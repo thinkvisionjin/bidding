@@ -1,91 +1,36 @@
 # -*- coding: utf-8 -*-
-
-#########################################################################
-## This scaffolding model makes your app work on Google App Engine too
-## File is released under public domain and you can use without limitations
-#########################################################################
-
-## if SSL/HTTPS is properly configured and you want all HTTP requests to
-## be redirected to HTTPS, uncomment the line below:
-# request.requires_https()
-
-## app configuration made easy. Look inside private/appconfig.ini
-from gluon.contrib.appconfig import AppConfig
-## once in production, remove reload=True to gain full speed
-myconf = AppConfig(reload=True)
-
-
-if not request.env.web2py_runtime_gae:
-    ## if NOT running on Google App Engine use SQLite or other DB
-    db = DAL(myconf.take('db.uri'), pool_size=myconf.take('db.pool_size', cast=int), check_reserved=['all'])
-else:
-    ## connect to Google BigTable (optional 'google:datastore://namespace')
-    db = DAL('google:datastore+ndb')
-    ## store sessions and tickets there
-    session.connect(request, response, db=db)
-    ## or store session in Memcache, Redis, etc.
-    ## from gluon.contrib.memdb import MEMDB
-    ## from google.appengine.api.memcache import Client
-    ## session.connect(request, response, db = MEMDB(Client()))
-
-## by default give a view/generic.extension to all actions from localhost
-## none otherwise. a pattern can be 'controller/function.extension'
-response.generic_patterns = ['*'] if request.is_local else []
-## choose a style for forms
-response.formstyle = myconf.take('forms.formstyle')  # or 'bootstrap3_stacked' or 'bootstrap2' or other
-response.form_label_separator = myconf.take('forms.separator')
-
-
-## (optional) optimize handling of static files
-# response.optimize_css = 'concat,minify,inline'
-# response.optimize_js = 'concat,minify,inline'
-## (optional) static assets folder versioning
-# response.static_version = '0.0.0'
-#########################################################################
-## Here is sample code if you need for
-## - email capabilities
-## - authentication (registration, login, logout, ... )
-## - authorization (role based authorization)
-## - services (xml, csv, json, xmlrpc, jsonrpc, amf, rss)
-## - old style crud actions
-## (more options discussed in gluon/tools.py)
-#########################################################################
-
-from gluon.tools import Auth, Service, PluginManager
-
-auth = Auth(db)
-service = Service()
-plugins = PluginManager()
-
-## create all tables needed by auth if not custom tables
-auth.define_tables(username=False, signature=False)
-
-## configure email
-mail = auth.settings.mailer
-mail.settings.server = 'logging' if request.is_local else myconf.take('smtp.server')
-mail.settings.sender = myconf.take('smtp.sender')
-mail.settings.login = myconf.take('smtp.login')
-
-## configure auth policy
-auth.settings.registration_requires_verification = False
-auth.settings.registration_requires_approval = False
-auth.settings.reset_password_requires_verification = True
-
 #########################################################################
 ## Define your tables below (or better in another model file) for example
-##
-## >>> db.define_table('mytable',Field('myfield','string'))
-##
-## Fields can be 'string','text','password','integer','double','boolean'
-##       'date','time','datetime','blob','upload', 'reference TABLENAME'
-## There is an implicit 'id integer autoincrement' field
-## Consult manual for more options, validators, etc.
-##
-## More API examples for controllers:
-##
-## >>> db.mytable.insert(myfield='value')
-## >>> rows=db(db.mytable.myfield=='value').select(db.mytable.ALL)
-## >>> for row in rows: print row.id, row.myfield
+from gluon import DAL, Field
+import pyodbc
+#02.设置字符串缺省的编码，如果不这样的话str无法使用
+import sys
+import json
+reload(sys)
+sys.setdefaultencoding('utf-8')
+str_db = u'mssql4://sa:1@localhost/BIDDING'
+#03.连接需要用utf8字符集，这样返回的中文结果可直接解码
+db = DAL(str_db,db_codec='utf-8',migrate_enabled=False)
+print db._uri
+print db._dbname
+db.define_table('BankRecord',Field('Account'),Field('CompanyName'),Field('CreateDate'),Field('Money'),Field('Note'),Field('TradingTime'))
+db.define_table('Customer',Field('Address1'),Field('Address2'),Field('CompanyName'),Field('CompanyPhone'),Field('ContactName'),Field('CreationDate'),Field('Email'),Field('EmployeeId'),Field('Fax'),Field('IsDelete'),Field('MobilePhone'),Field('Note'),Field('PassWord'),Field('Position'),Field('Type'),Field('UserName'),Field('ZipCode'))
+db.define_table('Employee',Field('Address'),Field('Age'),Field('Code'),Field('CompanyPhone'),Field('CreationDate'),Field('DateOfBirth'),Field('Department'),Field('Email'),Field('EmergencyContactName'),Field('EmergencyContactPhone'),Field('EmergencyContactRelationship'),Field('HomePhone'),Field('IsDelete'),Field('MobilePhone'),Field('Name'),Field('Note'),Field('PassWord'),Field('Position'),Field('SexId'),Field('Type'),Field('UserName'))
+db.define_table('Finance',Field('Activity'),Field('CreationDate'),Field('EmployeeId'),Field('Income'),Field('IsDelete'),Field('Note'),Field('ProjectCodeId'),Field('ProtocolCodeId'),Field('Spending'),Field('TargetId'),Field('TitleId'))
+db.define_table('Log',Field('Agent'),Field('CreationDate'),Field('Ip'),Field('Kind'),Field('Note'),Field('UserId'))
+db.define_table('Management',Field('Code'),Field('CreationDate'),Field('IsDelete'),Field('Name'))
+db.define_table('MoneyType',Field('CreationTime'),Field('IsDelete'),Field('Name'))
+db.define_table('ProjectCode',Field('CreationTime'),Field('EmployeeId'),Field('IsDelete'),Field('Option1'),Field('Option2'),Field('Option3'),Field('ProjectNumber'),Field('ProjectTypeId'),Field('ProtocolId'))
+db.define_table('ProjectResource',Field('CreationTime'),Field('IsDelete'),Field('Name'))
+db.define_table('Projects',Field('Assistant'),Field('BuyerId'),Field('ChargeRate'),Field('CreationDate'),Field('EmployeeId'),Field('EntrustMoney'),Field('IsDelete'),Field('MakeOutDate'),Field('ManagementStyleId'),Field('Note'),Field('Package'),Field('ProjectCodeId'),Field('ProjectName'),Field('ProjectSourceId'),Field('ProjectTypeId'),Field('ProtocolCodeId'),Field('SigningDate'),Field('SourcesOfFundingId'),Field('StateId'),Field('WinningCompany'),Field('WinningMoney'))
+db.define_table('ProjectStatus',Field('CreationTime'),Field('IsDelete'),Field('Name'))
+db.define_table('ProtocolCode',Field('CreationTime'),Field('EmployeeId'),Field('IsDelete'),Field('ProtocolNumber'),Field('TypeId'))
+db.define_table('Suggest',Field('Content'),Field('CreationTime'),Field('IsDelete'),Field('UserId'))
+db.define_table('Task',Field('CreationDate'),Field('Deadline'),Field('EmployeeId'),Field('IsDelete'),Field('Note'),Field('PlaceId'),Field('ProjectId'),Field('StateId'),Field('TitleId'))
+db.define_table('TaskLocation',Field('CreationTime'),Field('IsDelete'),Field('Name'))
+db.define_table('TaskStatus',Field('CreationTime'),Field('IsDelete'),Field('Name'))
+db.define_table('TypeOfTask',Field('CreationDate'),Field('IsDelete'),Field('Name'),Field('OrderId'))
+
 #########################################################################
 
 ## after defining tables, uncomment below to enable auditing

@@ -58,3 +58,24 @@ def call():
     return service()
 
 
+def add():
+    table_name = request.vars.table
+#     jsondata = request.
+#     if table_name == 'projects':
+#         db.project.insert()
+    return dict(table=table_name)
+
+def remove():
+    table_name = request.vars.table
+    return dict(table=table_name)
+
+def update():
+    table_name = request.vars.table
+    return dict(table=table_name)
+
+def select():
+    table_name = request.vars.table
+    if table_name == 'Projects':
+        for row in db().select(db.Projects.ALL):
+            print row.ProjectName.encode('gb2312')
+    return dict(projects="test")
