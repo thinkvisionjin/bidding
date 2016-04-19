@@ -57,7 +57,7 @@ def call():
     """
     return service()
 
-
+##################通用的表处理接口#############################
 def add():
     table_name = request.vars.table
 #     jsondata = request.
@@ -81,8 +81,6 @@ def select():
     return dict(projects="test")
 
 
-
-
-
+###############业务处理页面################################
 def protocals():
     return dict();

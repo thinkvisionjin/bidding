@@ -1,0 +1,6 @@
+ Id,int
+ ProtocolNumber,nvarchar
+ TypeId, int
+ EmployeeId,int
+ CreationTime,datetime
+ IsDelete, bit
