@@ -79,3 +79,10 @@ def select():
         for row in db().select(db.Projects.ALL):
             print row.ProjectName.encode('gb2312')
     return dict(projects="test")
+
+
+
+
+
+def protocals():
+    return dict();
