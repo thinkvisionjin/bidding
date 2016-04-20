@@ -1,0 +1,51 @@
+<table>
+<tr>
+<td content="Id" algin="right">
+</td>
+<td algin="left">
+<input id="Id" />
+</td>
+</tr>
+<tr>
+<td content="ProtocolNumber" algin="right">
+</td>
+<td algin="left">
+<input id="ProtocolNumber" />
+</td>
+</tr>
+<tr>
+<td content="TypeId" algin="right">
+</td>
+<td algin="left">
+<input id="TypeId" />
+</td>
+</tr>
+<tr>
+<td content="EmployeeId" algin="right">
+</td>
+<td algin="left">
+<input id="EmployeeId" />
+</td>
+</tr>
+<tr>
+<td content="CreationTime" algin="right">
+</td>
+<td algin="left">
+<input id="CreationTime" />
+</td>
+</tr>
+<tr>
+<td content="IsDelete" algin="right">
+</td>
+<td algin="left">
+<input id="IsDelete" />
+</td>
+</tr>
+<tr>
+<td algin="right">
+</td>
+<td align="right" style="padding-top: 10px;">
+<input type="button" id="Cancel" value="Cancel" />
+</td>
+</tr>
+</table>

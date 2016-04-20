@@ -75,12 +75,20 @@ def update():
 
 def select():
     table_name = request.vars.table
-    if table_name == 'Projects':
-        for row in db().select(db.Projects.ALL):
-            print row.ProjectName.encode('gb2312')
-    return dict(projects="test")
+    if table_name == 'ProtocolCode':
+        dic_rows = []
+        for row in db().select(db.ProtocolCode.ALL):
+            print row
+            dic_row = {'Id':row.id,'ProtocolNumber':row.ProtocolNumber,'TypeId':row.TypeId,
+                        'EmployeeId':row.EmployeeId,'CreationTime':row.CreationTime.strftime("%d/%m/%y %H:%M"),'IsDelete':row.IsDelete}
+            dic_rows.append(dic_row)
+    #AUTO-GENERATING#
+    
+    return json.dumps(dic_rows,ensure_ascii=False)
 
 
 ###############业务处理页面################################
-def protocals():
+def ProtocolCode():
+    return dict();
+def Projects():
     return dict();
