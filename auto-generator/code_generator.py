@@ -15,36 +15,42 @@ from py2neo.ext.geoff.xmlutil import jsonify
 
 def getTableColumns(tableName): 
     #return dictionary array [{name:"column names",type="column type"},{name:"column names",type="column type"},{name:"column names",type="column type"}]
-    connstr= u'driver={SQL Server};server=localhost;uid;pwd=1;DATABASE=BIDDING;Trusted_Connection=yes;unicode_results=True;CHARSET=UTF8'
-    conn = pyodbc.connect(connstr)
+    connstr= u'driver={SQL Server};server=localhost;uid;pwd=1;DATABASE=master;Trusted_Connection=yes;unicode_results=True;CHARSET=UTF8'
+    conn = pyodbc.connect(connstr,unicode_results=True)
     cursor=conn.cursor()
-    strm= 'select a.name as columnname,c.name typename \
+    strm= 'select a.name as columnname,c.name typename,cast(d.value as nvarchar(128)) as columnlabel\
     from sys.columns a, \
     sys.objects b,\
-    sys.types c \
+    sys.types c ,\
+    (select * from ::fn_listextendedproperty(\'MS_Description\',\'user\',\'dbo\',\'table\',\'' +tableName+'\',\'column\',default)) d \
     where a.object_id=b.object_id \
     and a.user_type_id=c.user_type_id \
+    and d.objname = a.name collate  Chinese_PRC_CI_AS \
     and b.type=\'u\' ' + 'and b.name = \''+tableName +'\''
     print strm
     cursor.execute(strm)
     rs = cursor.fetchall() 
     columnNames= []
     columnTypes=[]
+    columnLabels=[]
     for r1 in rs:
         columnNames.append(r1[0]) 
         columnTypes.append(r1[1])
-    d = {'table': tableName,'columns':columnNames,'types':columnTypes}
-    return  jsonify(d)
+        print r1[2]
+        columnLabels.append(r1[2])
+    d = {'table': tableName,'columns':columnNames,'types':columnTypes,'labels':columnLabels}
+    print jsonify(d,ensure_ascii=False)
+    return  jsonify(d,ensure_ascii=False)
 
 def generateHTMLTable(columnNames):
     snippet = markup.page()
-    titles = columnNames['columns']
+    titles = columnNames['labels']
     inputids = columnNames['columns']
     snippet.table()
-    for r in titles:
+    for i in range(len(titles)):
         snippet.tr()
-        snippet.td(oneliner.p(r),align='right')
-        snippet.td(oneliner.input(id=r),align='left')
+        snippet.td(oneliner.p(titles[i]),align='right')
+        snippet.td(oneliner.input(id=inputids[i]),align='left')
         snippet.tr.close()
     snippet.tr()
     snippet.td(style='padding-top: 10px;',align="right")
@@ -98,7 +104,7 @@ def generateJSFile(tableColumns):
         if re.search('{{=COLUMNS_CONTENT}}', line)!=None:
             column_content = []
             for i in range(len(tableColumns['columns'])):
-                column_content.append({'text':tableColumns['columns'][i],'datafield':tableColumns['columns'][i],'width':200})
+                column_content.append({'text':tableColumns['labels'][i],'datafield':tableColumns['columns'][i],'width':200})
             line = line.replace('{{=COLUMNS_CONTENT}}',jsonify(column_content))
         if re.search('{{=GET_ROW_DATA}}', line)!=None:
             get_row_data =""
@@ -124,15 +130,15 @@ def generateFiles(tableName):
     print "Generating " +tableName+ ".js"
     generateJSFile(tableColumns)
 
+
 generateFiles("ProtocolCode")
 #generateFiles("Projects")
-
 # tableColumnsJson = getTableColumns('ProtocolCode')
 # tableColumns = json.JSONDecoder().decode(tableColumnsJson)
 # print tableColumns['columns']
 # print generateHTMLTable(tableColumns)
 
-
+#getTableColumns("ProtocolCode")
 
 
 

@@ -5,7 +5,8 @@ c.name typename
 --a.scale
 from sys.columns a,
 sys.objects b,
-sys.types c
+sys.types c,
+ ::fn_listextendedproperty('MS_Description','user','dbo','table','ProtocolCode','column',default) d
 where a.object_id=b.object_id 
 and a.user_type_id=c.user_type_id
 and b.type='u'
@@ -14,10 +15,22 @@ and b.name = 'ProtocolCode'
 --and object_name(a.object_id)<>'t'
 order by b.name
 
+use master
+SELECT   *
+FROM   ::fn_listextendedproperty('MS_Description','user','dbo','table','ProtocolCode','column',default)
 
-select a.name as columnname,c.name typename     from sys.columns a,     sys.objects b,    sys.types c     
-where a.object_id=b.object_id     and a.user_type_id=c.user_type_id     and b.type='u' and b.name = 'ProtocolCode'
+select a.name as columnname,c.name typename,cast(d.value as nvarchar(128)) as columnlabel
+from sys.columns a,     sys.objects b,    sys.types c,   (select * from ::fn_listextendedproperty('MS_Description','user','dbo','table','ProtocolCode','column',default)) d
+where a.object_id=b.object_id and d.objname = a.name collate  Chinese_PRC_CI_AS
+and a.user_type_id=c.user_type_id   and b.type='u' and b.name = 'ProtocolCode'
 
+
+select a.name as columnname,c.name typename,cast(d.value as nvarchar(128)) as columnlabel  
+into  BIDDING.dbo.Columns_ProtocolCode  from sys.columns a,     sys.objects b,    sys.types c,    
+(select * from ::fn_listextendedproperty('MS_Description','user','dbo','table','ProtocolCode','column',default)) d   
+where a.object_id=b.object_id     and a.user_type_id=c.user_type_id     and d.objname = a.name collate  Chinese_PRC_CI_AS     and b.type='u' and b.name = 'ProtocolCode'
+
+select * from Columns_ProtocolCode
 
 use bidding
 

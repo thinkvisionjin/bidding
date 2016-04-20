@@ -71,7 +71,98 @@
                 source: dataAdapter,
                 pageable: true,
                 autoheight: true,
-                columns: columns_content
+                columns: columns_content,
+                showstatusbar: true,
+                renderstatusbar: function (statusbar) {
+                    // appends buttons to the status bar.
+                    var container = $("<div style='overflow: hidden; position: relative; margin: 5px;'></div>");
+                    var addButton = $("<div style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../bidding/static/images/add.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Add</span></div>");
+                    var deleteButton = $("<div style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../bidding/static/images/close.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Delete</span></div>");
+                    var reloadButton = $("<div style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../bidding/static/images/refresh.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Reload</span></div>");
+                    var searchButton = $("<div style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../bidding/static/images/search.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>Find</span></div>");
+                    container.append(addButton);
+                    container.append(deleteButton);
+                    container.append(reloadButton);
+                    container.append(searchButton);
+                    statusbar.append(container);
+                    addButton.jqxButton({  width: 60, height: 20 });
+                    deleteButton.jqxButton({  width: 65, height: 20 });
+                    reloadButton.jqxButton({  width: 65, height: 20 });
+                    searchButton.jqxButton({  width: 50, height: 20 });
+                    // add new row.
+                    addButton.click(function (event) {
+                        var datarow = generatedata(1);
+                        $("#jqxgrid").jqxGrid('addrow', null, datarow[0]);
+                    });
+                    // delete selected row.
+                    deleteButton.click(function (event) {
+                        var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
+                        var rowscount = $("#jqxgrid").jqxGrid('getdatainformation').rowscount;
+                        var id = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
+                        $("#jqxgrid").jqxGrid('deleterow', id);
+                    });
+                    // reload grid data.
+                    reloadButton.click(function (event) {
+                        $("#jqxgrid").jqxGrid({ source: getAdapter() });
+                    });
+                    // search for a record.
+                    searchButton.click(function (event) {
+                        var offset = $("#jqxgrid").offset();
+                        $("#jqxwindow").jqxWindow('open');
+                        $("#jqxwindow").jqxWindow('move', offset.left + 30, offset.top + 30);
+                    });
+                },
+            });
+         // create jqxWindow.
+            $("#jqxwindow").jqxWindow({ resizable: false,  autoOpen: false, width: 210, height: 180 });
+            // create find and clear buttons.
+            $("#findButton").jqxButton({ width: 70});
+            $("#clearButton").jqxButton({ width: 70});
+            // create dropdownlist.
+            $("#dropdownlist").jqxDropDownList({ autoDropDownHeight: true, selectedIndex: 0, width: 200, height: 23, 
+                source: [
+                    'First Name', 'Last Name', 'Product', 'Quantity', 'Price'
+                ]
+            });
+            if (theme != "") {
+                $("#inputField").addClass('jqx-input-' + theme);
+            }
+            // clear filters.
+            $("#clearButton").click(function () {
+                $("#jqxgrid").jqxGrid('clearfilters');
+            });
+            // find records that match a criteria.
+            $("#findButton").click(function () {
+                $("#jqxgrid").jqxGrid('clearfilters');
+                var searchColumnIndex = $("#dropdownlist").jqxDropDownList('selectedIndex');
+                var datafield = "";
+                switch (searchColumnIndex) {
+                    case 0:
+                        datafield = "firstname";
+                        break;
+                    case 1:
+                        datafield = "lastname";
+                        break;
+                    case 2:
+                        datafield = "productname";
+                        break;
+                    case 3:
+                        datafield = "quantity";
+                        break;
+                    case 4:
+                        datafield = "price";
+                        break;
+                }
+                var searchText = $("#inputField").val();
+                var filtergroup = new $.jqx.filter();
+                var filter_or_operator = 1;
+                var filtervalue = searchText;
+                var filtercondition = 'contains';
+                var filter = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
+                filtergroup.addfilter(filter_or_operator, filter);
+                $("#jqxgrid").jqxGrid('addfilter', datafield, filtergroup);
+                // apply the filters.
+                $("#jqxgrid").jqxGrid('applyfilters');
             });
             // create context menu
             var contextMenu = $("#Menu").jqxMenu({ width: 200, height: 58, autoOpenPopup: false, mode: 'popup'});

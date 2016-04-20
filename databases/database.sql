@@ -107,6 +107,11 @@ CREATE TABLE [dbo].[ProtocolCode](
 ) ON [PRIMARY]
 
 EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'序号' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProtocolCode', @level2type=N'COLUMN',@level2name=N'Id'
+
+EXEC sys.sp_addextendedproperty 
 @name=N'MS_Description', @value=N'协议编号' , 
 @level0type=N'SCHEMA',@level0name=N'dbo', 
 @level1type=N'TABLE',@level1name=N'ProtocolCode', @level2type=N'COLUMN',@level2name=N'ProtocolNumber'
@@ -115,6 +120,24 @@ EXEC sys.sp_addextendedproperty
 @name=N'MS_Description', @value=N'类型编号' , 
 @level0type=N'SCHEMA',@level0name=N'dbo', 
 @level1type=N'TABLE',@level1name=N'ProtocolCode', @level2type=N'COLUMN',@level2name=N'TypeID'
+
+
+
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'员工编号' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProtocolCode', @level2type=N'COLUMN',@level2name=N'EmployeeId'
+
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'创建日期' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProtocolCode', @level2type=N'COLUMN',@level2name=N'CreationTime'
+
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'是否已删除' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProtocolCode', @level2type=N'COLUMN',@level2name=N'IsDelete'
+
 
 
 SELECT   *

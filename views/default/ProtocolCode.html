@@ -80,27 +80,27 @@
            	<div style="overflow: hidden;">
            	<table>
 <tr>
-<td align="right"><p>Id</p></td>
+<td align="right"><p>序号</p></td>
 <td align="left"><input id="Id" /></td>
 </tr>
 <tr>
-<td align="right"><p>ProtocolNumber</p></td>
+<td align="right"><p>协议编号</p></td>
 <td align="left"><input id="ProtocolNumber" /></td>
 </tr>
 <tr>
-<td align="right"><p>TypeId</p></td>
+<td align="right"><p>类型编号</p></td>
 <td align="left"><input id="TypeId" /></td>
 </tr>
 <tr>
-<td align="right"><p>EmployeeId</p></td>
+<td align="right"><p>员工编号</p></td>
 <td align="left"><input id="EmployeeId" /></td>
 </tr>
 <tr>
-<td align="right"><p>CreationTime</p></td>
+<td align="right"><p>创建日期</p></td>
 <td align="left"><input id="CreationTime" /></td>
 </tr>
 <tr>
-<td align="right"><p>IsDelete</p></td>
+<td align="right"><p>是否已删除</p></td>
 <td align="left"><input id="IsDelete" /></td>
 </tr>
 <tr>
@@ -111,6 +111,27 @@
 </table>
        		</div>
        </div>
+       <div id="jqxwindow">
+            <div>
+                Find Record</div>
+            <div style="overflow: hidden;">
+                <div>
+                    Find what:</div>
+                <div style='margin-top:5px;'>
+                    <input id='inputField' type="text" class="jqx-input" style="width: 200px; height: 23px;" />
+                </div>
+                <div style="margin-top: 7px; clear: both;">
+                    Look in:</div>
+                <div style='margin-top:5px;'>
+                    <div id='dropdownlist'>
+                    </div>
+                </div>
+                <div>
+                    <input type="button" style='margin-top: 15px; margin-left: 50px; float: left;' value="Find" id="findButton" />
+                    <input type="button" style='margin-left: 5px; margin-top: 15px; float: left;' value="Clear" id="clearButton" />
+                </div>
+            </div>
+        </div>
        <div id='Menu'>
         <ul>
             <li>Edit Selected Row</li>
