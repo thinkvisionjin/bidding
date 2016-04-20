@@ -105,6 +105,21 @@ CREATE TABLE [dbo].[ProtocolCode](
 	[Id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'协议编号' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProtocolCode', @level2type=N'COLUMN',@level2name=N'ProtocolNumber'
+
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'类型编号' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProtocolCode', @level2type=N'COLUMN',@level2name=N'TypeID'
+
+
+SELECT   *
+FROM   ::fn_listextendedproperty('MS_Description','user','dbo','table','ProtocolCode','column',default)
+
 GO
 /****** Object:  Table [dbo].[ProjectStatus]    Script Date: 04/15/2016 17:12:50 ******/
 SET ANSI_NULLS ON
