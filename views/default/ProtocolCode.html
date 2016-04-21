@@ -24,7 +24,7 @@
 	<script src="{{=URL('static','js/vendor/jqwidgets/jqxdropdownlist.js')}}"	type="text/javascript"></script>
 	<script src="{{=URL('static','js/vendor/jqwidgets/demos.js')}}"	type="text/javascript"></script>
 	<script src="{{=URL('static','js/vendor/jqwidgets/generatedata.js')}}"	type="text/javascript"></script>
-    <script src="{{=URL('static','js/ProtocolCode.js')}}"	type="text/javascript"></script>
+    <script src="{{=URL('static','js/ProtocolCode2.js')}}"	type="text/javascript"></script>
 </head>
 <body class='default'>
     <div id='jqxWidget'>
@@ -75,8 +75,8 @@
             <div style="margin-top: 10px;" id="cellendeditevent"></div>
        </div>
        
-       <div id="popupWindow">
-            <div>Edit</div>
+       <div id="popupWindowEdit">
+            <div>编辑</div>
            	<div style="overflow: hidden;">
            	<table>
 <tr>
@@ -105,12 +105,47 @@
 </tr>
 <tr>
 <td align="right" style="padding-top: 10px;">
-<td align="left"><input type="button" id="Cancel" value="Cancel" /></td>
-<td align="left"><input type="button" id="Save" value="Save" /></td>
+<td align="left"><input type="button" id="Cancel" value="取消" /></td>
+<td align="left"><input type="button" id="Save" value="保存" /></td>
 </tr>
 </table>
        		</div>
        </div>
+       
+       <div id="popupWindow_ADD">
+            <div>新增</div>
+           	<div style="overflow: hidden;">
+           	<table>
+<tr>
+<td align="right"><p>协议编号</p></td>
+<td align="left"><input id="ProtocolNumber_ADD" /></td>
+</tr>
+<tr>
+<td align="right"><p>类型编号</p></td>
+<td align="left"><input id="TypeId_ADD" /></td>
+</tr>
+<tr>
+<td align="right"><p>员工编号</p></td>
+<td align="left"><input id="EmployeeId_ADD" /></td>
+</tr>
+<tr>
+<td align="right"><p>创建日期</p></td>
+<td align="left"><input id="CreationTime_ADD" /></td>
+</tr>
+<tr>
+<td align="right"><p>是否已删除</p></td>
+<td align="left"><input id="IsDelete_ADD" /></td>
+</tr>
+<tr>
+<td align="right" style="padding-top: 10px;">
+<td align="left"><input type="button" id="Cancel_ADD" value="取消" /></td>
+<td align="left"><input type="button" id="Save_ADD" value="保存" /></td>
+</tr>
+</table>
+       		</div>
+       </div>
+       
+       
        <div id="jqxwindow">
             <div>
                 Find Record</div>

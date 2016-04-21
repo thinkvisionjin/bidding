@@ -130,7 +130,6 @@ def generateFiles(tableName):
     print "Generating " +tableName+ ".js"
     generateJSFile(tableColumns)
 
-
 generateFiles("ProtocolCode")
 #generateFiles("Projects")
 # tableColumnsJson = getTableColumns('ProtocolCode')

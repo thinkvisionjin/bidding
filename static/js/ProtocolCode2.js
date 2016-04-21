@@ -116,8 +116,7 @@ $("#IsDelete").height(23)
                     searchButton.jqxButton({  width: 50, height: 20 });
                     // add new row.
                     addButton.click(function (event) {
-                        var datarow = generatedata(1);
-                        $("#jqxgrid").jqxGrid('addrow', null, datarow[0]);
+                    	$("#popupWindow_ADD").jqxWindow('show');
                     });
                     // delete selected row.
                     deleteButton.click(function (event) {
@@ -201,7 +200,7 @@ $("#IsDelete").height(23)
                 if ($.trim($(args).text()) == "Edit Selected Row") {
                     editrow = rowindex;
                     var offset = $("#jqxgrid").offset();
-                    $("#popupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 60, y: parseInt(offset.top) + 60} });
+                    $("#popupWindowEdit").jqxWindow({ position: { x: parseInt(offset.left) + 60, y: parseInt(offset.top) + 60} });
                     // get the clicked row's data and initialize the input fields.
                     var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', editrow);
                     $("#Id").val(dataRecord.Id);
@@ -219,7 +218,7 @@ $("#IsDelete").val(dataRecord.IsDelete);
 //                    $("#price").jqxNumberInput({ decimal: dataRecord.price });
                   //********GET_ROW_DATA END******************//
                     // show the popup window.
-                    $("#popupWindow").jqxWindow('show');
+                    $("#popupWindowEdit").jqxWindow('show');
                 }
                 else {
                     var rowid = $("#jqxgrid").jqxGrid('getrowid', rowindex);
@@ -235,8 +234,8 @@ $("#IsDelete").val(dataRecord.IsDelete);
                     return false;
                 }
             });
-            // initialize the popup window and buttons.
-            $("#popupWindow").jqxWindow({ width: 250, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01 });
+            // initialize the popup edit window and buttons.
+            $("#popupWindowEdit").jqxWindow({ width: 250, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01 });
             $("#Cancel").jqxButton({ theme: theme });
             $("#Save").jqxButton({ theme: theme });
             // update the edited row when the user clicks the 'Save' button.
@@ -256,9 +255,29 @@ $("#IsDelete").val(dataRecord.IsDelete);
                   //********ROW_CONTENT_SAVE END******************//
                     var rowid = $("#jqxgrid").jqxGrid('getrowid', editrow);
                     $('#jqxgrid').jqxGrid('updaterow', rowid, row);
-                    $("#popupWindow").jqxWindow('hide');
+                    $("#popupWindowEdit").jqxWindow('hide');
                 }
             });
+            //initialize the popup add window and buttons.
+            $("#popupWindow_ADD").jqxWindow({ width: 250, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01 });
+            $("#Cancel_ADD").jqxButton({ theme: theme });
+            $("#Save_ADD").jqxButton({ theme: theme });
+            $("#Save_ADD").click(function () {
+            	var row = {
+						 ProtocolNumber:$("#ProtocolNumber_ADD").val()
+						,TypeId:$("#TypeId_ADD").val()
+						,EmployeeId:$("#EmployeeId_ADD").val()
+						,CreationTime:$("#CreationTime_ADD").val()
+						,IsDelete:$("#IsDelete_ADD").val()
+						};
+           	   var datarow = row;
+               $.post("/bidding/default/insert?table=ProtocolCode",datarow,function(result){
+            	   //result = {"TypeId": 333, "EmployeeId": 33, "CreationTime": "21/04/16 14:44", "ProtocolNumber": "333", "IsDelete": true, "Id": 45}
+            	   $("#jqxgrid").jqxGrid('addrow', null, result, 'first');
+             	 },'json');
+               $("#popupWindow_ADD").jqxWindow('hide');
+            });
+            
             $("#excelExport").jqxButton();
             $("#xmlExport").jqxButton();
             $("#csvExport").jqxButton();

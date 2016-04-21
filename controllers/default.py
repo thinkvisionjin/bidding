@@ -58,22 +58,58 @@ def call():
     return service()
 
 ##################通用的表处理接口#############################
-def add():
+def insert():
+    print 'inserting data**************'
     table_name = request.vars.table
-#     jsondata = request.
-#     if table_name == 'projects':
-#         db.project.insert()
-    return dict(table=table_name)
+    rowData = request.post_vars
+#     rowData = {'TypeId': 1111111111,
+#                'EmployeeId': 700, 
+#                'CreationTime': '01/01/16 20:08', 
+#                'ProtocolNumber': 111111111, 'IsDelete': True}
+    print rowData
+    if table_name == 'ProtocolCode':
+        id = db.ProtocolCode.insert(TypeId=rowData['TypeId'],
+                                        EmployeeId=rowData['EmployeeId'],
+                                        ProtocolNumber=rowData['ProtocolNumber'],
+                                        IsDelete=rowData['IsDelete'])
+        row = db(db['ProtocolCode']._id ==id).select().first()
+        dic_row = {'Id':row.id,'ProtocolNumber':row.ProtocolNumber,'TypeId':row.TypeId,
+                        'EmployeeId':row.EmployeeId,'CreationTime':row.CreationTime.strftime("%d/%m/%y %H:%M"),'IsDelete':row.IsDelete}
+        result = json.dumps(dic_row,ensure_ascii=False)
+        print result
+        db.commit()
+    return result
 
-def remove():
+def delete():
+    print 'deleting row**************'
     table_name = request.vars.table
+    id = request.post_vars['Id']
+    if table_name == 'ProtocolCode':
+        row = db(db['ProtocolCode']._id ==id).select().first()
+        print row
+        db(db['ProtocolCode']._id == id).delete()
+        db.commit()
     return dict(table=table_name)
 
 def update():
+    print 'updating row**************'
     table_name = request.vars.table
+    if table_name == 'ProtocolCode':
+        print request.post_vars   
+        id = request.post_vars['Id']
+        print id
+        db(db['ProtocolCode']._id == id).update(**{'TypeId':request.post_vars['TypeId']})
+        db(db['ProtocolCode']._id == id).update(**{'EmployeeId':request.post_vars['EmployeeId']})
+        db(db['ProtocolCode']._id == id).update(**{'CreationTime':request.post_vars['CreationTime']})
+        db(db['ProtocolCode']._id == id).update(**{'ProtocolNumber':request.post_vars['ProtocolNumber']})
+        db(db['ProtocolCode']._id == id).update(**{'IsDelete':request.post_vars['IsDelete']})
+        row = db(db['ProtocolCode']._id ==id).select().first()
+        print row
+        db.commit()
     return dict(table=table_name)
 
 def select():
+    print 'selecting rows**************'
     table_name = request.vars.table
     if table_name == 'ProtocolCode':
         dic_rows = []
@@ -86,9 +122,10 @@ def select():
     
     return json.dumps(dic_rows,ensure_ascii=False)
 
-
 ###############业务处理页面################################
+
 def ProtocolCode():
     return dict();
+
 def Projects():
     return dict();
