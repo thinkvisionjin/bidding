@@ -57,10 +57,11 @@ def insert():
                'CreationTime': '01/01/16 20:08', 
                'ProtocolNumber': 111111111, 'IsDelete': True}
     if table_name == 'ProtocolCode':
-        id = db.ProtocolCode.insert(TypeId=rowData['TypeId'],
-                                    EmployeeId=rowData['EmployeeId'],
-                                    ProtocolNumber=rowData['ProtocolNumber'],
-                                    IsDelete=rowData['IsDelete'])
+#         id = db.ProtocolCode.insert(TypeId=rowData['TypeId'],
+#                                     EmployeeId=rowData['EmployeeId'],
+#                                     ProtocolNumber=rowData['ProtocolNumber'],
+#                                     IsDelete=rowData['IsDelete'])
+        id = db.ProtocolCode.insert(**rowData)
         row = db(db['ProtocolCode']._id ==id).select().first()
         dic_row = {'Id':row.id,'ProtocolNumber':row.ProtocolNumber,'TypeId':row.TypeId,
                         'EmployeeId':row.EmployeeId,'CreationTime':row.CreationTime.strftime("%d/%m/%y %H:%M"),'IsDelete':row.IsDelete}
