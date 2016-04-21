@@ -28,46 +28,30 @@
 </head>
 <body class='default'>
     <div id='jqxWidget'>
-    	<div style='margin-top: 20px;'>
-    		<table>
+    	<div id="searchArea">
+    	<!--AUTO_GENERATED-->
+    	<table id='searchTable' width='100%'>
     			<tr> 
-	    			<td> Name： </td> 
-	    			<td> <input type="text" id="inputName"/> </td> 
-	    			<td> Time： </td> 
-	    			<td><input type="text" id="inputTime"/> </td> 
+	    			<td>序       号: </td> 
+	    			<td> <input type="text" id="searchId"/> </td> 
+	    			<td>协议编号:</td> 
+	    			<td><input type="text" id="searchProtocolNumber"/> </td> 
     			</tr>
     			<tr> 
-    				<td> Code： </td> 
-    				<td> <input type="text" id="inputCode"/> </td> 
-    				<td> Status： </td> 
-    				<td><input type="text" id="inputStatus"/></td> 
+    				<td>类型编号:</td> 
+    				<td> <input type="text" id="searchTypeId"/> </td> 
+    				<td>员工编号:</td> 
+    				<td><input type="text" id="searchEmployeeId"/></td>
+    			</tr>
+    			<tr> 
+    				<td>创建日期:</td> 
+    				<td> <input type="text" id="searchCreationTime"/> </td> 
+    				<td>是否已删除:</td> 
+    				<td><input type="text" id="searchIsDelete"/></td>
     			</tr>
     		</table>
     	</div>
-    	<div style='margin-top: 20px;'>
-            <div style='float: left;'>
-                <input type="button" value="Export to Excel" id='excelExport' />
-                <br /><br />
-                <input type="button" value="Export to XML" id='xmlExport' />
-            </div>
-            <div style='margin-left: 10px; float: left;'>
-                <input type="button" value="Export to CSV" id='csvExport' />
-                <br /><br />
-                <input type="button" value="Export to TSV" id='tsvExport' />
-            </div>
-            
-            <div style='margin-left: 10px; float: left;'>
-                <input type="button" value="Export to HTML" id='htmlExport' />
-                <br /><br />
-                <input type="button" value="Export to JSON" id='jsonExport' />
-            </div>
-            <div style='margin-left: 10px; float: left;'>
-                <input type="button" value="Export to PDF" id='pdfExport' />
-                <br /><br />
-                <input type="button" value="Print" id='print' />
-            </div>
-        </div>
-
+    
         <div id="jqxgrid"></div>
         
         <div style="margin-top: 30px;">
@@ -75,102 +59,84 @@
             <div style="margin-top: 10px;" id="cellendeditevent"></div>
        </div>
        
-       <div id="popupWindowEdit">
+       
+       <div id="popupWindow_EDIT">
             <div>编辑</div>
            	<div style="overflow: hidden;">
-           	<table>
-<tr>
-<td align="right"><p>序号</p></td>
-<td align="left"><input id="Id" /></td>
-</tr>
-<tr>
-<td align="right"><p>协议编号</p></td>
-<td align="left"><input id="ProtocolNumber" /></td>
-</tr>
-<tr>
-<td align="right"><p>类型编号</p></td>
-<td align="left"><input id="TypeId" /></td>
-</tr>
-<tr>
-<td align="right"><p>员工编号</p></td>
-<td align="left"><input id="EmployeeId" /></td>
-</tr>
-<tr>
-<td align="right"><p>创建日期</p></td>
-<td align="left"><input id="CreationTime" /></td>
-</tr>
-<tr>
-<td align="right"><p>是否已删除</p></td>
-<td align="left"><input id="IsDelete" /></td>
-</tr>
-<tr>
-<td align="right" style="padding-top: 10px;">
-<td align="left"><input type="button" id="Cancel" value="取消" /></td>
-<td align="left"><input type="button" id="Save" value="保存" /></td>
-</tr>
-</table>
+           	<!--AUTO_GENERATED-->
+           	<table id='editTable'>
+				<tr>
+				<td align="right"><p>序号</p></td>
+				<td align="left"><input id="Id" /></td>
+				</tr>
+				<tr>
+				<td align="right"><p>协议编号</p></td>
+				<td align="left"><input id="ProtocolNumber" /></td>
+				</tr>
+				<tr>
+				<td align="right"><p>类型编号</p></td>
+				<td align="left"><input id="TypeId" /></td>
+				</tr>
+				<tr>
+				<td align="right"><p>员工编号</p></td>
+				<td align="left"><input id="EmployeeId" /></td>
+				</tr>
+				<tr>
+				<td align="right"><p>创建日期</p></td>
+				<td align="left"><input id="CreationTime" /></td>
+				</tr>
+				<tr>
+				<td align="right"><p>是否已删除</p></td>
+				<td align="left"><input id="IsDelete" /></td>
+				</tr>
+				<tr>
+				<td align="right" style="padding-top: 10px;">
+				<td align="left"><input type="button" id="Cancel" value="取消" /></td>
+				<td align="left"><input type="button" id="Save" value="保存" /></td>
+				</tr>
+				</table>
        		</div>
        </div>
+       
        
        <div id="popupWindow_ADD">
             <div>新增</div>
            	<div style="overflow: hidden;">
-           	<table>
-<tr>
-<td align="right"><p>协议编号</p></td>
-<td align="left"><input id="ProtocolNumber_ADD" /></td>
-</tr>
-<tr>
-<td align="right"><p>类型编号</p></td>
-<td align="left"><input id="TypeId_ADD" /></td>
-</tr>
-<tr>
-<td align="right"><p>员工编号</p></td>
-<td align="left"><input id="EmployeeId_ADD" /></td>
-</tr>
-<tr>
-<td align="right"><p>创建日期</p></td>
-<td align="left"><input id="CreationTime_ADD" /></td>
-</tr>
-<tr>
-<td align="right"><p>是否已删除</p></td>
-<td align="left"><input id="IsDelete_ADD" /></td>
-</tr>
-<tr>
-<td align="right" style="padding-top: 10px;">
-<td align="left"><input type="button" id="Cancel_ADD" value="取消" /></td>
-<td align="left"><input type="button" id="Save_ADD" value="保存" /></td>
-</tr>
-</table>
+           	<!--AUTO_GENERATED-->
+           	<table id='addTable'>
+				<tr>
+				<td align="right"><p>协议编号</p></td>
+				<td align="left"><input id="ProtocolNumber_ADD" /></td>
+				</tr>
+				<tr>
+				<td align="right"><p>类型编号</p></td>
+				<td align="left"><input id="TypeId_ADD" /></td>
+				</tr>
+				<tr>
+				<td align="right"><p>员工编号</p></td>
+				<td align="left"><input id="EmployeeId_ADD" /></td>
+				</tr>
+				<tr>
+				<td align="right"><p>创建日期</p></td>
+				<td align="left"><input id="CreationTime_ADD" /></td>
+				</tr>
+				<tr>
+				<td align="right"><p>是否已删除</p></td>
+				<td align="left"><input id="IsDelete_ADD" /></td>
+				</tr>
+				<tr>
+				<td align="right" style="padding-top: 10px;">
+				<td align="left"><input type="button" id="Cancel_ADD" value="取消" /></td>
+				<td align="left"><input type="button" id="Save_ADD" value="保存" /></td>
+				</tr>
+			</table>
        		</div>
        </div>
-       
-       
-       <div id="jqxwindow">
-            <div>
-                Find Record</div>
-            <div style="overflow: hidden;">
-                <div>
-                    Find what:</div>
-                <div style='margin-top:5px;'>
-                    <input id='inputField' type="text" class="jqx-input" style="width: 200px; height: 23px;" />
-                </div>
-                <div style="margin-top: 7px; clear: both;">
-                    Look in:</div>
-                <div style='margin-top:5px;'>
-                    <div id='dropdownlist'>
-                    </div>
-                </div>
-                <div>
-                    <input type="button" style='margin-top: 15px; margin-left: 50px; float: left;' value="Find" id="findButton" />
-                    <input type="button" style='margin-left: 5px; margin-top: 15px; float: left;' value="Clear" id="clearButton" />
-                </div>
-            </div>
-        </div>
+
        <div id='Menu'>
         <ul>
-            <li>Edit Selected Row</li>
-            <li>Delete Selected Row</li>
+            <li>修改</li>
+            <li>删除</li>
         </ul>
        </div>
     </div>
