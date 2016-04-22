@@ -39,9 +39,6 @@ $(document).ready(function () {
             };
             // initialize the input fields.
 //********INIT_INPUT_FIELDS START******************//
-$("#Id_SEARCH").addClass('jqx-input')
-$("#Id_SEARCH").width(150)
-$("#Id_SEARCH").height(23)
 $("#ProtocolNumber_SEARCH").addClass('jqx-input')
 $("#ProtocolNumber_SEARCH").width(150)
 $("#ProtocolNumber_SEARCH").height(23)
@@ -57,9 +54,6 @@ $("#CreationTime_SEARCH").height(23)
 $("#IsDelete_SEARCH").addClass('jqx-input')
 $("#IsDelete_SEARCH").width(150)
 $("#IsDelete_SEARCH").height(23)
-$("#Id_EDIT").addClass('jqx-input')
-$("#Id_EDIT").width(150)
-$("#Id_EDIT").height(23)
 $("#ProtocolNumber_EDIT").addClass('jqx-input')
 $("#ProtocolNumber_EDIT").width(150)
 $("#ProtocolNumber_EDIT").height(23)
@@ -75,25 +69,34 @@ $("#CreationTime_EDIT").height(23)
 $("#IsDelete_EDIT").addClass('jqx-input')
 $("#IsDelete_EDIT").width(150)
 $("#IsDelete_EDIT").height(23)
-$("#Id_ADD").addClass('jqx-input')
-$("#Id_ADD").width(150)
-$("#Id_ADD").height(23)
 $("#ProtocolNumber_ADD").addClass('jqx-input')
 $("#ProtocolNumber_ADD").width(150)
 $("#ProtocolNumber_ADD").height(23)
-$("#TypeId_ADD").addClass('jqx-input')
-$("#TypeId_ADD").width(150)
-$("#TypeId_ADD").height(23)
-$("#EmployeeId_ADD").addClass('jqx-input')
-$("#EmployeeId_ADD").width(150)
-$("#EmployeeId_ADD").height(23)
-$("#CreationTime_ADD").addClass('jqx-input')
-$("#CreationTime_ADD").width(150)
-$("#CreationTime_ADD").height(23)
-$("#IsDelete_ADD").addClass('jqx-input')
-$("#IsDelete_ADD").width(150)
-$("#IsDelete_ADD").height(23)
-
+$('#ProtocolNumber_ADD').val('SPMCEC-16ZC0001')
+var sourceTypeId = {"政府采购":0, "涉密":1, "年度":2, "其他":3};
+var sourceTypeId_reverse = {'0':"政府采购", 1:"涉密", 2:"年度", 3:"其他"};
+var sourceType = ["政府采购", "涉密", "年度", "其他"];
+$("#TypeId_ADD").jqxDropDownList({ source: sourceType, selectedIndex: 0, width: '150', height: '23'});
+$('#TypeId_ADD').on('select', function (event) {
+    var args = event.args;
+    var item = $('#TypeId_ADD').jqxDropDownList('getItem', args.index);
+    if (item != null) {
+    	var prefix = 'SPMCEC-16'
+    	if(args.index==0){
+    		prefix = prefix+'ZC'+'0001'
+    	}
+    	if(args.index==1){
+    		prefix = prefix+'SM'+'0001'
+    	}
+    	if(args.index==2){
+    		prefix = prefix+'ND'+'0001'
+    	}
+    	if(args.index==3){
+    		prefix = prefix+'QT'+'0001'
+    	}
+    	$('#ProtocolNumber_ADD').val(prefix)
+    }
+});
 //********INIT_INPUT_FIELDS END******************//
             var dataAdapter = new $.jqx.dataAdapter(source);
             var editrow = -1;
@@ -202,7 +205,6 @@ $("#IsDelete_ADD").height(23)
                     // get the clicked row's data and initialize the input fields.
                     var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', editrow);
 //********=GET_EDIT_ROW_DATA START******************//
-$("#Id_EDIT").val(dataRecord.Id);
 $("#ProtocolNumber_EDIT").val(dataRecord.ProtocolNumber);
 $("#TypeId_EDIT").val(dataRecord.TypeId);
 $("#EmployeeId_EDIT").val(dataRecord.EmployeeId);
@@ -227,7 +229,9 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
                     return false;
                 }
             });
-            $('#jqxgrid').jqxGrid({ toolbarheight: 120});
+            $('#jqxgrid').jqxGrid({ toolbarheight: 
+            120.0
+            });
             // initialize the popup edit window and buttons.
             $("#popupWindow_EDIT").jqxWindow({ width: 350, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel_EDIT"), modalOpacity: 0.01 });
             $("#Cancel_EDIT").jqxButton({ theme: theme });
@@ -237,8 +241,7 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
                 if (editrow >= 0) {
                     var row = 
 //******** EDIT_ROW_CONTENT_SAVE START*****************//
-{Id:$("#Id_EDIT").val()
-,ProtocolNumber:$("#ProtocolNumber_EDIT").val()
+{ProtocolNumber:$("#ProtocolNumber_EDIT").val()
 ,TypeId:$("#TypeId_EDIT").val()
 ,EmployeeId:$("#EmployeeId_EDIT").val()
 ,CreationTime:$("#CreationTime_EDIT").val()
@@ -246,6 +249,8 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
 };
 //********EDIT_ROW_CONTENT_SAVE END******************//
                     var rowid = $("#jqxgrid").jqxGrid('getrowid', editrow);
+                    var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', rowid);
+                    row['Id'] = dataRecord['Id']
                     $('#jqxgrid').jqxGrid('updaterow', rowid, row);
                     $("#popupWindow_EDIT").jqxWindow('hide');
                 }
@@ -257,12 +262,9 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
             $("#Save_ADD").click(function () {
                var row = 
 //******** ADD_ROW_CONTENT_SAVE START*****************//
-{Id:$("#Id_ADD").val()
-,ProtocolNumber:$("#ProtocolNumber_ADD").val()
-,TypeId:$("#TypeId_ADD").val()
-,EmployeeId:$("#EmployeeId_ADD").val()
-,CreationTime:$("#CreationTime_ADD").val()
-,IsDelete:$("#IsDelete_ADD").val()
+{ProtocolNumber:$("#ProtocolNumber_ADD").val()
+,TypeId:sourceTypeId[$("#TypeId_ADD").val()]
+,EmployeeId:'0001'
 }
 //******** ADD_ROW_CONTENT_SAVE START*****************//
                var datarow = row;

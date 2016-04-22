@@ -53,24 +53,21 @@ def update():
 
 def insert():
     table_name = 'ProtocolCode'
-    rowData = {'TypeId': 111111155,
-               'EmployeeId': 700,
-               'ProtocolNumber': 111111111, 'IsDelete': True}
-    if table_name == 'ProtocolCode':
-        id = db['ProtocolCode'].insert(**rowData)
-        row = db(db['ProtocolCode']._id ==id).select().first()
-#         dic_row = {'Id':row.id,'ProtocolNumber':row.ProtocolNumber,'TypeId':row.TypeId,
-#                         'EmployeeId':row.EmployeeId,'CreationTime':row.CreationTime.strftime("%y/%d/%m %H:%M"),'IsDelete':row.IsDelete}
-        print row.keys()
-        dict_row = {}
-        for obj in  row.values():
-            print type(obj)
-        for key in row.keys():
-            if isinstance(row[key], DAL) == False:
-                dict_row[key] = unicode(row[key])
-        print dict_row
-        db.commit()
-#     jsondata = request.
-    return dict()
+    rowData = {
+               'TypeId': '111111155',
+               'EmployeeId': '700',
+               'ProtocolNumber': '111111111', 'IsDelete': 'True'}
+    id = db[table_name].insert(**rowData)
+    row = db(db[table_name]._id ==id).select().first()
+    dict_row = {}
+#     for obj in  row.values():
+#         print type(obj)
+    for key in row.keys():
+        if (key== 'update_record' or key== 'delete_record')==False:
+            dict_row[key] = unicode(row[key])
+    db.commit()
+    result= json.dumps(dict_row,ensure_ascii=False)
+    print result
+    return result
 
 insert()

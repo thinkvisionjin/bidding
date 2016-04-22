@@ -16,7 +16,7 @@ from py2neo.ext.geoff.xmlutil import jsonify
 
 def getTableColumns(tableName): 
     #return dictionary array [{name:"column names",type="column type"},{name:"column names",type="column type"},{name:"column names",type="column type"}]
-    connstr= u'driver={SQL Server};server=localhost;uid;pwd=1;DATABASE=bidding;Trusted_Connection=yes;unicode_results=True;CHARSET=UTF8'
+    connstr= u'driver={SQL Server};server=localhost;uid;pwd=1;DATABASE=master;Trusted_Connection=yes;unicode_results=True;CHARSET=UTF8'
     conn = pyodbc.connect(connstr,unicode_results=True)
     cursor=conn.cursor()
     strm= 'select a.name as columnname,c.name typename,cast(d.value as nvarchar(128)) as columnlabel\
@@ -35,10 +35,10 @@ def getTableColumns(tableName):
     columnTypes=[]
     columnLabels=[]
     for r1 in rs:
-        columnNames.append(r1[0]) 
-        columnTypes.append(r1[1])
-        print r1[2]
-        columnLabels.append(r1[2])
+        if r1[0]!='Id':
+            columnNames.append(r1[0]) 
+            columnTypes.append(r1[1])
+            columnLabels.append(r1[2])
     d = {'table': tableName,'columns':columnNames,'types':columnTypes,'labels':columnLabels}
     print jsonify(d,ensure_ascii=False)
     return  jsonify(d,ensure_ascii=False)
@@ -109,6 +109,8 @@ def generateJSFile(tableColumns):
             line = line.replace('{{=TABLE_NAME}}',tableColumns['table'])
         if re.search('{{=DATA_FIELDS}}', line)!=None:
             datafields = []
+            #为数据表增加id字段，用于删除、更新操作
+            datafields.append({'name':'Id','type':'string'})
             for i in range(len(tableColumns['columns'])):
                 datafields.append({'name':tableColumns['columns'][i],'type':'string'})
             line = line.replace('{{=DATA_FIELDS}}',jsonify(datafields))
@@ -122,6 +124,8 @@ def generateJSFile(tableColumns):
             line = line.replace('{{=INIT_INPUT_FIELDS}}',init_input_fields)
         if re.search('{{=COLUMNS_CONTENT}}', line)!=None:
             column_content = []
+            #为数据表增加id字段，用于删除、更新操作
+            column_content.append({'text':'序号','datafield':'Id'})
             for i in range(len(tableColumns['columns'])):
                 column_content.append({'text':tableColumns['labels'][i],'datafield':tableColumns['columns'][i]})
             line = line.replace('{{=COLUMNS_CONTENT}}',jsonify(column_content))
@@ -157,7 +161,7 @@ def generateFiles(tableName):
     print "Generating " +tableName+ ".js"
     generateJSFile(tableColumns)
 
-generateFiles("ProjectCode")
+#generateFiles("ProtocolCode")
 #generateFiles("Projects")Projects
 # tableColumnsJson = getTableColumns('ProtocolCode')
 # tableColumns = json.JSONDecoder().decode(tableColumnsJson)

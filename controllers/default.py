@@ -62,30 +62,34 @@ def insert():
     print 'inserting data**************'
     table_name = request.vars.table
     rowData = request.post_vars
-#     rowData = {'TypeId': 1111111111,
-#                'EmployeeId': 700, 
-#                'CreationTime': '01/01/16 20:08', 
-#                'ProtocolNumber': 111111111, 'IsDelete': True}
     print rowData
-    if table_name == 'ProtocolCode':
-        id = db[table_name].insert(**rowData)
-        row = db(db[table_name]._id ==id).select().first()
-        dic_row = {'Id':row.id,'ProtocolNumber':row.ProtocolNumber,'TypeId':row.TypeId,
-                        'EmployeeId':row.EmployeeId,'CreationTime':row.CreationTime.strftime("%d/%m/%y %H:%M"),'IsDelete':row.IsDelete}
-        result = json.dumps(dic_row,ensure_ascii=False)
-        print result
-        db.commit()
+    id = db[table_name].insert(**rowData)
+    print id 
+    row = db(db[table_name]._id ==id).select().first()
+    dict_row = {}
+    for key in row.keys():
+        if (key== 'update_record' or key== 'delete_record'):
+            print 'ignore some keys'
+        elif key=='id':
+            dict_row['Id']  = row[key]
+        else:
+            if isinstance(row[key], bool):
+                dict_row[key] = row[key]
+            else:
+                dict_row[key] = unicode(row[key])
+    db.commit()
+    result= json.dumps(dict_row,ensure_ascii=False)
+    print result
     return result
 
 def delete():
     print 'deleting row**************'
     table_name = request.vars.table
     id = request.post_vars['Id']
-    if table_name == 'ProtocolCode':
-        row = db(db['ProtocolCode']._id ==id).select().first()
-        print row
-        db(db['ProtocolCode']._id == id).delete()
-        db.commit()
+    row = db(db[table_name]._id ==id).select().first()
+    print row
+    db(db[table_name]._id == id).delete()
+    db.commit()
     return dict(table=table_name)
 
 def update():
@@ -93,30 +97,36 @@ def update():
     table_name = request.vars.table
     if table_name == 'ProtocolCode':
         print request.post_vars   
-        id = request.post_vars['Id']
+        row_data = request.post_vars
+        id = row_data['Id']
         print id
-        db(db['ProtocolCode']._id == id).update(**{'TypeId':request.post_vars['TypeId']})
-        db(db['ProtocolCode']._id == id).update(**{'EmployeeId':request.post_vars['EmployeeId']})
-        db(db['ProtocolCode']._id == id).update(**{'CreationTime':request.post_vars['CreationTime']})
-        db(db['ProtocolCode']._id == id).update(**{'ProtocolNumber':request.post_vars['ProtocolNumber']})
-        db(db['ProtocolCode']._id == id).update(**{'IsDelete':request.post_vars['IsDelete']})
-        row = db(db['ProtocolCode']._id ==id).select().first()
-        print row
+        for key in row_data:
+            if key!='Id':
+                print key
+                db(db[table_name]._id == id).update(**{key:request.post_vars[key]})
+                print '****'
+        row = db(db[table_name]._id ==id).select().first()
         db.commit()
     return dict(table=table_name)
 
 def select():
     print 'selecting rows**************'
     table_name = request.vars.table
-    if table_name == 'ProtocolCode':
-        dic_rows = []
-        for row in db().select(db.ProtocolCode.ALL):
-            print row
-            dic_row = {'Id':row.id,'ProtocolNumber':row.ProtocolNumber,'TypeId':row.TypeId,
-                        'EmployeeId':row.EmployeeId,'CreationTime':row.CreationTime.strftime("%d/%m/%y %H:%M"),'IsDelete':row.IsDelete}
-            dic_rows.append(dic_row)
-    #AUTO-GENERATING#
-    
+    dic_rows = []
+    for row in db().select(db.ProtocolCode.ALL):
+        print row
+        dict_row = {}
+        for key in row.keys():
+            if (key== 'update_record' or key== 'delete_record'):
+                print 'ignore some keys'
+            elif key=='id':
+                dict_row['Id']  = row[key]
+            else:
+                if isinstance(row[key], bool):
+                    dict_row[key] = row[key]
+                else:
+                    dict_row[key] = unicode(row[key])
+        dic_rows.append(dict_row)
     return json.dumps(dic_rows,ensure_ascii=False)
 
 ###############业务处理页面################################
@@ -124,5 +134,3 @@ def select():
 def ProtocolCode():
     return dict();
 
-def ProjectCode():
-    return dict();

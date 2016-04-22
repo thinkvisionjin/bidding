@@ -182,6 +182,8 @@ $(document).ready(function () {
 {{=EDIT_ROW_CONTENT_SAVE}};
 //********EDIT_ROW_CONTENT_SAVE END******************//
                     var rowid = $("#jqxgrid").jqxGrid('getrowid', editrow);
+                    var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', rowid);
+                    row['Id'] = dataRecord['Id']
                     $('#jqxgrid').jqxGrid('updaterow', rowid, row);
                     $("#popupWindow_EDIT").jqxWindow('hide');
                 }
