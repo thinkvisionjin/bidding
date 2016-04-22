@@ -68,11 +68,8 @@ def insert():
 #                'ProtocolNumber': 111111111, 'IsDelete': True}
     print rowData
     if table_name == 'ProtocolCode':
-        id = db.ProtocolCode.insert(TypeId=rowData['TypeId'],
-                                        EmployeeId=rowData['EmployeeId'],
-                                        ProtocolNumber=rowData['ProtocolNumber'],
-                                        IsDelete=rowData['IsDelete'])
-        row = db(db['ProtocolCode']._id ==id).select().first()
+        id = db[table_name].insert(**rowData)
+        row = db(db[table_name]._id ==id).select().first()
         dic_row = {'Id':row.id,'ProtocolNumber':row.ProtocolNumber,'TypeId':row.TypeId,
                         'EmployeeId':row.EmployeeId,'CreationTime':row.CreationTime.strftime("%d/%m/%y %H:%M"),'IsDelete':row.IsDelete}
         result = json.dumps(dic_row,ensure_ascii=False)
@@ -127,5 +124,5 @@ def select():
 def ProtocolCode():
     return dict();
 
-def Projects():
+def ProjectCode():
     return dict();

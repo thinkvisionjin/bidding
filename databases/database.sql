@@ -141,7 +141,8 @@ EXEC sys.sp_addextendedproperty
 
 
 SELECT   *
-FROM   ::fn_listextendedproperty('MS_Description','user','dbo','table','ProtocolCode','column',default)
+FROM   ::fn_listextendedproperty
+('MS_Description','user','dbo','table','ProtocolCode','column',default)
 
 GO
 /****** Object:  Table [dbo].[ProjectStatus]    Script Date: 04/15/2016 17:12:50 ******/
@@ -198,6 +199,48 @@ CREATE TABLE [dbo].[ProjectCode](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'序号' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProjectCode', @level2type=N'COLUMN',@level2name=N'Id'
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'协议编号' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProjectCode', @level2type=N'COLUMN',@level2name=N'ProtocolId'
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'项目编号' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProjectCode', @level2type=N'COLUMN',@level2name=N'ProjectNumber'
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'员工编号' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProjectCode', @level2type=N'COLUMN',@level2name=N'EmployeeId'
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'类型编号' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProjectCode', @level2type=N'COLUMN',@level2name=N'ProjectTypeId'
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'创建时间' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProjectCode', @level2type=N'COLUMN',@level2name=N'CreationTime'
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'选项1' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProjectCode', @level2type=N'COLUMN',@level2name=N'Option1'
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'选项2' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProjectCode', @level2type=N'COLUMN',@level2name=N'Option2'
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'选项3' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProjectCode', @level2type=N'COLUMN',@level2name=N'Option3'
+EXEC sys.sp_addextendedproperty 
+@name=N'MS_Description', @value=N'是否已删除' , 
+@level0type=N'SCHEMA',@level0name=N'dbo', 
+@level1type=N'TABLE',@level1name=N'ProjectCode', @level2type=N'COLUMN',@level2name=N'IsDelete'
+
 /****** Object:  Table [dbo].[Project]    Script Date: 04/15/2016 17:12:50 ******/
 SET ANSI_NULLS ON
 GO

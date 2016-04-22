@@ -5,6 +5,7 @@ import pyodbc
 #02.设置字符串缺省的编码，如果不这样的话str无法使用
 import sys
 import json
+from datetime import datetime
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -52,23 +53,24 @@ def update():
 
 def insert():
     table_name = 'ProtocolCode'
-    rowData = {'TypeId': 1111111111,
-               'EmployeeId': 700, 
-               'CreationTime': '01/01/16 20:08', 
+    rowData = {'TypeId': 111111155,
+               'EmployeeId': 700,
                'ProtocolNumber': 111111111, 'IsDelete': True}
     if table_name == 'ProtocolCode':
-#         id = db.ProtocolCode.insert(TypeId=rowData['TypeId'],
-#                                     EmployeeId=rowData['EmployeeId'],
-#                                     ProtocolNumber=rowData['ProtocolNumber'],
-#                                     IsDelete=rowData['IsDelete'])
-        id = db.ProtocolCode.insert(**rowData)
+        id = db['ProtocolCode'].insert(**rowData)
         row = db(db['ProtocolCode']._id ==id).select().first()
-        dic_row = {'Id':row.id,'ProtocolNumber':row.ProtocolNumber,'TypeId':row.TypeId,
-                        'EmployeeId':row.EmployeeId,'CreationTime':row.CreationTime.strftime("%d/%m/%y %H:%M"),'IsDelete':row.IsDelete}
-        result = json.dumps(dic_row,ensure_ascii=False)
-        print result
+#         dic_row = {'Id':row.id,'ProtocolNumber':row.ProtocolNumber,'TypeId':row.TypeId,
+#                         'EmployeeId':row.EmployeeId,'CreationTime':row.CreationTime.strftime("%y/%d/%m %H:%M"),'IsDelete':row.IsDelete}
+        print row.keys()
+        dict_row = {}
+        for obj in  row.values():
+            print type(obj)
+        for key in row.keys():
+            if isinstance(row[key], DAL) == False:
+                dict_row[key] = unicode(row[key])
+        print dict_row
         db.commit()
 #     jsondata = request.
-    return result
+    return dict()
 
 insert()

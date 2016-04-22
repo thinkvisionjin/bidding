@@ -20,7 +20,7 @@ function getDemoTheme() {
         theme = theme.substring(0, theme.indexOf(')'));
     }
 
-    var url = "../../jqwidgets/styles/jqx." + theme + '.css';
+    var url = "/bidding/static/css/vendor/jqwidgets/styles/jqx." + theme + '.css';
     if (window.location.href.toString().indexOf("angularjs") >= 0) {
         var loc = window.location.href.toString();
         if (loc.indexOf('button') >= 0 ||
@@ -34,7 +34,7 @@ function getDemoTheme() {
         loc.indexOf('calendar') >= 0 ||
         loc.indexOf('datetimeinput') >= 0 ||
         (loc.indexOf('chart') >= 0 && loc.indexOf('bulletchart') == -1)) {
-            url = "../../../jqwidgets/styles/jqx." + theme + '.css';
+            url = "/bidding/static/css/vendor/jqwidgets/styles/jqx." + theme + '.css';
         }
     }
 
