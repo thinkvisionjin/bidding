@@ -26,7 +26,7 @@ $(document).ready(function () {
                 	var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', rowid);
                 	$.post("/bidding/default/delete?table=ProtocolCode",dataRecord,function(result){
                		 alert("操作成功！");
-               	 });
+               	 	});
                     commit(true);
                 },
                 addrow: function (rowid, rowdata, position, commit) {
@@ -200,7 +200,12 @@ $('#TypeId_ADD').on('select', function (event) {
                     });
                     // reload grid data.
                     reloadButton.click(function (event) {
-                        $("#jqxgrid").jqxGrid({ source:dataAdapter });
+                    	searchContent = "";
+                    	$.post("/bidding/default/select?table=ProtocolCode",searchContent,function(result){
+                    		source['localdata'] = result
+                    		dataAdapter = new $.jqx.dataAdapter(source)
+                        	$("#jqxgrid").jqxGrid({ source:dataAdapter });
+                      	});
                     });
                 },
                 showtoolbar: true,
@@ -246,10 +251,14 @@ $('#TypeId_ADD').on('select', function (event) {
                     	$("#jqxgrid").jqxGrid('exportdata', 'xls', 'jqxGrid'); 
                     });
                     searchButton.click(function (event) {
-                    	var data_url = "/bidding/default/select?table=ProtocolCode"
-                    	source['url'] = data_url
-                        dataAdapter = new $.jqx.dataAdapter(source)
-                    	$("#jqxgrid").jqxGrid({ source:dataAdapter });
+                    	searchContent = {'TypeId':'0'}
+                    	$.post("/bidding/default/select?table=ProtocolCode",searchContent,function(result){
+                    		source['url'] = ''
+                    		source['localdata'] = result
+                    		dataAdapter = new $.jqx.dataAdapter(source)
+                        	$("#jqxgrid").jqxGrid({ source:dataAdapter });
+                      	});
+             
                     });
                 },
             });

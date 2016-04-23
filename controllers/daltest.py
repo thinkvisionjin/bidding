@@ -73,8 +73,10 @@ def insert():
 def select():
     print 'selecting rows**************'
     table_name = table_name = 'ProtocolCode'
+    column_name = "TypeId"
     dic_rows = []
-    for row in db().select(db[table_name].ALL):
+    myquery = column_name +'=0'
+    for row in db(myquery).select(db[table_name].ALL):
         print row
         dict_row = {}
         for key in row.keys():

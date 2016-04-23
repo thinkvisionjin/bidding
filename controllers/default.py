@@ -112,13 +112,21 @@ def update():
 def select():
     print 'selecting rows**************'
     table_name = request.vars.table
+    myqueryfields =  request.post_vars
+    for key in myqueryfields.keys():
+        print key,myqueryfields[key]
+    myquery = "";
+    print myqueryfields
+    if len(myqueryfields)!=0:
+        myquery = 'TypeId=0'
+    
     dic_rows = []
-    for row in db().select(db[table_name].ALL):
+    for row in db(myquery).select(db[table_name].ALL):
         print row
         dict_row = {}
         for key in row.keys():
             if (key== 'update_record' or key== 'delete_record'):
-                print 'ignore some keys'
+                print 'ignore some keys:' + key
             elif key=='id':
                 dict_row['Id']  = row[key]
             else:
