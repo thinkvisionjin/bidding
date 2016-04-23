@@ -2,9 +2,9 @@ $(document).ready(function () {
             // prepare the data
             var datafields_content =  
 //********DATAFIELDS START******************//
-[{"name":"Id","type":"string"},{"name":"ProtocolNumber","type":"string"},{"name":"TypeId","type":"string"},{"name":"EmployeeId","type":"string"},{"name":"CreationTime","type":"string"},{"name":"IsDelete","type":"string"}]
+[{"name":"Id","type":"string"},{"name":"ProjectId","type":"string"},{"name":"PackageNumber","type":"string"},{"name":"PackageName","type":"string"},{"name":"StateId","type":"string"},{"name":"SigningDate","type":"string"},{"name":"MakeOutDate","type":"string"},{"name":"EntrustMoney","type":"string"},{"name":"WinningMoney","type":"string"},{"name":"WinningCompany","type":"string"},{"name":"ChargeRate","type":"string"},{"name":"Note","type":"string"},{"name":"CreationDate","type":"string"},{"name":"IsDelete","type":"string"}]
 //********DATAFIELDS END******************//
-            var data_url = "/bidding/default/select?table=ProtocolCode"
+            var data_url = "/bidding/default/select?table=ProjectPackage"
             var source =
             {
                 url: data_url,
@@ -14,7 +14,7 @@ $(document).ready(function () {
                     // synchronize with the server - send update command
                     // call commit with parameter true if the synchronization with the server is successful 
                     // and with parameter false if the synchronization failed.
-                $.post("/bidding/default/update?table=ProtocolCode",rowdata,function(result){
+                $.post("/bidding/default/update?table=ProjectPackage",rowdata,function(result){
                 		 alert("操作成功！");
                 	 });
                     commit(true);
@@ -24,9 +24,9 @@ $(document).ready(function () {
                     // call commit with parameter true if the synchronization with the server is successful 
                     // and with parameter false if the synchronization failed.
                 	var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', rowid);
-                	$.post("/bidding/default/delete?table=ProtocolCode",dataRecord,function(result){
+                	$.post("/bidding/default/delete?table=ProjectPackage",dataRecord,function(result){
                		 alert("操作成功！");
-               	 	});
+               	 });
                     commit(true);
                 },
                 addrow: function (rowid, rowdata, position, commit) {
@@ -39,49 +39,123 @@ $(document).ready(function () {
             };
             // initialize the input fields.
 //********INIT_INPUT_FIELDS START******************//
-
-ProtocolNumber_SEARCH()
-
-ProtocolType_SEARCH()
-
-EmployeeId_SEARCH();
-
-$("#CreationTime_SEARCH").jqxDateTimeInput({ formatString: "F", showTimeButton: true, width: '200px', height: '25px' });
-
-$("#IsDelete_SEARCH").jqxCheckBox({ width: 120, height: 25, checked: true});
-            $("#IsDelete_SEARCH").on('change', function (event) {
-                var checked = event.args.checked;
-                if (checked) {
-                   
-                }
-                else {
-                    
-                }
-            });
-            
-$("#ProtocolNumber_EDIT").addClass('jqx-input')
-$("#ProtocolNumber_EDIT").width(150)
-$("#ProtocolNumber_EDIT").height(23)
-$("#TypeId_EDIT").addClass('jqx-input')
-$("#TypeId_EDIT").width(150)
-$("#TypeId_EDIT").height(23)
-$("#EmployeeId_EDIT").addClass('jqx-input')
-$("#EmployeeId_EDIT").width(150)
-$("#EmployeeId_EDIT").height(23)
-$("#CreationTime_EDIT").addClass('jqx-input')
-$("#CreationTime_EDIT").width(150)
-$("#CreationTime_EDIT").height(23)
+$("#ProjectId_SEARCH").addClass('jqx-input')
+$("#ProjectId_SEARCH").width(150)
+$("#ProjectId_SEARCH").height(23)
+$("#PackageNumber_SEARCH").addClass('jqx-input')
+$("#PackageNumber_SEARCH").width(150)
+$("#PackageNumber_SEARCH").height(23)
+$("#PackageName_SEARCH").addClass('jqx-input')
+$("#PackageName_SEARCH").width(150)
+$("#PackageName_SEARCH").height(23)
+$("#StateId_SEARCH").addClass('jqx-input')
+$("#StateId_SEARCH").width(150)
+$("#StateId_SEARCH").height(23)
+$("#SigningDate_SEARCH").addClass('jqx-input')
+$("#SigningDate_SEARCH").width(150)
+$("#SigningDate_SEARCH").height(23)
+$("#MakeOutDate_SEARCH").addClass('jqx-input')
+$("#MakeOutDate_SEARCH").width(150)
+$("#MakeOutDate_SEARCH").height(23)
+$("#EntrustMoney_SEARCH").addClass('jqx-input')
+$("#EntrustMoney_SEARCH").width(150)
+$("#EntrustMoney_SEARCH").height(23)
+$("#WinningMoney_SEARCH").addClass('jqx-input')
+$("#WinningMoney_SEARCH").width(150)
+$("#WinningMoney_SEARCH").height(23)
+$("#WinningCompany_SEARCH").addClass('jqx-input')
+$("#WinningCompany_SEARCH").width(150)
+$("#WinningCompany_SEARCH").height(23)
+$("#ChargeRate_SEARCH").addClass('jqx-input')
+$("#ChargeRate_SEARCH").width(150)
+$("#ChargeRate_SEARCH").height(23)
+$("#Note_SEARCH").addClass('jqx-input')
+$("#Note_SEARCH").width(150)
+$("#Note_SEARCH").height(23)
+$("#CreationDate_SEARCH").addClass('jqx-input')
+$("#CreationDate_SEARCH").width(150)
+$("#CreationDate_SEARCH").height(23)
+$("#IsDelete_SEARCH").addClass('jqx-input')
+$("#IsDelete_SEARCH").width(150)
+$("#IsDelete_SEARCH").height(23)
+$("#ProjectId_EDIT").addClass('jqx-input')
+$("#ProjectId_EDIT").width(150)
+$("#ProjectId_EDIT").height(23)
+$("#PackageNumber_EDIT").addClass('jqx-input')
+$("#PackageNumber_EDIT").width(150)
+$("#PackageNumber_EDIT").height(23)
+$("#PackageName_EDIT").addClass('jqx-input')
+$("#PackageName_EDIT").width(150)
+$("#PackageName_EDIT").height(23)
+$("#StateId_EDIT").addClass('jqx-input')
+$("#StateId_EDIT").width(150)
+$("#StateId_EDIT").height(23)
+$("#SigningDate_EDIT").addClass('jqx-input')
+$("#SigningDate_EDIT").width(150)
+$("#SigningDate_EDIT").height(23)
+$("#MakeOutDate_EDIT").addClass('jqx-input')
+$("#MakeOutDate_EDIT").width(150)
+$("#MakeOutDate_EDIT").height(23)
+$("#EntrustMoney_EDIT").addClass('jqx-input')
+$("#EntrustMoney_EDIT").width(150)
+$("#EntrustMoney_EDIT").height(23)
+$("#WinningMoney_EDIT").addClass('jqx-input')
+$("#WinningMoney_EDIT").width(150)
+$("#WinningMoney_EDIT").height(23)
+$("#WinningCompany_EDIT").addClass('jqx-input')
+$("#WinningCompany_EDIT").width(150)
+$("#WinningCompany_EDIT").height(23)
+$("#ChargeRate_EDIT").addClass('jqx-input')
+$("#ChargeRate_EDIT").width(150)
+$("#ChargeRate_EDIT").height(23)
+$("#Note_EDIT").addClass('jqx-input')
+$("#Note_EDIT").width(150)
+$("#Note_EDIT").height(23)
+$("#CreationDate_EDIT").addClass('jqx-input')
+$("#CreationDate_EDIT").width(150)
+$("#CreationDate_EDIT").height(23)
 $("#IsDelete_EDIT").addClass('jqx-input')
 $("#IsDelete_EDIT").width(150)
 $("#IsDelete_EDIT").height(23)
-
-ProtocolType_ADD()
-$("#ProtocolNumber_ADD").addClass('jqx-input')
-$("#ProtocolNumber_ADD").width(200)
-$("#ProtocolNumber_ADD").height(23)
-$('#ProtocolNumber_ADD').val('SPMCEC-160001')
-
-
+$("#ProjectId_ADD").addClass('jqx-input')
+$("#ProjectId_ADD").width(150)
+$("#ProjectId_ADD").height(23)
+$("#PackageNumber_ADD").addClass('jqx-input')
+$("#PackageNumber_ADD").width(150)
+$("#PackageNumber_ADD").height(23)
+$("#PackageName_ADD").addClass('jqx-input')
+$("#PackageName_ADD").width(150)
+$("#PackageName_ADD").height(23)
+$("#StateId_ADD").addClass('jqx-input')
+$("#StateId_ADD").width(150)
+$("#StateId_ADD").height(23)
+$("#SigningDate_ADD").addClass('jqx-input')
+$("#SigningDate_ADD").width(150)
+$("#SigningDate_ADD").height(23)
+$("#MakeOutDate_ADD").addClass('jqx-input')
+$("#MakeOutDate_ADD").width(150)
+$("#MakeOutDate_ADD").height(23)
+$("#EntrustMoney_ADD").addClass('jqx-input')
+$("#EntrustMoney_ADD").width(150)
+$("#EntrustMoney_ADD").height(23)
+$("#WinningMoney_ADD").addClass('jqx-input')
+$("#WinningMoney_ADD").width(150)
+$("#WinningMoney_ADD").height(23)
+$("#WinningCompany_ADD").addClass('jqx-input')
+$("#WinningCompany_ADD").width(150)
+$("#WinningCompany_ADD").height(23)
+$("#ChargeRate_ADD").addClass('jqx-input')
+$("#ChargeRate_ADD").width(150)
+$("#ChargeRate_ADD").height(23)
+$("#Note_ADD").addClass('jqx-input')
+$("#Note_ADD").width(150)
+$("#Note_ADD").height(23)
+$("#CreationDate_ADD").addClass('jqx-input')
+$("#CreationDate_ADD").width(150)
+$("#CreationDate_ADD").height(23)
+$("#IsDelete_ADD").addClass('jqx-input')
+$("#IsDelete_ADD").width(150)
+$("#IsDelete_ADD").height(23)
 
 //********INIT_INPUT_FIELDS END******************//
             var dataAdapter = new $.jqx.dataAdapter(source);
@@ -89,11 +163,7 @@ $('#ProtocolNumber_ADD').val('SPMCEC-160001')
             // initialize jqxGrid
             var columns_content  = 
 //********COLUMNS_CONTENT START******************//
-[{"datafield":"Id","text":"\u5e8f\u53f7"},
- {"datafield":"ProtocolNumber","text":"\u534f\u8bae\u7f16\u53f7"},
- {"datafield":"TypeId","text":"\u7c7b\u578b\u7f16\u53f7"},
- {"datafield":"EmployeeId","text":"\u5458\u5de5\u7f16\u53f7"},
- {"datafield":"CreationTime","text":"\u521b\u5efa\u65e5\u671f"}]            
+[{"datafield":"Id","text":"\u5e8f\u53f7"},{"datafield":"ProjectId","text":"\u9879\u76ee\u5e8f\u53f7"},{"datafield":"PackageNumber","text":"\u5305\u7f16\u53f7"},{"datafield":"PackageName","text":"\u5305\u540d\u79f0"},{"datafield":"StateId","text":"\u5305\u72b6\u6001"},{"datafield":"SigningDate","text":"\u7b7e\u7ea6\u65e5\u671f"},{"datafield":"MakeOutDate","text":"\u5f00\u7968\u65e5\u671f"},{"datafield":"EntrustMoney","text":"\u59d4\u6258\u91d1\u989d"},{"datafield":"WinningMoney","text":"\u4e2d\u6807\u91d1\u989d"},{"datafield":"WinningCompany","text":"\u4e2d\u6807\u5355\u4f4d"},{"datafield":"ChargeRate","text":"\u670d\u52a1\u8d39\u7387"},{"datafield":"Note","text":"\u5305\u5907\u6ce8"},{"datafield":"CreationDate","text":"\u521b\u5efa\u65e5\u671f"},{"datafield":"IsDelete","text":"\u662f\u5426\u5df2\u5220\u9664"}]            
 //********COLUMNS_CONTENT  END******************//
             $("#jqxgrid").jqxGrid(
             {
@@ -129,12 +199,7 @@ $('#ProtocolNumber_ADD').val('SPMCEC-160001')
                     });
                     // reload grid data.
                     reloadButton.click(function (event) {
-                    	searchContent = "";
-                    	$.post("/bidding/default/select?table=ProtocolCode",searchContent,function(result){
-                    		source['localdata'] = result
-                    		dataAdapter = new $.jqx.dataAdapter(source)
-                        	$("#jqxgrid").jqxGrid({ source:dataAdapter });
-                      	});
+                        $("#jqxgrid").jqxGrid({ source:dataAdapter });
                     });
                 },
                 showtoolbar: true,
@@ -180,14 +245,7 @@ $('#ProtocolNumber_ADD').val('SPMCEC-160001')
                     	$("#jqxgrid").jqxGrid('exportdata', 'xls', 'jqxGrid'); 
                     });
                     searchButton.click(function (event) {
-                    	searchContent = {'TypeId':'0'}
-                    	$.post("/bidding/default/select?table=ProtocolCode",searchContent,function(result){
-                    		source['url'] = ''
-                    		source['localdata'] = result
-                    		dataAdapter = new $.jqx.dataAdapter(source)
-                        	$("#jqxgrid").jqxGrid({ source:dataAdapter });
-                      	});
-             
+                    	
                     });
                 },
             });
@@ -207,10 +265,18 @@ $('#ProtocolNumber_ADD').val('SPMCEC-160001')
                     // get the clicked row's data and initialize the input fields.
                     var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', editrow);
 //********=GET_EDIT_ROW_DATA START******************//
-$("#ProtocolNumber_EDIT").val(dataRecord.ProtocolNumber);
-$("#TypeId_EDIT").val(dataRecord.TypeId);
-$("#EmployeeId_EDIT").val(dataRecord.EmployeeId);
-$("#CreationTime_EDIT").val(dataRecord.CreationTime);
+$("#ProjectId_EDIT").val(dataRecord.ProjectId);
+$("#PackageNumber_EDIT").val(dataRecord.PackageNumber);
+$("#PackageName_EDIT").val(dataRecord.PackageName);
+$("#StateId_EDIT").val(dataRecord.StateId);
+$("#SigningDate_EDIT").val(dataRecord.SigningDate);
+$("#MakeOutDate_EDIT").val(dataRecord.MakeOutDate);
+$("#EntrustMoney_EDIT").val(dataRecord.EntrustMoney);
+$("#WinningMoney_EDIT").val(dataRecord.WinningMoney);
+$("#WinningCompany_EDIT").val(dataRecord.WinningCompany);
+$("#ChargeRate_EDIT").val(dataRecord.ChargeRate);
+$("#Note_EDIT").val(dataRecord.Note);
+$("#CreationDate_EDIT").val(dataRecord.CreationDate);
 $("#IsDelete_EDIT").val(dataRecord.IsDelete);
 
 //********GET_EDIT_ROW_DATA END******************//
@@ -232,7 +298,7 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
                 }
             });
             $('#jqxgrid').jqxGrid({ toolbarheight: 
-            125.0
+            300.0
             });
             // initialize the popup edit window and buttons.
             $("#popupWindow_EDIT").jqxWindow({ width: 350, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel_EDIT"), modalOpacity: 0.01 });
@@ -243,10 +309,18 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
                 if (editrow >= 0) {
                     var row = 
 //******** EDIT_ROW_CONTENT_SAVE START*****************//
-{ProtocolNumber:$("#ProtocolNumber_EDIT").val()
-,TypeId:$("#TypeId_EDIT").val()
-,EmployeeId:$("#EmployeeId_EDIT").val()
-,CreationTime:$("#CreationTime_EDIT").val()
+{ProjectId:$("#ProjectId_EDIT").val()
+,PackageNumber:$("#PackageNumber_EDIT").val()
+,PackageName:$("#PackageName_EDIT").val()
+,StateId:$("#StateId_EDIT").val()
+,SigningDate:$("#SigningDate_EDIT").val()
+,MakeOutDate:$("#MakeOutDate_EDIT").val()
+,EntrustMoney:$("#EntrustMoney_EDIT").val()
+,WinningMoney:$("#WinningMoney_EDIT").val()
+,WinningCompany:$("#WinningCompany_EDIT").val()
+,ChargeRate:$("#ChargeRate_EDIT").val()
+,Note:$("#Note_EDIT").val()
+,CreationDate:$("#CreationDate_EDIT").val()
 ,IsDelete:$("#IsDelete_EDIT").val()
 };
 //********EDIT_ROW_CONTENT_SAVE END******************//
@@ -264,13 +338,23 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
             $("#Save_ADD").click(function () {
                var row = 
 //******** ADD_ROW_CONTENT_SAVE START*****************//
-{ProtocolNumber:$("#ProtocolNumber_ADD").val()
-,TypeId:$("#TypeId_ADD").val()
-,EmployeeId:'0001'
+{ProjectId:$("#ProjectId_ADD").val()
+,PackageNumber:$("#PackageNumber_ADD").val()
+,PackageName:$("#PackageName_ADD").val()
+,StateId:$("#StateId_ADD").val()
+,SigningDate:$("#SigningDate_ADD").val()
+,MakeOutDate:$("#MakeOutDate_ADD").val()
+,EntrustMoney:$("#EntrustMoney_ADD").val()
+,WinningMoney:$("#WinningMoney_ADD").val()
+,WinningCompany:$("#WinningCompany_ADD").val()
+,ChargeRate:$("#ChargeRate_ADD").val()
+,Note:$("#Note_ADD").val()
+,CreationDate:$("#CreationDate_ADD").val()
+,IsDelete:$("#IsDelete_ADD").val()
 }
 //******** ADD_ROW_CONTENT_SAVE START*****************//
                var datarow = row;
-               $.post("/bidding/default/insert?table=ProtocolCode",datarow,function(result){
+               $.post("/bidding/default/insert?table=ProjectPackage",datarow,function(result){
             	   $("#jqxgrid").jqxGrid('addrow', null, result, 'first');
             	},'json');
                $("#popupWindow_ADD").jqxWindow('hide');

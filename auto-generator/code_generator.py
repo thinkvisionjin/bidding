@@ -163,7 +163,9 @@ def generateFiles(tableName):
 
 
 
-generateFiles("Project")
+#generateFiles("Project")
+#generateFiles("ProjectPackage")
+#generateFiles("ProjectPackage")
 #generateFiles("ProtocolCode")
 #generateFiles("ProjectCode")
 # tableColumnsJson = getTableColumns('ProtocolCode')

@@ -28,6 +28,7 @@
 	<script src="{{=URL('static','js/vendor/jqwidgets/jqxcheckbox.js')}}"	type="text/javascript"></script>
 	<script src="{{=URL('static','js/vendor/jqwidgets/demos.js')}}"	type="text/javascript"></script>
 	<script src="{{=URL('static','js/vendor/jqwidgets/generatedata.js')}}"	type="text/javascript"></script>
+	<script src="{{=URL('static','js/commonJson.js')}}"	type="text/javascript"></script>
     <script src="{{=URL('static','js/ProtocolCode.js')}}"	type="text/javascript"></script>
 </head>
 <body class='default'>
@@ -46,14 +47,15 @@
 <td align="left"><p>协议编号</p></td>
 <td align="left"><input id="ProtocolNumber_SEARCH" /></td>
 <td align="left"><p>协议类型</p></td>
-<td align="left"><div id="TypeId_SEARCH" /></td>
+<td align="left"><div align="left" id="TypeId_SEARCH"/></td>
 <td align="left"><p>员工姓名</p></td>
 <td align="left"><input id="EmployeeId_SEARCH" /></td>
 </tr>
 <tr>
 <td align="left"><p>创建日期</p></td>
 <td align="left"><div id="CreationTime_SEARCH" /></td>
-<td align="left"><div id="IsDelete_SEARCH"> 包含已删除记录</div></td>
+<td align="left"><p></p></td>
+<td align="left" ><div id="IsDelete_SEARCH"> 包含已删除记录</div></td>
 </tr>
 </table>
        </div>

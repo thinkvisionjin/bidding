@@ -119,8 +119,8 @@ def select():
     print myqueryfields
     if len(myqueryfields)!=0:
         myquery = 'TypeId=0'
-    
     dic_rows = []
+    print table_name
     for row in db(myquery).select(db[table_name].ALL):
         print row
         dict_row = {}
@@ -142,5 +142,9 @@ def select():
 def ProtocolCode():
     return dict();
 def ProjectCode():
+    return dict();
+def Project():
+    return dict();
+def ProjectPackage():
     return dict();
 
