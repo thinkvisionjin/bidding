@@ -137,6 +137,26 @@ $("#ProjectType_ADD").jqxDropDownList(
 $('#ProjectType_ADD').on('select', function (event) {
     var args = event.args;
     var item = $('#ProjectType_ADD').jqxDropDownList('getItem', args.index);
+    if(item.value=='0'){
+    	$('#BiddingSiteStatisticType_ADD').jqxDropDownList('ensureVisible', 0)
+    	$(".SELCTION").hide()
+    	$(".FZC").show()
+    }
+    if(item.value=='1'){
+    	$('#BiddingSiteStatisticType_ADD').jqxDropDownList('ensureVisible', 0)
+    	$(".SELCTION").hide()
+    	$(".ZC").show()
+    }
+    if(item.value=='3'){
+    	$('#BiddingSiteStatisticType_ADD').jqxDropDownList('ensureVisible', 0)
+    	$(".SELCTION").hide()
+    	$(".SM").show()
+    }
+    if(item.value=='4'){
+    	$('#BiddingSiteStatisticType_ADD').jqxDropDownList('ensureVisible', 0)
+    	$(".SELCTION").hide()
+    	$(".GJ").show()
+    }
 });
 
 var managementStylesource = {
@@ -275,6 +295,8 @@ $('#OperationType_ADD').on('select', function (event) {
                     // add new row.
                     addButton.click(function (event) {
                     	$("#popupWindow_ADD").jqxWindow('show');
+                    	$(".SELCTION").hide()
+                    	$(".FZC").show()
                     	$("#ProjectNumber_ADD").val('PCMET-16088888G030')
                     });
                     // delete selected row.

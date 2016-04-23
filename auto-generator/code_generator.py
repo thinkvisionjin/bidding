@@ -161,6 +161,9 @@ def generateFiles(tableName):
     print "Generating " +tableName+ ".js"
     generateJSFile(tableColumns)
 
+
+
+generateFiles("Project")
 #generateFiles("ProtocolCode")
 #generateFiles("ProjectCode")
 # tableColumnsJson = getTableColumns('ProtocolCode')
@@ -169,6 +172,6 @@ def generateFiles(tableName):
 # print generateHTMLTable(tableColumns)
 
 #getTableColumns("ProtocolCode")
-
+#getTableColumns("ProtocolCode")
 
 

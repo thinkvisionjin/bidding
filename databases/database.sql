@@ -288,6 +288,36 @@ CREATE TABLE [dbo].[Project](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'序号' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'Id'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'协议序号' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'ProtocolCodeId'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'项目序号' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'ProjectCodeId'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'项目名称' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'ProjectName'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'采购单位' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'BuyerId'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'所有者' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'EmployeeId'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'协助人' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'Assistant'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'项目来源' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'ProjectSourceId'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'资金来源' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'SourcesOfFundingId'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'项目类型' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'ProjectTypeId'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'管理方式' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'ManagementStyleId'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'拆包数量' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'Package'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'项目状态' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'StateId'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'签约日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'SigningDate'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'开票日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'MakeOutDate'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'委托金额' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'EntrustMoney'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'中标金额' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'WinningMoney'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'中标单位' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'WinningCompany'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'服务费率' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'ChargeRate'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'项目备注' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'Note'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'CreationDate'
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否已删除' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'IsDelete'
+
+
+
+
+
+
+
+
 /****** Object:  Table [dbo].[ProjectType]    Script Date: 04/15/2016 17:12:50 ******/
 SET ANSI_NULLS ON
 GO
