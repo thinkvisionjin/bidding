@@ -204,8 +204,13 @@ function OperationType_SEARCH(){
 	});
 }
 
-/**********For 新增************/
 
+function ProjectName_SEARCH(){
+	
+}
+
+
+/**********For 新增************/
 //协议类型
 function ProtocolType_ADD(){
 	var protocolCodeTypesource = {
@@ -255,6 +260,28 @@ function ProtocolNumber_ADD(){
 	$('#ProtocolNumber_ADD').on('select', function (event) {
 	    var args = event.args;
 	    var item = $('#ProtocolNumber_ADD').jqxDropDownList('getItem', args.index);
+	});
+}
+//协议编号2
+function ProtocolCodeId_ADD(){
+	var protocolNumbersource = {
+			datatype: "json",
+	        datafields: [
+	            { name: 'Id' },
+	            { name: 'ProtocolNumber' },
+	        ],
+	        url: "/bidding/default/select?table=ProtocolCode",
+	        async: true
+	}
+	var protocolNumberdataAdapter = new $.jqx.dataAdapter(protocolNumbersource);
+	$("#ProtocolCodeId_ADD").jqxDropDownList(
+			{ source: protocolNumberdataAdapter, 
+				displayMember: "ProtocolNumber", 
+				valueMember: "Id",
+				selectedIndex: 0, width: '200', height: '23'});
+	$('#ProtocolCodeId_ADD').on('select', function (event) {
+	    var args = event.args;
+	    var item = $('#ProtocolCodeId_ADD').jqxDropDownList('getItem', args.index);
 	});
 }
 

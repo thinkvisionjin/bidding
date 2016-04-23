@@ -81,6 +81,8 @@ $("#CreationDate_SEARCH").height(23)
 $("#IsDelete_SEARCH").addClass('jqx-input')
 $("#IsDelete_SEARCH").width(150)
 $("#IsDelete_SEARCH").height(23)
+
+
 $("#ProtocolCodeId_EDIT").addClass('jqx-input')
 $("#ProtocolCodeId_EDIT").width(150)
 $("#ProtocolCodeId_EDIT").height(23)
@@ -123,9 +125,12 @@ $("#CreationDate_EDIT").height(23)
 $("#IsDelete_EDIT").addClass('jqx-input')
 $("#IsDelete_EDIT").width(150)
 $("#IsDelete_EDIT").height(23)
-$("#ProtocolCodeId_ADD").addClass('jqx-input')
-$("#ProtocolCodeId_ADD").width(200)
-$("#ProtocolCodeId_ADD").height(23)
+
+
+
+ProtocolCodeId_ADD()
+
+
 $("#ProjectCodeId_ADD").addClass('jqx-input')
 $("#ProjectCodeId_ADD").width(200)
 $("#ProjectCodeId_ADD").height(23)
