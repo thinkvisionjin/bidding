@@ -113,7 +113,7 @@ def select():
     print 'selecting rows**************'
     table_name = request.vars.table
     dic_rows = []
-    for row in db().select(db.ProtocolCode.ALL):
+    for row in db().select(db[table_name].ALL):
         print row
         dict_row = {}
         for key in row.keys():
@@ -132,5 +132,7 @@ def select():
 ###############业务处理页面################################
 
 def ProtocolCode():
+    return dict();
+def ProjectCode():
     return dict();
 

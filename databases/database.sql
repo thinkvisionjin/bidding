@@ -122,7 +122,6 @@ EXEC sys.sp_addextendedproperty
 @level1type=N'TABLE',@level1name=N'ProtocolCode', @level2type=N'COLUMN',@level2name=N'TypeID'
 
 
-
 EXEC sys.sp_addextendedproperty 
 @name=N'MS_Description', @value=N'员工编号' , 
 @level0type=N'SCHEMA',@level0name=N'dbo', 
@@ -138,7 +137,21 @@ EXEC sys.sp_addextendedproperty
 @level0type=N'SCHEMA',@level0name=N'dbo', 
 @level1type=N'TABLE',@level1name=N'ProtocolCode', @level2type=N'COLUMN',@level2name=N'IsDelete'
 
+SET QUOTED_IDENTIFIER ON
+GO
 
+CREATE TABLE [dbo].[ProtocolCodeType](
+	[Id] [bigint] identity(1,1) not NULL,
+	[TypeId] [bigint] not NULL,
+	[TypeCode] [nvarchar](50) NULL,
+	[TypeName] [nvarchar](50) NULL
+) ON [PRIMARY]
+
+insert into [ProtocolCodeType] values('0','ZC','政府采购')
+insert into [ProtocolCodeType] values('1','SM','涉密')
+insert into [ProtocolCodeType] values('2','ND','年度')
+insert into [ProtocolCodeType] values('3','QT','其他')
+GO
 
 SELECT   *
 FROM   ::fn_listextendedproperty
@@ -275,6 +288,88 @@ CREATE TABLE [dbo].[Project](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+/****** Object:  Table [dbo].[ProjectType]    Script Date: 04/15/2016 17:12:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ProjectType](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	ProjectTypeID [nvarchar](50) NULL,
+	ProjectTypeCode [nvarchar](50) NULL,
+	ProjectTypeName [nvarchar](50) NULL
+ CONSTRAINT [PK_ProjectType] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY] 
+GO
+
+insert into [ProjectType] values('0','PCMET','非政府采购国内一般项目')
+insert into [ProjectType] values('4','0808','国际项目')
+insert into [ProjectType] values('1','PCMET','政府采购')
+insert into [ProjectType] values('3','PCMET','国内涉密')
+
+/****** Object:  Table [dbo].[ProjectType]    Script Date: 04/15/2016 17:12:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[BiddingSiteStatisticType](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	BiddingSiteStatisticTypeId [nvarchar](50) NULL,
+	BiddingSiteStatisticTypeCode [nvarchar](50) NULL,
+	BiddingSiteStatisticTypeName [nvarchar](50) NULL
+ CONSTRAINT [PK_BiddingSiteStatisticType] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY] 
+GO
+
+insert into BiddingSiteStatisticType values('0','0808','一般机电')
+insert into BiddingSiteStatisticType values('1','0808','政府采购')
+insert into BiddingSiteStatisticType values('2','0808','中央投资')
+/****** Object:  Table [dbo].[ProjectType]    Script Date: 04/15/2016 17:12:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[BiddingCountType](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	BiddingCountTypeId [nvarchar](50) NULL,
+	BiddingCountTypeCode [nvarchar](50) NULL,
+	BiddingCountTypeName [nvarchar](50) NULL
+ CONSTRAINT [PK_BiddingCountType] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY] 
+GO
+
+insert into BiddingCountType values('0','F','首次招标')
+insert into BiddingCountType values('1','R','重新招标')
+/****** Object:  Table [dbo].[ProjectType]    Script Date: 04/15/2016 17:12:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[OperationType](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	OperationTypeId [nvarchar](50) NULL,
+	OperationTypeCode [nvarchar](50) NULL,
+	OperationTypeName [nvarchar](50) NULL
+ CONSTRAINT [PK_OperationType] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY] 
+GO
+
+insert into OperationType values('1','D','线下政采')
+insert into OperationType values('6','S','二期政采')
+
+
 /****** Object:  Table [dbo].[MoneyType]    Script Date: 04/15/2016 17:12:50 ******/
 SET ANSI_NULLS ON
 GO
@@ -308,8 +403,55 @@ CREATE TABLE [dbo].[Management](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ManagementStyle](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ManagementStyleId] [nvarchar](50) NULL,
+	[ManagementStyleCode] [nvarchar](50) NULL,
+	[ManagementStyleName] [nvarchar](50) NULL,
+ CONSTRAINT [PK_ManagementStyle] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+insert into [ManagementStyle] values(1,'0','机电产品')
+insert into [ManagementStyle] values(2,'2','中央投资')
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PurchaseStyle](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[PurchaseStyleId] [nvarchar](50) NULL,
+	[PurchaseStyleCode] [nvarchar](50) NULL,
+	[PurchaseStyleName] [nvarchar](50) NULL,
+ CONSTRAINT [PK_PurchaseStyle] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+insert into [PurchaseStyle] values(1,'G','国内公开')
+insert into [PurchaseStyle] values(2,'Y','国内邀请')
+insert into [PurchaseStyle] values(3,'X','询价采购')
+insert into [PurchaseStyle] values(4,'J','竞争性谈判')
+insert into [PurchaseStyle] values(5,'Q','其他')
+
+
+
 /****** Object:  Table [dbo].[Log]    Script Date: 04/15/2016 17:12:50 ******/
 SET ANSI_NULLS ON
+
+
+
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -387,6 +529,10 @@ CREATE TABLE [dbo].[Employee](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+insert into [Employee]([UserName],[Name],[IsDelete],[CreationDate]) values('Toms','汤姆逊',0,'2015-01-01 00:00:00')
+insert into [Employee]([UserName],[Name],[IsDelete],[CreationDate]) values('Alan','艾伦',0,'2015-01-01 00:00:00')
+insert into [Employee]([UserName],[Name],[IsDelete],[CreationDate]) values('Jack','杰克',0,'2015-01-01 00:00:00')
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'0.管理员，1.员工' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Employee', @level2type=N'COLUMN',@level2name=N'Type'
 GO
 /****** Object:  Table [dbo].[Customer]    Script Date: 04/15/2016 17:12:50 ******/

@@ -16,7 +16,7 @@ from py2neo.ext.geoff.xmlutil import jsonify
 
 def getTableColumns(tableName): 
     #return dictionary array [{name:"column names",type="column type"},{name:"column names",type="column type"},{name:"column names",type="column type"}]
-    connstr= u'driver={SQL Server};server=localhost;uid;pwd=1;DATABASE=master;Trusted_Connection=yes;unicode_results=True;CHARSET=UTF8'
+    connstr= u'driver={SQL Server};server=localhost;uid;pwd=1;DATABASE=bidding;Trusted_Connection=yes;unicode_results=True;CHARSET=UTF8'
     conn = pyodbc.connect(connstr,unicode_results=True)
     cursor=conn.cursor()
     strm= 'select a.name as columnname,c.name typename,cast(d.value as nvarchar(128)) as columnlabel\
@@ -162,7 +162,7 @@ def generateFiles(tableName):
     generateJSFile(tableColumns)
 
 #generateFiles("ProtocolCode")
-#generateFiles("Projects")Projects
+#generateFiles("ProjectCode")
 # tableColumnsJson = getTableColumns('ProtocolCode')
 # tableColumns = json.JSONDecoder().decode(tableColumnsJson)
 # print tableColumns['columns']

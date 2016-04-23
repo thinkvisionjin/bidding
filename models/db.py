@@ -21,8 +21,10 @@ db.define_table('Log',Field('Agent'),Field('CreationDate'),Field('Ip'),Field('Ki
 db.define_table('Management',Field('Code'),Field('CreationDate'),Field('IsDelete'),Field('Name'))
 db.define_table('MoneyType',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('ProjectCode',Field('CreationTime'),Field('EmployeeId'),Field('IsDelete'),Field('Option1'),Field('Option2'),Field('Option3'),Field('ProjectNumber'),Field('ProjectTypeId'),Field('ProtocolId'))
+db.define_table('ProtocolCodeType',Field('TypeCode'),Field('TypeId'),Field('TypeName'))
 db.define_table('ProjectResource',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('Projects',Field('Assistant'),Field('BuyerId'),Field('ChargeRate'),Field('CreationDate'),Field('EmployeeId'),Field('EntrustMoney'),Field('IsDelete'),Field('MakeOutDate'),Field('ManagementStyleId'),Field('Note'),Field('Package'),Field('ProjectCodeId'),Field('ProjectName'),Field('ProjectSourceId'),Field('ProjectTypeId'),Field('ProtocolCodeId'),Field('SigningDate'),Field('SourcesOfFundingId'),Field('StateId'),Field('WinningCompany'),Field('WinningMoney'))
+db.define_table('ProjectType',Field('ProjectTypeCode'),Field('ProjectTypeID'),Field('ProjectTypeName'))
 db.define_table('ProjectStatus',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('ProtocolCode',Field('CreationTime'),Field('EmployeeId'),Field('IsDelete'),Field('ProtocolNumber'),Field('TypeId'))
 db.define_table('Suggest',Field('Content'),Field('CreationTime'),Field('IsDelete'),Field('UserId'))
@@ -30,6 +32,11 @@ db.define_table('Task',Field('CreationDate'),Field('Deadline'),Field('EmployeeId
 db.define_table('TaskLocation',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('TaskStatus',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('TypeOfTask',Field('CreationDate'),Field('IsDelete'),Field('Name'),Field('OrderId'))
+db.define_table('PurchaseStyle',Field('PurchaseStyleCode'),Field('PurchaseStyleId'),Field('PurchaseStyleName'))
+db.define_table('ManagementStyle',Field('ManagementStyleCode'),Field('ManagementStyleId'),Field('ManagementStyleName'))
+db.define_table('OperationType',Field('OperationTypeCode'),Field('OperationTypeId'),Field('OperationTypeName'))
+db.define_table('BiddingCountType',Field('BiddingCountTypeCode'),Field('BiddingCountTypeId'),Field('BiddingCountTypeName'))
+db.define_table('BiddingSiteStatisticType',Field('BiddingSiteStatisticTypeCode'),Field('BiddingSiteStatisticTypeId'),Field('BiddingSiteStatisticTypeName'))
 
 #########################################################################
 

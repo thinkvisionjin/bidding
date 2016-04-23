@@ -2,9 +2,9 @@ $(document).ready(function () {
             // prepare the data
             var datafields_content =  
 //********DATAFIELDS START******************//
-[{"name":"Id","type":"string"},{"name":"ProtocolNumber","type":"string"},{"name":"TypeId","type":"string"},{"name":"EmployeeId","type":"string"},{"name":"CreationTime","type":"string"},{"name":"IsDelete","type":"string"}]
+[{"name":"Id","type":"string"},{"name":"ProtocolId","type":"string"},{"name":"ProjectNumber","type":"string"},{"name":"EmployeeId","type":"string"},{"name":"ProjectTypeId","type":"string"},{"name":"CreationTime","type":"string"},{"name":"Option1","type":"string"},{"name":"Option2","type":"string"},{"name":"Option3","type":"string"},{"name":"IsDelete","type":"string"}]
 //********DATAFIELDS END******************//
-            var data_url = "/bidding/default/select?table=ProtocolCode"
+            var data_url = "/bidding/default/select?table=ProjectCode"
             var source =
             {
                 url: data_url,
@@ -14,7 +14,7 @@ $(document).ready(function () {
                     // synchronize with the server - send update command
                     // call commit with parameter true if the synchronization with the server is successful 
                     // and with parameter false if the synchronization failed.
-                $.post("/bidding/default/update?table=ProtocolCode",rowdata,function(result){
+                $.post("/bidding/default/update?table=ProjectCode",rowdata,function(result){
                 		 alert("操作成功！");
                 	 });
                     commit(true);
@@ -24,7 +24,7 @@ $(document).ready(function () {
                     // call commit with parameter true if the synchronization with the server is successful 
                     // and with parameter false if the synchronization failed.
                 	var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', rowid);
-                	$.post("/bidding/default/delete?table=ProtocolCode",dataRecord,function(result){
+                	$.post("/bidding/default/delete?table=ProjectCode",dataRecord,function(result){
                		 alert("操作成功！");
                	 });
                     commit(true);
@@ -39,124 +39,209 @@ $(document).ready(function () {
             };
             // initialize the input fields.
 //********INIT_INPUT_FIELDS START******************//
-
-var ProtocolNumber_SEARCHsource =
-{
-    datatype: "json",
-    datafields: [
-        { name: 'ProtocolNumber' },
-        { name: 'Id' }
-    ],
-    url: "/bidding/default/select?table=ProtocolCode",
-    async: true
-};
-var ProtocolNumber_SEARCHdataAdapter = new $.jqx.dataAdapter(ProtocolNumber_SEARCHsource);
-            
-$("#ProtocolNumber_SEARCH").jqxInput({ 
-	source: ProtocolNumber_SEARCHdataAdapter, 
-	displayMember: "ProtocolNumber", 
-	valueMember: "Id", width: 200, height: 25});
-$("#ProtocolNumber_SEARCH").on('select', function (event) {
-    if (event.args) {
-        var item = event.args.item;
-        if (item) {
-        }
-    }
-});
-
-var protocolCodeTypesource = {
-		datatype: "json",
-        datafields: [
-            { name: 'TypeId' },
-            { name: 'TypeName' },
-            { name: 'TypeCode' }
-        ],
-        url: "/bidding/default/select?table=ProtocolCodeType",
-        async: true
-}
-var protocolCodeTypedataAdapter = new $.jqx.dataAdapter(protocolCodeTypesource);
-$("#TypeId_SEARCH").jqxDropDownList(
-		{ source: protocolCodeTypedataAdapter, 
-			displayMember: "TypeName", 
-			valueMember: "TypeId",
-			selectedIndex: 0, width: '200', height: '25'});
-$('#TypeId_SEARCH').on('select', function (event) {
-    var args = event.args;
-    var item = $('#TypeId_SEARCH').jqxDropDownList('getItem', args.index);
-});
-
-var EmployeeId_SEARCHsource =
-{
-    datatype: "json",
-    datafields: [
-        { name: 'Name' },
-        { name: 'Id' }
-    ],
-    url: "/bidding/default/select?table=Employee",
-    async: true
-};
-var EmployeeId_SEARCHdataAdapter = new $.jqx.dataAdapter(EmployeeId_SEARCHsource);
-            
-$("#EmployeeId_SEARCH").jqxInput({ 
-	source: EmployeeId_SEARCHdataAdapter, 
-	displayMember: "Name", 
-	valueMember: "Id", width: 200, height: 25});
-$("#EmployeeId_SEARCH").on('select', function (event) {
-    if (event.args) {
-        var item = event.args.item;
-        if (item) {
-        }
-    }
-});
-$("#CreationTime_SEARCH").jqxDateTimeInput({ formatString: "F", showTimeButton: true, width: '200px', height: '25px' });
-
-$("#IsDelete_SEARCH").jqxCheckBox({ width: 120, height: 25, checked: true});
-            $("#IsDelete_SEARCH").on('change', function (event) {
-                var checked = event.args.checked;
-                if (checked) {
-                   
-                }
-                else {
-                    
-                }
-            });
-
-
-
-$("#ProtocolNumber_EDIT").addClass('jqx-input')
-$("#ProtocolNumber_EDIT").width(150)
-$("#ProtocolNumber_EDIT").height(23)
-$("#TypeId_EDIT").addClass('jqx-input')
-$("#TypeId_EDIT").width(150)
-$("#TypeId_EDIT").height(23)
+$("#ProtocolId_SEARCH").addClass('jqx-input')
+$("#ProtocolId_SEARCH").width(150)
+$("#ProtocolId_SEARCH").height(23)
+$("#ProjectNumber_SEARCH").addClass('jqx-input')
+$("#ProjectNumber_SEARCH").width(150)
+$("#ProjectNumber_SEARCH").height(23)
+$("#EmployeeId_SEARCH").addClass('jqx-input')
+$("#EmployeeId_SEARCH").width(150)
+$("#EmployeeId_SEARCH").height(23)
+$("#ProjectTypeId_SEARCH").addClass('jqx-input')
+$("#ProjectTypeId_SEARCH").width(150)
+$("#ProjectTypeId_SEARCH").height(23)
+$("#CreationTime_SEARCH").addClass('jqx-input')
+$("#CreationTime_SEARCH").width(150)
+$("#CreationTime_SEARCH").height(23)
+$("#Option1_SEARCH").addClass('jqx-input')
+$("#Option1_SEARCH").width(150)
+$("#Option1_SEARCH").height(23)
+$("#Option2_SEARCH").addClass('jqx-input')
+$("#Option2_SEARCH").width(150)
+$("#Option2_SEARCH").height(23)
+$("#Option3_SEARCH").addClass('jqx-input')
+$("#Option3_SEARCH").width(150)
+$("#Option3_SEARCH").height(23)
+$("#IsDelete_SEARCH").addClass('jqx-input')
+$("#IsDelete_SEARCH").width(150)
+$("#IsDelete_SEARCH").height(23)
+$("#ProtocolId_EDIT").addClass('jqx-input')
+$("#ProtocolId_EDIT").width(150)
+$("#ProtocolId_EDIT").height(23)
+$("#ProjectNumber_EDIT").addClass('jqx-input')
+$("#ProjectNumber_EDIT").width(150)
+$("#ProjectNumber_EDIT").height(23)
 $("#EmployeeId_EDIT").addClass('jqx-input')
 $("#EmployeeId_EDIT").width(150)
 $("#EmployeeId_EDIT").height(23)
+$("#ProjectTypeId_EDIT").addClass('jqx-input')
+$("#ProjectTypeId_EDIT").width(150)
+$("#ProjectTypeId_EDIT").height(23)
 $("#CreationTime_EDIT").addClass('jqx-input')
 $("#CreationTime_EDIT").width(150)
 $("#CreationTime_EDIT").height(23)
+$("#Option1_EDIT").addClass('jqx-input')
+$("#Option1_EDIT").width(150)
+$("#Option1_EDIT").height(23)
+$("#Option2_EDIT").addClass('jqx-input')
+$("#Option2_EDIT").width(150)
+$("#Option2_EDIT").height(23)
+$("#Option3_EDIT").addClass('jqx-input')
+$("#Option3_EDIT").width(150)
+$("#Option3_EDIT").height(23)
 $("#IsDelete_EDIT").addClass('jqx-input')
 $("#IsDelete_EDIT").width(150)
 $("#IsDelete_EDIT").height(23)
-$("#ProtocolNumber_ADD").addClass('jqx-input')
-$("#ProtocolNumber_ADD").width(150)
-$("#ProtocolNumber_ADD").height(23)
-$('#ProtocolNumber_ADD').val('SPMCEC-160001')
 
+$("#ProjectNumber_ADD").addClass('jqx-input')
+$("#ProjectNumber_ADD").width(150)
+$("#ProjectNumber_ADD").height(23)
 
-$("#TypeId_ADD").jqxDropDownList(
-		{ source: protocolCodeTypedataAdapter, 
-			displayMember: "TypeName", 
-			valueMember: "TypeId",
+var protocolNumbersource = {
+		datatype: "json",
+        datafields: [
+            { name: 'Id' },
+            { name: 'ProtocolNumber' },
+        ],
+        url: "/bidding/default/select?table=ProtocolCode",
+        async: true
+}
+var protocolNumberdataAdapter = new $.jqx.dataAdapter(protocolNumbersource);
+$("#ProtocolNumber_ADD").jqxDropDownList(
+		{ source: protocolNumberdataAdapter, 
+			displayMember: "ProtocolNumber", 
+			valueMember: "Id",
 			selectedIndex: 0, width: '150', height: '23'});
-$('#TypeId_ADD').on('select', function (event) {
+$('#ProtocolNumber_ADD').on('select', function (event) {
     var args = event.args;
-    var item = $('#TypeId_ADD').jqxDropDownList('getItem', args.index);
-    if (item != null) {
-    	var prefix = 'SPMCEC-16'
-    	prefix = prefix+item.value+'0001'
-    	$('#ProtocolNumber_ADD').val(prefix)
-    }
+    var item = $('#ProtocolNumber_ADD').jqxDropDownList('getItem', args.index);
+});
+
+var projectTypesource = {
+		datatype: "json",
+        datafields: [
+            { name: 'ProjectTypeName' },
+            { name: 'ProjectTypeID' },
+            { name: 'ProjectTypeCode' },
+        ],
+        url: "/bidding/default/select?table=ProjectType",
+        async: true
+}
+var projectTypedataAdapter = new $.jqx.dataAdapter(projectTypesource);
+$("#ProjectType_ADD").jqxDropDownList(
+		{ source: projectTypedataAdapter, 
+			displayMember: "ProjectTypeName", 
+			valueMember: "ProjectTypeID",
+			selectedIndex: 0, width: '150', height: '23'});
+$('#ProjectType_ADD').on('select', function (event) {
+    var args = event.args;
+    var item = $('#ProjectType_ADD').jqxDropDownList('getItem', args.index);
+});
+
+var managementStylesource = {
+		datatype: "json",
+        datafields: [
+            { name: 'ManagementStyleId' },
+            { name: 'ManagementStyleCode' },
+            { name: 'ManagementStyleName' },
+        ],
+        url: "/bidding/default/select?table=ManagementStyle",
+        async: true
+}
+var managementStyledataAdapter = new $.jqx.dataAdapter(managementStylesource);
+$("#ManagementStyle_ADD").jqxDropDownList(
+		{ source: managementStyledataAdapter, 
+			displayMember: "ManagementStyleName", 
+			valueMember: "ManagementStyleId",
+			selectedIndex: 0, width: '150', height: '23'});
+$('#ManagementStyle_ADD').on('select', function (event) {
+    var args = event.args;
+    var item = $('#ManagementStyle_ADD').jqxDropDownList('getItem', args.index);
+});
+
+var purchaseStylesource = {
+		datatype: "json",
+        datafields: [
+            { name: 'PurchaseStyleId' },
+            { name: 'PurchaseStyleCode' },
+            { name: 'PurchaseStyleName' },
+        ],
+        url: "/bidding/default/select?table=PurchaseStyle",
+        async: true
+}
+var purchaseStyledataAdapter = new $.jqx.dataAdapter(purchaseStylesource);
+$("#PurchaseStyle_ADD").jqxDropDownList(
+		{ source: purchaseStyledataAdapter, 
+			displayMember: "PurchaseStyleName", 
+			valueMember: "PurchaseStyleId",
+			selectedIndex: 0, width: '150', height: '23'});
+$('#PurchaseStyle_ADD').on('select', function (event) {
+    var args = event.args;
+    var item = $('#PurchaseStyle_ADD').jqxDropDownList('getItem', args.index);
+});
+
+var biddingSiteStatisticTypesource = {
+		datatype: "json",
+        datafields: [
+            { name: 'BiddingSiteStatisticTypeName' },
+            { name: 'BiddingSiteStatisticTypeCode' },
+            { name: 'BiddingSiteStatisticTypeName' },
+        ],
+        url: "/bidding/default/select?table=BiddingSiteStatisticType",
+        async: true
+}
+var biddingSiteStatisticTypedataAdapter = new $.jqx.dataAdapter(biddingSiteStatisticTypesource);
+$("#BiddingSiteStatisticType_ADD").jqxDropDownList(
+		{ source: biddingSiteStatisticTypedataAdapter, 
+			displayMember: "BiddingSiteStatisticTypeName", 
+			valueMember: "BiddingSiteStatisticTypeName",
+			selectedIndex: 0, width: '150', height: '23'});
+$('#BiddingSiteStatisticType_ADD').on('select', function (event) {
+    var args = event.args;
+    var item = $('#BiddingSiteStatisticType_ADD').jqxDropDownList('getItem', args.index);
+});
+
+var biddingCountTypesource = {
+		datatype: "json",
+        datafields: [
+            { name: 'BiddingCountTypeId' },
+            { name: 'BiddingCountTypeCode' },
+            { name: 'BiddingCountTypeName' },
+        ],
+        url: "/bidding/default/select?table=BiddingCountType",
+        async: true
+}
+var biddingCountTypedataAdapter = new $.jqx.dataAdapter(biddingCountTypesource);
+$("#BiddingCountType_ADD").jqxDropDownList(
+		{ source: biddingCountTypedataAdapter, 
+			displayMember: "BiddingCountTypeName", 
+			valueMember: "BiddingCountTypeId",
+			selectedIndex: 0, width: '150', height: '23'});
+$('#BiddingCountType_ADD').on('select', function (event) {
+    var args = event.args;
+    var item = $('#BiddingCountType_ADD').jqxDropDownList('getItem', args.index);
+});
+
+var operationTypesource = {
+		datatype: "json",
+        datafields: [
+            { name: 'OperationTypeId' },
+            { name: 'OperationTypeCode' },
+            { name: 'OperationTypeName' },
+        ],
+        url: "/bidding/default/select?table=OperationType",
+        async: true
+}
+var operationTypedataAdapter = new $.jqx.dataAdapter(operationTypesource);
+$("#OperationType_ADD").jqxDropDownList(
+		{ source: operationTypedataAdapter, 
+			displayMember: "OperationTypeName", 
+			valueMember: "OperationTypeId",
+			selectedIndex: 0, width: '150', height: '23'});
+$('#OperationType_ADD').on('select', function (event) {
+    var args = event.args;
+    var item = $('#OperationType_ADD').jqxDropDownList('getItem', args.index);
 });
 //********INIT_INPUT_FIELDS END******************//
             var dataAdapter = new $.jqx.dataAdapter(source);
@@ -164,7 +249,7 @@ $('#TypeId_ADD').on('select', function (event) {
             // initialize jqxGrid
             var columns_content  = 
 //********COLUMNS_CONTENT START******************//
-[{"datafield":"Id","text":"\u5e8f\u53f7"},{"datafield":"ProtocolNumber","text":"\u534f\u8bae\u7f16\u53f7"},{"datafield":"TypeId","text":"\u7c7b\u578b\u7f16\u53f7"},{"datafield":"EmployeeId","text":"\u5458\u5de5\u7f16\u53f7"},{"datafield":"CreationTime","text":"\u521b\u5efa\u65e5\u671f"},{"datafield":"IsDelete","text":"\u662f\u5426\u5df2\u5220\u9664"}]            
+[{"datafield":"Id","text":"\u5e8f\u53f7"},{"datafield":"ProtocolId","text":"\u534f\u8bae\u7f16\u53f7"},{"datafield":"ProjectNumber","text":"\u9879\u76ee\u7f16\u53f7"},{"datafield":"EmployeeId","text":"\u5458\u5de5\u7f16\u53f7"},{"datafield":"ProjectTypeId","text":"\u7c7b\u578b\u7f16\u53f7"},{"datafield":"CreationTime","text":"\u521b\u5efa\u65f6\u95f4"},{"datafield":"Option1","text":"\u9009\u98791"},{"datafield":"Option2","text":"\u9009\u98792"},{"datafield":"Option3","text":"\u9009\u98793"},{"datafield":"IsDelete","text":"\u662f\u5426\u5df2\u5220\u9664"}]            
 //********COLUMNS_CONTENT  END******************//
             $("#jqxgrid").jqxGrid(
             {
@@ -190,6 +275,7 @@ $('#TypeId_ADD').on('select', function (event) {
                     // add new row.
                     addButton.click(function (event) {
                     	$("#popupWindow_ADD").jqxWindow('show');
+                    	$("#ProjectNumber_ADD").val('PCMET-16088888G030')
                     });
                     // delete selected row.
                     deleteButton.click(function (event) {
@@ -246,10 +332,7 @@ $('#TypeId_ADD').on('select', function (event) {
                     	$("#jqxgrid").jqxGrid('exportdata', 'xls', 'jqxGrid'); 
                     });
                     searchButton.click(function (event) {
-                    	var data_url = "/bidding/default/select?table=ProtocolCode"
-                    	source['url'] = data_url
-                        dataAdapter = new $.jqx.dataAdapter(source)
-                    	$("#jqxgrid").jqxGrid({ source:dataAdapter });
+                    	
                     });
                 },
             });
@@ -269,10 +352,14 @@ $('#TypeId_ADD').on('select', function (event) {
                     // get the clicked row's data and initialize the input fields.
                     var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', editrow);
 //********=GET_EDIT_ROW_DATA START******************//
-$("#ProtocolNumber_EDIT").val(dataRecord.ProtocolNumber);
-$("#TypeId_EDIT").val(dataRecord.TypeId);
+$("#ProtocolId_EDIT").val(dataRecord.ProtocolId);
+$("#ProjectNumber_EDIT").val(dataRecord.ProjectNumber);
 $("#EmployeeId_EDIT").val(dataRecord.EmployeeId);
+$("#ProjectTypeId_EDIT").val(dataRecord.ProjectTypeId);
 $("#CreationTime_EDIT").val(dataRecord.CreationTime);
+$("#Option1_EDIT").val(dataRecord.Option1);
+$("#Option2_EDIT").val(dataRecord.Option2);
+$("#Option3_EDIT").val(dataRecord.Option3);
 $("#IsDelete_EDIT").val(dataRecord.IsDelete);
 
 //********GET_EDIT_ROW_DATA END******************//
@@ -294,7 +381,7 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
                 }
             });
             $('#jqxgrid').jqxGrid({ toolbarheight: 
-            120.0
+            180.0
             });
             // initialize the popup edit window and buttons.
             $("#popupWindow_EDIT").jqxWindow({ width: 350, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel_EDIT"), modalOpacity: 0.01 });
@@ -305,10 +392,14 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
                 if (editrow >= 0) {
                     var row = 
 //******** EDIT_ROW_CONTENT_SAVE START*****************//
-{ProtocolNumber:$("#ProtocolNumber_EDIT").val()
-,TypeId:$("#TypeId_EDIT").val()
+{ProtocolId:$("#ProtocolId_EDIT").val()
+,ProjectNumber:$("#ProjectNumber_EDIT").val()
 ,EmployeeId:$("#EmployeeId_EDIT").val()
+,ProjectTypeId:$("#ProjectTypeId_EDIT").val()
 ,CreationTime:$("#CreationTime_EDIT").val()
+,Option1:$("#Option1_EDIT").val()
+,Option2:$("#Option2_EDIT").val()
+,Option3:$("#Option3_EDIT").val()
 ,IsDelete:$("#IsDelete_EDIT").val()
 };
 //********EDIT_ROW_CONTENT_SAVE END******************//
@@ -326,13 +417,19 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
             $("#Save_ADD").click(function () {
                var row = 
 //******** ADD_ROW_CONTENT_SAVE START*****************//
-{ProtocolNumber:$("#ProtocolNumber_ADD").val()
-,TypeId:$("#TypeId_ADD").val()
+{ProtocolId:$("#ProtocolNumber_ADD").val()
+,ProjectNumber:$("#ProjectNumber_ADD").val()
 ,EmployeeId:'0001'
+,ProjectTypeId:$("#ProjectTypeId_ADD").val()
+,CreationTime:$("#CreationTime_ADD").val()
+,Option1:$("#ManagementStyle_ADD").val()
+,Option2:$("#PurchaseStyle_ADD").val()
+,Option3:$("#ProjectType_ADD").val()
+,IsDelete:$("#IsDelete_ADD").val()
 }
 //******** ADD_ROW_CONTENT_SAVE START*****************//
                var datarow = row;
-               $.post("/bidding/default/insert?table=ProtocolCode",datarow,function(result){
+               $.post("/bidding/default/insert?table=ProjectCode",datarow,function(result){
             	   $("#jqxgrid").jqxGrid('addrow', null, result, 'first');
             	},'json');
                $("#popupWindow_ADD").jqxWindow('hide');

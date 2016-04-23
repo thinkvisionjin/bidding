@@ -3,7 +3,7 @@ import pyodbc
 import json
 import types
  
-connstr= u'driver={SQL Server};server=localhost;uid;pwd=1;DATABASE=master;Trusted_Connection=yes;unicode_results=True;CHARSET=UTF8'
+connstr= u'driver={SQL Server};server=localhost;uid;pwd=1;DATABASE=bidding;Trusted_Connection=yes;unicode_results=True;CHARSET=UTF8'
 conn = pyodbc.connect(connstr)
 cursor=conn.cursor()
  
@@ -32,4 +32,4 @@ ORDER BY TableName ''')
         print u'db.define_table(\''+r[0]+ u'\','+u','.join(rxa)+')'
  
  
-# defineTables()
+defineTables()
