@@ -169,3 +169,11 @@ def getyhls():
 def getqrls():
     redirect(URL('../../static/data/qrls.txt'))
 
+def agenda():
+    return dict();
+
+def getappointment():
+    redirect(URL('../../static/data/appointment.txt'))
+def getmeetroom():
+    redirect(URL('../../static/data/appointment.txt'))
+    

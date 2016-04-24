@@ -101,6 +101,8 @@ $(document).ready(function () {
                 width: '100%',
                 height: '500px',
                 source: adapter,
+                editDialogDateFormatString:"yyyy-MM-dd",
+                editDialogDateTimeFormatString:"yyyy-MM-dd HH:mm:ss",
 				renderAppointment: function(data)
 				{
 					if (data.appointment.location == "")
@@ -151,7 +153,9 @@ $(document).ready(function () {
 					fields.subjectLabel.html("主题");
 					
 					fields.fromLabel.html("开始");
+					
 					fields.toLabel.html("结束");
+					 
 					fields.resourceLabel.html("会议室");
 					fields.descriptionLabel.html("描述");
 					
