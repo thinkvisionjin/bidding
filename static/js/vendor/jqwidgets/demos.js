@@ -7,7 +7,7 @@ function getDemoTheme() {
         return theme;
     }
 
-    var theme = "summer";
+    var theme = "office";
    
 
     var url = "/bidding/static/css/vendor/jqwidgets/styles/jqx." + theme + '.css';
