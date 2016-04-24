@@ -388,7 +388,7 @@ function ProtocolType_ADD(){
 	        async: true
 	}
 	var protocolCodeTypedataAdapter = new $.jqx.dataAdapter(protocolCodeTypesource);
-	$("#TypeId_ADD").jqxInput(
+	$("#TypeId_ADD").jqxDropDownList(
 			{ source: protocolCodeTypedataAdapter, 
 				displayMember: "TypeName", 
 				valueMember: "TypeId",

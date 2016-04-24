@@ -46,7 +46,7 @@ ProtocolType_SEARCH()
 
 EmployeeId_SEARCH();
 
-$("#CreationTime_SEARCH").jqxDateTimeInput({ formatString: "F", showTimeButton: true, width: '200px', height: '25px' });
+$("#CreationTime_SEARCH").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
 
 $("#IsDelete_SEARCH").jqxCheckBox({ width: 120, height: 25, checked: true});
             $("#IsDelete_SEARCH").on('change', function (event) {
