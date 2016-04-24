@@ -142,6 +142,9 @@ def select():
 def mainframe():
     return dict();
 
+def scheduler():
+    return dict();
+
 def upload():
     return dict();
 
@@ -153,4 +156,16 @@ def Project():
     return dict();
 def ProjectPackage():
     return dict();
+
+def fileUpload():
+    f= request.vars.fileToUpload
+    print f.filename
+    return '上传成功' 
+
+def getyhls():
+    print "getyhls"
+    redirect(URL('../../static/data/yhls.txt'))
+
+def getqrls():
+    redirect(URL('../../static/data/qrls.txt'))
 

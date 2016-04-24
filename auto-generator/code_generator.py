@@ -165,9 +165,10 @@ def generateFiles(tableName):
 
 #generateFiles("Project")
 #generateFiles("ProjectPackage")
-#generateFiles("ProjectPackage")
+generateFiles("ProjectPackage")
 #generateFiles("ProtocolCode")
 #generateFiles("ProjectCode")
+
 # tableColumnsJson = getTableColumns('ProtocolCode')
 # tableColumns = json.JSONDecoder().decode(tableColumnsJson)
 # print tableColumns['columns']
