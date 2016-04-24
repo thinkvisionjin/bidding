@@ -1,12 +1,27 @@
-{{extend 'layout.html'}}
-
-{{block head}}
-    <link rel="stylesheet" href="{{=URL('static','css/vendor/jqwidgets/styles/jqx.base.css')}}" type="text/css" />
-	<link rel="stylesheet" href="{{=URL('static','css/vendor/jqwidgets/styles/jqx.bootstrap.css')}}" type="text/css" />
-{{end}}
-
-{{block center}}
-   <div id='jqxWidget' style="width: 100%; height:800px;">
+<html>
+<head>
+<meta charset="utf-8">
+<title>审计大数据实验室</title>
+<!-- 加载基本的CSS
+<link href="/datalabs/static/css/vendor/bootstrap/css/bootstrap.min.css"	rel="stylesheet">
+<link href="/datalabs/static/css/vendor/flat-ui/flat-ui.css"	rel="stylesheet">-->
+<link rel="stylesheet" href="{{=URL('static','css/vendor/jqwidgets/styles/jqx.base.css')}}" type="text/css" />
+<link rel="stylesheet" href="{{=URL('static','css/vendor/jqwidgets/styles/jqx.bootstrap.css')}}" type="text/css" />
+<script type="text/javascript" src="{{=URL('static','js/vendor/jquery/jquery-1.11.1.min.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/demos.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcore.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxsplitter.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxbuttons.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxscrollbar.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxpanel.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxnavigationbar.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtabs.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxbuttons.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtree.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/index.js')}}"></script>
+</head>
+<body>
+	 <div id='jqxWidget' style="width: 100%; height:800px;">
         <div id="mainSplitter">
             <div class="splitter-panel">
                 <div id='jqxNavigationBar'>
@@ -69,19 +84,6 @@
 			</div>
         </div>
     </div>
-{{end}}
-
-{{block page_js}}
-<script type="text/javascript" src="{{=URL('static','js/vendor/jquery/jquery-1.11.1.min.js')}}"></script>
-<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/demos.js')}}"></script>
-<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcore.js')}}"></script>
-<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxsplitter.js')}}"></script>
-<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxbuttons.js')}}"></script>
-<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxscrollbar.js')}}"></script>
-<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxpanel.js')}}"></script>
-<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxnavigationbar.js')}}"></script>
-<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtabs.js')}}"></script>
-<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxbuttons.js')}}"></script>
-<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtree.js')}}"></script>
-<script type="text/javascript" src="{{=URL('static','js/index.js')}}"></script>
-{{end page_js}}
+	
+</body>
+</html>
