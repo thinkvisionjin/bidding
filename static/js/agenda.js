@@ -96,9 +96,9 @@ $(document).ready(function () {
             var adapter = new $.jqx.dataAdapter(source);
 
             $("#scheduler").jqxScheduler({
-                date: new $.jqx.date(2016, 11, 23),
+                date: new $.jqx.date(2016, 10, 25),
                 width: '100%',
-                height: '600px',
+                height: '585px',
                 source: adapter,
                 editDialogDateFormatString:"yyyy-MM-dd",
                 editDialogDateTimeFormatString:"yyyy-MM-dd HH:mm:ss",
