@@ -6,12 +6,8 @@ function getDemoTheme() {
     else {
         return theme;
     }
-    var themestart = window.location.toString().indexOf('?');
-    if (themestart == -1) {
-        return '';
-    }
 
-    var theme = "metro";
+    var theme = "summer";
    
 
     var url = "/bidding/static/css/vendor/jqwidgets/styles/jqx." + theme + '.css';
