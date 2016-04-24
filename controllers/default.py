@@ -153,4 +153,14 @@ def Project():
     return dict();
 def ProjectPackage():
     return dict();
+def agenda():
+    return dict();
 
+def getxmlData():
+    return  response.stream("D:\\web2py\\applications\\datalabs\\static\\data\\data.xml")
+
+def getappointment():
+    return response.stream("D:\\web2py\\applications\\bidding\\static\\data\\appointment.txt")
+def getmeetroom():
+
+    return response.stream("D:\\web2py\\applications\\bidding\\static\\data\\appointment.txt")

@@ -252,4 +252,11 @@
 'You are successfully running web2py': '您已成功运行 web2py',
 'You can modify this application and adapt it to your needs': '请根据您的需要修改本程序',
 'You visited the url %s': 'You visited the url %s',
+'关于我们': '关于我们',
+'参考文档': '参考文档',
+'后台管理': '后台管理',
+'地图撒点': '地图撒点',
+'应用管理': '应用管理',
+'测试': '测试',
+'首页': '首页',
 }

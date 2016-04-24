@@ -11,14 +11,8 @@ function getDemoTheme() {
         return '';
     }
 
-    var theme = window.location.toString().substring(1 + themestart);
-    if (theme.indexOf('(') >= 0)
-    {
-        theme = theme.substring(1);
-    }
-    if (theme.indexOf(')') >= 0) {
-        theme = theme.substring(0, theme.indexOf(')'));
-    }
+    var theme = "metro";
+   
 
     var url = "/bidding/static/css/vendor/jqwidgets/styles/jqx." + theme + '.css';
     if (window.location.href.toString().indexOf("angularjs") >= 0) {

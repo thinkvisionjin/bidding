@@ -5,14 +5,14 @@
 ## Customize your APP title, subtitle and menus here
 #########################################################################
 
-response.logo = A(B('web',SPAN(2),'py'),XML('&trade;&nbsp;'),
-                  _class="navbar-brand",_href="http://www.web2py.com/",
+response.logo = A(B('上海浦成机电招标设备有限公司',SPAN(2),'TM'),XML('&trade;&nbsp;'),
+                  _class="navbar-brand",_href="#",
                   _id="web2py-logo")
 response.title = request.application.replace('_',' ').title()
 response.subtitle = ''
 
 ## read more at http://dev.w3.org/html5/markup/meta.name.html
-response.meta.author = 'Your Name <you@example.com>'
+response.meta.author = 'Jin Liu & Xiangmin Zhang <thinkvisionjin@163.com>'
 response.meta.description = 'a cool new app'
 response.meta.keywords = 'web2py, python, framework'
 response.meta.generator = 'Web2py Web Framework'
@@ -25,7 +25,7 @@ response.google_analytics_id = None
 #########################################################################
 
 response.menu = [
-    (T('Home'), False, URL('default', 'index'), [])
+    (T('首页'), False, URL('default', 'index'), [])
 ]
 
 DEVELOPMENT_MENU = True
@@ -40,8 +40,8 @@ def _():
     ctr = request.controller
     # useful links to internal and external resources
     response.menu += [
-        (T('My Sites'), False, URL('admin', 'default', 'site')),
-          (T('This App'), False, '#', [
+        (T('后台管理'), False, URL('admin', 'default', 'site')),
+          (T('应用管理'), False, '#', [
               (T('Design'), False, URL('admin', 'default', 'design/%s' % app)),
               LI(_class="divider"),
               (T('Controller'), False,
@@ -71,23 +71,7 @@ def _():
               (T('About'), False, URL(
                'admin', 'default', 'about/' + app)),
               ]),
-          ('web2py.com', False, '#', [
-             (T('Download'), False,
-              'http://www.web2py.com/examples/default/download'),
-             (T('Support'), False,
-              'http://www.web2py.com/examples/default/support'),
-             (T('Demo'), False, 'http://web2py.com/demo_admin'),
-             (T('Quick Examples'), False,
-              'http://web2py.com/examples/default/examples'),
-             (T('FAQ'), False, 'http://web2py.com/AlterEgo'),
-             (T('Videos'), False,
-              'http://www.web2py.com/examples/default/videos/'),
-             (T('Free Applications'),
-              False, 'http://web2py.com/appliances'),
-             (T('Plugins'), False, 'http://web2py.com/plugins'),
-             (T('Recipes'), False, 'http://web2pyslices.com/'),
-             ]),
-          (T('Documentation'), False, '#', [
+          (T('参考文档'), False, '#', [
              (T('Online book'), False, 'http://www.web2py.com/book'),
              LI(_class="divider"),
              (T('Preface'), False,
@@ -125,9 +109,9 @@ def _():
              (T("Buy web2py's book"), False,
               'http://stores.lulu.com/web2py'),
              ]),
-          (T('Community'), False, None, [
-             (T('Groups'), False,
-              'http://www.web2py.com/examples/default/usergroups'),
+          (T('关于我们'), False, None, [
+             (T('测试'), False,
+              'http://127.0.0.1:8000/clio/default/showGIS.html'),
               (T('Twitter'), False, 'http://twitter.com/web2py'),
               (T('Live Chat'), False,
                'http://webchat.freenode.net/?channels=web2py'),
