@@ -1,0 +1,197 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title id="Description">jqxFileUpload can be used for uploading file(s) to a server. In this demo you can browse for files and click the widget's buttons to see how it will work in a real environment. For uploading files however, you should set the "uploadUrl" property to point to a Web Server file that will handle the actual Upload process.</title>
+    <link type="text/css" rel="Stylesheet" href="{{=URL('static','css/vendor/jqwidgets/styles/jqx.base.css')}}" />
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jquery/jquery-1.11.1.min.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcore.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxbuttons.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxfileupload.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/scripts/demos.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxscrollbar.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxlistbox.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdropdownlist.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.pager.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.selection.js')}}"></script> 
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.columnsresize.js')}}"></script> 
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdata.js')}}"></script> 
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxnumberinput.js')}}"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#jqxFileUpload').jqxFileUpload({width:300,   uploadUrl: 'fileUpload', fileInputName: 'fileToUpload',
+			localization:{browseButton: '上传流水', uploadButton : '上传', cancelButton: '取消', uploadFileTooltip: '上传', cancelFileTooltip: '取消'}});
+			$('#jqxFileUpload').on('uploadEnd', function (event) {
+				var args = event.args;
+				var fileName = args.file;
+				var serverResponce = args.response;
+				alert(serverResponce);
+				$("#jqxDropDownList").jqxDropDownList('insertAt', fileName,  0); 
+				// Your code here.
+			});
+			var source = ["a", "b", "c"];
+			 $("#jqxDropDownList").jqxDropDownList({ placeHolder: "已上传流水", filterPlaceHolder:"查找...", filterable: true, source: source,  width: '300', height: '30'});
+
+			$('#jqxDropDownList').on('select', function (event) {
+                    var args = event.args;
+                    var item = $('#jqxDropDownList').jqxDropDownList('getItem', args.index);
+
+                    if (item != null) {
+ //                       $('#Events').jqxPanel('prepend', '<div style="margin-top: 5px;">Selected: ' + item.label + '</div>');
+                    }
+					url = "getyhls?filename="+item.label;
+					var source =
+					{
+						datatype: "json",
+						datafields: [
+							{ name: 'xh', type: 'string' },
+							{ name: 'jysj', type: 'date' },
+							{ name: 'je', type: 'float'},
+							{ name: 'qrje', type: 'float'},
+							{ name: 'cwqrje', type: 'float'},
+							{ name: 'zy', type: 'string' },
+							{ name: 'zh', type: 'string' },
+							{ name: 'mc', type: 'string' }
+						],
+						id: 'id',
+						url: url
+					};
+					var dataAdapter = new $.jqx.dataAdapter(source);
+					$("#ls-jqxgrid").jqxGrid({source:dataAdapter, selectedrowindex: -1});
+
+					$("#qr-jqxgrid").jqxGrid('clear');
+                });			
+
+			 $("#ls-jqxgrid").jqxGrid({height:"35%", width:"100%",
+				 columns: [
+					  { text: '序号', datafield: 'xh', width: 40, cellsalign: 'center', align: 'center' },
+					  { text: '交易时间', datafield: 'jysj', width: 200, cellsalign: 'center', align: 'center', cellsformat:'yyyy-MM-dd' },
+					  { text: '金额', datafield: 'je', width: 100, cellsalign: 'center', align: 'center' },
+					  { text: '确认金额', datafield: 'qrje', width: 100, cellsalign: 'center', align: 'center' },
+					  { text: '财务确认金额', datafield: 'cwqrje', width: 100, cellsalign: 'center', align: 'center' },
+					  { text: '摘要', datafield: 'zy', width: 190, cellsalign: 'center', align: 'center' },
+					  { text: '对方账号', datafield: 'zh', width: 90, cellsalign: 'center', align: 'center'},
+					  { text: '对方名称', datafield: 'mc', width: 90, cellsalign: 'center', align: 'center'},
+					  { text: '确认', datafield: 'Edit', columntype: 'button', cellsrenderer: function () {
+						 return "确认";
+					  }, buttonclick: function (row) {
+						 // open the popup window when the user clicks a button.
+						 editrow = row;
+						 var offset = $("#ls-jqxgrid").offset();
+						 $("#popupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 60, y: parseInt(offset.top) + 60 } });
+
+						 // get the clicked row's data and initialize the input fields.
+						 var dataRecord = $("#ls-jqxgrid").jqxGrid('getrowdata', editrow);
+/*						 $("#firstName").val(dataRecord.firstname);
+						 $("#lastName").val(dataRecord.lastname);
+						 $("#product").val(dataRecord.productname);*/
+						 $("#quantity").jqxNumberInput({ });
+						 $("#price").jqxNumberInput({  });
+						 var lxsource = ['投标保证金', '购买标书', '中标服务费', '退投标保证金'];
+						 $("#lx").jqxDropDownList({ source: lxsource, selectedIndex: -1});
+
+						 // show the popup window.
+						 $("#popupWindow").jqxWindow('open');
+					 }
+					 }
+
+					]
+				});
+				$("#ls-jqxgrid").on('rowclick', function (event) 
+				{ 
+					url = "getqrls?lsh="+event.args.row.bounddata['xh'];
+					var source =
+					{
+						datatype: "json",
+						datafields: [
+							{ name: 'xh', type: 'string' },
+							{ name: 'lx', type: 'string' },
+							{ name: 'je', type: 'float' },
+							{ name: 'czry', type: 'string' }
+						],
+						id: 'id',
+						url: url
+					};
+					var dataAdapter = new $.jqx.dataAdapter(source);
+					$("#qr-jqxgrid").jqxGrid({source:dataAdapter});
+					//alert("aa");
+				});
+				$("#qr-jqxgrid").jqxGrid({height:"20%", width:"100%",
+				 columns: [
+					  { text: '序号', datafield: 'xh', columngroup: 'qrqd', width: 40, cellsalign: 'center', align: 'center' },
+					  { text: '类型', datafield: 'lx', columngroup: 'qrqd',width: 200, cellsalign: 'center', align: 'center' },
+					  { text: '金额', datafield: 'je', columngroup: 'qrqd',width: 190, cellsalign: 'center', align: 'center' },
+					  { text: '操作人员', datafield: 'czry', columngroup: 'qrqd',width: 190, cellsalign: 'center', align: 'center' },
+					  { text: '财务确认', datafield: 'cwqr', columngroup: 'qrqd',width: 90, cellsalign: 'center', align: 'center'},
+					],
+					columngroups: [
+						{ text: '确认清单', align: 'center', name: 'qrqd' }
+					]
+
+				});
+				$("#popupWindow").jqxWindow({
+					width: 400, height:400, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01           
+				});
+			   $("#Cancel").jqxButton({ theme: theme });
+			   $("#Save").jqxButton({ theme: theme, template: "success" });
+				$("#Save").click(function () {
+
+						var row = { lx: $("#lx").val(), je: $("#quantity").val()};
+						$('#qr-jqxgrid').jqxGrid('addrow', null, row);
+						$("#popupWindow").jqxWindow('hide');
+
+				});
+
+        });
+        
+    </script>
+</head>
+<body>  
+	<table style="width:300px">
+	<tr>
+	<td>
+		<div id='jqxDropDownList'>	</div></td>
+		<td>
+		<div id="jqxFileUpload" ></div>
+		</td>
+	</tr>
+	</table>
+	<div id='ls-jqxgrid'></div>
+	<div id='qr-jqxgrid'></div>
+       <div id="popupWindow">
+            <div>银行流水确认</div>
+            <div style="overflow: hidden;">
+                <table align="center"  height="100%">
+                    <tr>
+                        <td align="right">类型:</td>
+                        <td align="left"><div id="lx" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">Last Name:</td>
+                        <td align="left"><input id="lastName" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">Product:</td>
+                        <td align="left"><input id="product" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">金额:</td>
+                        <td align="left"><div id="quantity"></div></td>
+                    </tr>
+                    <tr>
+                        <td align="right">Price:</td>
+                        <td align="left"><div id="price"></div></td>
+                    </tr>
+                    <tr>
+                        <td align="right"></td>
+                        <td style="padding-top: 10px;" align="right"><input style="margin-right: 5px;" type="button" id="Save" value="Save" /><input id="Cancel" type="button" value="Cancel" /></td>
+                    </tr>
+                </table>
+            </div>
+       </div>
+		
+</body>
+</html>
