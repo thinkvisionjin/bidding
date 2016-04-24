@@ -46,7 +46,7 @@ ProtocolType_SEARCH()
 
 EmployeeId_SEARCH();
 
-$("#CreationTime_SEARCH").jqxDateTimeInput({ formatString: "F", showTimeButton: true, width: '200px', height: '25px' });
+$("#CreationTime_SEARCH").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
 
 $("#IsDelete_SEARCH").jqxCheckBox({ width: 120, height: 25, checked: true});
             $("#IsDelete_SEARCH").on('change', function (event) {
@@ -258,7 +258,7 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
                 }
             });
             //initialize the popup add window and buttons.
-            $("#popupWindow_ADD").jqxWindow({ width: 350, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01 });
+            $("#popupWindow_ADD").jqxWindow({ width: 400, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01 });
             $("#Cancel_ADD").jqxButton({ theme: theme });
             $("#Save_ADD").jqxButton({ theme: theme });
             $("#Save_ADD").click(function () {
