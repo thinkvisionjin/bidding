@@ -139,6 +139,12 @@ def select():
 
 ###############业务处理页面################################
 
+def mainframe():
+    return dict();
+
+def upload():
+    return dict();
+
 def ProtocolCode():
     return dict();
 def ProjectCode():
