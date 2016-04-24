@@ -5,7 +5,6 @@ $(document).ready(function () {
                 id: "id1",
                 description: "数字化智能审计例会.",
                 location: "f",
-                subject: "数字化智能审计例会",
                 calendar: "第一会议室",
                 start: new Date(2016, 10, 23, 9, 0, 0),
                 end: new Date(2016, 10, 23, 16, 0, 0)
@@ -99,7 +98,7 @@ $(document).ready(function () {
             $("#scheduler").jqxScheduler({
                 date: new $.jqx.date(2016, 10, 25),
                 width: '100%',
-                height: '500px',
+                height: '600px',
                 source: adapter,
                 editDialogDateFormatString:"yyyy-MM-dd",
                 editDialogDateTimeFormatString:"yyyy-MM-dd HH:mm:ss",
