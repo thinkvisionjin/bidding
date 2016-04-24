@@ -174,6 +174,12 @@ CREATE TABLE [dbo].[ProjectStatus](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+insert into [ProjectStatus] values('招标通告','2016-04-22 10:00:00',0)
+insert into [ProjectStatus] values('正在进行','2016-04-22 10:00:00',0)
+insert into [ProjectStatus] values('已完成','2016-04-22 10:00:00',0)
+insert into [ProjectStatus] values('失败流标','2016-04-22 10:00:00',0)
+insert into [ProjectStatus] values('其他','2016-04-22 10:00:00',0)
+
 /****** Object:  Table [dbo].[ProjectResource]    Script Date: 04/15/2016 17:12:50 ******/
 SET ANSI_NULLS ON
 GO
@@ -190,6 +196,15 @@ CREATE TABLE [dbo].[ProjectResource](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+insert into [ProjectResource] values('自有项目','2016-04-22 10:00:00',0)
+insert into [ProjectResource] values('合作分成(坚轩)','2016-04-22 10:00:00',0)
+insert into [ProjectResource] values('合作分成(华松)','2016-04-22 10:00:00',0)
+insert into [ProjectResource] values('合作分成(机关服务中心)','2016-04-22 10:00:00',0)
+insert into [ProjectResource] values('合作分成(进出口)','2016-04-22 10:00:00',0)
+insert into [ProjectResource] values('其他','2016-04-22 10:00:00',0)
+
+
 /****** Object:  Table [dbo].[ProjectCode]    Script Date: 04/15/2016 17:12:50 ******/
 SET ANSI_NULLS ON
 GO
@@ -297,6 +312,8 @@ EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'项目备注' 
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建日期' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'CreationDate'
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否已删除' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Project', @level2type=N'COLUMN',@level2name=N'IsDelete'
 
+INSERT INTO Project(ProtocolCodeId,EmployeeId,StateId,ProjectName,ManagementStyleId,Note,Assistant,ProjectSourceId,SourcesOfFundingId,BuyerId,CreationDate,ProjectCodeId,ProjectTypeId) VALUES 
+('66','1','1','金质工程','1','ce','1','1','1','1','2016-04-24 00:00:00','8','0');
 
 /****** Object:  Table [dbo].[ProjectPackage]    Script Date: 04/15/2016 17:12:50 ******/
 CREATE TABLE [dbo].ProjectPackage(
@@ -436,6 +453,10 @@ CREATE TABLE [dbo].[MoneyType](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+insert into [MoneyType] values('自有资金','2015-01-01 00:00:00',0)
+insert into [MoneyType] values('中央投资','2015-01-01 00:00:00',0)
+insert into [MoneyType] values('地方财政','2015-01-01 00:00:00',0)
+
 /****** Object:  Table [dbo].[Management]    Script Date: 04/15/2016 17:12:50 ******/
 SET ANSI_NULLS ON
 GO
@@ -489,11 +510,14 @@ CREATE TABLE [dbo].[PurchaseStyle](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-insert into [PurchaseStyle] values(1,'G','国内公开')
-insert into [PurchaseStyle] values(2,'Y','国内邀请')
+delete from [PurchaseStyle]
+insert into [PurchaseStyle] values(1,'G','国内公开招标')
+insert into [PurchaseStyle] values(2,'Y','国内邀请招标')
 insert into [PurchaseStyle] values(3,'X','询价采购')
-insert into [PurchaseStyle] values(4,'J','竞争性谈判')
-insert into [PurchaseStyle] values(5,'Q','其他')
+insert into [PurchaseStyle] values(4,'JT','竞争性谈判')
+insert into [PurchaseStyle] values(5,'JC','竞争性磋商')
+insert into [PurchaseStyle] values(6,'JC','单一来源采购')
+insert into [PurchaseStyle] values(6,'Q','其他')
 
 
 
@@ -615,6 +639,14 @@ CREATE TABLE [dbo].[Customer](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+
+insert [Customer]([Type],[UserName],[CreationDate],EmployeeId) values('2','上海市民政局','2015-01-01 20:20:08',1)
+insert [Customer]([Type],[UserName],[CreationDate],EmployeeId) values('2','上海市工商局','2015-01-01 20:20:08',1)
+insert [Customer]([Type],[UserName],[CreationDate],EmployeeId) values('2','上海市环保局','2015-01-01 20:20:08',1)
+insert [Customer]([Type],[UserName],[CreationDate],EmployeeId) values('1','上海万达信息','2015-01-01 20:20:08',1)
+insert [Customer]([Type],[UserName],[CreationDate],EmployeeId) values('1','上海理想计算机','2015-01-01 20:20:08',1)
+insert [Customer]([Type],[UserName],[CreationDate],EmployeeId) values('1','上海长城电脑','2015-01-01 20:20:08',1)
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'1.卖家，2.买家，3.专家' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Customer', @level2type=N'COLUMN',@level2name=N'Type'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'添加用户的员工id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'Customer', @level2type=N'COLUMN',@level2name=N'EmployeeId'

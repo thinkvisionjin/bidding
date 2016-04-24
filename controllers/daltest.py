@@ -23,7 +23,7 @@ db.define_table('Management',Field('Code'),Field('CreationDate'),Field('IsDelete
 db.define_table('MoneyType',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('ProjectCode',Field('CreationTime'),Field('EmployeeId'),Field('IsDelete'),Field('Option1'),Field('Option2'),Field('Option3'),Field('ProjectNumber'),Field('ProjectTypeId'),Field('ProtocolId'))
 db.define_table('ProjectResource',Field('CreationTime'),Field('IsDelete'),Field('Name'))
-db.define_table('Projects',Field('Assistant'),Field('BuyerId'),Field('ChargeRate'),Field('CreationDate'),Field('EmployeeId'),Field('EntrustMoney'),Field('IsDelete'),Field('MakeOutDate'),Field('ManagementStyleId'),Field('Note'),Field('Package'),Field('ProjectCodeId'),Field('ProjectName'),Field('ProjectSourceId'),Field('ProjectTypeId'),Field('ProtocolCodeId'),Field('SigningDate'),Field('SourcesOfFundingId'),Field('StateId'),Field('WinningCompany'),Field('WinningMoney'))
+db.define_table('Project',Field('Assistant'),Field('BuyerId'),Field('ChargeRate'),Field('CreationDate'),Field('EmployeeId'),Field('EntrustMoney'),Field('IsDelete'),Field('MakeOutDate'),Field('ManagementStyleId'),Field('Note'),Field('Package'),Field('ProjectCodeId'),Field('ProjectName'),Field('ProjectSourceId'),Field('ProjectTypeId'),Field('ProtocolCodeId'),Field('SigningDate'),Field('SourcesOfFundingId'),Field('StateId'),Field('WinningCompany'),Field('WinningMoney'))
 db.define_table('ProjectStatus',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('ProtocolCode',Field('CreationTime'),Field('EmployeeId'),Field('IsDelete'),Field('ProtocolNumber'),Field('TypeId'))
 db.define_table('ProtocolCodeType',Field('TypeCode'),Field('TypeId'),Field('TypeName'))
@@ -32,6 +32,8 @@ db.define_table('Task',Field('CreationDate'),Field('Deadline'),Field('EmployeeId
 db.define_table('TaskLocation',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('TaskStatus',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('TypeOfTask',Field('CreationDate'),Field('IsDelete'),Field('Name'),Field('OrderId'))
+db.define_table('ProjectPackage',Field('ChargeRate'),Field('CreationDate'),Field('EntrustMoney'),Field('IsDelete'),Field('MakeOutDate'),Field('Note'),Field('PackageName'),Field('PackageNumber'),Field('ProjectId'),Field('SigningDate'),Field('StateId'),Field('WinningCompany'),Field('WinningMoney'))
+
     
 
 def update():
@@ -53,8 +55,10 @@ def update():
 
 
 def insert():
-    table_name = 'ProjectCode'
-    rowData = {'EmployeeId': '0001', 'ProjectNumber': 'PCMET-16088888G030', 'ProtocolNumber': 'SPMCEC-16ZC0001', 'Option2': '1', 'Option3': '0', 'Option1': '1'}
+#     table_name = 'Project'
+#     rowData = {'ProtocolCodeId': '66', 'EmployeeId': '1', 'StateId': '1', 'ProjectName': '金质工程', 'ManagementStyleId': '1', 'Note': 'ce', 'Assistant': '1', 'ProjectSourceId': '1', 'SourcesOfFundingId': '1', 'BuyerId': '1', 'CreationDate': '2016-04-24 00:00:00', 'ProjectCodeId': '8', 'ProjectTypeId': '0'}    
+    table_name = 'ProjectPackage'
+    rowData =   {'PackageNumber': 'PCMET-16088888G030-01', 'StateId': '1', 'WinningMoney': '5000000', 'PackageName': '\xe7\xa1\xac\xe4\xbb\xb6\xe8\xae\xbe\xe5\xa4\x87', 'WinningCompany': '\xe4\xb8\x87\xe8\xbe\xbe\xe4\xbf\xa1\xe6\x81\xaf', 'ChargeRate': '20', 'SigningDate': '2016-04-24 00:00:00', 'EntrustMoney': '50000', 'MakeOutDate': '2016-04-24 00:00:00', 'IsDelete': '0'}
     id = db[table_name].insert(**rowData)
     row = db(db[table_name]._id ==id).select().first()
     dict_row = {}
@@ -68,7 +72,7 @@ def insert():
     print result
     return result
 
-# insert()
+insert()
 
 def select():
     print 'selecting rows**************'
@@ -92,4 +96,4 @@ def select():
         dic_rows.append(dict_row)
     return json.dumps(dic_rows,ensure_ascii=False)
 
-select()
+#select()
