@@ -97,7 +97,7 @@ $(document).ready(function () {
             var adapter = new $.jqx.dataAdapter(source);
 
             $("#scheduler").jqxScheduler({
-                date: new $.jqx.date(2016, 11, 23),
+                date: new $.jqx.date(2016, 10, 25),
                 width: '100%',
                 height: '500px',
                 source: adapter,
