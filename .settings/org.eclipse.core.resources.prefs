@@ -4,5 +4,6 @@ encoding//auto-generator/definetables.py=utf-8
 encoding//controllers/daltest.py=utf-8
 encoding//controllers/default.py=utf-8
 encoding//models/db.py=utf-8
+encoding//views/default/index.html=UTF-8
 encoding/<project>=UTF-8
 encoding/routes.example.py=utf-8
