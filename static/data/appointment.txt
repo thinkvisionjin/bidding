@@ -1,0 +1,22 @@
+
+[
+{
+                "id": "id6",
+                "description": "aa",
+                "applyuser": "a",
+                "subject": "建交委",
+                "calendar": "第1会议室",
+                "start": "2016-10-26 15:00",
+                "end": "2016-10-26 16:00"
+            },
+  {
+                "id": "id5",
+                "description": "aa",
+                "applyuser": "b",
+                "subject": "公积金中心交流",
+                "calendar": "第六会议室",
+                "start": "2016-10-25 15:00",
+                "end": "2016-10-25 16:00"
+            }
+  
+]
