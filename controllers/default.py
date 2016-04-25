@@ -184,6 +184,9 @@ def getqrls():
 def agenda():
     return dict();
 
+def buybid():
+    return dict();
+
 def getappointment():
     redirect(URL('../../static/data/appointment.txt'))
 def getmeetroom():
