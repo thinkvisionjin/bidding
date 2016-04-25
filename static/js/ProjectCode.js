@@ -94,20 +94,25 @@ $("#ProjectNumber_ADD").width(150)
 $("#ProjectNumber_ADD").height(23)
 
 //********INIT_INPUT_FIELDS END******************//
-var dataAdapter = new $.jqx.dataAdapter(source);
+var dataAdapter = new $.jqx.dataAdapter(source, {
+	loadComplete: function () {
+        // data is loaded.
+//		$("#jqxgrid").jqxGrid('autoresizecolumns');
+    }
+});
 var editrow = -1;
 // initialize jqxGrid
 var columns_content  = 
 //********COLUMNS_CONTENT START******************//
-[{"datafield":"Id","text":"\u5e8f\u53f7"},
- {"datafield":"ProtocolId","text":"\u534f\u8bae\u7f16\u53f7"},
- {"datafield":"ProjectNumber","text":"\u9879\u76ee\u7f16\u53f7"},
- {"datafield":"EmployeeId","text":"\u5458\u5de5\u7f16\u53f7"},
- {"datafield":"ProjectTypeId","text":"\u7c7b\u578b\u7f16\u53f7"},
- {"datafield":"CreationTime","text":"\u521b\u5efa\u65f6\u95f4"},
- {"datafield":"Option1","text":"\u9009\u98791"},
- {"datafield":"Option2","text":"\u9009\u98792"},
- {"datafield":"Option3","text":"\u9009\u98793"}]            
+[{"datafield":"Id","text":"\u5e8f\u53f7", width: 40, cellsalign: 'center', align: 'center'},
+ {"datafield":"ProtocolId","text":"\u534f\u8bae\u7f16\u53f7", width: 120, cellsalign: 'center', align: 'center'},
+ {"datafield":"ProjectNumber","text":"\u9879\u76ee\u7f16\u53f7", width: 170, cellsalign: 'center', align: 'center'},
+ {"datafield":"EmployeeId","text":"\u5458\u5de5\u7f16\u53f7", width: 100, cellsalign: 'center', align: 'center'},
+ {"datafield":"ProjectTypeId","text":"\u7c7b\u578b\u7f16\u53f7", width: 100, cellsalign: 'center', align: 'center'},
+ {"datafield":"CreationTime","text":"\u521b\u5efa\u65f6\u95f4", width: 200, cellsalign: 'center', align: 'center'},
+ {"datafield":"Option1","text":"\u9009\u98791", width: 100, cellsalign: 'center', align: 'center'},
+ {"datafield":"Option2","text":"\u9009\u98792", width: 100, cellsalign: 'center', align: 'center'},
+ {"datafield":"Option3","text":"\u9009\u98793", width: 100, cellsalign: 'center', align: 'center'}]            
 //********COLUMNS_CONTENT  END******************//
             $("#jqxgrid").jqxGrid(
             {
@@ -196,7 +201,9 @@ var columns_content  =
                     });
                 },
             });
-            // create context menu
+			
+            
+			// create context menu
             var contextMenu = $("#Menu").jqxMenu({ width: 200, height: 58, autoOpenPopup: false, mode: 'popup'});
             $("#jqxgrid").on('contextmenu', function () {
                 return false;
