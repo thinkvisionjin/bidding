@@ -44,15 +44,15 @@ function InitProjectPackageGid(){
 
 
 		var projectPackage_columns_content  = 
-			[ {"datafield":"PackageNumber","text":"\u5305\u7f16\u53f7"},
-			 {"datafield":"PackageName","text":"\u5305\u540d\u79f0"},
-			 {"datafield":"StateId","text":"\u5305\u72b6\u6001"},
-			 {"datafield":"SigningDate","text":"\u7b7e\u7ea6\u65e5\u671f"},
-			 {"datafield":"MakeOutDate","text":"\u5f00\u7968\u65e5\u671f"},
-			 {"datafield":"EntrustMoney","text":"\u59d4\u6258\u91d1\u989d"},
-			 {"datafield":"WinningMoney","text":"\u4e2d\u6807\u91d1\u989d"},
-			 {"datafield":"WinningCompany","text":"\u4e2d\u6807\u5355\u4f4d"},
-			 {"datafield":"ChargeRate","text":"\u670d\u52a1\u8d39\u7387"}]
+			[ {"datafield":"PackageNumber","text":"\u5305\u7f16\u53f7", width: 100, cellsalign: 'center', align: 'center'},
+			 {"datafield":"PackageName","text":"\u5305\u540d\u79f0", width: 100, cellsalign: 'center', align: 'center'},
+			 {"datafield":"StateId","text":"\u5305\u72b6\u6001", width: 60, cellsalign: 'center', align: 'center'},
+			 {"datafield":"SigningDate","text":"\u7b7e\u7ea6\u65e5\u671f", width: 100, cellsalign: 'center', align: 'center'},
+			 {"datafield":"MakeOutDate","text":"\u5f00\u7968\u65e5\u671f", width: 80, cellsalign: 'center', align: 'center'},
+			 {"datafield":"EntrustMoney","text":"\u59d4\u6258\u91d1\u989d", width: 80, cellsalign: 'center', align: 'center'},
+			 {"datafield":"WinningMoney","text":"\u4e2d\u6807\u91d1\u989d", width: 80, cellsalign: 'center', align: 'center'},
+			 {"datafield":"WinningCompany","text":"\u4e2d\u6807\u5355\u4f4d", width: 100, cellsalign: 'center', align: 'center'},
+			 {"datafield":"ChargeRate","text":"\u670d\u52a1\u8d39\u7387", width: 60, cellsalign: 'center', align: 'center'}]
 		$("#Package_ADD").jqxDataTable(
 		        {
 		            width: 780,
@@ -222,13 +222,21 @@ function initrowdetails (index, parentElement, gridElement, record) {
     var nestedGridAdapter = new $.jqx.dataAdapter(source, {
 		loadComplete: function () {
 	        // data is loaded.
-			$($('#jqxGrid').children()[0]).jqxGrid('autoresizecolumns'); 
+//			$($('#jqxGrid').children()[0]).jqxGrid('autoresizecolumns'); 
 	    }
 	});
-    var columns_content  = [ {"datafield":"PackageNumber","text":"\u5305\u7f16\u53f7"}, 	 {"datafield":"PackageName","text":"\u5305\u540d\u79f0"}, {"datafield":"StateId","text":"\u5305\u72b6\u6001"},  {"datafield":"SigningDate","text":"\u7b7e\u7ea6\u65e5\u671f"}, {"datafield":"MakeOutDate","text":"\u5f00\u7968\u65e5\u671f"}, {"datafield":"EntrustMoney","text":"\u59d4\u6258\u91d1\u989d"},{"datafield":"WinningMoney","text":"\u4e2d\u6807\u91d1\u989d"}, {"datafield":"WinningCompany","text":"\u4e2d\u6807\u5355\u4f4d"},  {"datafield":"ChargeRate","text":"\u670d\u52a1\u8d39\u7387"}]
+    var columns_content  = [ {"datafield":"PackageNumber","text":"\u5305\u7f16\u53f7", width: 180, cellsalign: 'center', align: 'center'},
+                			 {"datafield":"PackageName","text":"\u5305\u540d\u79f0", width: 100, cellsalign: 'center', align: 'center'},
+                			 {"datafield":"StateId","text":"\u5305\u72b6\u6001", width: 60, cellsalign: 'center', align: 'center'},
+                			 {"datafield":"SigningDate","text":"\u7b7e\u7ea6\u65e5\u671f", width: 150, cellsalign: 'center', align: 'center'},
+                			 {"datafield":"MakeOutDate","text":"\u5f00\u7968\u65e5\u671f", width: 150, cellsalign: 'center', align: 'center'},
+                			 {"datafield":"EntrustMoney","text":"\u59d4\u6258\u91d1\u989d", width: 60, cellsalign: 'center', align: 'center'},
+                			 {"datafield":"WinningMoney","text":"\u4e2d\u6807\u91d1\u989d", width: 60, cellsalign: 'center', align: 'center'},
+                			 {"datafield":"WinningCompany","text":"\u4e2d\u6807\u5355\u4f4d", width: 100, cellsalign: 'center', align: 'center'},
+                			 {"datafield":"ChargeRate","text":"\u670d\u52a1\u8d39\u7387", width: 60, cellsalign: 'center', align: 'center'}]
     if (grid != null) {
         grid.jqxGrid({
-            source: nestedGridAdapter, width: 600, height: 200,
+            source: nestedGridAdapter, width: 920, height: 171,
             columns:columns_content,
             columnsautoresize: true
         });
@@ -272,7 +280,19 @@ function InitMainGrid(){
     };
     var dataAdapter = new $.jqx.dataAdapter(source);
     var editrow = -1;
-    var columns_content  =[{"datafield":"Id","text":"\u5e8f\u53f7"},{"datafield":"ProtocolCodeId","text":"\u534f\u8bae\u5e8f\u53f7"},{"datafield":"ProjectCodeId","text":"\u9879\u76ee\u5e8f\u53f7"},{"datafield":"ProjectName","text":"\u9879\u76ee\u540d\u79f0"},{"datafield":"BuyerId","text":"\u91c7\u8d2d\u5355\u4f4d"},{"datafield":"EmployeeId","text":"\u6240\u6709\u8005"},{"datafield":"Assistant","text":"\u534f\u52a9\u4eba"},{"datafield":"ProjectSourceId","text":"\u9879\u76ee\u6765\u6e90"},{"datafield":"SourcesOfFundingId","text":"\u8d44\u91d1\u6765\u6e90"},{"datafield":"ProjectTypeId","text":"\u9879\u76ee\u7c7b\u578b"},{"datafield":"ManagementStyleId","text":"\u7ba1\u7406\u65b9\u5f0f"},{"datafield":"StateId","text":"\u9879\u76ee\u72b6\u6001"},{"datafield":"CreationDate","text":"\u521b\u5efa\u65e5\u671f"}]            
+    var columns_content  =[{"datafield":"Id","text":"\u5e8f\u53f7",width: 40, cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProtocolCodeId","text":"\u534f\u8bae\u5e8f\u53f7", width: 60, cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectCodeId","text":"\u9879\u76ee\u5e8f\u53f7", width: 60, cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectName","text":"\u9879\u76ee\u540d\u79f0", width: 220, cellsalign: 'center', align: 'center'},
+                           {"datafield":"BuyerId","text":"\u91c7\u8d2d\u5355\u4f4d", width: 60, cellsalign: 'center', align: 'center'},
+                           {"datafield":"EmployeeId","text":"\u6240\u6709\u8005", width: 60, cellsalign: 'center', align: 'center'},
+                           {"datafield":"Assistant","text":"\u534f\u52a9\u4eba", width: 60, cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectSourceId","text":"\u9879\u76ee\u6765\u6e90", width: 70, cellsalign: 'center', align: 'center'},
+                           {"datafield":"SourcesOfFundingId","text":"\u8d44\u91d1\u6765\u6e90", width: 70, cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectTypeId","text":"\u9879\u76ee\u7c7b\u578b", width: 80, cellsalign: 'center', align: 'center'},
+                           {"datafield":"ManagementStyleId","text":"\u7ba1\u7406\u65b9\u5f0f", width: 80, cellsalign: 'center', align: 'center'},
+                           {"datafield":"StateId","text":"\u9879\u76ee\u72b6\u6001", width: 70, cellsalign: 'center', align: 'center'},
+                           {"datafield":"CreationDate","text":"\u521b\u5efa\u65e5\u671f", width: 150, cellsalign: 'center', align: 'center'}]            
     var outerDataAdapter = new $.jqx.dataAdapter(source, { autoBind: true });
     projects_record = outerDataAdapter.records;
     $("#jqxgrid").jqxGrid(
@@ -442,6 +462,9 @@ function InitADDNewPackageWindow(){
 	//initialize the popup add window and buttons.
     $("#popupWindow_PackageADD").jqxWindow({ width:595, maxHeight: 850,resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01 });
     $("#CancelPackage_ADD").jqxButton({ theme: theme });
+    $("#CancelPackage_ADD").click(function () {
+    	$("#popupWindow_PackageADD").jqxWindow('hide');
+    });
     $("#SavePackage_ADD").jqxButton({ theme: theme });
     $("#SavePackage_ADD").click(function () {
     	var row=
@@ -497,8 +520,13 @@ function InitAddNewProjectWindow(){
 	//项目备注
 	$('#Note_ADD').jqxEditor({height: "200px", width: '780px'});
 	//initialize the popup add window and buttons.
-    $("#popupWindow_ADD").jqxWindow({ width: 800, maxHeight: 850,resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01 });
+    $("#popupWindow_ADD").jqxWindow({ showCollapseButton: true,
+    	width: 800, 
+    	height:600,autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01 });
     $("#Cancel_ADD").jqxButton({ theme: theme });
+    $("#Cancel_ADD").click(function () {
+    	$("#popupWindow_ADD").jqxWindow('hide');
+    });
     $("#Save_ADD").jqxButton({ theme: theme });
     $("#Save_ADD").click(function () {
 		var row = {ProtocolCodeId:$("#ProtocolCodeId_ADD").val(),ProjectCodeId:$("#ProjectCodeId_ADD").val(),ProjectName:$("#ProjectName_ADD").val()
