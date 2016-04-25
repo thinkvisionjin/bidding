@@ -20,3 +20,9 @@ $(document).ready(function () {
 			}
 			$('#jqxTabs').jqxTabs('addAt', 1, frameid, '<iframe id="'+frameid+'" style="border:none;padding:0;margin:0;" frameborder=no border=0 height="99%" width="100%"src="'+url+'"></iframe>' );
 		}
+		function printbuybid()
+		{
+            var newWindow = window.open('buybid.html', '');
+
+            newWindow.print();		
+		}
