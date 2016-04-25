@@ -7,7 +7,7 @@ function getDemoTheme() {
         return theme;
     }
 
-    var theme = "office";
+    var theme = "metro";
    
 
     var url = "/bidding/static/css/vendor/jqwidgets/styles/jqx." + theme + '.css';
