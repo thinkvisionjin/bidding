@@ -115,7 +115,7 @@ var columns_content  =
  {"datafield":"Option3","text":"\u9009\u98793", width: 100, cellsalign: 'center', align: 'center'}]            
 //********COLUMNS_CONTENT  END******************//
             $("#jqxgrid").jqxGrid(
-            {
+            { 
                 width: '100%',
                 source: dataAdapter,
                 pageable: true,
