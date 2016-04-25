@@ -38,6 +38,7 @@ function InitProjectPackageGid(){
 		var projectPackageurldataAdapter = new $.jqx.dataAdapter(projectPackageSource, {
 			loadComplete: function () {
 		        // data is loaded.
+				 
 		    }
 		});
 
@@ -218,12 +219,18 @@ function initrowdetails (index, parentElement, gridElement, record) {
         dataType: "json",
         url: "/bidding/default/select?table=ProjectPackage",
     }
-    var nestedGridAdapter = new $.jqx.dataAdapter(source);
+    var nestedGridAdapter = new $.jqx.dataAdapter(source, {
+		loadComplete: function () {
+	        // data is loaded.
+			$($('#jqxGrid').children()[0]).jqxGrid('autoresizecolumns'); 
+	    }
+	});
     var columns_content  = [ {"datafield":"PackageNumber","text":"\u5305\u7f16\u53f7"}, 	 {"datafield":"PackageName","text":"\u5305\u540d\u79f0"}, {"datafield":"StateId","text":"\u5305\u72b6\u6001"},  {"datafield":"SigningDate","text":"\u7b7e\u7ea6\u65e5\u671f"}, {"datafield":"MakeOutDate","text":"\u5f00\u7968\u65e5\u671f"}, {"datafield":"EntrustMoney","text":"\u59d4\u6258\u91d1\u989d"},{"datafield":"WinningMoney","text":"\u4e2d\u6807\u91d1\u989d"}, {"datafield":"WinningCompany","text":"\u4e2d\u6807\u5355\u4f4d"},  {"datafield":"ChargeRate","text":"\u670d\u52a1\u8d39\u7387"}]
     if (grid != null) {
         grid.jqxGrid({
             source: nestedGridAdapter, width: 600, height: 200,
-            columns:columns_content
+            columns:columns_content,
+            columnsautoresize: true
         });
     }
 }
@@ -440,7 +447,7 @@ function InitADDNewPackageWindow(){
     	var row=
     	  {  ProjectId:$("#ProjectId_ADD").val()
     		,PackageNumber:$("#PackageNumber_ADD").val()
-    		,PackageName:$("#PackageName_ADD").val()
+    		,PackageName:encodeURIComponent(encodeURIComponent($("#PackageName_ADD").val()))
     		,StateId:$("#StateIdPackage_ADD").val()
     		,SigningDate:$("#SigningDate_ADD").val()
     		,MakeOutDate:$("#MakeOutDate_ADD").val()

@@ -68,8 +68,18 @@ def insert():
     row = db(db[table_name]._id ==id).select().first()
     dict_row = {}
     for key in row.keys():
-        if (key== 'update_record' or key== 'delete_record'):
+        if (key== 'update_record' or key== 'delete_record' or key =='PackageName'):
             print 'ignore some keys'
+            if(key =='PackageName'):
+                print key
+                print row[key]
+#                 print row[key].decode("gb2312");
+                print unicode(row[key])
+                print "*********"
+#                 print 'encode gb2312   ',row[key].encode('gb2312')
+#                 print 'decode gb2312  ',row[key].decode('gb2312')
+#                 print 'encode utf-8  ',row[key].encode('utf-8')
+#                 print 'decode utf-8   ',row[key].decode('utf-8')
         elif key=='id':
             dict_row['Id']  = row[key]
         else:
@@ -85,7 +95,9 @@ def insert():
 def delete():
     print 'deleting row**************'
     table_name = request.vars.table
+    print table_name
     id = request.post_vars['Id']
+    print id 
     row = db(db[table_name]._id ==id).select().first()
     print row
     db(db[table_name]._id == id).delete()

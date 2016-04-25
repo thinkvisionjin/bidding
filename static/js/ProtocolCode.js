@@ -260,6 +260,9 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
             //initialize the popup add window and buttons.
             $("#popupWindow_ADD").jqxWindow({ width: 400, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01 });
             $("#Cancel_ADD").jqxButton({ theme: theme });
+            $("#Cancel_ADD").click(function(){
+            	$("#popupWindow_ADD").jqxWindow('hide');
+            })
             $("#Save_ADD").jqxButton({ theme: theme });
             $("#Save_ADD").click(function () {
                var row = 
