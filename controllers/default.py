@@ -8,6 +8,7 @@
 ## - download is for downloading files uploaded in the db (does streaming)
 #########################################################################
 
+@auth.requires_login()
 def index():
     """
     example action using the internationalization operator T and flash
@@ -36,7 +37,8 @@ def user():
     to decorate functions that need access control
     also notice there is http://..../[app]/appadmin/manage/auth to allow administrator to manage users
     """
-    return dict(form=auth())
+    form=auth()
+    return dict(form = form)
 
 
 @cache.action()
@@ -58,6 +60,7 @@ def call():
     return service()
 
 ##################通用的表处理接口#############################
+
 def insert():
     print 'inserting data**************'
     table_name = request.vars.table
@@ -191,4 +194,9 @@ def getappointment():
     redirect(URL('../../static/data/appointment.txt'))
 def getmeetroom():
     redirect(URL('../../static/data/appointment.txt'))
-    
+
+
+def manage_transactions():
+    grid = SQLFORM.smartgrid(db.Project,linked_tables=['Package','ProtocolCode'],
+                             user_signature=False)
+    return dict(grid=grid)
