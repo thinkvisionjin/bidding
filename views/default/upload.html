@@ -19,7 +19,7 @@
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdata.js')}}"></script> 
 	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"></script>
 	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxnumberinput.js')}}"></script>
-
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxinput.js')}}"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -33,7 +33,7 @@
 				$("#jqxDropDownList").jqxDropDownList('insertAt', fileName,  0); 
 				// Your code here.
 			});
-			var source = ["a", "b", "c"];
+			var source = ["201509流水.xls", "201510流水.xls", "201511流水.xls"];
 			 $("#jqxDropDownList").jqxDropDownList({ placeHolder: "已上传流水", filterPlaceHolder:"查找...", filterable: true, source: source,  width: '300', height: '30'});
 
 			$('#jqxDropDownList').on('select', function (event) {
@@ -89,9 +89,6 @@
 /*						 $("#firstName").val(dataRecord.firstname);
 						 $("#lastName").val(dataRecord.lastname);
 						 $("#product").val(dataRecord.productname);*/
-						 $("#quantity").jqxNumberInput({ });
-						 var lxsource = ['投标保证金', '购买标书', '中标服务费', '退投标保证金'];
-						 $("#lx").jqxDropDownList({ source: lxsource, selectedIndex: -1});
 
 						 // show the popup window.
 						 $("#popupWindow").jqxWindow('open');
@@ -117,6 +114,7 @@
 						datafields: [
 							{ name: 'xh', type: 'string' },
 							{ name: 'lx', type: 'string' },
+							{ name: 'projectcode', type: 'string' },
 							{ name: 'je', type: 'float' },
 							{ name: 'czry', type: 'string' }
 						],
@@ -131,6 +129,7 @@
 				 columns: [
 					  { text: '序号', datafield: 'xh',  width: 40, cellsalign: 'center', align: 'center' },
 					  { text: '类型', datafield: 'lx', width: 200, cellsalign: 'center', align: 'center' },
+					  { text: '项目编号', datafield: 'projectcode', width: 200, cellsalign: 'center', align: 'center' },
 					  { text: '金额', datafield: 'je', width: 190, cellsalign: 'center', align: 'center' },
 					  { text: '操作人员', datafield: 'czry', width: 190, cellsalign: 'center', align: 'center' },
 					  { text: '财务确认', datafield: 'cwqr', width: 90, cellsalign: 'center', align: 'center'},
@@ -140,10 +139,12 @@
 	                    var me = this;
 	                    var container = $("<div style='margin: 5px;'></div>");
 	                    toolbar.append(container);
-	                    container.append('<input id="addrowbutton" type="button" value="新增" />');
+	                    container.append('<input id="financebutton" type="button" value="财务确认" />');
+	                    container.append('<input style="margin-left: 5px;" id="addrowbutton" type="button" value="新增" />');
 	                    container.append('<input style="margin-left: 5px;" id="deleterowbutton" type="button" value="删除" />');
 	                    container.append('<input style="margin-left: 5px;" id="updaterowbutton" type="button" value="修改" />');
 	                    $("#addrowbutton").jqxButton({template:'success'});
+	                    $("#financebutton").jqxButton({template:'success'});
 	                    $("#updaterowbutton").jqxButton({template:'warning'});
 	                    $("#deleterowbutton").jqxButton({template:'danger'});
 
@@ -153,8 +154,14 @@
 				$("#popupWindow").jqxWindow({
 					width: 400, height:400, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01           
 				});
+				 $("#quantity").jqxNumberInput({width:200,height: 25 });
+				 $("#projectcode").jqxInput({width:200,height: 25 });
+				 var lxsource = ['投标保证金', '购买标书', '中标服务费', '退投标保证金'];
+				 $("#lx").jqxDropDownList({ height:25, width:200, source: lxsource, selectedIndex: -1});
+				
 			   $("#Cancel").jqxButton({ theme: theme });
 			   $("#Save").jqxButton({ theme: theme, template: "success" });
+			   
 				$("#Save").click(function () {
 
 						var row = { lx: $("#lx").val(), je: $("#quantity").val()};
@@ -162,7 +169,16 @@
 						$("#popupWindow").jqxWindow('hide');
 
 				});
+				$("#addrowbutton").click(function () {
 
+					$("#popupWindow").jqxWindow('open');
+
+				});
+				$("#updaterowbutton").click(function () {
+
+					$("#popupWindow").jqxWindow('open');
+
+				});				
         });
         
     </script>
@@ -187,7 +203,10 @@
                         <td align="right">类型:</td>
                         <td align="left"><div id="lx" /></td>
                     </tr>
-
+                    <tr>
+                        <td align="right">项目编号:</td>
+                        <td align="left"><input type="text" id="projectcode"/></td>
+                    </tr>
                     <tr>
                         <td align="right">金额:</td>
                         <td align="left"><div id="quantity"></div></td>
@@ -195,7 +214,7 @@
 
                     <tr>
                         <td align="right"></td>
-                        <td style="padding-top: 10px;" align="right"><input style="margin-right: 5px;" type="button" id="Save" value="Save" /><input id="Cancel" type="button" value="Cancel" /></td>
+                        <td style="padding-top: 10px;" align="right"><input style="margin-right: 5px;" type="button" id="Save" value="保存" /><input id="Cancel" type="button" value="取消" /></td>
                     </tr>
                 </table>
             </div>

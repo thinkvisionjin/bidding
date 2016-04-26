@@ -58,15 +58,16 @@ function InitProjectPackageGid(){
 		            width: 780,
 		            height: 200,
 		            source: projectPackageurldataAdapter,
-		            pageable: true,
+		           // pageable: true,
 		            editable: true,
+		            autoRowHeight: false,
 		            showToolbar: true,
-		            altRows: true,
+		           // altRows: true,
 		            ready: function()
 		            {
 		                // called when the DataTable is loaded.         
 		            },
-		            pagerButtonsCount: 8,
+		          //  pagerButtonsCount: 8,
 		            toolbarHeight: 35,
 		            renderToolbar: function(toolBar)
 		            {
@@ -344,18 +345,25 @@ function InitMainGrid(){
         	//添加打印按钮、导出Excel按钮和其他按钮
             var me = this;
             var container = $("<div style='margin-left: auto; margin-right: auto; '></div>");
-            var searchArea = $("#searchArea")
-            var printButton = $("<div style='float: left; margin-left: 30%;margin-top: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
-            var exportButton = $("<div style='float: left; margin-left: 5px;margin-top: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>导出</span></div>");
-            var searchButton = $("<div style='float: left; margin-left: 5px;margin-top: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>查询</span></div>");
+            var container = $("<div style='margin: 5px;'></div>");
+//            var searchArea = $("#searchArea")
+            var printButton = $("<div style='float: left; margin-left: 30%;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
+            var exportButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>导出</span></div>");
+            var searchButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>查询</span></div>");
+
+//            var printButton = $('<input style="margin-left: 5px;" id="addrowbutton" type="button" value="新增" />');
+//            var exportButton = $('<input style="margin-left: 5px;" id="deleterowbutton" type="button" value="删除" />');
+//            var searchButton = $('<input style="margin-left: 5px;" id="updaterowbutton" type="button" value="修改" />');
+            
             toolbar.append(container);
-            container.append(searchArea);
+//            container.append(searchArea);
             container.append(printButton);
             container.append(exportButton);
             container.append(searchButton);
-            printButton.jqxButton({  width: 80, height: 20 });
-            exportButton.jqxButton({  width: 80, height: 20 });
-            searchButton.jqxButton({  width: 80, height: 20 });
+            
+            printButton.jqxButton({   });
+            exportButton.jqxButton({   });
+            searchButton.jqxButton({   });
             if (theme != "") {
             	exportButton.addClass('jqx-widget-content-' + theme);
             	exportButton.addClass('jqx-rc-all-' + theme);
@@ -465,7 +473,7 @@ function InitADDNewPackageWindow(){
     $("#CancelPackage_ADD").click(function () {
     	$("#popupWindow_PackageADD").jqxWindow('hide');
     });
-    $("#SavePackage_ADD").jqxButton({ theme: theme });
+    $("#SavePackage_ADD").jqxButton({ theme: theme, template:"success"  });
     $("#SavePackage_ADD").click(function () {
     	var row=
     	  {  ProjectId:$("#ProjectId_ADD").val()
@@ -518,7 +526,7 @@ function InitAddNewProjectWindow(){
 	//项目创建时间
 	$("#CreationDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
 	//项目备注
-	$('#Note_ADD').jqxEditor({height: "200px", width: '780px'});
+//	$('#Note_ADD').jqxEditor({height: "200px", width: '780px'});
 	//initialize the popup add window and buttons.
     $("#popupWindow_ADD").jqxWindow({ showCollapseButton: true,
     	width: 800, 
@@ -527,7 +535,7 @@ function InitAddNewProjectWindow(){
     $("#Cancel_ADD").click(function () {
     	$("#popupWindow_ADD").jqxWindow('hide');
     });
-    $("#Save_ADD").jqxButton({ theme: theme });
+    $("#Save_ADD").jqxButton({ theme: theme, template:"success"  });
     $("#Save_ADD").click(function () {
 		var row = {ProtocolCodeId:$("#ProtocolCodeId_ADD").val(),ProjectCodeId:$("#ProjectCodeId_ADD").val(),ProjectName:$("#ProjectName_ADD").val()
 		,BuyerId:$("#BuyerId_ADD").val(),EmployeeId:$("#EmployeeId_ADD").val(),Assistant:$("#Assistant_ADD").val(),ProjectSourceId:$("#ProjectSourceId_ADD").val()
@@ -595,11 +603,11 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
             return false;
         }
     });
-    $('#jqxgrid').jqxGrid({ toolbarheight: 170.0});
+    $('#jqxgrid').jqxGrid({ });
     // initialize the popup edit window and buttons.
     $("#popupWindow_EDIT").jqxWindow({ width: 350, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel_EDIT"), modalOpacity: 0.01 });
     $("#Cancel_EDIT").jqxButton({ theme: theme });
-    $("#Save_EDIT").jqxButton({ theme: theme });
+    $("#Save_EDIT").jqxButton({ theme: theme, template:"success" });
     // update the edited row when the user clicks the 'Save' button.
     $("#Save_EDIT").click(function () {
         if (editrow >= 0) {

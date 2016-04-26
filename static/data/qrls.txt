@@ -1,13 +1,15 @@
 ﻿[
 {
 "xh": "bb",
-"lx": "bb",
+"lx": "购买标书",
+"projectcode": "00001",
 "je": 10,
 "czry": "张力"
 },
 {
 "xh": "bb",
-"lx": "bb",
+"lx": "中标服务费",
+"projectcode": "00001",
 "je": 10,
 "czry": "张力"
 }

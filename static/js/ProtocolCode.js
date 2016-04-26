@@ -235,9 +235,9 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
             125.0
             });
             // initialize the popup edit window and buttons.
-            $("#popupWindow_EDIT").jqxWindow({ width: 350, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel_EDIT"), modalOpacity: 0.01 });
+            $("#popupWindow_EDIT").jqxWindow({ width: 400, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel_EDIT"), modalOpacity: 0.01 });
             $("#Cancel_EDIT").jqxButton({ theme: theme });
-            $("#Save_EDIT").jqxButton({ theme: theme });
+            $("#Save_EDIT").jqxButton({ theme: theme, template: "success" });
             // update the edited row when the user clicks the 'Save' button.
             $("#Save_EDIT").click(function () {
                 if (editrow >= 0) {
@@ -263,7 +263,7 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
             $("#Cancel_ADD").click(function(){
             	$("#popupWindow_ADD").jqxWindow('hide');
             })
-            $("#Save_ADD").jqxButton({ theme: theme });
+            $("#Save_ADD").jqxButton({ theme: theme, template: "success" });
             $("#Save_ADD").click(function () {
                var row = 
 //******** ADD_ROW_CONTENT_SAVE START*****************//

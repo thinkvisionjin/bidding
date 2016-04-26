@@ -420,7 +420,7 @@ function ProtocolNumber_ADD(){
 			{ source: protocolNumberdataAdapter, 
 				displayMember: "ProtocolNumber", 
 				valueMember: "Id",
-				selectedIndex: 0, width: '150', height: '23'});
+				selectedIndex: -1, width: '150', height: '23'});
 	$('#ProtocolNumber_ADD').on('select', function (event) {
 	    var args = event.args;
 	    var item = $('#ProtocolNumber_ADD').jqxDropDownList('getItem', args.index);
@@ -546,10 +546,12 @@ function Assistant_ADD(){
     var dataAdapter = new $.jqx.dataAdapter(source);
                 
     $("#Assistant_ADD").jqxDropDownList({ 
+    	checkboxes: true,
     	source: dataAdapter, 
     	displayMember: "Name", 
     	valueMember: "Id", width: 200, height: 25,
     	selectedIndex: 0});
+
     $("#Assistant_ADD").on('select', function (event) {
         if (event.args) {
             var item = event.args.item;

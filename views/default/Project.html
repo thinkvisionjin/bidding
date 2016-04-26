@@ -70,7 +70,7 @@
 </head>
 <body class='default'>
 	<div id='jqxWidget'>
-		<div id="jqxgrid"></div>
+		
 
 		<div style="margin-top: 30px;">
 			<div id="cellbegineditevent"></div>
@@ -106,7 +106,7 @@
 				</tr>
 			</table>
 		</div>
-
+		<div id="jqxgrid"></div>
 
 		<div id="popupWindow_EDIT">
 			<div>编辑</div>
@@ -208,8 +208,7 @@
 						<td align="left"><input id="CreationDate_ADD" /></td>
 					</tr>
 					<tr>
-						<td colspan="4" align="left"><p>项目拆包</p>
-							<div id="Package_ADD" /></td>
+						<td colspan="4" align="left"><div id="Package_ADD" /></td>
 					</tr>
 					<tr>
 						<td colspan="4" align="left"><p>项目备注</p>
@@ -217,10 +216,11 @@
 					</tr>
 					<tr>
 						<td align="center" style="padding-top: 10px;">
-						<td align="center"><input type="button" id="Cancel_ADD"
+						<td align="center" style="padding-top: 10px;">
+						<td align="center" style="padding-top: 10px;">
+						<td align="right"><input style="margin-right: 5px;" type="button" id="Save_ADD"
+							value="保存" /><input type="button" id="Cancel_ADD"
 							value="取消" /></td>
-						<td align="center"><input type="button" id="Save_ADD"
-							value="保存" /></td>
 					</tr>
 				</table>
 			</div>
@@ -263,9 +263,11 @@
 					</tr>
 					<tr>
 						<td align="center" style="padding-top: 10px;">
-							<td align="center"><input type="button" id="CancelPackage_ADD"
+						<td align="center" style="padding-top: 10px;">
+						<td align="center" style="padding-top: 10px;">						
+							<td align="right"><input style="margin-right: 5px;" type="button" id="SavePackage_ADD" value="保存" /><input type="button" id="CancelPackage_ADD"
 							value="取消" /></td>
-<td align="center"><input type="button" id="SavePackage_ADD" value="保存" /></td>
+
 </tr>
 </table>
        		</div>

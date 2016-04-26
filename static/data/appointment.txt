@@ -1,22 +1,49 @@
 
 [
 {
-                "id": "id6",
+                "id": "id1",
                 "description": "aa",
-                "applyuser": "a",
-                "subject": "建交委",
+                "applyuser": "张严",
+                "subject": "B项目开标",
                 "calendar": "第1会议室",
                 "start": "2016-10-26 15:00",
                 "end": "2016-10-26 16:00"
             },
   {
-                "id": "id5",
+                "id": "id2",
                 "description": "aa",
-                "applyuser": "b",
-                "subject": "公积金中心交流",
-                "calendar": "第六会议室",
+                "applyuser": "王丽",
+                "subject": "A项目开标",
+                "calendar": "第2会议室",
                 "start": "2016-10-25 15:00",
                 "end": "2016-10-25 16:00"
-            }
+            },
+{
+                "id": "id3",
+                "description": "aa",
+                "applyuser": "张严",
+                "subject": "B项目开标",
+                "calendar": "第3会议室",
+                "start": "2016-10-27 10:00",
+                "end": "2016-10-27 16:00"
+            },
+  {
+                "id": "id4",
+                "description": "aa",
+                "applyuser": "陈明",
+                "subject": "A项目开标",
+                "calendar": "第4会议室",
+                "start": "2016-10-28 9:00",
+                "end": "2016-10-28 12:00"
+            }  ,
+  {
+                "id": "id5",
+                "description": "aa",
+                "applyuser": "张丽",
+                "subject": "A项目开标",
+                "calendar": "多媒体会议室",
+                "start": "2016-10-29 9:00",
+                "end": "2016-10-29 12:00"
+            }           
   
 ]

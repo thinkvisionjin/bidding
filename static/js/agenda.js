@@ -106,7 +106,7 @@ $(document).ready(function () {
 				{
 					if (data.appointment.location == "")
 					{
-						data.html = data.appointment.subject + "[申请人:" + "aaaa" + "]";
+						data.html = data.appointment.subject + "[申请人:" + "张三" + "]";
 					}
 					else
 					{
@@ -303,7 +303,7 @@ $(document).ready(function () {
             $("#scheduler").on('appointmentAdd', function (event) {
                 var args = event.args;
                 var appointment = args.appointment;
-				$('#scheduler').jqxScheduler('setAppointmentProperty', appointment.id, "location", "[申请人:tttt]");
+				$('#scheduler').jqxScheduler('setAppointmentProperty', appointment.id, "location", "张三");
 				
 
             });
