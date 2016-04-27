@@ -85,7 +85,7 @@ $(document).ready(function () {
                         $("#jqxgrid").jqxGrid({ source:dataAdapter });
                     });
                 },
-                showtoolbar: true,
+                showtoolbar: false,
                 rendertoolbar: function (toolbar) {
                 	//添加打印按钮、导出Excel按钮和其他按钮
                     var me = this;

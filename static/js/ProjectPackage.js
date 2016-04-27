@@ -202,7 +202,7 @@ $("#IsDelete_ADD").height(23)
                         $("#jqxgrid").jqxGrid({ source:dataAdapter });
                     });
                 },
-                showtoolbar: true,
+                showtoolbar: false,
                 rendertoolbar: function (toolbar) {
                 	//添加打印按钮、导出Excel按钮和其他按钮
                     var me = this;
@@ -354,6 +354,17 @@ $("#IsDelete_EDIT").val(dataRecord.IsDelete);
 }
 //******** ADD_ROW_CONTENT_SAVE START*****************//
                var datarow = row;
+               
+//               $.ajax({
+//            	   type: "POST",
+//            	   contentType:"pplication/x-www-form-urlencoded; charset=utf-8",
+//            	   url: "/bidding/default/insert?table=ProjectPackage",
+//            	   data: datarow,
+//            	   dataType:"json",
+//            	   success: function(result){
+//            		   $("#jqxgrid").jqxGrid('addrow', null, result, 'first');
+//            	   }
+//            	   });             
                $.post("/bidding/default/insert?table=ProjectPackage",datarow,function(result){
             	   $("#jqxgrid").jqxGrid('addrow', null, result, 'first');
             	},'json');

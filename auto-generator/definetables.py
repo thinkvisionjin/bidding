@@ -10,13 +10,7 @@ cursor=conn.cursor()
  
 def defineTables():
     cursor.execute(u'use BIDDING')
-    cursor.execute(u'''SELECT object_name (i.id) TableName,   
-       rows as RowCnt   
-FROM sysindexes i   
-INNER JOIN sysObjects o   
-    ON (o.id = i.id AND o.xType = 'U ')   
-WHERE indid < 2   
-ORDER BY TableName ''')
+    cursor.execute(u'''SELECT object_name (i.id) TableName,rows as RowCnt   FROM sysindexes i INNER JOIN sysObjects o  ON (o.id = i.id AND o.xType = 'U ')  WHERE indid < 2  ORDER BY TableName ''')
     rows = cursor.fetchall() 
     ts=[]
     for r in rows:

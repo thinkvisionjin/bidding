@@ -8,7 +8,7 @@
 ## - download is for downloading files uploaded in the db (does streaming)
 #########################################################################
 
-@auth.requires_login()
+# @auth.requires_login()
 def index():
     """
     example action using the internationalization operator T and flash
@@ -62,90 +62,60 @@ def call():
 ##################通用的表处理接口#############################
 
 def insert():
-    print 'inserting data**************'
     table_name = request.vars.table
+    print 'inserting data into:'  +table_name +'**************'
     rowData = request.post_vars
-    print rowData
+#     print rowData
+#     print rowData['PackageName'].encode('utf-8')
+#     rowData['PackageName'] = unicode(rowData['PackageName'].encode('utf-8'))
+#     print rowData  
     id = db[table_name].insert(**rowData)
-    print id 
+    db.commit()
     row = db(db[table_name]._id ==id).select().first()
     dict_row = {}
     for key in row.keys():
-        if (key== 'update_record' or key== 'delete_record' or key =='PackageName'):
-            print 'ignore some keys'
-            if(key =='PackageName'):
-                print key
-                print row[key]
-#                 print row[key].decode("gb2312");
-                print unicode(row[key])
-                print "*********"
-#                 print 'encode gb2312   ',row[key].encode('gb2312')
-#                 print 'decode gb2312  ',row[key].decode('gb2312')
-#                 print 'encode utf-8  ',row[key].encode('utf-8')
-#                 print 'decode utf-8   ',row[key].decode('utf-8')
-        elif key=='id':
-            dict_row['Id']  = row[key]
-        else:
-            if isinstance(row[key], bool):
-                dict_row[key] = row[key]
-            else:
-                dict_row[key] = unicode(row[key])
-    db.commit()
+        if (key!= 'update_record' and key!= 'delete_record'):
+                if key=='id':
+                    dict_row['Id']  = row[key]
+                elif isinstance(row[key], bool):
+                    dict_row[key] = row[key]
+                else:
+                    dict_row[key] = unicode(row[key])
     result= json.dumps(dict_row,ensure_ascii=False)
-    print result
     return result
 
 def delete():
-    print 'deleting row**************'
     table_name = request.vars.table
-    print table_name
+    print 'delete data from:'  +table_name +'**************'
     id = request.post_vars['Id']
-    print id 
     row = db(db[table_name]._id ==id).select().first()
-    print row
     db(db[table_name]._id == id).delete()
     db.commit()
     return dict(table=table_name)
 
 def update():
-    print 'updating row**************'
     table_name = request.vars.table
-    if table_name == 'ProtocolCode':
-        print request.post_vars   
-        row_data = request.post_vars
-        id = row_data['Id']
-        print id
-        for key in row_data:
-            if key!='Id':
-                print key
-                db(db[table_name]._id == id).update(**{key:request.post_vars[key]})
-                print '****'
-        row = db(db[table_name]._id ==id).select().first()
-        db.commit()
+    print 'update data into:'  +table_name +'**************'
+    row_data = request.post_vars
+    id = row_data['Id']
+    for key in row_data:
+        if key!='Id':
+            db(db[table_name]._id == id).update(**{key:request.post_vars[key]})
+    row = db(db[table_name]._id ==id).select().first()
+    db.commit()
     return dict(table=table_name)
 
 def select():
-    print 'selecting rows**************'
     table_name = request.vars.table
-    myqueryfields =  request.post_vars
-    for key in myqueryfields.keys():
-        print key,myqueryfields[key]
-    myquery = "";
-    print myqueryfields
-    if len(myqueryfields)!=0:
-        myquery = 'TypeId=0'
+    print 'select data from:'  +table_name +'**************'
     dic_rows = []
-    print table_name
-    for row in db(myquery).select(db[table_name].ALL):
-        print row
+    for row in db().select(db[table_name].ALL):
         dict_row = {}
         for key in row.keys():
-            if (key== 'update_record' or key== 'delete_record'):
-                print 'ignore some keys:' + key
-            elif key=='id':
-                dict_row['Id']  = row[key]
-            else:
-                if isinstance(row[key], bool):
+            if (key!= 'update_record' and key!= 'delete_record'):
+                if key=='id':
+                    dict_row['Id']  = row[key]
+                elif isinstance(row[key], bool):
                     dict_row[key] = row[key]
                 else:
                     dict_row[key] = unicode(row[key])
