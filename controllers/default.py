@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # this file is released under public domain and you can use without limitations
+from datetime import datetime
 
 #########################################################################
 ## This is a sample controller
@@ -65,22 +66,28 @@ def insert():
     table_name = request.vars.table
     print 'inserting data into:'  +table_name +'**************'
     rowData = request.post_vars
-#     print rowData
-#     print rowData['PackageName'].encode('utf-8')
-#     rowData['PackageName'] = unicode(rowData['PackageName'].encode('utf-8'))
-#     print rowData  
+    print rowData
+    print rowData['ProjectName'].decode('utf-8')
+    data = rowData['ProjectName'].decode('utf-8')
+    rowData['ProjectName'] = data
+    print  rowData['ProjectName']
     id = db[table_name].insert(**rowData)
     db.commit()
     row = db(db[table_name]._id ==id).select().first()
+    print row
     dict_row = {}
     for key in row.keys():
-        if (key!= 'update_record' and key!= 'delete_record'):
-                if key=='id':
-                    dict_row['Id']  = row[key]
+        if (key!= u'update_record' and key!= u'delete_record'):
+                if key==u'id':
+                    dict_row[u'Id']  = row[key]
                 elif isinstance(row[key], bool):
                     dict_row[key] = row[key]
-                else:
+                elif isinstance(row[key], str):
+                    dict_row[key] = row[key].decode('utf-8')
+                elif isinstance(row[key], datetime):
                     dict_row[key] = unicode(row[key])
+                else:
+                    dict_row[key] = row[key]
     result= json.dumps(dict_row,ensure_ascii=False)
     return result
 
@@ -107,18 +114,22 @@ def update():
 
 def select():
     table_name = request.vars.table
-    print 'select data from:'  +table_name +'**************'
+    print u'select data from:'  +table_name +'**************'
     dic_rows = []
     for row in db().select(db[table_name].ALL):
         dict_row = {}
         for key in row.keys():
-            if (key!= 'update_record' and key!= 'delete_record'):
-                if key=='id':
-                    dict_row['Id']  = row[key]
+            if (key!= u'update_record' and key!= u'delete_record'):
+                if key==u'id':
+                    dict_row[u'Id']  = row[key]
                 elif isinstance(row[key], bool):
                     dict_row[key] = row[key]
-                else:
+                elif isinstance(row[key], str):
+                    dict_row[key] = row[key].decode('utf-8')
+                elif isinstance(row[key], datetime):
                     dict_row[key] = unicode(row[key])
+                else:
+                    dict_row[key] = row[key]
         dic_rows.append(dict_row)
     return json.dumps(dic_rows,ensure_ascii=False)
 

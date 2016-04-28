@@ -336,6 +336,11 @@ CREATE TABLE [dbo].ProjectPackage(
 	[Id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+INSERT INTO ProjectPackage
+(PackageNumber,StateId,WinningMoney,PackageName,WinningCompany,ChargeRate,SigningDate,EntrustMoney,MakeOutDate,IsDelete) 
+VALUES ('PCMET-16088888G030-01','1','5000000','硬件设备','万达信息','20','2016-04-24 00:00:00','50000','2016-04-24 00:00:00','0');
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'包序号' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'ProjectPackage', @level2type=N'COLUMN',@level2name=N'Id'
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'项目序号' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'ProjectPackage', @level2type=N'COLUMN',@level2name=N'ProjectId'
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'包编号' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'ProjectPackage', @level2type=N'COLUMN',@level2name=N'PackageNumber'

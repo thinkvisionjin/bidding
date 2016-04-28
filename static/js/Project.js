@@ -518,7 +518,7 @@ function InitAddNewProjectWindow(){
 	//项目创建时间
 	$("#CreationDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
 	//项目备注
-	$('#Note_ADD').jqxEditor({height: "200px", width: '780px'});
+//	$('#Note_ADD').jqxEditor({height: "200px", width: '780px'});
 	//initialize the popup add window and buttons.
     $("#popupWindow_ADD").jqxWindow({ showCollapseButton: true,
     	width: 800, 
@@ -532,7 +532,9 @@ function InitAddNewProjectWindow(){
 		var row = {ProtocolCodeId:$("#ProtocolCodeId_ADD").val(),ProjectCodeId:$("#ProjectCodeId_ADD").val(),ProjectName:$("#ProjectName_ADD").val()
 		,BuyerId:$("#BuyerId_ADD").val(),EmployeeId:$("#EmployeeId_ADD").val(),Assistant:$("#Assistant_ADD").val(),ProjectSourceId:$("#ProjectSourceId_ADD").val()
 		,SourcesOfFundingId:$("#SourcesOfFundingId_ADD").val(),ProjectTypeId:$("#ProjectTypeId_ADD").val(),ManagementStyleId:$("#ManagementStyleId_ADD").val()
-		,StateId:$("#StateId_ADD").val(),Note:$("#Note_ADD").val(),CreationDate:$("#CreationDate_ADD").val(),IsDelete:'0'
+		,StateId:$("#StateId_ADD").val(),
+//		Note:$("#Note_ADD").val(),
+		CreationDate:$("#CreationDate_ADD").val(),IsDelete:'0'
 		}
 		var datarow = row;
 		$.post("/bidding/default/insert?table=Project",datarow,function(result){

@@ -11,7 +11,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 str_db = u'mssql4://sa:1@localhost/BIDDING'
 #03.连接需要用utf8字符集，这样返回的中文结果可直接解码
-db = DAL(str_db,db_codec='utf-8',migrate_enabled=False)
+db = DAL(str_db,migrate_enabled=False)
 print db._uri
 print db._dbname
 db.define_table('BankRecord',Field('Account'),Field('CompanyName'),Field('CreateDate'),Field('Money'),Field('Note'),Field('TradingTime'))
