@@ -67,11 +67,10 @@ def insert():
     print 'inserting data into:'  +table_name +'**************'
     rowData = request.post_vars
     print rowData
-    print rowData['ProjectName'].decode('utf-8')
-    data = rowData['ProjectName'].decode('utf-8')
-    rowData['ProjectName'] = data
-    print  rowData['ProjectName']
+    for key in rowData:
+        rowData[key] = rowData[key].decode('utf-8')
     id = db[table_name].insert(**rowData)
+    print id 
     db.commit()
     row = db(db[table_name]._id ==id).select().first()
     print row

@@ -38,7 +38,7 @@ db.define_table('ProjectPackage',Field('ChargeRate'),Field('CreationDate'),Field
 db.define_table('ProjectResource',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('ProjectStatus',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('ProjectType',Field('ProjectTypeCode'),Field('ProjectTypeID'),Field('ProjectTypeName'))
-db.define_table('ProtocolCode',Field('CreationTime',default=request.now),Field('EmployeeId',default=auth.user_id),Field('IsDelete'),Field('ProtocolNumber'),Field('TypeId'))
+db.define_table('ProtocolCode',Field('CreationTime',default=request.now,type='datetime'),Field('EmployeeId',default=auth.user_id),Field('IsDelete'),Field('ProtocolNumber'),Field('TypeId'))
 db.define_table('ProtocolCodeType',Field('TypeCode'),Field('TypeId'),Field('TypeName'))
 db.define_table('PurchaseStyle',Field('PurchaseStyleCode'),Field('PurchaseStyleId'),Field('PurchaseStyleName'))
 db.define_table('Suggest',Field('Content'),Field('CreationTime'),Field('IsDelete'),Field('UserId'))

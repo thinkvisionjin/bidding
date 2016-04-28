@@ -470,7 +470,7 @@ function InitADDNewPackageWindow(){
     	var row=
     	  {  ProjectId:$("#ProjectId_ADD").val()
     		,PackageNumber:$("#PackageNumber_ADD").val()
-    		,PackageName:encodeURIComponent(encodeURIComponent($("#PackageName_ADD").val()))
+    		,PackageName:$("#PackageName_ADD").val()
     		,StateId:$("#StateIdPackage_ADD").val()
     		,SigningDate:$("#SigningDate_ADD").val()
     		,MakeOutDate:$("#MakeOutDate_ADD").val()
