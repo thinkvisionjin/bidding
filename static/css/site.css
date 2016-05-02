@@ -8,6 +8,20 @@ html
 	font-size: 12px;
 }
 
+.MdyBtn {
+	cursor : pointer;
+	border-color : #C2DBEA;
+	border-width : 1px;
+	border-style : solid;
+	background-color : #F0F6FA;
+	color : #1E50A2;
+	font-size : 12px;
+	width:40px;
+	height:20px;
+	padding-left:6px;
+	padding-right:6px;
+}
+
 .NavBtn
 {
 	width: 100%;

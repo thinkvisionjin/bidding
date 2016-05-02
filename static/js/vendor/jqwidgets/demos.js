@@ -7,7 +7,7 @@ function getDemoTheme() {
         return theme;
     }
 
-    var theme = "metro";
+    var theme = "energyblue";
    
 
     var url = "/bidding/static/css/vendor/jqwidgets/styles/jqx." + theme + '.css';

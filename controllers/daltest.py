@@ -35,6 +35,7 @@ db.define_table('TypeOfTask',Field('CreationDate'),Field('IsDelete'),Field('Name
 db.define_table('ProjectPackage',Field('ChargeRate'),Field('CreationDate'),Field('EntrustMoney'),Field('IsDelete'),Field('MakeOutDate'),Field('Note'),Field('PackageName'),Field('PackageNumber'),Field('ProjectId'),Field('SigningDate'),Field('StateId'),Field('WinningCompany'),Field('WinningMoney'))
 
     
+print db.executesql(u'select * from [zhaobiao].[dbo].[Zbgg]', as_dict=True)
 
 def update():
     table_name = 'ProtocolCode'
@@ -72,7 +73,7 @@ def insert():
     print result
     return result
 
-insert()
+
 
 def select():
     print 'selecting rows**************'
