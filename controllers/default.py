@@ -224,3 +224,18 @@ def zbgg():
 def zbggs():
     return dict();
 
+def gettbbmsh():
+    sqlstr = u'''select  id,code,title,a.buid,a.flag,bflag 
+from [zhaobiao].[dbo].[baomings] a 
+where  (select tid from [zhaobiao].[dbo].[user_info] where uid=a.uid) = '1' 
+order by code,[kbtime] '''
+    flag =  request.vars.flag 
+    if flag ==0:
+        sqlstr += u'''and (bflag=0 or bflag=3 or bflag=-1) and kbtime>getdate() '''
+    if request.post_vars[u'seachKey'] is not None:
+        searchContent = request.post_vars[u'seachKey']
+        sqlstr += u'''and (title like '%" + + "%' or code like '%" '''+ searchContent + u'''"%'  or (select company from [zhaobiao].[dbo].[user_info] where uid=a.buid) like '%" '''+ searchContent + u''' "%') '''
+    return sqltojson(sqlstr);
+
+def tbbmsh():
+    return dict()
