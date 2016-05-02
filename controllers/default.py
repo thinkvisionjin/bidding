@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # this file is released under public domain and you can use without limitations
-from datetime import datetime
 
 #########################################################################
 ## This is a sample controller
@@ -225,7 +224,3 @@ def zbgg():
 def zbggs():
     return dict();
 
-def manage_transactions():
-    grid = SQLFORM.smartgrid(db.Project,linked_tables=['Package','ProtocolCode'],
-                             user_signature=False)
-    return dict(grid=grid)
