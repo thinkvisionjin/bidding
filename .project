@@ -14,4 +14,10 @@
 	<natures>
 		<nature>org.python.pydev.pythonNature</nature>
 	</natures>
+	<variableList>
+		<variable>
+			<name>web2py</name>
+			<value>file:/D:/web2py</value>
+		</variable>
+	</variableList>
 </projectDescription>
