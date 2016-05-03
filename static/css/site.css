@@ -3,7 +3,6 @@
 html
 {
 	height: 100%;
-	overflow: hidden;
 	font-family: 'Microsoft YaHei', Arial;
 	font-size: 12px;
 }
@@ -63,3 +62,5 @@ html
 }
 
 td,th {height:30px ;text-align:left;}
+
+.g111 { width:99%;border:1px solid #98b7d4; float:left; margin:10px; }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-    <title id="Description">jqxFileUpload can be used for uploading file(s) to a server. In this demo you can browse for files and click the widget's buttons to see how it will work in a real environment. For uploading files however, you should set the "uploadUrl" property to point to a Web Server file that will handle the actual Upload process.</title>
+    <title id="Description">投标报名审核</title>
     <link type="text/css" rel="Stylesheet" href="{{=URL('static','css/vendor/jqwidgets/styles/jqx.base.css')}}" />
     <link type="text/css" rel="Stylesheet" href="{{=URL('static','css/site.css')}}" />
     <script type="text/javascript" src="{{=URL('static','js/vendor/jquery/jquery-1.11.1.min.js')}}"></script>
@@ -21,16 +21,17 @@
 	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"></script>
 	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxnumberinput.js')}}"></script>
 	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxinput.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxexpander.js')}}"></script>
+	
 	<script type="text/javascript" src="{{=URL('static','js/tbbmsh.js')}}"></script>
 </head>
-<body>  
-	<table >
-		<tr>
-			<td>招标编号/名称/公司：</td>
-			<td><input id="txtKeyword"></input></td>
-			<td align="left"><input type="button" id="search" value="查询" /></td>
-		</tr>
-	</table>	
-	<div id='gg-jqxgrid'></div>
+<body>  	
+	<div id='jqxExpander' class="g111">
+		<div>
+			报名标书 - {{=returnValue}}
+         </div>
+		<div id='gg-jqxgrid'>
+		</div>
+	</div>
 </body>
 </html>

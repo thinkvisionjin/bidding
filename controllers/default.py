@@ -225,7 +225,7 @@ def zbggs():
     return dict();
 
 def gettbbmsh():
-    sqlstr = u'''select  id,code,title,a.buid,a.flag,bflag 
+    sqlstr = u'''select  top 100 id,code,title,a.buid,a.flag,bflag 
 from [zhaobiao].[dbo].[baomings] a 
 where  (select tid from [zhaobiao].[dbo].[user_info] where uid=a.uid) = '1' 
 order by code,[kbtime] '''
@@ -238,4 +238,10 @@ order by code,[kbtime] '''
     return sqltojson(sqlstr);
 
 def tbbmsh():
-    return dict()
+    flag =  request.vars.flag 
+    reValue=u'待审核'
+    if flag == 1:
+         reValue=u'已审核'
+    return dict(returnValue = reValue)
+
+
