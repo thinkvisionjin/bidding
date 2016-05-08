@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title id='Description'>Project</title>
+<meta name="description" content="Project" />
+
+<link rel="stylesheet"
+	href="{{=URL('static','css/vendor/jqwidgets/styles/jqx.base.css')}}"
+	type="text/css" />
+<link rel="stylesheet" href="{{=URL('static','css/site.css')}}"
+	type="text/css" />
+<script src="{{=URL('static','js/vendor/jquery/jquery-1.11.1.min.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxcore.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxdata.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxbuttons.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxinput.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxscrollbar.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxmenu.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.pager.js')}}"
+	type="text/javascript"></script>
+<script
+	src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.selection.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxdata.export.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.export.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.sort.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxnumberinput.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxlistbox.js')}}"
+	type="text/javascript"></script>
+<script
+	src="{{=URL('static','js/vendor/jqwidgets/jqxdropdownlist.js')}}"
+	type="text/javascript"></script>
+<script
+	src="{{=URL('static','js/vendor/jqwidgets/jqxDropDownButton.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxEditor.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxDataTable.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxTooltip.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxcalendar.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxcheckbox.js')}}"	
+	type="text/javascript"></script>
+<script	src="{{=URL('static','js/vendor/jqwidgets/jqxDateTimeInput.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxexpander.js')}}" 
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/demos.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/generatedata.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/commonJs.js')}}"
+	type="text/javascript"></script>
+<script src="{{=URL('static','js/EditProject.js')}}"
+	type="text/javascript"></script>
+<style type="text/css">
+input:focus {
+	background-color: #FF6;
+}
+</style>
+<script type="text/javascript">
+	
+</script>
+</head>
+<body class='default'>
+	
+	<div id='jqxExpander' class="g111">
+	<div>
+		编辑项目档案
+		<div style="display:none" id="ProjectData">
+        	{{=project}}
+    	</div>
+    </div>
+
+	<div style="overflow: hidden;">
+			<table width="100%">
+				<tr>
+					<td align="left"><p>项目编号</p></td>
+					<td align="left"><input id="EditProject_ProjectCode" /></td>
+					<td align="left"><p>项目名称</p></td>
+					<td align="left"><input id="EditProject_ProjectName" /></td>
+					<td align="left"><p>采购单位</p></td>
+					<td align="left"><div id="EditProject_Customer" /></td>
+				</tr>
+				<tr>
+					<td align="left"><p>项目类型</p></td>
+					<td align="left"><div id="EditProject_ProjectType" /></td>
+					<td align="left"><p>采购方式</p></td>
+					<td align="left"><div id="EditProject_PurchaseStyle" /></td>
+					<td align="left"><p>项目来源</p></td>
+					<td align="left"><div id="EditProject_ProjectSource" /></td>
+				</tr>
+				<tr>
+					<td align="left"><p>资金来源</p></td>
+					<td align="left"><div id="EditProject_FundingSource" /></td>
+					<td align="left"><p>项目负责人</p></td>
+					<td align="left"><div id="EditProject_Employee" /></td>
+					<td align="left"><p>项目协助人</p></td>
+					<td align="left"><div id="EditProject_Assistant" /></td>
+				</tr>
+				<tr>
+					<td align="left"><p>项目状态</p></td>
+					<td align="left"><div id="EditProject_ProjectStatus" /></td>
+					<td align="left"><p>创建日期</p></td>
+					<td align="left"><input id="EditProject_CreationDate" /></td>
+				</tr>
+				<tr>
+					<td colspan="6" align="left"><div id="EditProject_PackageTable" /></td>
+				</tr>
+				<!--  
+				<tr>
+					<td colspan="4" align="left"><p>项目备注</p>
+						<div id="Note_ADD" /></td>
+				</tr>
+				-->
+				<tr>
+					<td align="center" style="padding-top: 10px;">
+					<td align="center" style="padding-top: 10px;">
+					<td align="center" style="padding-top: 10px;">
+					<td align="center" style="padding-top: 10px;">
+					<td align="center" style="padding-top: 10px;">
+					<td align="right">
+						<input style="margin-right: 5px;" type="button" id="EditProject_Save" value="保存" />
+						<input type="button"id="EditProject_Cancel" value="取消" />
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div id="popupWindow_PackageADD">
+		<div>新增</div>
+		<div style="overflow: hidden;">
+			<table width="100%">
+				<tr>
+					<td align="left"><p>包编号</p></td>
+					<td align="left"><input id="PackageNumber_ADD" /></td>
+					<td align="left"><p>包名称</p></td>
+					<td align="left"><input id="PackageName_ADD" /></td>
+				</tr>
+				<tr>
+					<td align="left"><p>签约日期</p></td>
+					<td align="left"><input id="SigningDate_ADD" /></td>
+					<td align="left"><p>开票日期</p></td>
+					<td align="left"><input id="MakeOutDate_ADD" /></td>
+				</tr>
+				<tr>
+					<td align="left"><p>委托金额</p></td>
+					<td align="left"><input id="EntrustMoney_ADD" /></td>
+					<td align="left"><p>中标金额</p></td>
+					<td align="left"><input id="WinningMoney_ADD" /></td>
+				</tr>
+				<tr>
+					<td align="left"><p>中标单位</p></td>
+					<td align="left"><input id="WinningCompany_ADD" /></td>
+					<td align="left"><p>服务费率</p></td>
+					<td align="left"><input id="ChargeRate_ADD" /></td>
+				</tr>
+				<tr>
+					<td align="left"><p>包状态</p></td>
+					<td align="left"><div id="StateIdPackage_ADD" /></td>
+				</tr>
+				<tr>
+					<td align="left"><p>包备注</p></td>
+					<td align="left" COLSPAN=3><input id="NotePackage_ADD" /></td>
+				</tr>
+				<tr>
+					<td align="center" style="padding-top: 10px;">
+					<td align="center" style="padding-top: 10px;">
+					<td align="center" style="padding-top: 10px;">
+					<td align="right"><input style="margin-right: 5px;"
+						type="button" id="SavePackage_ADD" value="保存" /><input
+						type="button" id="CancelPackage_ADD" value="取消" /></td>
+	
+				</tr>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

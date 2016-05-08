@@ -8,7 +8,8 @@
 ## - download is for downloading files uploaded in the db (does streaming)
 #########################################################################
 from datetime import datetime
-# @auth.requires_login()
+from _sqlite3 import Row
+
 def index():
     """
     example action using the internationalization operator T and flash
@@ -93,9 +94,9 @@ def delete():
     table_name = request.vars.table
     print 'delete data from:'  +table_name +'**************'
     id = request.post_vars['Id']
-    row = db(db[table_name]._id ==id).select().first()
-    db(db[table_name]._id == id).delete()
-    db.commit()
+    strSQL = u"delete  from [bidding].[dbo].[" + table_name + u"] where  id = " +id;
+    print strSQL
+    db.executesql(strSQL)
     return dict(table=table_name)
 
 def update():
@@ -150,6 +151,23 @@ def Project():
     return dict();
 def ProjectPackage():
     return dict();
+
+def ProjectMangement():
+    return dict();
+def FinanceMangement():
+    return dict();
+
+def EditProject():
+    id = request.vars.id
+    strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  id = " +id;
+    project=sqltojson(strSQL)
+    return dict(project=project)
+
+def ViewProject():
+    id = request.vars.id
+    strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  id = " +id;
+    project=sqltojson(strSQL)
+    return dict(project=project)
 
 def fileUpload():
     f= request.vars.fileToUpload

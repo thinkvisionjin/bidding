@@ -47,7 +47,7 @@ function initContent(){
 		  { text: '投标状态', datafield: 'flag', width: "10%", cellsalign: 'center', align: 'center' },
 		  { text: '审核结果', datafield: 'bflag', width: "10%", cellsalign: 'center', align: 'center' },
 		  {
-            text: '操作', editable: false, datafield: 'edit',
+            text: '操作', editable: false, datafield: 'edit',cellsalign: 'center',
             cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
             var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="zbgg?id=">审核</a>';
             var a = '<div class="jqx-grid-cell-middle-align" style="margin-top: 6px;">'+a+'</div>';
