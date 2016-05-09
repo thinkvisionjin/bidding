@@ -1,6 +1,5 @@
 
-function InitEditProjectPage(){
-	var project = JSON.parse($("#ProjectData").text())[0]
+function InitEditProjectPage(project){
 	$("#jqxExpander").jqxExpander({width: '100%', toggleMode: 'dblclick'});
 	
 	$("#EditProject_ProjectCode").addClass('jqx-input')
@@ -47,8 +46,8 @@ function InitEditProjectPage(){
 	});
 }
 
-function InitProjectPackageGid(){
-	var url = "/bidding/default/select?table=ProjectPackage"
+function InitProjectPackageGid(project){
+	    var url = "/bidding/default/SelectPackagesByProjectId?id="+project.Id
 		var source =
 		{
 		    dataFields: [{"name":"Id","type":"string"},{"name":"ProjectId","type":"string"},{"name":"PackageNumber","type":"string"},{"name":"PackageName","type":"string"},{"name":"StateId","type":"string"},{"name":"SigningDate","type":"string"},{"name":"MakeOutDate","type":"string"},{"name":"EntrustMoney","type":"string"},{"name":"WinningMoney","type":"string"},{"name":"WinningCompany","type":"string"},{"name":"ChargeRate","type":"string"},{"name":"Note","type":"string"},{"name":"CreationDate","type":"string"},{"name":"IsDelete","type":"string"}],
@@ -67,10 +66,10 @@ function InitProjectPackageGid(){
 		        // synchronize with the server - send delete command
 		        // call commit with parameter true if the synchronization with the server is successful 
 		        // and with parameter false if the synchronization failed.
-		    	var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', rowid);
+		    	var dataRecord = $("#EditProject_PackageTable").jqxDataTable('getrowdata', rowid);
 		    	$.post("/bidding/default/delete?table=ProjectPackage",dataRecord,function(result){
 		   		 alert("操作成功！");
-		   	 });
+		   	 	});
 		        commit(true);
 		    },
 		    addrow: function (rowid, rowdata, position, commit) {
@@ -233,7 +232,7 @@ function InitProjectPackageGid(){
 		        });
 }
 
-function InitNewPackageWindow(){
+function InitNewPackageWindow(project){
 	$("#PackageNumber_ADD").jqxInput({width: '200px',height: "25px"});
 	$("#PackageName_ADD").jqxInput({width: '200px',height: "25px"});
 	$("#SigningDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
@@ -277,7 +276,8 @@ function InitNewPackageWindow(){
 }
 
 $(document).ready(function () {
-	InitEditProjectPage();
-    InitProjectPackageGid();
-    InitNewPackageWindow();
+	var project = JSON.parse($("#ProjectData").text())[0]
+	InitEditProjectPage(project);
+    InitProjectPackageGid(project);
+    InitNewPackageWindow(project);
 });

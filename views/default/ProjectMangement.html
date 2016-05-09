@@ -59,6 +59,8 @@
 	type="text/javascript"></script>
 <script src="{{=URL('static','js/vendor/jqwidgets/jqxcheckbox.js')}}"	
 	type="text/javascript"></script>
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxloader.js')}}"	
+	type="text/javascript"></script>
 <script
 	src="{{=URL('static','js/vendor/jqwidgets/jqxDateTimeInput.js')}}"
 	type="text/javascript"></script>
@@ -149,6 +151,11 @@ input:focus {
 						<td align="left"><input id="NewProject_CreationDate" /></td>
 					</tr>
 					<tr>
+					<td align="left"><p>管理方式</p></td>
+					<td align="left"><div id="NewProject_ManagementStyle" /></td>
+					</tr>
+					
+					<tr>
 						<td colspan="4" align="left"><div id="NewProject_NewPackage" /></td>
 					</tr>
 					<!--  
@@ -171,60 +178,8 @@ input:focus {
 		</div>
 		
 		<!--  点击新建项目档案的确认按钮之后显示一个等待窗口，待新建成功之后：显示项目编号-->
-		<div id = "popupWindow_GeneratingProjectCode">
-			<div>操作中..</div>
-			<div style="overflow: hidden;">
-				<div id='GeneratingProjectCode_Information'>正在为您创建项目档案,请稍候！</div>
-			</div> 
-		</div>
+		<div id = "Loader_CreatingNewProject"></div>
 		
-   <!-- <div id="popupWindow_PackageADD">
-			<div>新增</div>
-			<div style="overflow: hidden;">
-				<table width="100%">
-					<tr>
-						<td align="left"><p>包编号</p></td>
-						<td align="left"><input id="PackageNumber_ADD" /></td>
-						<td align="left"><p>包名称</p></td>
-						<td align="left"><input id="PackageName_ADD" /></td>
-					</tr>
-					<tr>
-						<td align="left"><p>签约日期</p></td>
-						<td align="left"><input id="SigningDate_ADD" /></td>
-						<td align="left"><p>开票日期</p></td>
-						<td align="left"><input id="MakeOutDate_ADD" /></td>
-					</tr>
-					<tr>
-						<td align="left"><p>委托金额</p></td>
-						<td align="left"><input id="EntrustMoney_ADD" /></td>
-						<td align="left"><p>中标金额</p></td>
-						<td align="left"><input id="WinningMoney_ADD" /></td>
-					</tr>
-					<tr>
-						<td align="left"><p>中标单位</p></td>
-						<td align="left"><input id="WinningCompany_ADD" /></td>
-						<td align="left"><p>服务费率</p></td>
-						<td align="left"><input id="ChargeRate_ADD" /></td>
-					</tr>
-					<tr>
-						<td align="left"><p>包状态</p></td>
-						<td align="left"><div id="StateIdPackage_ADD" /></td>
-					</tr>
-					<tr>
-						<td align="left"><p>包备注</p></td>
-						<td align="left" COLSPAN=3><input id="NotePackage_ADD" /></td>
-					</tr>
-					<tr>
-						<td align="center" style="padding-top: 10px;">
-						<td align="center" style="padding-top: 10px;">
-						<td align="center" style="padding-top: 10px;">
-						<td align="right"><input style="margin-right: 5px;"
-							type="button" id="SavePackage_ADD" value="保存" /><input
-							type="button" id="CancelPackage_ADD" value="取消" /></td>
-
-					</tr>
-				</table>
-			</div>
-		</div> --></div>
+   </div>
 </body>
 </html>

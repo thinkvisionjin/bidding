@@ -159,16 +159,96 @@ def FinanceMangement():
 
 def EditProject():
     id = request.vars.id
-    strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  id = " +id;
+    strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  Id = " +id;
     project=sqltojson(strSQL)
     return dict(project=project)
 
 def ViewProject():
     id = request.vars.id
-    strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  id = " +id;
+    strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  Id = " +id;
     project=sqltojson(strSQL)
     return dict(project=project)
 
+def SelectPackagesByProjectId():
+    id = request.vars.id
+    strSQL = u"select top 1 * from [bidding].[dbo].[ProjectPackage] where  ProjectId = " +id;
+    return sqltojson(strSQL)
+
+def GenerateProjectCode(project,id):
+    ProjectCode = u"2016" 
+    if project["ProjectTypeId"]==u"0":
+        ProjectCode+="YB"
+    if project["ProjectTypeId"]==u"1":
+        ProjectCode+=u"GJ"
+    if project["ProjectTypeId"]==u"2":
+        ProjectCode+=u"ZC"
+    if project["ProjectTypeId"]==u"3":
+        ProjectCode+=u"SM"
+    ProjectCode+="-"
+    if project["PurchaseStyleId"]==u"1":
+        ProjectCode+=u"GK"
+    if project["PurchaseStyleId"]==u"2":
+        ProjectCode+=u"YQ"
+    if project["PurchaseStyleId"]==u"3":
+        ProjectCode+=u"XJ"
+    if project["PurchaseStyleId"]==u"4":
+        ProjectCode+=u"JT"
+    if project["PurchaseStyleId"]==u"5":
+        ProjectCode+=u"JC"
+    if project["PurchaseStyleId"]==u"6":
+        ProjectCode+=u"DY"
+    if project["PurchaseStyleId"]==u"7":
+        ProjectCode+=u"QT"
+    ProjectCode+="-"
+    if project["ManagementStyleId"]==u"1":
+        ProjectCode+=u"JDCP"
+    if project["ManagementStyleId"]==u"2":
+        ProjectCode+=u"ZYTZ"
+    ProjectCode+="-" 
+    if project["ProjectSourceId"]==u"1":
+        ProjectCode+=u"ZY" 
+    if project["ProjectSourceId"]==u"2":
+        ProjectCode+=u"JX"
+    if project["ProjectSourceId"]==u"3":
+        ProjectCode+=u"HX"
+    if project["ProjectSourceId"]==u"4":
+        ProjectCode+=u"JG"
+    if project["ProjectSourceId"]==u"5":
+        ProjectCode+=u"JC"
+    if project["ProjectSourceId"]==u"6":
+        ProjectCode+=u"QT"
+    return ProjectCode;
+
+def CreateNewProject():
+    print 'CreateNewProject'
+    rowData = request.post_vars
+    print rowData
+    for key in rowData:
+        rowData[key] = rowData[key].decode('utf-8')
+    id = db['Project'].insert(**rowData)
+    print id 
+    db.commit()
+    updateProjectStr = u"update [bidding].[dbo].[Project]  set ProjectCode = '"+GenerateProjectCode(rowData,id)+u"' where id ="+unicode(id)
+    print updateProjectStr
+    db.executesql(updateProjectStr)
+    db.commit()
+    row = db(db['Project']._id ==id).select().first()
+    print row
+    dict_row = {}
+    for key in row.keys():
+        if (key!= u'update_record' and key!= u'delete_record'):
+                if key==u'id':
+                    dict_row[u'Id']  = row[key]
+                elif isinstance(row[key], bool):
+                    dict_row[key] = row[key]
+                elif isinstance(row[key], str):
+                    dict_row[key] = row[key].decode('utf-8')
+                elif isinstance(row[key], datetime):
+                    dict_row[key] = unicode(row[key])
+                else:
+                    dict_row[key] = row[key]
+    result= json.dumps(dict_row,ensure_ascii=False)
+    return result
 def fileUpload():
     f= request.vars.fileToUpload
     print f.filename

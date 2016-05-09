@@ -206,7 +206,7 @@ function BindProjectSource(documentObject,project){
 	            { name: 'Id' },
 	            { name: 'Name' }
 	        ],
-	        url: "/bidding/default/select?table=ProjectResource",
+	        url: "/bidding/default/select?table=ProjectSource",
 	        async: true
 	}
 	var dataAdapter = new $.jqx.dataAdapter(source,{
@@ -245,7 +245,7 @@ function BindFundingSource(documentObject,project){
 	            { name: 'Id' },
 	            { name: 'Name' }
 	        ],
-	        url: "/bidding/default/select?table=MoneyType",
+	        url: "/bidding/default/select?table=FundingSource",
 	        async: true
 	}
 	var dataAdapter = new $.jqx.dataAdapter(source,{
