@@ -85,64 +85,65 @@ function InitProjectGrid(){
     };
     var dataAdapter = new $.jqx.dataAdapter(source);
     var editrow = -1;
-    var columns_content  =[{"datafield":"Id","text":"序号",width: 40, cellsalign: 'center', align: 'center'},
-                           {"datafield":"ProjectCodeId","text":"项目编号", width: 60, cellsalign: 'center', align: 'center'},
-                           {"datafield":"ProjectName","text":"项目名称", width: 220, cellsalign: 'center', align: 'center'},
-                           {"datafield":"ProjectTypeId","text":"项目类型", width: 80, cellsalign: 'center', align: 'center',
+    var columns_content  =[{"datafield":"Id","text":"序号",width: "3%", cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectCodeId","text":"项目编号", width: "12%", cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectName","text":"项目名称", width: "12%", cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectTypeId","text":"项目类型", width: "5%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
 //                        		   content = findDataFieldContentByValue(datafield,value);
                    		   		   content ="政府采购"
                    		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
                                }},
-                           {"datafield":"BuyerId","text":"采购单位", width: 120, cellsalign: 'center', align: 'center',
+                           {"datafield":"BuyerId","text":"采购单位", width: "10%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
 //                        		   content = findDataFieldContentByValue(datafield,value);
                    		   		   content ="上海市民政局"
                    		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
                                }},
-                           {"datafield":"EmployeeId","text":"负责人", width: 60, cellsalign: 'center', align: 'center',
+                           {"datafield":"EmployeeId","text":"负责人", width: "7%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
 //                        		   content = findDataFieldContentByValue(datafield,value);
                    		   		   content ="汤姆逊"
                    		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
                                }},
-                           {"datafield":"Assistant","text":"协助人", width: 60, cellsalign: 'center', align: 'center',
+                           {"datafield":"Assistant","text":"协助人", width: "7%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
 //                        		   content = findDataFieldContentByValue(datafield,value);
                    		   		   content ="汤姆逊"
                    		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
                                }},
-                           {"datafield":"ProjectSourceId","text":"项目来源", width: 70, cellsalign: 'center', align: 'center',
+                           {"datafield":"ProjectSourceId","text":"项目来源", width: "7%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
 //                        		   content = findDataFieldContentByValue(datafield,value);
                    		   		   content ="自有项目"
                    		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
                                }},
-                           {"datafield":"SourcesOfFundingId","text":"资金来源", width: 70, cellsalign: 'center', align: 'center',
+                           {"datafield":"SourcesOfFundingId","text":"资金来源", width: "7%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
 //                        		   content = findDataFieldContentByValue(datafield,value);
                    		   		   content ="中央投资"
                    		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
                                }},
-                           {"datafield":"ManagementStyleId","text":"管理方式", width: 80, cellsalign: 'center', align: 'center',
+                           {"datafield":"ManagementStyleId","text":"管理方式", width: "7%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
 //                        		   content = findDataFieldContentByValue(datafield,value);
                    		   		   content ="招标公告"
                    		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
                                }},
-                           {"datafield":"StateId","text":"项目状态", width: 70, cellsalign: 'center', align: 'center',
+                           {"datafield":"StateId","text":"项目状态", width: "7%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
 //                        		   content = findDataFieldContentByValue(datafield,value);
                    		   		   content ="招标公告"
                    		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
                                }},
-                           {"datafield":"CreationDate","text":"创建日期", width: 150, cellsalign: 'center', align: 'center'},
+                           {"datafield":"CreationDate","text":"创建日期", width: "7%", cellsalign: 'center', align: 'center'},
                            {
-                               text: '操作', editable: false, datafield: 'edit',width: 180, cellsalign: 'center', align: 'center',
+                               text: '操作', editable: false, datafield: 'edit',width: "9%", cellsalign: 'center', align: 'center',
                                cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                               var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="zbgg?id=">详细</a>';
-                               var b = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="zbgg?id=">修改</a>';
-                               var c = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="zbgg?id=">删除</a>';
+                            	   
+                               var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="http://127.0.0.1:8000/bidding/default/EditProject?id='+rowdata.Id + '">详细</a>';
+                               var b = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="http://127.0.0.1:8000/bidding/default/ViewProject?id='+rowdata.Id + '">修改</a>';
+                               var c = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="http://127.0.0.1:8000/bidding/default/EditProject?id='+rowdata.Id + '">删除</a>';
                                var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+a+b+c+'</div>';
                                return d;
                                }
@@ -314,9 +315,9 @@ function InitNewProjectWindow(){
 	//项目资金来源
    BindFundingSource("#NewProject_FundingSource")
     //项目负责人
-   BindEmployee("#NewProject_Employee",false)
+   BindEmployee("#NewProject_Employee")
    //协助人
-   BindEmployee("#NewProject_Assistant",true)
+   BindEmployee("#NewProject_Assistant")
    //项目状态
    BindProjectStatus("#NewProject_ProjectStatus")
 	//项目创建时间

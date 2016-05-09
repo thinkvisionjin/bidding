@@ -9,7 +9,7 @@ function isObjectEmpty(obj){
 };
 
 //绑定项目名称 //input
-function BindProjectName(documentObject){
+function BindProjectName(documentObject,project){
 	var source = {
 			datatype: "json",
 	        datafields: [
@@ -20,7 +20,22 @@ function BindProjectName(documentObject){
 	        url: "/bidding/default/select?table=Project",
 	        async: true
 	}
-	var dataAdapter = new $.jqx.dataAdapter(source);
+	var dataAdapter = new $.jqx.dataAdapter(source,{
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapter.records;
+            var length = records.length;
+        	if (project != undefined ){
+        		var items = $(documentObject).jqxDropDownList('getItems'); 
+             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.Id);
+             	$(documentObject).jqxDropDownList('selectItem', item ); 
+        	}
+        	$(documentObject).on('select', function (event) {
+        	    var args = event.args;
+        	    var item = $(documentObject).jqxDropDownList('getItem', args.index);
+        	});
+        }
+    });
 	$(documentObject).jqxInput(
 			{ source: dataAdapter, 
 				displayMember: "ProjectName", 
@@ -29,28 +44,16 @@ function BindProjectName(documentObject){
 }
 
 //绑定项目类型 //dropdownlist
-function BindProjectType(documentObject){
-	if(Global_ProjectType.length==0){
-		var source = {
-				datatype: "json",
-		        datafields: [
-		            { name: 'ProjectTypeName' },
-		            { name: 'ProjectTypeID' },
-		            { name: 'ProjectTypeCode' },
-		        ],
-		        url: "/bidding/default/select?table=ProjectType",
-		        async: true
-		}
-	}else{
-		var source = {
-				datatype: "json",
-		        datafields: [
-		            { name: 'ProjectTypeName' },
-		            { name: 'ProjectTypeID' },
-		            { name: 'ProjectTypeCode' },
-		        ],
-		        localdata:Global_ProjectType
-		}
+function BindProjectType(documentObject,project){
+	var source = {
+			datatype: "json",
+	        datafields: [
+	            { name: 'ProjectTypeName' },
+	            { name: 'ProjectTypeID' },
+	            { name: 'ProjectTypeCode' },
+	        ],
+	        url: "/bidding/default/select?table=ProjectType",
+	        async: true
 	}
 	
 	
@@ -59,9 +62,15 @@ function BindProjectType(documentObject){
             // get data records.
             var records = dataAdapter.records;
             var length = records.length;
-            for(i=0;i<length;i++){
-            	Global_ProjectType.push( records[i])
-            }
+        	if (project != undefined ){
+        		var items = $(documentObject).jqxDropDownList('getItems'); 
+             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.ProjectTypeId);
+             	$(documentObject).jqxDropDownList('selectItem', item ); 
+        	}
+        	$(documentObject).on('select', function (event) {
+        	    var args = event.args;
+        	    var item = $(documentObject).jqxDropDownList('getItem', args.index);
+        	});
         }
     });
 	$(documentObject).jqxDropDownList(
@@ -69,14 +78,11 @@ function BindProjectType(documentObject){
 				displayMember: "ProjectTypeName", 
 				valueMember: "ProjectTypeID",
 				 width: '200', height: '25'});
-	$(documentObject).on('select', function (event) {
-	    var args = event.args;
-	    var item = $(documentObject).jqxDropDownList('getItem', args.index);
-	});
+	
 }
 
 //绑定管理类型//dropdownlist
-function BindManagementStyle(documentObject){
+function BindManagementStyle(documentObject,project){
 	var source = {
 			datatype: "json",
 	        datafields: [
@@ -87,12 +93,27 @@ function BindManagementStyle(documentObject){
 	        url: "/bidding/default/select?table=ManagementStyle",
 	        async: true
 	}
-	var dataAdapter = new $.jqx.dataAdapter(source);
+	var dataAdapter = new $.jqx.dataAdapter(source,{
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapter.records;
+            var length = records.length;
+        	if (project != undefined ){
+        		var items = $(documentObject).jqxDropDownList('getItems'); 
+             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.ManagementStyleId);
+             	$(documentObject).jqxDropDownList('selectItem', item ); 
+        	}
+        	$(documentObject).on('select', function (event) {
+        	    var args = event.args;
+        	    var item = $(documentObject).jqxDropDownList('getItem', args.index);
+        	});
+        }
+    });
 	$(documentObject).jqxDropDownList(
 			{ source: dataAdapter, 
 				displayMember: "ManagementStyleName", 
 				valueMember: "ManagementStyleId",
-				 width: '150', height: '23'});
+				 width: '200', height: '25'});
 	$(documentObject).on('select', function (event) {
 	    var args = event.args;
 	    var item = $(documentObject).jqxDropDownList('getItem', args.index);
@@ -100,7 +121,7 @@ function BindManagementStyle(documentObject){
 }
 
 //绑定采购类型//dropdownlist
-function BindPurchaseStyle(documentObject){
+function BindPurchaseStyle(documentObject,project){
 	var source = {
 			datatype: "json",
 	        datafields: [
@@ -111,7 +132,22 @@ function BindPurchaseStyle(documentObject){
 	        url: "/bidding/default/select?table=PurchaseStyle",
 	        async: true
 	}
-	var dataAdapter = new $.jqx.dataAdapter(source);
+	var dataAdapter = new $.jqx.dataAdapter(source,{
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapter.records;
+            var length = records.length;
+        	if (project != undefined ){
+        		var items = $(documentObject).jqxDropDownList('getItems'); 
+             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.PurchaseStyleId);
+             	$(documentObject).jqxDropDownList('selectItem', item ); 
+        	}
+        	$(documentObject).on('select', function (event) {
+        	    var args = event.args;
+        	    var item = $(documentObject).jqxDropDownList('getItem', args.index);
+        	});
+        }
+    });
 	$(documentObject).jqxDropDownList(
 			{ source: dataAdapter, 
 				displayMember: "PurchaseStyleName", 
@@ -124,7 +160,7 @@ function BindPurchaseStyle(documentObject){
 }
 
 //绑定采购单位//dropdownlist
-function BindCustomer(documentObject){
+function BindCustomer(documentObject,project){
 	var source = {
 			datatype: "json",
 	        datafields: [
@@ -135,7 +171,22 @@ function BindCustomer(documentObject){
 	        url: "/bidding/default/select?table=Customer",
 	        async: true
 	}
-	var dataAdapter = new $.jqx.dataAdapter(source);
+	var dataAdapter = new $.jqx.dataAdapter(source,{
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapter.records;
+            var length = records.length;
+        	if (project != undefined ){
+        		var items = $(documentObject).jqxDropDownList('getItems'); 
+             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.BuyerId);
+             	$(documentObject).jqxDropDownList('selectItem', item ); 
+        	}
+        	$(documentObject).on('select', function (event) {
+        	    var args = event.args;
+        	    var item = $(documentObject).jqxDropDownList('getItem', args.index);
+        	});
+        }
+    });
 	$(documentObject).jqxDropDownList(
 			{ source: dataAdapter, 
 				displayMember: "UserName", 
@@ -148,8 +199,8 @@ function BindCustomer(documentObject){
 }
 
 //绑定项目来源//dropdownlist
-function BindProjectSource(documentObject){
-	var ProjectSourceIdsource = {
+function BindProjectSource(documentObject,project){
+	var source = {
 			datatype: "json",
 	        datafields: [
 	            { name: 'Id' },
@@ -158,9 +209,24 @@ function BindProjectSource(documentObject){
 	        url: "/bidding/default/select?table=ProjectResource",
 	        async: true
 	}
-	var ProjectSourceIddataAdapter = new $.jqx.dataAdapter(ProjectSourceIdsource);
+	var dataAdapter = new $.jqx.dataAdapter(source,{
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapter.records;
+            var length = records.length;
+        	if (project != undefined ){
+        		var items = $(documentObject).jqxDropDownList('getItems'); 
+             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.ProjectSourceId);
+             	$(documentObject).jqxDropDownList('selectItem', item ); 
+        	}
+        	$(documentObject).on('select', function (event) {
+        	    var args = event.args;
+        	    var item = $(documentObject).jqxDropDownList('getItem', args.index);
+        	});
+        }
+    });
 	$(documentObject).jqxDropDownList(
-			{ source: ProjectSourceIddataAdapter, 
+			{ source: dataAdapter, 
 				displayMember: "Name", 
 				valueMember: "Id",
 				width: '200', height: '25'});
@@ -172,7 +238,7 @@ function BindProjectSource(documentObject){
 }
 
 //绑定项目资金来源//dropdownlist
-function BindFundingSource(documentObject){
+function BindFundingSource(documentObject,project){
 	var source = {
 			datatype: "json",
 	        datafields: [
@@ -182,7 +248,22 @@ function BindFundingSource(documentObject){
 	        url: "/bidding/default/select?table=MoneyType",
 	        async: true
 	}
-	var dataAdapter = new $.jqx.dataAdapter(source);
+	var dataAdapter = new $.jqx.dataAdapter(source,{
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapter.records;
+            var length = records.length;
+        	if (project != undefined ){
+        		var items = $(documentObject).jqxDropDownList('getItems'); 
+             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.SourcesOfFundingId);
+             	$(documentObject).jqxDropDownList('selectItem', item ); 
+        	}
+        	$(documentObject).on('select', function (event) {
+        	    var args = event.args;
+        	    var item = $(documentObject).jqxDropDownList('getItem', args.index);
+        	});
+        }
+    });
 	$(documentObject).jqxDropDownList(
 			{ source: dataAdapter, 
 				displayMember: "Name", 
@@ -195,7 +276,7 @@ function BindFundingSource(documentObject){
 }
 
 //绑定员工(项目负责人和项目协助人)//dropdownlist
-function BindEmployee(documentObject,multiSelect){
+function BindEmployee(documentObject,project){
 	var source =
     {
         datatype: "json",
@@ -206,10 +287,25 @@ function BindEmployee(documentObject,multiSelect){
         url: "/bidding/default/select?table=Employee",
         async: true
     };
-    var dataAdapter = new $.jqx.dataAdapter(source);
+	var dataAdapter = new $.jqx.dataAdapter(source,{
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapter.records;
+            var length = records.length;
+        	if (project != undefined ){
+        		var items = $(documentObject).jqxDropDownList('getItems'); 
+             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.EmployeeId);
+             	$(documentObject).jqxDropDownList('selectItem', item ); 
+        	}
+        	$(documentObject).on('select', function (event) {
+        	    var args = event.args;
+        	    var item = $(documentObject).jqxDropDownList('getItem', args.index);
+        	});
+        }
+    });
                 
     $(documentObject).jqxDropDownList({ 
-    	checkboxes: multiSelect,
+//    	checkboxes: multiSelect,
     	source: dataAdapter, 
     	displayMember: "Name", 
     	valueMember: "Id", width: 200, height: 25    	});
@@ -223,7 +319,7 @@ function BindEmployee(documentObject,multiSelect){
 }
 
 //绑定项目状态 //dropdownlist
-function BindProjectStatus(documentObject,global_project){
+function BindProjectStatus(documentObject,project){
 	var source = {
 			datatype: "json",
 	        datafields: [
@@ -233,18 +329,27 @@ function BindProjectStatus(documentObject,global_project){
 	        url: "/bidding/default/select?table=ProjectStatus",
 	        async: true
 	}
-	var dataAdapter = new $.jqx.dataAdapter(source);
+	var dataAdapter = new $.jqx.dataAdapter(source,{
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapter.records;
+            var length = records.length;
+        	if (project != undefined ){
+        		var items = $(documentObject).jqxDropDownList('getItems'); 
+             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.StateId);
+             	$(documentObject).jqxDropDownList('selectItem', item ); 
+        	}
+        	$(documentObject).on('select', function (event) {
+        	    var args = event.args;
+        	    var item = $(documentObject).jqxDropDownList('getItem', args.index);
+        	});
+        }
+    });
 	$(documentObject).jqxDropDownList(
 			{ source: dataAdapter, 
 				displayMember: "Name", 
 				valueMember: "Id",
 				 width: '200', height: '25'});
-	if (global_project != undefined ){
-		var v1 = $(documentObject).jqxDropDownList('val')
-		$(documentObject).jqxDropDownList('val',global_project.StateId);
-		var v2 = $(documentObject).jqxDropDownList('val')
-		var v3 = global_project.StateId
-	}
 	$(documentObject).on('select', function (event) {
 	    var args = event.args;
 	    var item = $(documentObject).jqxDropDownList('getItem', args.index);

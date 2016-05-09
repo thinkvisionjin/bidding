@@ -1,32 +1,50 @@
 
-function InitEditProjectPage(global_project){
-	$("#jqxExpander").jqxExpander({width: '1024px', toggleMode: 'dblclick'});
+function InitEditProjectPage(){
+	var project = JSON.parse($("#ProjectData").text())[0]
+	$("#jqxExpander").jqxExpander({width: '100%', toggleMode: 'dblclick'});
 	
 	$("#EditProject_ProjectCode").addClass('jqx-input')
 	$("#EditProject_ProjectCode").width(200)
-	$("#EditProject_ProjectCode").height(23)
+	$("#EditProject_ProjectCode").height(25)
+	$("#EditProject_ProjectCode").val(project.ProjectCodeId)
+	$("#EditProject_ProjectCode").jqxInput({disabled: true });
 	//填写项目名称
 	$("#EditProject_ProjectName").addClass('jqx-input')
 	$("#EditProject_ProjectName").width(200)
-	$("#EditProject_ProjectName").height(23)
+	$("#EditProject_ProjectName").height(25)
+	$("#EditProject_ProjectName").val(project.ProjectName)
+	$("#EditProject_ProjectName").jqxInput({disabled: true });
 	//采购单位
-    BindCustomer("#EditProject_Customer")
+    BindCustomer("#EditProject_Customer",project)
 	//项目类型
-	BindProjectType("#EditProject_ProjectType");
+	BindProjectType("#EditProject_ProjectType",project);
 	//采购类型
-	BindPurchaseStyle("#EditProject_PurchaseStyle")
+	BindPurchaseStyle("#EditProject_PurchaseStyle",project)
 	//	项目来源
-	BindProjectSource("#EditProject_ProjectSource")
+	BindProjectSource("#EditProject_ProjectSource",project)
 	//项目资金来源
-   BindFundingSource("#EditProject_FundingSource")
+   BindFundingSource("#EditProject_FundingSource",project)
     //项目负责人
-   BindEmployee("#EditProject_Employee",false)
+   BindEmployee("#EditProject_Employee",project)
    //协助人
-   BindEmployee("#EditProject_Assistant",true)
+   BindEmployee("#EditProject_Assistant",project)
    //项目状态
-   BindProjectStatus("#EditProject_ProjectStatus",global_project)
+   BindProjectStatus("#EditProject_ProjectStatus",project)
 	//项目创建时间
 	$("#EditProject_CreationDate").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
+	
+	$("#EditProject_Save").jqxButton({template:'success'});
+	$("#EditProject_Save").click(function () {
+
+	});
+	$("#EditProject_Cancel").jqxButton({template:'warning'});
+	$("#EditProject_Cancel").click(function () {
+
+	});
+	$("#EditProject_Return").jqxButton({template:'danger'});
+	$("#EditProject_Return").click(function () {
+		window.location="http://127.0.0.1:8000/bidding/default/ProjectMangement.html"
+	});
 }
 
 function InitProjectPackageGid(){
@@ -70,19 +88,19 @@ function InitProjectPackageGid(){
 		    }
 		});
 		var projectPackage_columns_content  = 
-			[ {"datafield":"PackageNumber","text":"\u5305\u7f16\u53f7", width: '11%', cellsalign: 'center', align: 'center'},
+			[ {"datafield":"PackageNumber","text":"\u5305\u7f16\u53f7", width: '14%', cellsalign: 'center', align: 'center'},
 			 {"datafield":"PackageName","text":"\u5305\u540d\u79f0", width:  '11%', cellsalign: 'center', align: 'center'},
 			 {"datafield":"StateId","text":"\u5305\u72b6\u6001", width:  '11%', cellsalign: 'center', align: 'center'},
 			 {"datafield":"SigningDate","text":"\u7b7e\u7ea6\u65e5\u671f", width:  '11%', cellsalign: 'center', align: 'center'},
 			 {"datafield":"MakeOutDate","text":"\u5f00\u7968\u65e5\u671f", width:  '11%', cellsalign: 'center', align: 'center'},
 			 {"datafield":"EntrustMoney","text":"\u59d4\u6258\u91d1\u989d", width:  '11%', cellsalign: 'center', align: 'center'},
 			 {"datafield":"WinningMoney","text":"\u4e2d\u6807\u91d1\u989d", width:  '11%', cellsalign: 'center', align: 'center'},
-			 {"datafield":"WinningCompany","text":"\u4e2d\u6807\u5355\u4f4d", width:  '11%', cellsalign: 'center', align: 'center'},
-			 {"datafield":"ChargeRate","text":"\u670d\u52a1\u8d39\u7387", width: '11%', cellsalign: 'center', align: 'center'}]
+			 {"datafield":"WinningCompany","text":"\u4e2d\u6807\u5355\u4f4d", width:  '10%', cellsalign: 'center', align: 'center'},
+			 {"datafield":"ChargeRate","text":"\u670d\u52a1\u8d39\u7387", width: '10%', cellsalign: 'center', align: 'center'}]
 		$("#EditProject_PackageTable").jqxDataTable(
 		        {
-		            width: 1024,
-		            height: 200,
+		            width: "99%",
+		            height: 300,
 		            source: projectPackageurldataAdapter,
 		           // pageable: true,
 		            editable: true,
@@ -259,8 +277,7 @@ function InitNewPackageWindow(){
 }
 
 $(document).ready(function () {
-	var global_project = JSON.parse($("#ProjectData").text())[0]
-	InitEditProjectPage(global_project);
+	InitEditProjectPage();
     InitProjectPackageGid();
     InitNewPackageWindow();
 });
