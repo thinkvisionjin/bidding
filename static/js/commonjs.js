@@ -178,7 +178,7 @@ function BindCustomer(documentObject,project){
             var length = records.length;
         	if (project != undefined ){
         		var items = $(documentObject).jqxDropDownList('getItems'); 
-             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.BuyerId);
+             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.CustomerId);
              	$(documentObject).jqxDropDownList('selectItem', item ); 
         	}
         	$(documentObject).on('select', function (event) {
@@ -255,7 +255,7 @@ function BindFundingSource(documentObject,project){
             var length = records.length;
         	if (project != undefined ){
         		var items = $(documentObject).jqxDropDownList('getItems'); 
-             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.SourcesOfFundingId);
+             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.FundingSourceId);
              	$(documentObject).jqxDropDownList('selectItem', item ); 
         	}
         	$(documentObject).on('select', function (event) {
@@ -336,7 +336,7 @@ function BindProjectStatus(documentObject,project){
             var length = records.length;
         	if (project != undefined ){
         		var items = $(documentObject).jqxDropDownList('getItems'); 
-             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.StateId);
+             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.ProjectStatusId);
              	$(documentObject).jqxDropDownList('selectItem', item ); 
         	}
         	$(documentObject).on('select', function (event) {

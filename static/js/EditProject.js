@@ -5,7 +5,7 @@ function InitEditProjectPage(project){
 	$("#EditProject_ProjectCode").addClass('jqx-input')
 	$("#EditProject_ProjectCode").width(200)
 	$("#EditProject_ProjectCode").height(25)
-	$("#EditProject_ProjectCode").val(project.ProjectCodeId)
+	$("#EditProject_ProjectCode").val(project.ProjectCode)
 	$("#EditProject_ProjectCode").jqxInput({disabled: true });
 	//填写项目名称
 	$("#EditProject_ProjectName").addClass('jqx-input')
@@ -253,7 +253,7 @@ function InitNewPackageWindow(project){
     $("#SavePackage_ADD").jqxButton({ theme: theme, template:"success"  });
     $("#SavePackage_ADD").click(function () {
     	var row=
-    	  {  ProjectId:$("#ProjectId_ADD").val()
+    	  {  ProjectId:project.Id
     		,PackageNumber:$("#PackageNumber_ADD").val()
     		,PackageName:$("#PackageName_ADD").val()
     		,StateId:$("#StateIdPackage_ADD").val()
@@ -269,9 +269,9 @@ function InitNewPackageWindow(project){
     		}
 		var datarow = row;
 		$.post("/bidding/default/insert?table=ProjectPackage",datarow,function(result){
-			$("#popupWindow_PackageADD").jqxGrid('addrow', null, result, 'first');
+			$("#EditProject_PackageTable").jqxDataTable('addrow', null, result, 'first');
+			$("#popupWindow_PackageADD").jqxWindow('hide');
 		},'json');
-		$("#popupWindow_PackageADD").jqxWindow('hide');
 	});
 }
 
