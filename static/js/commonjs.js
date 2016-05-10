@@ -318,6 +318,48 @@ function BindEmployee(documentObject,project){
     });
 }
 
+function BindAssitant(documentObject,project){
+	var source =
+    {
+        datatype: "json",
+        datafields: [
+            { name: 'Name' },
+            { name: 'Id' }
+        ],
+        url: "/bidding/default/select?table=Employee",
+        async: true
+    };
+	var dataAdapter = new $.jqx.dataAdapter(source,{
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapter.records;
+            var length = records.length;
+        	if (project != undefined ){
+        		var items = $(documentObject).jqxDropDownList('getItems'); 
+             	var item = $(documentObject).jqxDropDownList('getItemByValue', project.Assistant);
+             	$(documentObject).jqxDropDownList('selectItem', item ); 
+        	}
+        	$(documentObject).on('select', function (event) {
+        	    var args = event.args;
+        	    var item = $(documentObject).jqxDropDownList('getItem', args.index);
+        	});
+        }
+    });
+                
+    $(documentObject).jqxDropDownList({ 
+//    	checkboxes: multiSelect,
+    	source: dataAdapter, 
+    	displayMember: "Name", 
+    	valueMember: "Id", width: 200, height: 25    	});
+    $(documentObject).on('select', function (event) {
+        if (event.args) {
+            var item = event.args.item;
+            if (item) {
+            }
+        }
+    });
+}
+
 //绑定项目状态 //dropdownlist
 function BindProjectStatus(documentObject,project){
 	var source = {

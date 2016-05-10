@@ -93,6 +93,8 @@ input:focus {
 					<td align="left"><div id="BuyerId_SEARCH" /></td>
 					<td align="left"><p>项目类型</p></td>
 					<td align="left"><div id="ProjectTypeId_SEARCH" /></td>
+					<td align="left"><p>采购方式</p></td>
+					<td align="left"><div id="PurchaseStyleId_SEARCH" /></td>
 				</tr>
 				<tr>
 					<td align="left"><p>项目来源</p></td>
@@ -101,25 +103,23 @@ input:focus {
 					<td align="left"><div id="SourcesOfFundingId_SEARCH" /></td>
 					<td align="left"><p>管理方式</p></td>
 					<td align="left"><div id="ManagementStyleId_SEARCH" /></td>
-					<!-- <td align="left"><p>采购方式</p></td>
-					<td align="left"><div id="PurchaseStyleId_SEARCH" /></td> -->
+					<td align="left"><p>项目状态</p></td>
+					<td align="left"><div id="StateId_SEARCH" /></td>
 				</tr>
 				<tr>
 					<td align="left"><p>负责人</p></td>
 					<td align="left"><div id="EmployeeId_SEARCH" /></td>
 					<td align="left"><p>协助人</p></td>
 					<td align="left"><div id="Assistant_SEARCH" /></td>
-					<td align="left"><p>项目状态</p></td>
-					<td align="left"><div id="StateId_SEARCH" /></td>
 				</tr>
 			</table>
 		</div>
 		<div id="jqxgrid"></div>
 
 		<div id="popupWindow_NewProject">
-			<div>新项目建档</div>
+			<div>新建项目档案</div>
 			<div style="overflow: hidden;">
-				<table width="100%">
+				<table width="100%" border='0'>
 					<tr>
 						<td align="left"><p>项目名称</p></td>
 						<td align="left"><input id="NewProject_ProjectName" /></td>
@@ -153,24 +153,11 @@ input:focus {
 					<tr>
 					<td align="left"><p>管理方式</p></td>
 					<td align="left"><div id="NewProject_ManagementStyle" /></td>
-					</tr>
-					
+					</tr>					
 					<tr>
-						<td colspan="4" align="left"><div id="NewProject_NewPackage" /></td>
-					</tr>
-					<!--  
-					<tr>
-						<td colspan="4" align="left"><p>项目备注</p>
-							<div id="Note_ADD" /></td>
-					</tr>
-					-->
-					<tr>
-						<td align="center" style="padding-top: 10px;">
-						<td align="center" style="padding-top: 10px;">
-						<td align="center" style="padding-top: 10px;">
-						<td align="right">
-							<input style="margin-right: 5px;" type="button" id="NewProject_Save" value="保存" />
-							<input type="button"id="NewProject_Cancel" value="取消" />
+						<td colspan="3" align="right"></td><td>
+							<input type="button" id="NewProject_Save" value="保存" />
+							<input style="margin-left: 10px;" type="button" id="NewProject_Cancel" value="取消" />
 						</td>
 					</tr>
 				</table>

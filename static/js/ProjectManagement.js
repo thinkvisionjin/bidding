@@ -9,7 +9,7 @@ function InitProjectGrid(){
 	                          {"name":"EmployeeId","type":"string"},
 	                          {"name":"Assistant","type":"string"},
 	                          {"name":"ProjectSourceId","type":"string"},
-	                          {"name":"FundingSource","type":"string"},
+	                          {"name":"FundingSourceId","type":"string"},
 	                          {"name":"ProjectTypeId","type":"string"},
 	                          {"name":"ManagementStyleId","type":"string"},
 	                          {"name":"PurchaseStyleId","type":"string"},
@@ -53,71 +53,61 @@ function InitProjectGrid(){
     var dataAdapter = new $.jqx.dataAdapter(source);
     var editrow = -1;
     var columns_content  =[{"datafield":"Id","text":"序号",width: "3%", cellsalign: 'center', align: 'center'},
-                           {"datafield":"ProjectCode","text":"项目编号", width: "12%", cellsalign: 'center', align: 'center'},
-                           {"datafield":"ProjectName","text":"项目名称", width: "12%", cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectCode","text":"项目编号", width: "10%", cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectName","text":"项目名称", width: "10%", cellsalign: 'center', align: 'center'},
                            {"datafield":"ProjectTypeId","text":"项目类型", width: "5%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-//                        		   content = findDataFieldContentByValue(datafield,value);
-                   		   		   content ="政府采购"
-                   		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
+                        		  var item =  $("#ProjectTypeId_SEARCH").jqxDropDownList('getItemByValue', value);
+                   		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
                                }},
-                           {"datafield":"CustomerId","text":"采购单位", width: "10%", cellsalign: 'center', align: 'center',
+                           {"datafield":"CustomerId","text":"采购单位", width: "9%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-//                        		   content = findDataFieldContentByValue(datafield,value);
-                   		   		   content ="上海市民政局"
-                   		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
+                        		   var item =  $("#BuyerId_SEARCH").jqxDropDownList('getItemByValue', value);
+                    		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
                                }},
-                           {"datafield":"EmployeeId","text":"负责人", width: "7%", cellsalign: 'center', align: 'center',
+                           {"datafield":"EmployeeId","text":"负责人", width: "6%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-//                        		   content = findDataFieldContentByValue(datafield,value);
-                   		   		   content ="汤姆逊"
-                   		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
+                        		   var item =  $("#EmployeeId_SEARCH").jqxDropDownList('getItemByValue', value);
+                       		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
                                }},
-                           {"datafield":"Assistant","text":"协助人", width: "7%", cellsalign: 'center', align: 'center',
+                           {"datafield":"Assistant","text":"协助人", width: "6%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-//                        		   content = findDataFieldContentByValue(datafield,value);
-                   		   		   content ="汤姆逊"
-                   		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
+                        		   var item =  $("#Assistant_SEARCH").jqxDropDownList('getItemByValue', value);
+                          		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
                                }},
                            {"datafield":"ProjectSourceId","text":"项目来源", width: "7%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-//                        		   content = findDataFieldContentByValue(datafield,value);
-                   		   		   content ="自有项目"
-                   		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
+                        		   var item =  $("#ProjectSourceId_SEARCH").jqxDropDownList('getItemByValue', value);
+                         		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
                                }},
                            {"datafield":"FundingSourceId","text":"资金来源", width: "7%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-//                        		   content = findDataFieldContentByValue(datafield,value);
-                   		   		   content ="中央投资"
-                   		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
+                        		   var item =  $("#SourcesOfFundingId_SEARCH").jqxDropDownList('getItemByValue', value);
+                         		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
                                }},
                            {"datafield":"ManagementStyleId","text":"管理方式", width: "7%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-//                        		   content = findDataFieldContentByValue(datafield,value);
-                   		   		   content ="招标公告"
-                   		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
+                        		   var item =  $("#ManagementStyleId_SEARCH").jqxDropDownList('getItemByValue', value);
+                         		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
                                }},
                            {"datafield":"PurchaseStyleId","text":"采购方式", width: "7%", cellsalign: 'center', align: 'center',
                             	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-//                            		   content = findDataFieldContentByValue(datafield,value);
-                       		   		   content ="单一来源采购"
-                       		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
+                            		   var item =  $("#PurchaseStyleId_SEARCH").jqxDropDownList('getItemByValue', value);
+                             		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
                                 }},
                            {"datafield":"ProjectStatusId","text":"项目状态", width: "7%", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-//                        		   content = findDataFieldContentByValue(datafield,value);
-                   		   		   content ="招标公告"
-                   		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ content+' </div>'
+                        		   var item =  $("#StateId_SEARCH").jqxDropDownList('getItemByValue', value);
+                         		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
                                }},
                            {"datafield":"CreationDate","text":"创建日期", width: "7%", cellsalign: 'center', align: 'center'},
                            {
                                text: '操作', editable: false, datafield: 'edit',width: "9%", cellsalign: 'center', align: 'center',
                                cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                            	   
-                               var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="http://127.0.0.1:8000/bidding/default/EditProject?id='+rowdata.Id + '">详细</a>';
-                               var b = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="http://127.0.0.1:8000/bidding/default/ViewProject?id='+rowdata.Id + '">修改</a>';
-                               var c = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="http://127.0.0.1:8000/bidding/default/EditProject?id='+rowdata.Id + '">删除</a>';
-                               var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+a+b+c+'</div>';
+                               var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="http://127.0.0.1:8000/bidding/default/ViewProject?id='+rowdata.Id + '">详细</a>';
+                               var b = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="http://127.0.0.1:8000/bidding/default/EditProject?id='+rowdata.Id + '">修改</a>';
+//                               var c = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn">删除</a>';
+                               var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+a+b+'</div>';
                                return d;
                                }
                              }]            
@@ -126,16 +116,12 @@ function InitProjectGrid(){
     $("#jqxgrid").jqxGrid(
     {
         width: '100%',
+        height: 500,
         source: dataAdapter,
         pageable: true,
-        autoheight: true,
+        
         rowdetails: true,
         rowsheight: 35,
-//        initrowdetails: initrowdetails,
-//        rowdetailstemplate: { rowdetails: "<div id='grid' style='margin: 10px;'></div>", rowdetailsheight: 220, rowdetailshidden: true },
-//        ready: function () {
-//            $("#jqxgrid").jqxGrid('showrowdetails', 0);
-//        },
         columns: columns_content,
         showstatusbar: true,
         renderstatusbar: function (statusbar) {
@@ -222,8 +208,9 @@ function InitSearchArea(){
 	BindProjectSource("#ProjectSourceId_SEARCH")//dropdownlist
 	BindFundingSource("#SourcesOfFundingId_SEARCH")//dropdownlist
 	BindManagementStyle("#ManagementStyleId_SEARCH")//dropdownlist
+	BindPurchaseStyle("#PurchaseStyleId_SEARCH")
 	BindEmployee("#EmployeeId_SEARCH",true)//dropdownlist
-	BindEmployee("#Assistant_SEARCH",false)//dropdownlist
+	BindAssitant("#Assistant_SEARCH",false)//dropdownlist
 	BindProjectStatus("#StateId_SEARCH")//dropdownlist
 }
 
@@ -256,8 +243,8 @@ function InitNewProjectWindow(){
 	$("#Loader_CreatingNewProject").jqxLoader({ width: 100, height: 60, imagePosition: 'top' });
 	//初始化整个Window
 	$("#popupWindow_NewProject").jqxWindow({ showCollapseButton: true,
-    	width: 600, 
-    	height:400,autoOpen: false, cancelButton: $("#NewProject_Cancel"), modalOpacity: 0.01 });    
+    	width: 750, 
+    	height:450,autoOpen: false, cancelButton: $("#NewProject_Cancel"), modalOpacity: 0.01 });    
 	$("#NewProject_Cancel").jqxButton({ theme: theme });
     $("#NewProject_Cance").click(function () {
     	$("#popupWindow_NewProject").jqxWindow('hide');

@@ -15,49 +15,57 @@ function InitEditProjectPage(project){
 	$("#EditProject_ProjectName").jqxInput({disabled: true });
 	//采购单位
     BindCustomer("#EditProject_Customer",project)
+    	$("#EditProject_Customer").jqxDropDownList({disabled: true });
 	//项目类型
 	BindProjectType("#EditProject_ProjectType",project);
+		$("#EditProject_ProjectType").jqxDropDownList({disabled: true });
 	//采购类型
 	BindPurchaseStyle("#EditProject_PurchaseStyle",project)
+		$("#EditProject_PurchaseStyle").jqxDropDownList({disabled: true });
 	//	项目来源
 	BindProjectSource("#EditProject_ProjectSource",project)
+		$("#EditProject_ProjectSource").jqxDropDownList({disabled: true });
 	//项目资金来源
    BindFundingSource("#EditProject_FundingSource",project)
+   		$("#EditProject_FundingSource").jqxDropDownList({disabled: true });
     //项目负责人
    BindEmployee("#EditProject_Employee",project)
+   		$("#EditProject_Employee").jqxDropDownList({disabled: true });
    //协助人
    BindAssitant("#EditProject_Assistant",project)
+   		$("#EditProject_Assistant").jqxDropDownList({disabled: true });
    //项目状态
    BindProjectStatus("#EditProject_ProjectStatus",project)
+   		$("#EditProject_ProjectStatus").jqxDropDownList({disabled: true });
 	//项目创建时间
 	$("#EditProject_CreationDate").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
-	
-	$("#EditProject_Save").jqxButton({template:'success'});
-	$("#EditProject_Save").click(function () {
-		var row = {Id:project.Id
-				,ProtocolCodeId:''
-				,ProjectCode:project.PojectCode
-				,ProjectCode:project.PojectCode
-				,ProjectName:$("#EditProject_ProjectName").val()
-				,CustomerId:$("#EditProject_Customer").val()
-				,EmployeeId:$("#EditProject_Employee").val()
-				,Assistant:$("#EditProject_Assistant").val()
-				,ProjectSourceId:$("#EditProject_ProjectSource").val()
-				,FundingSourceId:$("#EditProject_FundingSource").val()
-				,ProjectTypeId:$("#NewProject_ProjectType").val()
-				,ManagementStyleId:$("#EditProject_ManagementStyle").val()
-				,PurchaseStyleId:$("#EditProject_PurchaseStyle").val()
-				,ProjectStatusId:$("#EditProject_ProjectStatus").val()
-				,CreationDate:$("#EditProject_CreationDate").val()
-				,IsDelete:'0'}
-		$.post("/bidding/default/update?table=Project",row,function(result){
-   		alert("操作成功！");
-   });
-	});
-	$("#EditProject_Cancel").jqxButton({template:'warning'});
-	$("#EditProject_Cancel").click(function () {
-		window.location="http://127.0.0.1:8000/bidding/default/ProjectMangement.html"
-	});
+	$("#EditProject_CreationDate").jqxDateTimeInput({disabled: true });
+//	$("#EditProject_Save").jqxButton({template:'success'});
+//	$("#EditProject_Save").click(function () {
+//		var row = {Id:project.Id
+//				,ProtocolCodeId:''
+//				,ProjectCode:project.PojectCode
+//				,ProjectCode:project.PojectCode
+//				,ProjectName:$("#EditProject_ProjectName").val()
+//				,CustomerId:$("#EditProject_Customer").val()
+//				,EmployeeId:$("#EditProject_Employee").val()
+//				,Assistant:$("#EditProject_Assistant").val()
+//				,ProjectSourceId:$("#EditProject_ProjectSource").val()
+//				,FundingSourceId:$("#EditProject_FundingSource").val()
+//				,ProjectTypeId:$("#NewProject_ProjectType").val()
+//				,ManagementStyleId:$("#EditProject_ManagementStyle").val()
+//				,PurchaseStyleId:$("#EditProject_PurchaseStyle").val()
+//				,ProjectStatusId:$("#EditProject_ProjectStatus").val()
+//				,CreationDate:$("#EditProject_CreationDate").val()
+//				,IsDelete:'0'}
+//		$.post("/bidding/default/update?table=Project",row,function(result){
+//   		alert("操作成功！");
+//   });
+//	});
+//	$("#EditProject_Cancel").jqxButton({template:'warning'});
+//	$("#EditProject_Cancel").click(function () {
+//		window.location="http://127.0.0.1:8000/bidding/default/ProjectMangement.html"
+//	});
 	$("#EditProject_Return").jqxButton({template:'danger'});
 	$("#EditProject_Return").click(function () {
 		window.location="http://127.0.0.1:8000/bidding/default/ProjectMangement.html"
@@ -88,14 +96,16 @@ function InitProjectPackageGid(project){
 		        // synchronize with the server - send update command
 		        // call commit with parameter true if the synchronization with the server is successful 
 		        // and with parameter false if the synchronization failed.
-			    
+		    $.post("/bidding/default/update?table=ProjectPackage",rowdata,function(result){
+		    		 alert("操作成功！");
+		    });
 		        commit(true);
 		    },
 		    deleterow: function (rowid, commit) {
 		        // synchronize with the server - send delete command
 		        // call commit with parameter true if the synchronization with the server is successful 
 		        // and with parameter false if the synchronization failed.
-		    	var dataRecord = $("#EditProject_PackageTable").jqxGrid('getrowdata', rowid);
+		    	var dataRecord = $("#EditProject_PackageTable").jqxDataTable('getrowdata', rowid);
 		    	$.post("/bidding/default/delete?table=ProjectPackage",dataRecord,function(result){
 		   		 alert("操作成功！");
 		   	 	});
@@ -118,37 +128,12 @@ function InitProjectPackageGid(project){
 		var projectPackage_columns_content  = 
 			[{"datafield":"PackageNumber","text":"\u5305\u7f16\u53f7", cellsalign: 'center', align: 'center'},
 			 {"datafield":"PackageName","text":"\u5305\u540d\u79f0",  cellsalign: 'center', align: 'center'},
-			 {"datafield":"StateId","text":"\u5305\u72b6\u6001", cellsalign: 'center', align: 'center',columntype: 'dropdownlist',
-				 createeditor: function (row, column, editor) {
-                     // assign a new data source to the dropdownlist.
-					 var list = ['Germany', 'Brazil', 'France'];
-					 
-					 var source = {
-								datatype: "json",
-						        datafields: [
-						            { name: 'Id' },
-						            { name: 'Name' }
-						        ],
-						        url: "/bidding/default/select?table=ProjectStatus",
-						        async: true
-						}
-					 var dataAdapter = new $.jqx.dataAdapter(source,{
-					        loadComplete: function () {
-					        	var items = editor.jqxDropDownList('getItems'); 
-					        	var data = $('#EditProject_PackageTable').jqxGrid('getrowdata', 0);
-				             	var item = editor.jqxDropDownList('getItemByValue', data.StateID);
-				             	editor.jqxDropDownList('selectItem', item ); 
-					        }
-					    })
-								
-                     editor.jqxDropDownList({ autoDropDownHeight: true, source: dataAdapter });
-					 
-                 },
-                 // update the editor's value before saving it.
-                 cellvaluechanging: function (row, column, columntype, oldvalue, newvalue) {
-                     // return the old value, if the new value is empty.
-                     if (newvalue == "") return oldvalue;
-                 }},
+			 {"datafield":"StateId","text":"\u5305\u72b6\u6001", cellsalign: 'center', align: 'center',
+          	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
+//        		   content = findDataFieldContentByValue(datafield,value);
+        		   var item =  $("#EditProject_ProjectStatus").jqxDropDownList('getItemByValue', value);
+    		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
+               }},
 			 {"datafield":"SigningDate","text":"\u7b7e\u7ea6\u65e5\u671f",  cellsalign: 'center', align: 'center'},
 			 {"datafield":"MakeOutDate","text":"\u5f00\u7968\u65e5\u671f",  cellsalign: 'center', align: 'center'},
 			 {"datafield":"EntrustMoney","text":"\u59d4\u6258\u91d1\u989d",  cellsalign: 'center', align: 'center'},
@@ -156,19 +141,21 @@ function InitProjectPackageGid(project){
 			 {"datafield":"WinningCompany","text":"\u4e2d\u6807\u5355\u4f4d",  cellsalign: 'center', align: 'center'},
 			 {"datafield":"ChargeRate","text":"\u670d\u52a1\u8d39\u7387",  cellsalign: 'center', align: 'center'}]
 		
-		$("#EditProject_PackageTable").jqxGrid(
+		$("#EditProject_PackageTable").jqxDataTable(
 		        {
 		            width: "100%",
 		            height: 300,
-		            selectionmode: 'singlecell',
 		            source: projectPackageurldataAdapter,
+		           // pageable: true,
 		            editable: true,
 		            autoRowHeight: false,
-		            showToolbar: true,
+//		            showToolbar: true,
+		           // altRows: true,
 		            ready: function()
 		            {
 		                // called when the DataTable is loaded.         
 		            },
+		          //  pagerButtonsCount: 8,
 		            toolbarHeight: 35,
 		            renderToolbar: function(toolBar)
 		            {
@@ -263,33 +250,32 @@ function InitProjectPackageGid(project){
 		                cancelButton.click(function (event) {
 		                    if (!cancelButton.jqxButton('disabled')) {
 		                        // cancel changes.
-		                        $("#EditProject_PackageTable").jqxGrid('endRowEdit', rowIndex, true);
+		                        $("#EditProject_PackageTable").jqxDataTable('endRowEdit', rowIndex, true);
 		                    }
 		                });
 		                updateButton.click(function (event) {
 		                    if (!updateButton.jqxButton('disabled')) {
 		                        // save changes.
-		                    	$.post("/bidding/default/update?table=ProjectPackage",rowdata,function(result){
-		   			    		 alert("操作成功！");
-		                    	});
-		                        $("#EditProject_PackageTable").jqxGrid('endRowEdit', rowIndex, false);
+		                    	
+		                        $("#EditProject_PackageTable").jqxDataTable('endRowEdit', rowIndex, false);
 		                    }
 		                });
 		                editButton.click(function () {
 		                    if (!editButton.jqxButton('disabled')) {
-		                        $("#EditProject_PackageTable").jqxGrid('beginRowEdit', rowIndex);
+		                        $("#EditProject_PackageTable").jqxDataTable('beginRowEdit', rowIndex);
 		                        updateButtons('edit');
 		                    }
 		                });
 		                deleteButton.click(function () {
 		                    if (!deleteButton.jqxButton('disabled')) {
-		                        $("#EditProject_PackageTable").jqxGrid('deleteRow', rowIndex);
+		                        $("#EditProject_PackageTable").jqxDataTable('deleteRow', rowIndex);
 		                        updateButtons('delete');
 		                    }
 		                });
 		            },
 		            columns: projectPackage_columns_content
 		        });
+		$("#EditProject_PackageTable").jqxDataTable({disabled: true });
 }
 
 function InitNewPackageWindow(project){
@@ -328,7 +314,7 @@ function InitNewPackageWindow(project){
     		,IsDelete:0
     		}
 		$.post("/bidding/default/insert?table=ProjectPackage",row,function(result){
-			$("#EditProject_PackageTable").jqxGrid('addrow', null, result,"first");
+			$("#EditProject_PackageTable").jqxDataTable('addRow', null, result,"first");
 			$("#popupWindow_PackageADD").jqxWindow('hide');
 		},'json');
 	});

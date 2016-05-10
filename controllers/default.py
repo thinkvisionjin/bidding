@@ -105,7 +105,7 @@ def update():
     row_data = request.post_vars
     id = row_data['Id']
     for key in row_data:
-        if key!='Id':
+        if key!='Id' and key!='uid':
             db(db[table_name]._id == id).update(**{key:request.post_vars[key]})
     row = db(db[table_name]._id ==id).select().first()
     db.commit()
@@ -171,7 +171,7 @@ def ViewProject():
 
 def SelectPackagesByProjectId():
     id = request.vars.id
-    strSQL = u"select top 1 * from [bidding].[dbo].[ProjectPackage] where  ProjectId = " +id;
+    strSQL = u"select * from [bidding].[dbo].[ProjectPackage] where  ProjectId = " +id;
     return sqltojson(strSQL)
 
 def GenerateProjectCode(project,id):
