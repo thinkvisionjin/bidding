@@ -10,6 +10,7 @@
 from datetime import datetime
 from _sqlite3 import Row
 
+@auth.requires_login()
 def index():
     """
     example action using the internationalization operator T and flash

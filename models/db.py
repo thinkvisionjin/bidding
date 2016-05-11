@@ -14,7 +14,7 @@ str_db = u'mssql4://sa:1@localhost/BIDDING'
 #03.连接需要用utf8字符集，这样返回的中文结果可直接解码
 
 db = DAL(str_db,migrate_enabled=False)
-dbu = DAL('sqlite://storage.sqlite')
+dbu = DAL(str_db)
 auth = Auth(dbu)
 auth.define_tables(username=True)
 crud = Crud(dbu)
