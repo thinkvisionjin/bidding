@@ -151,6 +151,10 @@ def select():
 
 ###############业务处理页面################################
 
+def testdb():
+    records=db().select(db['ProtocolCode'].ALL)
+    return SQLTABLE(records)
+
 def mainframe():
     return dict();
 
@@ -202,6 +206,17 @@ def sqltojson(sql):
             dict_row[key] = unicode(row[key])
         dic_rows.append(dict_row)
     return json.dumps(dic_rows) 
+
+def sqltoarray(sql):
+    dic_rows=[]
+    rows = db.executesql(sql, as_dict=True)
+    for row in rows:
+        print row
+        dict_row = {}
+        for key in row.keys():
+            dict_row[key] = unicode(row[key])
+        dic_rows.append(dict_row)
+    return dic_rows 
 
 def getzbgg():
     keyword = request.vars.title
@@ -277,3 +292,65 @@ def zbgg():
     
 def zbggs():
     return dict();
+
+
+def gmbs():
+ 
+    return dict();
+
+def getgmbs():
+    sql = u"""select * from gmbs""";   
+    return sqltojson(sql);
+
+def gmbsmx():
+    if request.vars.oper == u'modify':
+        return dict(title=u"修改", id=request.vars.id)
+    return dict(title=u"新增")
+
+def getdwmc():
+    sql = u"""select dwmc from kh""";   
+    return sqltojson(sql);
+
+def getkh():
+    sql = u"""select * from kh where dwmc='"""+request.vars.dwmc+u"'";
+    return sqltojson(sql);
+
+def getgmbspz():
+    result = {};
+    sql = u"""select dwmc from kh""";   
+    result['dwmc'] = sqltoarray(sql);
+    sql = u"""select PackageNumber from ProjectPackage""";   
+    result['bsbh'] = sqltoarray(sql);
+    return json.dumps(result)   
+
+def insertrow():
+    table_name = request.vars.table
+    rowData = request.post_vars
+    try:    
+        id = db[table_name].insert(**rowData)
+    except:
+        return u"fail"
+    return u"success" ; 
+
+def updaterow():
+    table_name = request.vars.table
+    id = request.vars.id
+    rowData = request.post_vars
+    try:    
+        db(db[table_name]._id == id).update(**rowData)
+    except:
+        return u"fail"
+    return u"success" 
+    
+def deleterow():
+    table_name = request.vars.table
+    id = request.vars.id
+    try:   
+        db(db[table_name]._id == id).delete()
+    except:
+        return u"fail"
+    return u"success"    
+
+def selectone():
+    sql = u"""select * from """+request.vars.table+u""" where Id="""+request.vars.id;
+    return sqltojson(sql);

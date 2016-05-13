@@ -62,3 +62,16 @@ html
 }
 
 td,th {height:30px ;text-align:left;}
+
+.tbinputtitle
+{
+	align: left;
+	text-align: left;
+}
+
+.tbinput
+{
+	align: "left";
+	width: 195px;
+	height: 25px;
+}

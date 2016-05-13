@@ -39,6 +39,7 @@ db.define_table('Task',Field('CreationDate'),Field('Deadline'),Field('EmployeeId
 db.define_table('TaskLocation',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('TaskStatus',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('TypeOfTask',Field('CreationDate'),Field('IsDelete'),Field('Name'),Field('OrderId'))
+db.define_table('gmbs',Field('dwmc'),Field('rq'),Field('zzszwmc'),Field('zzsywmc'),Field('zzsgb'),Field('lxdz'),Field('lxr'),Field('sj'),Field('dzxx'),Field('cz'),Field('bsbh'),Field('je'))
 #########################################################################
 
 ## after defining tables, uncomment below to enable auditing
