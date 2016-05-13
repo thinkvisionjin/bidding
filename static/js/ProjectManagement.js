@@ -104,8 +104,8 @@ function InitProjectGrid(){
                            {
                                text: '操作', editable: false, datafield: 'edit',width: "9%", cellsalign: 'center', align: 'center',
                                cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                               var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="http://127.0.0.1:8000/bidding/default/ViewProject?id='+rowdata.Id + '">详细</a>';
-                               var b = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="http://127.0.0.1:8000/bidding/default/EditProject?id='+rowdata.Id + '">修改</a>';
+                               var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/ViewProject?id='+rowdata.Id + '">详细</a>';
+                               var b = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/EditProject?id='+rowdata.Id + '">修改</a>';
 //                               var c = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn">删除</a>';
                                var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+a+b+'</div>';
                                return d;
