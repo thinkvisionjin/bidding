@@ -1,5 +1,45 @@
 
-function InitProjectGrid(){
+var gCustomer ;
+
+function addselectfieldwindows()
+{
+	$(document.body).append('<div id="popupWindow" ><div>字段选择</div><div style="overflow: hidden;"><div  id="zdlistbox"></div></div></div>');
+	$("#popupWindow").jqxWindow({ isModal: true, autoOpen: false, height: 300, width: 200 , modalOpacity: 0.5});
+	 var listSource = [{ label: '序号', value: 'Id', checked: false },
+	                   { label: '项目编号', value: 'ProjectCode', checked: true },
+	                   { label: '项目名称', value: 'ProjectName', checked: true },
+	                   { label: '项目类型', value: 'ProjectTypeId', checked: true },
+	                   { label: '采购单位', value: 'CustomerId', checked: true },
+	                   { label: '负责人', value: 'EmployeeId', checked: true },
+	                   { label: '协助人', value: 'Assistant', checked: false },
+	                   { label: '项目来源', value: 'ProjectSourceId', checked: false },
+	                   { label: '资金来源', value: 'FundingSourceId', checked: false },
+	                   { label: '管理方式', value: 'ManagementStyleId', checked: false },
+	                   { label: '采购方式', value: 'PurchaseStyleId', checked: true },
+	                   { label: '项目状态', value: 'ProjectStatusId', checked: true },
+                       {value:"CreationDate",label:"创建日期", checked: true},
+                       {value:"PackageCount",label:"包件数量", checked: true},
+                       {value:"DocumentBuyerCount",label:"已售标书数量", checked: true},
+                       {value:"BidderCount",label:"投标人数量", width: "120", checked: true},
+                       {value:"MarginCount",label:"已交保证金数量", checked: true},
+                       {value:"ReturnMarginCount",label:"归还保证金数量", checked: true},
+                       {value:"EntrustMoney",label:"委托金额合计", checked: true},
+                       {value:"WinningMoney",label:"中标金额合计", checked: true},
+	                   ];
+	$('#zdlistbox').jqxListBox({ source: listSource, width:'100%', height:'100%', checkboxes: true });
+    $("#zdlistbox").on('checkChange', function (event) {
+        $("#jqxgrid").jqxGrid('beginupdate');
+        if (event.args.checked) {
+            $("#jqxgrid").jqxGrid('showcolumn', event.args.value);
+        }
+        else {
+            $("#jqxgrid").jqxGrid('hidecolumn', event.args.value);
+        }
+        $("#jqxgrid").jqxGrid('endupdate');
+    });	
+}
+
+function InitProjectGrid(dict){
 	var datafields_content = [
 	                          {"name":"Id","type":"string"},
 	                          {"name":"ProtocolCodeId","type":"string"},
@@ -14,10 +54,16 @@ function InitProjectGrid(){
 	                          {"name":"ManagementStyleId","type":"string"},
 	                          {"name":"PurchaseStyleId","type":"string"},
 	                          {"name":"ProjectStatusId","type":"string"},
-	                          {"name":"Note","type":"string"},
 	                          {"name":"CreationDate","type":"string"},
-	                          {"name":"IsDelete","type":"string"}]
-    var data_url = "/bidding/default/select?table=Project"
+	                          {"name":"PackageCount","type":"string"},
+	                          {"name":"DocumentBuyerCount","type":"string"},
+	                          {"name":"BidderCount","type":"string"},
+	                          {"name":"MarginCount","type":"string"},
+	                          {"name":"ReturnMarginCount","type":"string"},
+	                          {"name":"EntrustMoney","type":"string"},
+	                          {"name":"WinningMoney","type":"string"}
+	                          ]
+    var data_url = "/bidding/default/SelectProjectsSummary"
     var source =
     {
         url: data_url,
@@ -52,63 +98,125 @@ function InitProjectGrid(){
     };
     var dataAdapter = new $.jqx.dataAdapter(source);
     var editrow = -1;
-    var columns_content  =[{"datafield":"Id","text":"序号",width: "3%", cellsalign: 'center', align: 'center'},
-                           {"datafield":"ProjectCode","text":"项目编号", width: "10%", cellsalign: 'center', align: 'center'},
-                           {"datafield":"ProjectName","text":"项目名称", width: "10%", cellsalign: 'center', align: 'center'},
-                           {"datafield":"ProjectTypeId","text":"项目类型", width: "5%", cellsalign: 'center', align: 'center',
+    var columns_content  =[{"datafield":"Id","text":"序号",width: "80", cellsalign: 'center', align: 'center',hidden:true,},
+                           {"datafield":"ProjectCode","text":"项目编号", width: "180", cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectName","text":"项目名称", width: "180", cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectTypeId","text":"项目类型", width: "180", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                        		  var item =  $("#ProjectTypeId_SEARCH").jqxDropDownList('getItemByValue', value);
-                   		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
+                        		  var label="";
+                        		  pt = JSON.parse(dict.ProjectType)
+                        		  for(i=0;i<pt.length;i++){
+                        			  if(pt[i].ProjectTypeId==value.toString()) {
+                        				  label = pt[i].ProjectTypeName
+                        			  }
+                        		  }
+                   		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                                }},
-                           {"datafield":"CustomerId","text":"采购单位", width: "9%", cellsalign: 'center', align: 'center',
+                           {"datafield":"CustomerId","text":"采购单位", width: "180", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                        		   var item =  $("#BuyerId_SEARCH").jqxDropDownList('getItemByValue', value);
-                    		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
+                        		   var label="";
+                         		  pt = JSON.parse(dict.Customer)
+                         		  for(i=0;i<pt.length;i++){
+                         			  if(pt[i].Id==value.toString()) {
+                         				  label = pt[i].UserName
+                         			  }
+                         		  }
+                    		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                                }},
-                           {"datafield":"EmployeeId","text":"负责人", width: "6%", cellsalign: 'center', align: 'center',
+                           {"datafield":"EmployeeId","text":"负责人", width: "80", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                        		   var item =  $("#EmployeeId_SEARCH").jqxDropDownList('getItemByValue', value);
-                       		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
+                        		   var label="";
+                          		  pt = JSON.parse(dict.Employee)
+                          		  for(i=0;i<pt.length;i++){
+                          			  if(pt[i].Id==value.toString()) {
+                          				  label = pt[i].Name
+                          			  }
+                          		  }
+                     		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                                }},
-                           {"datafield":"Assistant","text":"协助人", width: "6%", cellsalign: 'center', align: 'center',
+                           {"datafield":"Assistant","text":"协助人", width: "80", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                        		   var item =  $("#Assistant_SEARCH").jqxDropDownList('getItemByValue', value);
-                          		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
+                        		   var label="";
+                           		  pt = JSON.parse(dict.Employee)
+                           		  for(i=0;i<pt.length;i++){
+                           			  if(pt[i].Id==value.toString()) {
+                           				  label = pt[i].Name
+                           			  }
+                           		  }
+                      		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                                }},
-                           {"datafield":"ProjectSourceId","text":"项目来源", width: "7%", cellsalign: 'center', align: 'center',
+                           {"datafield":"ProjectSourceId","text":"项目来源", width: "120", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                        		   var item =  $("#ProjectSourceId_SEARCH").jqxDropDownList('getItemByValue', value);
-                         		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
+                        		   var label="";
+                           		  pt = JSON.parse(dict.ProjectSource)
+                           		  for(i=0;i<pt.length;i++){
+                           			  if(pt[i].Id==value.toString()) {
+                           				  label = pt[i].Name
+                           			  }
+                           		  }
+                      		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                                }},
-                           {"datafield":"FundingSourceId","text":"资金来源", width: "7%", cellsalign: 'center', align: 'center',
+                           {"datafield":"FundingSourceId","text":"资金来源", width: "120", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                        		   var item =  $("#SourcesOfFundingId_SEARCH").jqxDropDownList('getItemByValue', value);
-                         		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
+                        		   var label="";
+                            		  pt = JSON.parse(dict.FundingSource)
+                            		  for(i=0;i<pt.length;i++){
+                            			  if(pt[i].Id==value.toString()) {
+                            				  label = pt[i].Name
+                            			  }
+                            		  }
+                       		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                                }},
-                           {"datafield":"ManagementStyleId","text":"管理方式", width: "7%", cellsalign: 'center', align: 'center',
+                           {"datafield":"ManagementStyleId","text":"管理方式", width: "120", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                        		   var item =  $("#ManagementStyleId_SEARCH").jqxDropDownList('getItemByValue', value);
-                         		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
+                        		   var label="";
+                         		  pt = JSON.parse(dict.ManagementStyle)
+                         		  for(i=0;i<pt.length;i++){
+                         			  if(pt[i].ManagementStyleId==value.toString()) {
+                         				  label = pt[i].ManagementStyleName
+                         			  }
+                         		  }
+                    		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                                }},
-                           {"datafield":"PurchaseStyleId","text":"采购方式", width: "7%", cellsalign: 'center', align: 'center',
+                           {"datafield":"PurchaseStyleId","text":"采购方式", width: "120", cellsalign: 'center', align: 'center',
                             	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                            		   var item =  $("#PurchaseStyleId_SEARCH").jqxDropDownList('getItemByValue', value);
-                             		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
+                            		  var label="";
+                              		  pt = JSON.parse(dict.PurchaseStyle)
+                              		  for(i=0;i<pt.length;i++){
+                              			  if(pt[i].PurchaseStyleId==value.toString()) {
+                              				  label = pt[i].PurchaseStyleName
+                              			  }
+                              		  }
+                         		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                                 }},
-                           {"datafield":"ProjectStatusId","text":"项目状态", width: "7%", cellsalign: 'center', align: 'center',
+                           {"datafield":"ProjectStatusId","text":"项目状态", width: "120", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                        		   var item =  $("#StateId_SEARCH").jqxDropDownList('getItemByValue', value);
-                         		   	return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ item.label+' </div>'
+                        		   var label="";
+                          		  pt = JSON.parse(dict.ProjectStatus)
+                          		  for(i=0;i<pt.length;i++){
+                          			  if(pt[i].Id==value.toString()) {
+                          				  label = pt[i].Name
+                          			  }
+                          		  }
+                     		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                                }},
-                           {"datafield":"CreationDate","text":"创建日期", width: "7%", cellsalign: 'center', align: 'center'},
+                              {"datafield":"CreationDate","text":"创建日期", width: "120", cellsalign: 'center', align: 'center',hidden:true},
+	                          {"datafield":"PackageCount","text":"包件数量", width: "120", cellsalign: 'center', align: 'center',hidden:false},
+	                          {"datafield":"DocumentBuyerCount","text":"已售标书数量", width: "120", cellsalign: 'center', align: 'center',hidden:false},
+	                          {"datafield":"BidderCount","text":"投标人数量", width: "120", cellsalign: 'center', align: 'center',hidden:true},
+	                          {"datafield":"MarginCount","text":"已交保证金数量", width: "120", cellsalign: 'center', align: 'center',hidden:true},
+	                          {"datafield":"ReturnMarginCount","text":"归还保证金数量", width: "120", cellsalign: 'center', align: 'center',hidden:true},
+	                          {"datafield":"EntrustMoney","text":"委托金额合计", width: "120", cellsalign: 'center', align: 'center',hidden:true},
+	                          {"datafield":"WinningMoney","text":"中标金额合计", width: "120", cellsalign: 'center', align: 'center',hidden:true},
                            {
-                               text: '操作', editable: false, datafield: 'edit',width: "9%", cellsalign: 'center', align: 'center',
+                               text: '操作', editable: false, datafield: 'edit',width: "250", cellsalign: 'center', align: 'center',
                                cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                               var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/ViewProject?id='+rowdata.Id + '">详细</a>';
+                               var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/ViewProject?id='+rowdata.Id + '">查看</a>';
                                var b = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/EditProject?id='+rowdata.Id + '">修改</a>';
-//                               var c = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn">删除</a>';
-                               var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+a+b+'</div>';
-                               return d;
+                               var c = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/EditProject?id='+rowdata.Id + '">购买标书</a>';
+                               var d = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/EditProject?id='+rowdata.Id + '">退保证金</a>';
+                               var e = '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+a+b+c+d+'</div>';
+                               return e;
                                }
                              }]            
     var outerDataAdapter = new $.jqx.dataAdapter(source, { autoBind: true });
@@ -116,65 +224,48 @@ function InitProjectGrid(){
     $("#jqxgrid").jqxGrid(
     {
         width: '100%',
-        height: 500,
+        height: 560,
         source: dataAdapter,
         pageable: true,
-        
         rowdetails: true,
         rowsheight: 35,
         columns: columns_content,
-        showstatusbar: true,
-        renderstatusbar: function (statusbar) {
-            // appends buttons to the status bar.
-            var container = $("<div style='overflow: hidden; position: relative; margin: 5px;'></div>");
-            var addButton = $("<div style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../bidding/static/images/add.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>新增</span></div>");
-            var deleteButton = $("<div style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../bidding/static/images/close.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>删除</span></div>");
-            var reloadButton = $("<div style='float: left; margin-left: 5px;'><img style='position: relative; margin-top: 2px;' src='../../bidding/static/images/refresh.png'/><span style='margin-left: 4px; position: relative; top: -3px;'>刷新</span></div>");
-            container.append(addButton);
-            container.append(deleteButton);
-            container.append(reloadButton);
-            statusbar.append(container);
-            addButton.jqxButton({  width: 60, height: 20 });
-            deleteButton.jqxButton({  width: 65, height: 20 });
-            reloadButton.jqxButton({  width: 65, height: 20 });
-            // add new row.
-            addButton.click(function (event) {
-            	$("#popupWindow_NewProject").jqxWindow('show');
-            });
-            // delete selected row.
-            deleteButton.click(function (event) {
-                var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
-                var rowscount = $("#jqxgrid").jqxGrid('getdatainformation').rowscount;
-                var id = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
-                $("#jqxgrid").jqxGrid('deleterow', id);
-            });
-            // reload grid data.
-            reloadButton.click(function (event) {
-                $("#jqxgrid").jqxGrid({ source:dataAdapter });
-            });
-        },
+        showstatusbar: false,
+        renderstatusbar: function (statusbar) {},
         showtoolbar: true,
         rendertoolbar: function (toolbar) {
         	//添加打印按钮、导出Excel按钮和其他按钮
             var me = this;
             var container = $("<div style='margin-left: auto; margin-right: auto; '></div>");
             var container = $("<div style='margin: 5px;'></div>");
-            var printButton = $("<div style='float: left; margin-left: 30%;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
+            var addNewButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>新增</span></div>");
+            var refreshButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>刷新</span></div>");
+            var deleteButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>删除</span></div>");
+            var printButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
             var exportButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>导出</span></div>");
-            var searchButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>查询</span></div>");
+            var columnSettingButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>设置</span></div>");
             toolbar.append(container);
+            container.append(addNewButton);
+            container.append(refreshButton);
+            container.append(deleteButton);
             container.append(printButton);
             container.append(exportButton);
-            container.append(searchButton);
-            printButton.jqxButton({   });
-            exportButton.jqxButton({   });
-            searchButton.jqxButton({   });
-            if (theme != "") {
-            	exportButton.addClass('jqx-widget-content-' + theme);
-            	exportButton.addClass('jqx-rc-all-' + theme);
-            	printButton.addClass('jqx-widget-content-' + theme);
-            	printButton.addClass('jqx-rc-all-' + theme);
-            }
+            container.append(columnSettingButton);
+            addNewButton.jqxButton({ template: "success" });
+            refreshButton.jqxButton({ template: "primary" });
+            printButton.jqxButton({ template: "info" });
+            exportButton.jqxButton({ template: "warning" });
+            deleteButton.jqxButton({ template: "danger" });
+            columnSettingButton.jqxButton({ template: "inverse" });
+            addNewButton.click(function (event) {
+            	$("#popupWindow_NewProject").jqxWindow('show');
+            });
+            refreshButton.click(function (event) {
+                $("#jqxgrid").jqxGrid({ source:dataAdapter });
+            });
+            columnSettingButton.click(function (event) {
+            	$("#popupWindow").jqxWindow('open');
+            });
             printButton.click(function (event) {
                 var gridContent = $("#jqxgrid").jqxGrid('exportdata', 'html');
                 var newWindow = window.open('', '', 'width=800, height=500'),
@@ -194,57 +285,67 @@ function InitProjectGrid(){
             exportButton.click(function (event) {
             	$("#jqxgrid").jqxGrid('exportdata', 'xls', 'jqxGrid'); 
             });
-            searchButton.click(function (event) {
-            	
+            // delete selected row.
+            deleteButton.click(function (event) {
+                var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
+                var rowscount = $("#jqxgrid").jqxGrid('getdatainformation').rowscount;
+                var id = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
+                $("#jqxgrid").jqxGrid('deleterow', id);
             });
         },
     });
 }
 
-function InitSearchArea(){
+function InitSearchArea(dict){
 	BindProjectName("#ProjectName_SEARCH")   //input 
-	BindCustomer("#BuyerId_SEARCH")  //dropdownlist
-	BindProjectType("#ProjectTypeId_SEARCH")//dropdownlist
-	BindProjectSource("#ProjectSourceId_SEARCH")//dropdownlist
-	BindFundingSource("#SourcesOfFundingId_SEARCH")//dropdownlist
-	BindManagementStyle("#ManagementStyleId_SEARCH")//dropdownlist
-	BindPurchaseStyle("#PurchaseStyleId_SEARCH")
-	BindEmployee("#EmployeeId_SEARCH",true)//dropdownlist
-	BindAssitant("#Assistant_SEARCH",false)//dropdownlist
-	BindProjectStatus("#StateId_SEARCH")//dropdownlist
+	$("#ProjectName_SEARCH_Button").jqxButton({ template: "success",height: '19px'});
+	$("#ProjectName_SEARCH_Button").click(function (event) {
+         $("#jqxgrid").jqxGrid({ source:dataAdapter });
+     });
+	$("#ProjectName_ADSEARCH_Button").jqxToggleButton({template: "success", width: '100', toggled: false,height: '19px'});
+	$("#ProjectName_ADSEARCH_Button").click(function (event) {
+		 var toggled = $("#ProjectName_ADSEARCH_Button").jqxToggleButton('toggled');
+         if (toggled) {
+        	 AdvancedSearchContent("show",dict)
+         }
+         else {
+        	 AdvancedSearchContent("hide",dict)
+         }
+     });
+	
 }
 
-function InitNewProjectWindow(){	
+function InitNewProjectWindow(dict){	
 	//填写项目名称
 	$("#NewProject_ProjectName").addClass('jqx-input')
 	$("#NewProject_ProjectName").width(200)
 	$("#NewProject_ProjectName").height(23)
 	//采购单位
-    BindCustomer("#NewProject_Customer")
+    BindCustomer("#NewProject_Customer",dict.Customer)
 	//项目类型
-	BindProjectType("#NewProject_ProjectType");
+	BindProjectType("#NewProject_ProjectType",dict.ProjectType);
 	//采购类型
-	BindPurchaseStyle("#NewProject_PurchaseStyle")
+	BindPurchaseStyle("#NewProject_PurchaseStyle",dict.PurchaseStyle)
 	//管理方式
-	BindManagementStyle("#NewProject_ManagementStyle")
+	BindManagementStyle("#NewProject_ManagementStyle",dict.ManagementStyle)
 	//	项目来源
-	BindProjectSource("#NewProject_ProjectSource")
+	BindProjectSource("#NewProject_ProjectSource",dict.ProjectSource)
 	//项目资金来源
-   BindFundingSource("#NewProject_FundingSource")
+   BindFundingSource("#NewProject_FundingSource",dict.FundingSource)
     //项目负责人
-   BindEmployee("#NewProject_Employee")
+   BindEmployee("#NewProject_Employee",dict.Employee)
    //协助人
-   BindEmployee("#NewProject_Assistant")
+   BindEmployee("#NewProject_Assistant",dict.Employee)
    //项目状态
-   BindProjectStatus("#NewProject_ProjectStatus")
+   BindProjectStatus("#NewProject_ProjectStatus",dict.ProjectStatus)
 	//项目创建时间
 	$("#NewProject_CreationDate").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
 	//初始化创建项目的loader
 	$("#Loader_CreatingNewProject").jqxLoader({ width: 100, height: 60, imagePosition: 'top' });
 	//初始化整个Window
 	$("#popupWindow_NewProject").jqxWindow({ showCollapseButton: true,
-    	width: 750, 
-    	height:450,autoOpen: false, cancelButton: $("#NewProject_Cancel"), modalOpacity: 0.01 });    
+    	width: 650, 
+    	height:340,autoOpen: false, cancelButton: $("#NewProject_Cancel"), modalOpacity: 0.01 });    
 	$("#NewProject_Cancel").jqxButton({ theme: theme });
     $("#NewProject_Cance").click(function () {
     	$("#popupWindow_NewProject").jqxWindow('hide');
@@ -268,9 +369,44 @@ function InitNewProjectWindow(){
 	});
 }
 
+function AdvancedSearchContent(action,dict){
+	if(action=="show"){
+		var searchTable = $("#searchTable"); 
+		row1HTML = '<tr id="row1Search"><td align="left"><p>采购单位</p></td>	<td align="left"><div id="BuyerId_SEARCH" /></td>	\
+			<td align="left"><p>项目类型</p></td> <td align="left"><div id="ProjectTypeId_SEARCH" /></td>	\
+			<td align="left"><p>采购方式</p></td>	<td align="left"><div id="PurchaseStyleId_SEARCH" /></td>\
+			<td align="left"><p>项目来源</p></td>	<td align="left"><div id="ProjectSourceId_SEARCH" /></td></tr>'
+			row2HTML='<tr id="row2Search"><td align="left"><p>资金来源</p></td>	<td align="left"><div id="SourcesOfFundingId_SEARCH" /></td>\
+			<td align="left"><p>管理方式</p></td>	<td align="left"><div id="ManagementStyleId_SEARCH" /></td>\
+			<td align="left"><p>项目状态</p></td>	<td align="left"><div id="StateId_SEARCH" /></td>\
+			<td align="left"><p>负责人</p></td>	<td align="left"><div id="EmployeeId_SEARCH" /></td>\
+			<td align="left"><p>协助人</p></td>	<td align="left"><div id="Assistant_SEARCH" /></td></tr>'
+			searchTable.append(row1HTML);
+			searchTable.append(row2HTML);
+			BindCustomer("#BuyerId_SEARCH",dict.Customer)  //dropdownlist
+			BindProjectType("#ProjectTypeId_SEARCH",dict.ProjectType)//dropdownlist
+			BindProjectSource("#ProjectSourceId_SEARCH",dict.ProjectSource)//dropdownlist
+			BindFundingSource("#SourcesOfFundingId_SEARCH",dict.FundingSource)//dropdownlist
+			BindManagementStyle("#ManagementStyleId_SEARCH",dict.FundingSource)//dropdownlist
+			BindPurchaseStyle("#PurchaseStyleId_SEARCH",dict.PurchaseStyle)
+			BindEmployee("#EmployeeId_SEARCH",dict.Employee,true)//dropdownlist
+			BindAssitant("#Assistant_SEARCH",dict.Employee,false)//dropdownlist
+			BindProjectStatus("#StateId_SEARCH",dict.ProjectStatus)//dropdownlist
+	}else{
+		$("#row1Search").remove();
+		$("#row2Search").remove();
+	}
+	
+}
+
 
 $(document).ready(function () {
-	InitSearchArea();
-	InitProjectGrid();
-	InitNewProjectWindow();
+	
+	$.get("/bidding/default/getDictionaries",function(result){
+			dict = result
+			InitSearchArea(dict);
+		    addselectfieldwindows();
+			InitProjectGrid(dict);
+			InitNewProjectWindow(dict);
+		},'json');
 });

@@ -5,7 +5,7 @@ $(document).ready(function () {
 			$("#jqxNavigationBar").jqxNavigationBar({height: "100%", width: "100%", expandMode: "singleFitHeight"});
 			$('#jqxTabs').jqxTabs({height: '100%', showCloseButtons: true, scrollPosition: 'both' });
 			$("#yh").jqxButton({ theme: theme });
-			$("#yh1").jqxButton({ theme: theme });
+//			$("#yh1").jqxButton({ theme: theme });
 			$('#jqxTree').jqxTree({ height: '300px', width: '300px'});
         });
 		function addTabs(frameid, url)

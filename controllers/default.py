@@ -8,6 +8,7 @@
 ## - download is for downloading files uploaded in the db (does streaming)
 #########################################################################
 from datetime import datetime
+from decimal import *
 from _sqlite3 import Row
 
 @auth.requires_login()
@@ -78,6 +79,7 @@ def insert():
     dict_row = {}
     for key in row.keys():
         if (key!= u'update_record' and key!= u'delete_record'):
+            try:
                 if key==u'id':
                     dict_row[u'Id']  = row[key]
                 elif isinstance(row[key], bool):
@@ -86,8 +88,13 @@ def insert():
                     dict_row[key] = row[key].decode('utf-8')
                 elif isinstance(row[key], datetime):
                     dict_row[key] = unicode(row[key])
+                elif isinstance(row[key], Decimal):
+                    dict_row[key] = unicode(row[key])
                 else:
                     dict_row[key] = row[key]
+            except:
+                print sys.exc_info()
+    print id 
     result= json.dumps(dict_row,ensure_ascii=False)
     return result
 
@@ -135,6 +142,29 @@ def select():
 
 ###############业务处理页面################################
 
+
+def getDictionaries():
+    dictionaries = {}
+    strSQL = u"select  Id,ProjectCode,ProjectName from [bidding].[dbo].[Project]"
+    dictionaries["ProjectName"] = sqltojson(strSQL)
+    strSQL = u"select  Id,UserName from [bidding].[dbo].[Customer]"
+    dictionaries["Customer"] = sqltojson(strSQL)
+    strSQL = u"select  Id,ProjectTypeId,ProjectTypeName from [bidding].[dbo].[ProjectType]"
+    dictionaries["ProjectType"] = sqltojson(strSQL)
+    strSQL = u"select  Id,PurchaseStyleId,PurchaseStyleName from [bidding].[dbo].[PurchaseStyle]"
+    dictionaries["PurchaseStyle"] = sqltojson(strSQL)
+    strSQL = u"select  Id,Name from [bidding].[dbo].[ProjectSource]"
+    dictionaries["ProjectSource"] = sqltojson(strSQL)
+    strSQL = u"select  Id,Name from [bidding].[dbo].[FundingSource]"
+    dictionaries["FundingSource"] = sqltojson(strSQL)
+    strSQL = u"select  Id,ManagementStyleId,ManagementStyleName from [bidding].[dbo].[ManagementStyle]"
+    dictionaries["ManagementStyle"] = sqltojson(strSQL)
+    strSQL = u"select  Id,Name from [bidding].[dbo].[ProjectStatus]"
+    dictionaries["ProjectStatus"] = sqltojson(strSQL)
+    strSQL = u"select  Id,Name from [bidding].[dbo].[Employee]"
+    dictionaries["Employee"] = sqltojson(strSQL)
+    return json.dumps(dictionaries,ensure_ascii=False)
+
 def mainframe():
     return dict();
 
@@ -152,10 +182,7 @@ def Project():
     return dict();
 def ProjectPackage():
     return dict();
-
 def ProjectMangement():
-    return dict();
-def FinanceMangement():
     return dict();
 
 def EditProject():
@@ -218,7 +245,23 @@ def GenerateProjectCode(project,id):
         ProjectCode+=u"JC"
     if project["ProjectSourceId"]==u"6":
         ProjectCode+=u"QT"
-    return ProjectCode;
+    return ProjectCode+unicode(id);
+
+def SelectProjectsSummary():
+    strSQL = u'''select  a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete],
+      count(b.Id) as PackageCount,
+      count(b.Id) as DocumentBuyerCount,
+      count(b.Id) as BidderCount,
+      count(b.Id) as MarginCount,
+      count(b.Id) as ReturnMarginCount,
+      sum(isnull(b.EntrustMoney,0)) as EntrustMoney,
+      sum(isnull(b.WinningMoney,0)) as WinningMoney 
+      from [dbo].[Project] a left join [dbo].[ProjectPackage] b on a.id= b.ProjectId
+group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete]
+      order by a.[Id] desc'''
+    return  sqltojson(strSQL)
+def gmbs():
+    return dict();
 
 def CreateNewProject():
     print 'CreateNewProject'
@@ -250,6 +293,7 @@ def CreateNewProject():
                     dict_row[key] = row[key]
     result= json.dumps(dict_row,ensure_ascii=False)
     return result
+
 def fileUpload():
     f= request.vars.fileToUpload
     print f.filename
@@ -343,4 +387,69 @@ def tbbmsh():
          reValue=u'已审核'
     return dict(returnValue = reValue)
 
+def insertTable(table,post_vars):
+    print 'inserting data into:'  +table +'**************'
+    rowData = post_vars
+    print rowData
+    for key in rowData:
+        rowData[key] = rowData[key].decode('utf-8')
+    id = db[table].insert(**rowData)
+    print id 
+    db.commit()
+    row = db(db[table]._id ==id).select().first()
+    print row
+    dict_row = {}
+    for key in row.keys():
+        if (key!= u'update_record' and key!= u'delete_record'):
+                if key==u'id':
+                    dict_row[u'Id']  = row[key]
+                elif isinstance(row[key], bool):
+                    dict_row[key] = row[key]
+                elif isinstance(row[key], str):
+                    dict_row[key] = row[key].decode('utf-8')
+                elif isinstance(row[key], datetime):
+                    dict_row[key] = unicode(row[key])
+                else:
+                    dict_row[key] = row[key]
+    result= json.dumps(dict_row,ensure_ascii=False)
+    return result
 
+def deleteTable(table,post_vars):
+    table = table
+    print 'delete data from:'  +table +'**************'
+    id = post_vars['Id']
+    strSQL = u"delete  from [bidding].[dbo].[" + table + u"] where  id = " +id;
+    print strSQL
+    db.executesql(strSQL)
+    return dict(table=table)
+
+def updateTable(table,post_vars):
+    print 'update data into:'  +table +'**************'
+    row_data = post_vars
+    id = row_data['Id']
+    for key in row_data:
+        if key!='Id' and key!='uid':
+            db(db[table]._id == id).update(**{key:request.post_vars[key]})
+    row = db(db[table]._id ==id).select().first()
+    db.commit()
+    return dict(table=table)
+
+def selectTable(table):
+        print u'select data from:'  +table +'**************'
+        dic_rows = []
+        for row in db().select(db[table].ALL):
+            dict_row = {}
+            for key in row.keys():
+                if (key!= u'update_record' and key!= u'delete_record'):
+                    if key==u'id':
+                        dict_row[u'Id']  = row[key]
+                    elif isinstance(row[key], bool):
+                        dict_row[key] = row[key]
+                    elif isinstance(row[key], str):
+                        dict_row[key] = row[key].decode('utf-8')
+                    elif isinstance(row[key], datetime):
+                        dict_row[key] = unicode(row[key])
+                    else:
+                        dict_row[key] = row[key]
+            dic_rows.append(dict_row)
+        return json.dumps(dic_rows,ensure_ascii=False)

@@ -84,15 +84,13 @@ input:focus {
 </head>
 <body class='default'>
 	
-	<div id='jqxExpander' class="g111">
+	<div id='jqxProjectBasicExpander' class="g111">
 	<div>
 		编辑项目档案
-		<div style="display:none" id="ProjectData">
-        	{{=project}}
-    	</div>
+		<div style="display:none" id="ProjectData">	{{=project}}	</div>
     </div>
-
-	<div style="overflow: hidden;">
+    
+    <div style="overflow: hidden;">
 			<table width="100%">
 				<tr>
 					<td align="left"><p>项目编号</p></td>
@@ -124,9 +122,6 @@ input:focus {
 					<td align="left"><p>创建日期</p></td>
 					<td align="left"><input id="EditProject_CreationDate" /></td>
 				</tr>
-				<tr>
-					<td colspan="6" align="left"><div id="EditProject_PackageTable" /></td>
-				</tr>
 				<!--  
 				<tr>
 					<td colspan="4" align="left"><p>项目备注</p>
@@ -137,17 +132,41 @@ input:focus {
 					<td align="center" style="padding-top: 10px;">
 					<td align="center" style="padding-top: 10px;">
 					<td align="center" style="padding-top: 10px;">
+					<td align="center" style="padding-top: 10px;"> 
+					<input style="margin-right: 5px;" type="button" id="EditProject_Save" value="保存" />
+					
+					<input type="button" id="EditProject_Cancel" value="取消" />
+					<input type="button" id="EditProject_Return" value="返回" /></td>
 					<td align="center" style="padding-top: 10px;">
-					<td align="center" style="padding-top: 10px;">
-					<td align="right">
-						<input style="margin-right: 5px;" type="button" id="EditProject_Save" value="保存" />
-						<input type="button" id="EditProject_Cancel" value="取消" />
-						<input type="button" id="EditProject_Return" value="返回" />
+					<td align="right">				
 					</td>
 				</tr>
 			</table>
-		</div>
 	</div>
+    </div>
+    
+    <div id='jqxProjectPackagesExpander' class="g111">
+    <div>包件管理    </div>
+    <div style="overflow: hidden;">	
+    	<div id="EditProject_PackageTable"></div>
+    </div>
+    </div>
+
+    <div id='jqxProjectDocumentsExpander' class="g111">
+    <div>标书管理 </div>
+    <div style="overflow: hidden;">	
+    	<div id="EditProject_DocumentTable"></div>
+    </div>
+    </div>
+    
+    <div id='jqxProjectMarginExpander' class="g111">
+    <div>保证金管理   </div>
+    <div style="overflow: hidden;">	
+    	<div id="EditProject_MarginTable"></div>
+    </div>	
+ 	</div>
+	
+	
 	<div id="popupWindow_PackageADD">
 		<div>新增</div>
 		<div style="overflow: hidden;">

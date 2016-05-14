@@ -3,6 +3,7 @@ encoding//auto-generator/code_generator.py=utf-8
 encoding//auto-generator/definetables.py=utf-8
 encoding//controllers/cw.py=utf-8
 encoding//controllers/daltest.py=utf-8
+encoding//controllers/dbo.py=utf-8
 encoding//controllers/default.py=utf-8
 encoding//controllers/test.py=utf-8
 encoding//languages/zh-cn.py=utf-8
