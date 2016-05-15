@@ -20,6 +20,62 @@ def index():
     return dict(message=T('Welcome to web2py!'))
 
 
+def Num2MoneyFormat( change_number ):
+    """
+    .转换数字为大写货币格式( format_word.__len__() - 3 + 2位小数 )
+    change_number 支持 float, int, long, string
+    """
+    format_word = ["分", "角", "元",
+               "拾","百","千","万",
+               "拾","百","千","亿",
+               "拾","百","千","万",
+               "拾","百","千","兆"]
+
+    format_num = ["零","壹","贰","叁","肆","伍","陆","柒","捌","玖"]
+    if type( change_number ) == unicode:
+        # - 如果是字符串,先尝试转换成float或int.
+        if '.' in change_number:
+            try:    change_number = float( change_number )
+            except: raise ValueError, '%s   can\'t change'%change_number
+        else:
+            try:    change_number = int( change_number )
+            except: raise ValueError, '%s   can\'t change'%change_number
+
+    if type( change_number ) == float:
+        real_numbers = []
+        for i in range( len( format_word ) - 3, -3, -1 ):
+            if change_number >= 10 ** i or i < 1:
+                real_numbers.append( int( round( change_number/( 10**i ), 2)%10 ) )
+
+    elif isinstance( change_number, (int, long) ):
+        real_numbers = [ int( i ) for i in str( change_number ) + '00' ]
+
+    else:
+        raise ValueError, '%s   can\'t change'%change_number
+
+    zflag = 0                       #标记连续0次数，以删除万字，或适时插入零字
+    start = len(real_numbers) - 3
+    change_words = []
+    for i in range(start, -3, -1):  #使i对应实际位数，负数为角分
+        if 0 <> real_numbers[start-i] or len(change_words) == 0:
+            if zflag:
+                change_words.append(format_num[0])
+                zflag = 0
+            change_words.append( format_num[ real_numbers[ start - i ] ] )
+            change_words.append(format_word[i+2])
+
+        elif 0 == i or (0 == i%4 and zflag < 3):    #控制 万/元
+            change_words.append(format_word[i+2])
+            zflag = 0
+        else:
+            zflag += 1
+
+    if change_words[-1] not in ( format_word[0], format_word[1]):
+        # - 最后两位非"角,分"则补"整"
+        change_words.append("整")
+
+    return ''.join(change_words)
+
 def user():
     """
     exposes:
@@ -207,6 +263,26 @@ def sqltojson(sql):
         dic_rows.append(dict_row)
     return json.dumps(dic_rows) 
 
+def rawsqltojson(sql):
+    dic_rows=[]
+    rows = db.executesql(sql, as_dict=True)
+    for row in rows:
+        print row
+        dict_row = {}
+        for key in row.keys():
+            dict_row[key] = unicode(row[key])
+        dic_rows.append(dict_row)
+    return dic_rows 
+
+def sqltoarraynodict(sql):
+    dic_rows=[]
+    rows = db.executesql(sql, as_dict=True)
+    for row in rows:
+        for key in row.keys():
+            dic_rows.append(row[key])
+    return dic_rows 
+
+
 def sqltoarray(sql):
     dic_rows=[]
     rows = db.executesql(sql, as_dict=True)
@@ -294,63 +370,439 @@ def zbggs():
     return dict();
 
 
-def gmbs():
- 
-    return dict();
 
-def getgmbs():
-    sql = u"""select * from gmbs""";   
-    return sqltojson(sql);
 
-def gmbsmx():
-    if request.vars.oper == u'modify':
-        return dict(title=u"修改", id=request.vars.id)
-    return dict(title=u"新增")
-
-def getdwmc():
-    sql = u"""select dwmc from kh""";   
-    return sqltojson(sql);
-
-def getkh():
-    sql = u"""select * from kh where dwmc='"""+request.vars.dwmc+u"'";
-    return sqltojson(sql);
-
-def getgmbspz():
-    result = {};
-    sql = u"""select dwmc from kh""";   
-    result['dwmc'] = sqltoarray(sql);
-    sql = u"""select PackageNumber from ProjectPackage""";   
-    result['bsbh'] = sqltoarray(sql);
-    return json.dumps(result)   
-
-def insertrow():
-    table_name = request.vars.table
-    rowData = request.post_vars
+def insertrow(table_name, rowData):
     try:    
         id = db[table_name].insert(**rowData)
     except:
         return u"fail"
     return u"success" ; 
 
+
+
 def updaterow():
-    table_name = request.vars.table
-    id = request.vars.id
-    rowData = request.post_vars
     try:    
         db(db[table_name]._id == id).update(**rowData)
     except:
         return u"fail"
-    return u"success" 
-    
-def deleterow():
-    table_name = request.vars.table
-    id = request.vars.id
+    return u"success"     
+
+
+
+
+def deleterow(table_name, id):
     try:   
         db(db[table_name]._id == id).delete()
     except:
         return u"fail"
-    return u"success"    
+    return u"success" 
 
-def selectone():
-    sql = u"""select * from """+request.vars.table+u""" where Id="""+request.vars.id;
+def p_getbsbh(uid):
+    sql = u"""select PackageNumber from ProjectPackage""";   
+    return sqltoarray(sql);
+
+#购买标书代码
+#定制代码
+def getkh():
+    sql = u"""select * from kh where dwmc='"""+request.vars.dwmc+u"'";
     return sqltojson(sql);
+
+#购买标书配置信息需定制
+def getgmbspz():
+    uid = u'';
+    result = {};
+    sql = u"""select dwmc from kh""";   
+    result[u'dwmc'] = sqltoarraynodict(sql);
+
+    result[u'bsbh'] = p_getbsbh(uid);
+    return json.dumps(result)   
+
+#主页
+def gmbs():
+    return dict();
+#操作
+def gmbsmx():
+    if request.vars.oper == u'modify':
+        return dict(title=u"修改", Id=request.vars.Id)
+    if request.vars.oper == u'detail':
+        return dict(title=u"详细", Id=request.vars.Id)    
+    return dict(title=u"新增", Id=request.vars.Id)
+
+#获取所有
+def getgmbs():
+    dwmc = request.vars.dwmc
+    bsbh = request.vars.bsbh
+    if dwmc==None:
+        dwmc=u''
+    if bsbh==None:
+        bsbh=u''
+    where = u'where '
+    where += u"dwmc like '%"+dwmc+u"%'"
+    where += u"and bsbh like '%"+bsbh+u"%'"
+    sql = u"""select * from gmbs """ + where;
+    print sql   
+    return sqltojson(sql);
+
+def print_gmbs():
+    table_name = u'gmbs'
+    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+    rows = rawsqltojson(sql);    
+    row = rows[0]
+    print row
+    row[u'rq'] = row[u'rq'][0:10]
+    row[u'zje'] = Num2MoneyFormat(row[u'je'])
+    return dict(**row)
+
+def select_gmbs():
+    dwmc = request.vars.dwmc
+    bsbh = request.vars.bsbh
+    username = u'Test'
+    if dwmc==None:
+        dwmc=u''
+    if bsbh==None:
+        bsbh=u''
+    where = u"where username='"+username+u"'"
+    where += u"and dwmc like '%"+dwmc+u"%'"
+    where += u"and bsbh like '%"+bsbh+u"%'"
+    order = u" order by rq desc"
+    sql = u"""select * from gmbs """ + where+order;
+    print sql   
+    return sqltojson(sql);
+
+def updaterow_gmbs():
+    table_name = u'gmbs'
+    id = request.vars.id
+    rowData = request.post_vars
+    return updaterow(table_name, id, rowData)
+
+def insertrow_gmbs():
+    table_name = u'gmbs'
+    username = u'Test'
+    rowData = request.post_vars
+    rowData[u'username'] = username
+    print u"insertrow gmbs"
+    print rowData
+    return insertrow(table_name, rowData)
+
+def deleterow_gmbs():
+    table_name = u'gmbs'
+    id = request.vars.Id
+    print table_name
+    print id
+    return deleterow(table_name, id)
+   
+
+def selectone_gmbs():
+    table_name = u'gmbs'
+    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+    return sqltojson(sql);
+
+#################################################3
+#主页
+def kh():
+    return dict();
+#操作
+def khmx():
+    if request.vars.oper == u'modify':
+        return dict(title=u"修改", Id=request.vars.Id)
+    if request.vars.oper == u'detail':
+        return dict(title=u"详细", Id=request.vars.Id)    
+    return dict(title=u"新增", Id=request.vars.Id)
+
+#获取所有
+def select_kh():
+    username = u'Test'
+    where = u"where username='"+username+u"'"
+    dwmc = request.vars.dwmc
+    if dwmc==None:
+        dwmc=u''
+    where += u"and dwmc like '%"+dwmc+u"%'"
+    
+    order = u" order by rq desc"
+    sql = u"""select * from kh """ + where+order;
+    print sql   
+    return sqltojson(sql);
+
+def updaterow_kh():
+    table_name = u'kh'
+    id = request.vars.id
+    rowData = request.post_vars
+    return updaterow(table_name, id, rowData)
+
+def insertrow_kh():
+    table_name = u'kh'
+    username = u'Test'
+    rowData = request.post_vars
+    rowData[u'username'] = username
+    print u"insertrow kh"
+    print rowData
+    return insertrow(table_name, rowData)
+
+def deleterow_kh():
+    table_name = u'kh'
+    id = request.vars.Id
+    print table_name
+    print id
+    return deleterow(table_name, id)
+   
+
+def selectone_kh():
+    table_name = u'kh'
+    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+    return sqltojson(sql);
+
+##########################################################33
+#主页
+def tbbzj():
+    return dict();
+#操作
+def tbbzjmx():
+    if request.vars.oper == u'modify':
+        return dict(title=u"修改", Id=request.vars.Id)
+    if request.vars.oper == u'detail':
+        return dict(title=u"详细", Id=request.vars.Id)    
+    return dict(title=u"新增", Id=request.vars.Id)
+
+#获取所有
+def select_tbbzj():
+    username = u'Test'
+    where = u"where username='"+username+u"'"
+    
+    dwmc = request.vars.dwmc
+    if dwmc==None:
+        dwmc=u''
+    where += u"and dwmc like '%"+dwmc+u"%'"
+    
+
+    bsbh = request.vars.bsbh
+    if bsbh==None:
+        bsbh=u''
+    where += u"and bsbh like '%"+bsbh+u"%'"
+    
+    order = u" order by rq desc"
+    sql = u"""select * from tbbzj """ + where+order;
+    print sql   
+    return sqltojson(sql);
+
+def updaterow_tbbzj():
+    table_name = u'tbbzj'
+    id = request.vars.id
+    rowData = request.post_vars
+    return updaterow(table_name, id, rowData)
+
+def insertrow_tbbzj():
+    table_name = u'tbbzj'
+    username = u'Test'
+    rowData = request.post_vars
+    rowData[u'username'] = username
+    print u"insertrow tbbzj"
+    print rowData
+    return insertrow(table_name, rowData)
+
+def deleterow_tbbzj():
+    table_name = u'tbbzj'
+    id = request.vars.Id
+    print table_name
+    print id
+    return deleterow(table_name, id)
+   
+
+def selectone_tbbzj():
+    table_name = u'tbbzj'
+    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+    return sqltojson(sql);
+
+
+
+def gettbbzjpz():
+    uid = u''
+    result = {};
+    sql = u"""select dwmc from kh""";   
+    result[u'dwmc'] = sqltoarraynodict(sql);
+
+    result[u'bsbh'] = p_getbsbh(uid)
+    result[u'bzjlx'] = [u'现金', u'保函']
+    return json.dumps(result)  
+
+def print_tbzj():
+    table_name = u'tbzj'
+    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+    rows = rawsqltojson(sql);    
+    row = rows[0]
+    row[u'bm'] = u'业务一部'
+    row[u'rq'] = row[u'rq'][0:10]
+    row[u'hjje'] = Num2MoneyFormat(row[u'je'])
+    
+    a = row[u'je']
+    if a.find(u".")==-1:
+        c = a+u'00'
+    else:
+        c = a.replace(u'.', u'')
+    print c
+    b = []
+    for i in range(1,10):
+        b.append(u'')
+    b[10-len(c):10] = c[:]
+    if len(a)<=9:
+        b[10-len(c)-1] = u'￥'
+    for i in range(1,11):
+        print i
+        row[u'je'+unicode(i)] = b[i-1]
+        row[u'hjje'+unicode(i)] = b[i-1] 
+    row[u'xj'] = u''    
+    row[u'hk'] = u''  
+    row[u'zp'] = u''  
+    row[u'qt'] = u''              
+    if row[u'fkfs'] == u'现金':
+        row[u'xj'] = u'√'
+    if row[u'fkfs'] == u'汇款':
+        row[u'hk'] = u'√'
+    if row[u'fkfs'] == u'支票':
+        row[u'zp'] = u'√'
+    if row[u'fkfs'] == u'其他':
+        row[u'qt'] = u'√'                        
+    print row   
+    print row[u'fkfs']
+    return dict(**row)
+
+#########################
+#主页
+def tbzj():
+    return dict();
+#操作
+def tbzjmx():
+    if request.vars.oper == u'modify':
+        return dict(title=u"修改", Id=request.vars.Id)
+    if request.vars.oper == u'detail':
+        return dict(title=u"详细", Id=request.vars.Id)    
+    return dict(title=u"新增", Id=request.vars.Id)
+
+#获取所有
+def select_tbzj():
+    username = u'Test'
+    where = u"where username='"+username+u"'"
+    
+    dwmc = request.vars.dwmc
+    if dwmc==None:
+        dwmc=u''
+    where += u"and dwmc like '%"+dwmc+u"%'"
+    
+    order = u" order by rq desc"
+    sql = u"""select * from tbzj """ + where+order;
+    print sql   
+    return sqltojson(sql);
+
+def updaterow_tbzj():
+    table_name = u'tbzj'
+    id = request.vars.id
+    rowData = request.post_vars
+    return updaterow(table_name, id, rowData)
+
+def insertrow_tbzj():
+    table_name = u'tbzj'
+    username = u'Test'
+    rowData = request.post_vars
+    rowData[u'username'] = username
+    print u"insertrow tbzj"
+    print rowData
+    return insertrow(table_name, rowData)
+
+def deleterow_tbzj():
+    table_name = u'tbzj'
+    id = request.vars.Id
+    print table_name
+    print id
+    return deleterow(table_name, id)
+   
+
+def selectone_tbzj():
+    table_name = u'tbzj'
+    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+    return sqltojson(sql);
+
+#购买标书配置信息需定制
+def gettbzjpz():
+    uid = u'';
+    result = {};
+    sql = u"""select dwmc from kh""";   
+    result[u'dwmc'] = sqltoarraynodict(sql);
+
+    result[u'bsbh'] = p_getbsbh(uid);
+    result[u'fkfs'] = [u'现金', u'汇款', u'支票', u'其他']
+    return json.dumps(result) 
+
+
+
+########################################
+#主页
+def zb():
+    return dict();
+#操作
+def zbmx():
+    if request.vars.oper == u'modify':
+        return dict(title=u"修改", Id=request.vars.Id)
+    if request.vars.oper == u'detail':
+        return dict(title=u"详细", Id=request.vars.Id)    
+    return dict(title=u"新增", Id=request.vars.Id)
+
+#获取所有
+def select_zb():
+    username = u'Test'
+    where = u"where username='"+username+u"'"
+    
+    bsbh = request.vars.bsbh
+    if bsbh==None:
+        bsbh=u''
+    where += u"and bsbh like '%"+bsbh+u"%'"
+    
+
+    zbdw1 = request.vars.zbdw1
+    if zbdw1==None:
+        zbdw1=u''
+    where += u"and (zbdw1 like '%"+zbdw1+u"%'"
+    where += u"or zbdw2 like '%"+zbdw1+u"%'"
+    where += u"or zbdw3 like '%"+zbdw1+u"%')"
+    
+    order = u" order by rq desc"
+    sql = u"""select * from zb """ + where+order;
+    print sql   
+    return sqltojson(sql);
+
+def updaterow_zb():
+    table_name = u'zb'
+    id = request.vars.id
+    rowData = request.post_vars
+    return updaterow(table_name, id, rowData)
+
+def insertrow_zb():
+    table_name = u'zb'
+    username = u'Test'
+    rowData = request.post_vars
+    rowData[u'username'] = username
+    print u"insertrow zb"
+    print rowData
+    return insertrow(table_name, rowData)
+
+def deleterow_zb():
+    table_name = u'zb'
+    id = request.vars.Id
+    print table_name
+    print id
+    return deleterow(table_name, id)
+   
+
+def selectone_zb():
+    table_name = u'zb'
+    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+    return sqltojson(sql);
+
+
+def getzbpz():
+    uid = u'';
+    result = {};
+    sql = u"""select dwmc from kh""";   
+    result[u'dwmc'] = sqltoarraynodict(sql);
+
+    result[u'bsbh'] = p_getbsbh(uid);
+    return json.dumps(result) 

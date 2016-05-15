@@ -1,5 +1,5 @@
 
-function getkh(dwmc)
+/*function getkh(dwmc)
 {
 	if (dwmc == olddwmc)
 		{
@@ -28,15 +28,17 @@ function getkh(dwmc)
 		olddwmc = dwmc;
 		
 	}, 'json');	
-}
+}*/
 function configpage()
 {
-    $.get('getgmbspz', function(result){
+	
+    $.get('gettbbzjpz', function(result){
 		//需特殊处理
-    	$('#dwmc').jqxInput({source:result['dwmc']})
+    	$('#dwmc').jqxInput({source:result['dwmc']});
     	$('#bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh'], displayMember: "PackageNumber", valueMember: "PackageNumber"});
+    	$('#bzjlx').jqxDropDownList({ placeHolder: "", source: result['bzjlx']});
     }, 'json');	
-    $("#dwmc").blur(function(){getkh($("#dwmc").val())});  
+
 }
 var olddwmc='';
 var state = 'add';
@@ -50,23 +52,16 @@ $('#tr_username').show();
 $('#username').jqxInput({disabled:true});
 $('#tr_ly').show();
 $('#ly').jqxInput({disabled:true});
-	$.get('selectone_gmbs?Id='+$('#Id').val(), function(result){
+	$.get('selectone_tbbzj?Id='+$('#Id').val(), function(result){
 		var data = result[0];
 		$('#Id').val(data['Id']);
 $('#dwmc').val(data['dwmc']);
-$('#rq').val(data['rq']);
-$('#zzszwmc').val(data['zzszwmc']);
-$('#zzsywmc').val(data['zzsywmc']);
-$('#zzsgb').val(data['zzsgb']);
-$('#lxdz').val(data['lxdz']);
-$('#lxr').val(data['lxr']);
-$('#sj').val(data['sj']);
-$('#dzxx').val(data['dzxx']);
-$('#cz').val(data['cz']);
 $('#bsbh').val(data['bsbh']);
+$('#bzjlx').val(data['bzjlx']);
 $('#je').val(data['je']);
-$('#username').val(data['username']);
-$('#ly').val(data['ly']);		
+$('#rq').val(data['rq']);
+$('#username').val(data['username']);	
+$('#ly').val(data['ly']);	
 	}, 'json');	
 	$('#Save').hide();
 	$('#Cancel').val('关闭');
@@ -79,26 +74,16 @@ $('#Id').jqxInput({disabled:true});
 $('#tr_rq').show();
 $('#rq').jqxInput({disabled:true});
 $('#tr_username').show();
-$('#username').jqxInput({disabled:true});
-$('#tr_ly').show();
-$('#ly').jqxInput({disabled:true});;
-	$.get('selectone_gmbs?Id='+$('#Id').val(), function(result){
+$('#username').jqxInput({disabled:true});;
+	$.get('selectone_tbbzj?Id='+$('#Id').val(), function(result){
 		var data = result[0];
 		$('#Id').val(data['Id']);
 $('#dwmc').val(data['dwmc']);
-$('#rq').val(data['rq']);
-$('#zzszwmc').val(data['zzszwmc']);
-$('#zzsywmc').val(data['zzsywmc']);
-$('#zzsgb').val(data['zzsgb']);
-$('#lxdz').val(data['lxdz']);
-$('#lxr').val(data['lxr']);
-$('#sj').val(data['sj']);
-$('#dzxx').val(data['dzxx']);
-$('#cz').val(data['cz']);
 $('#bsbh').val(data['bsbh']);
+$('#bzjlx').val(data['bzjlx']);
 $('#je').val(data['je']);
-$('#username').val(data['username']);
-$('#ly').val(data['ly']);			
+$('#rq').val(data['rq']);
+$('#username').val(data['username']);			
 	}, 'json');	
 }
 
@@ -107,26 +92,19 @@ function save(state)
 {
 	if (state == 'add')
 		{
-		url = 'insertrow_gmbs';
+		url = 'insertrow_tbbzj';
 		}
 	else if (state == 'modify')
 		{
-		url = 'updaterow_gmbs?Id='+$('#Id').val();
+		url = 'updaterow_tbbzj?Id='+$('#Id').val();
 		}
 	var row = {	
 	dwmc:$('#dwmc').val(),
-zzszwmc:$('#zzszwmc').val(),
-zzsywmc:$('#zzsywmc').val(),
-zzsgb:$('#zzsgb').val(),
-lxdz:$('#lxdz').val(),
-lxr:$('#lxr').val(),
-sj:$('#sj').val(),
-dzxx:$('#dzxx').val(),
-cz:$('#cz').val(),
 bsbh:$('#bsbh').val(),
+bzjlx:$('#bzjlx').val(),
 je:$('#je').val(),
 username:$('#username').val(),
-ly:$('#ly').val(),
+ly:'现场',
 	//////////////需特殊处理//////
 	};
     $.ajax({
@@ -138,7 +116,7 @@ ly:$('#ly').val(),
             if (response == 'success')
             	{
 				alert('成功');
-            	window.location.href='gmbs';
+            	window.location.href='tbbzj';
             	}
 			else
 			{
@@ -154,30 +132,21 @@ ly:$('#ly').val(),
 
 $(document).ready(function () {
 
-	$("#gmbs-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
+	$("#tbbzj-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
 
     // Create a jqxInput
     
 
     $('#Id').jqxInput();
 $('#dwmc').jqxInput();
-$('#rq').jqxInput();
-$('#zzszwmc').jqxInput();
-$('#zzsywmc').jqxInput();
-$('#zzsgb').jqxInput();
-$('#lxdz').jqxInput();
-$('#lxr').jqxInput();
-$('#sj').jqxInput();
-$('#dzxx').jqxInput();
-$('#cz').jqxInput();
-//$('#bsbh').jqxDropDownList({ placeHolder: ''});
+$('#bsbh').jqxDropDownList({ placeHolder: ''});
+$('#bzjlx').jqxDropDownList({ placeHolder: ''});
 $('#je').jqxNumberInput({inputMode: 'simple'});
+$('#rq').jqxInput();
 $('#username').jqxInput();
-$('#ly').jqxInput();
 	$('#tr_Id').hide();
 $('#tr_rq').hide();
 $('#tr_username').hide();
-$('#tr_ly').hide();
 
 	configpage();
     $("#Save").jqxButton({template:'success'});
@@ -187,7 +156,7 @@ $('#tr_ly').hide();
 		save(state);
 	});
 	$("#Cancel").click(function () {
-		window.location.href="gmbs";
+		window.location.href="tbbzj";
 	}); 	
 	if (title.innerHTML=='修改')
 	{
