@@ -17,14 +17,14 @@ function addselectfieldwindows()
 	                   { label: '管理方式', value: 'ManagementStyleId', checked: false },
 	                   { label: '采购方式', value: 'PurchaseStyleId', checked: true },
 	                   { label: '项目状态', value: 'ProjectStatusId', checked: true },
-                       {value:"CreationDate",label:"创建日期", checked: true},
+                       {value:"CreationDate",label:"创建日期", checked: false},
                        {value:"PackageCount",label:"包件数量", checked: true},
                        {value:"DocumentBuyerCount",label:"已售标书数量", checked: true},
-                       {value:"BidderCount",label:"投标人数量", width: "120", checked: true},
-                       {value:"MarginCount",label:"已交保证金数量", checked: true},
-                       {value:"ReturnMarginCount",label:"归还保证金数量", checked: true},
-                       {value:"EntrustMoney",label:"委托金额合计", checked: true},
-                       {value:"WinningMoney",label:"中标金额合计", checked: true},
+                       {value:"BidderCount",label:"投标人数量", width: "120", checked: false},
+                       {value:"MarginCount",label:"已交保证金数量", checked: false},
+                       {value:"ReturnMarginCount",label:"归还保证金数量", checked: false},
+                       {value:"EntrustMoney",label:"委托金额合计", checked: false},
+                       {value:"WinningMoney",label:"中标金额合计", checked: false},
 	                   ];
 	$('#zdlistbox').jqxListBox({ source: listSource, width:'100%', height:'100%', checkboxes: true });
     $("#zdlistbox").on('checkChange', function (event) {
@@ -99,8 +99,8 @@ function InitProjectGrid(dict){
     var dataAdapter = new $.jqx.dataAdapter(source);
     var editrow = -1;
     var columns_content  =[{"datafield":"Id","text":"序号",width: "80", cellsalign: 'center', align: 'center',hidden:true,},
-                           {"datafield":"ProjectCode","text":"项目编号", width: "180", cellsalign: 'center', align: 'center'},
-                           {"datafield":"ProjectName","text":"项目名称", width: "180", cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectCode","text":"项目编号", width: "185", cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectName","text":"项目名称", width: "190", cellsalign: 'center', align: 'center'},
                            {"datafield":"ProjectTypeId","text":"项目类型", width: "180", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		  var label="";
@@ -178,7 +178,7 @@ function InitProjectGrid(dict){
                          		  }
                     		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                                }},
-                           {"datafield":"PurchaseStyleId","text":"采购方式", width: "120", cellsalign: 'center', align: 'center',
+                           {"datafield":"PurchaseStyleId","text":"采购方式", width: "160", cellsalign: 'center', align: 'center',
                             	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                             		  var label="";
                               		  pt = JSON.parse(dict.PurchaseStyle)
@@ -224,8 +224,9 @@ function InitProjectGrid(dict){
     $("#jqxgrid").jqxGrid(
     {
         width: '100%',
-        height: 560,
+        height: 610,
         source: dataAdapter,
+        columnsresize: true,
         pageable: true,
         rowdetails: true,
         rowsheight: 35,

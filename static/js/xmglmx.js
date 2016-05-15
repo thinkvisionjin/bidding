@@ -199,6 +199,7 @@ function InitProjectPackageGrid(dict,project){
 		            height: 265,
 		            width: "100%",
 		            selectionmode: 'singlerow',
+		            columnsresize: true,
 		            source: projectPackageurldataAdapter,
 		            pageable: true,
 		            editable: true,
@@ -277,11 +278,11 @@ function InitProjectPackageGrid(dict,project){
 }
 
 function InitProjectDocumentGrid(dict,project){
-	var data = generatedata(7);
+
     var source =
     {
-        localdata: data,
-        datatype: "array",
+        url: "select_gmbs",
+        datatype: "json",
         updaterow: function (rowid, rowdata, commit) {
             // synchronize with the server - send update command
             // call commit with parameter true if the synchronization with the server is successful 
@@ -290,13 +291,21 @@ function InitProjectDocumentGrid(dict,project){
         },
         datafields:
         [
-            { name: 'Customer', type: 'string' },
-            { name: 'DocumentID', type: 'string' },
-            { name: 'PackageName', type: 'string' },
-            { name: 'HasPaid', type: 'bool' },
-            { name: 'Quantity', type: 'number' },
-            { name: 'Amount', type: 'number' },
-            { name: 'PaidDate ', type: 'date' }
+            {name : 'Id',type : 'string'	},
+			{name : 'dwmc',type : 'string'	},
+			{name : 'rq',type : 'string'	},
+			{name : 'zzszwmc',type : 'string'	},
+			{name : 'zzsywmc',type : 'string'	},
+			{name : 'zzsgb',type : 'string'	},
+			{name : 'lxdz',type : 'string'	},
+			{name : 'lxr',type : 'string'	},
+			{name : 'sj',type : 'string'	},
+			{name : 'dzxx',type : 'string'	},
+			{name : 'cz',type : 'string'	},
+			{name : 'bsbh',type : 'string'	},
+			{name : 'je',type : 'string'	},
+			{name : 'username',type : 'string'	},
+			{name : 'ly',type : 'string'	}
         ]
     };
     var dataAdapter = new $.jqx.dataAdapter(source);
@@ -310,13 +319,75 @@ function InitProjectDocumentGrid(dict,project){
         editable: true,
         selectionmode: 'singlerow',
         editmode: 'selectedrow',
+        columnsresize: true,
+        showToolbar: true,
+        renderToolbar: function(toolBar) {
+        	//添加打印按钮、导出Excel按钮和其他按钮
+            var me = this;
+            var container = $("<div style='margin-left: auto; margin-right: auto; '></div>");
+            var container = $("<div style='margin: 5px;'></div>");
+            var addNewButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>新增</span></div>");
+            var refreshButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>刷新</span></div>");
+            var deleteButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>删除</span></div>");
+            var printButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
+            var exportButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>导出</span></div>");
+            var columnSettingButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>设置</span></div>");
+            toolBar.append(container);
+            container.append(addNewButton);
+            container.append(refreshButton);
+            container.append(deleteButton);
+            container.append(printButton);
+            container.append(exportButton);
+            container.append(columnSettingButton);
+            addNewButton.jqxButton({ template: "success" });
+            refreshButton.jqxButton({ template: "primary" });
+            printButton.jqxButton({ template: "info" });
+            exportButton.jqxButton({ template: "warning" });
+            deleteButton.jqxButton({ template: "danger" });
+            columnSettingButton.jqxButton({ template: "inverse" });
+            addNewButton.click(function (event) {
+            	$("#popupWindow_PackageADD").jqxWindow('show');
+            });
+            refreshButton.click(function (event) {
+                $("#EditProject_DocumentTable").jqxGrid({ source:projectPackageurldataAdapter });
+            });
+            columnSettingButton.click(function (event) {
+            	$("#popupWindow_PackageADD").jqxWindow('open');
+            });
+            printButton.click(function (event) {
+                var gridContent = $("#EditProject_DocumentTable").jqxGrid('exportdata', 'html');
+                var newWindow = window.open('', '', 'width=800, height=500'),
+                document = newWindow.document.open(),
+                pageContent =
+                    '<!DOCTYPE html>\n' +
+                    '<html>\n' +
+                    '<head>\n' +
+                    '<meta charset="utf-8" />\n' +
+                    '<title>打印原始单据</title>\n' +
+                    '</head>\n' +
+                    '<body>\n' + gridContent + '\n</body>\n</html>';
+                document.write(pageContent);
+                document.close();
+                newWindow.print();
+            });
+            exportButton.click(function (event) {
+            	$("#EditProject_DocumentTable").jqxGrid('exportdata', 'xls', 'jqxGrid'); 
+            });
+            // delete selected row.
+            deleteButton.click(function (event) {
+                var selectedrowindex = $("#EditProject_DocumentTable").jqxGrid('getselectedrowindex');
+                var rowscount = $("#EditProject_DocumentTable").jqxGrid('getdatainformation').rowscount;
+                var id = $("#EditProject_DocumentTable").jqxGrid('getrowid', selectedrowindex);
+                $("#EditProject_DocumentTable").jqxGrid('deleterow', id);
+            });
+        
+        },
         columns: [
-          { text: '客户名称', columntype: 'textbox', datafield: 'Customer', width: '20%' , align: 'center', cellsalign: 'center',},
-          { text: '招标书编号', datafield: 'lastname', columntype: 'DocumentID', width: '20%', align: 'center', cellsalign: 'center',},
-          { text: '包件名称', columntype: 'dropdownlist', datafield: 'PackageName', width:'20%' , align: 'center', cellsalign: 'center',},
-          { text: '是否已付款', datafield: 'available', columntype: 'HasPaid', width: '10%' , align: 'center', cellsalign: 'center',},
+          { text: '客户名称', columntype: 'textbox', datafield: 'dwmc', width: '20%' , align: 'center', cellsalign: 'center',},
+          { text: '招标书编号', columntype: 'textbox', datafield: 'zzszwmc', width: '20%', align: 'center', cellsalign: 'center',},
+          { text: '包件名称', columntype: 'dropdownlist', datafield: 'bsbh', width:'20%' , align: 'center', cellsalign: 'center',},
           {
-              text: '付款日期', datafield: 'PaidDate', columntype: 'datetimeinput', width: '10%', align: 'center', cellsalign: 'center', cellsformat: 'd',
+              text: '付款日期', datafield: 'rq', columntype: 'datetimeinput', width: '20%', align: 'center', cellsalign: 'center', cellsformat: 'd',
           validation: function (cell, value) {
                   if (value == "")
                      return true;
@@ -327,19 +398,7 @@ function InitProjectDocumentGrid(dict,project){
                   return true;
               }
           },
-          {
-              text: '数量', datafield: 'Quantity', width: '10%', align: 'center', cellsalign: 'center', columntype: 'numberinput',
-              validation: function (cell, value) {
-                  if (value < 0 || value > 150) {
-                      return { result: false, message: "Quantity should be in the 0-150 interval" };
-                  }
-                  return true;
-              },
-              createeditor: function (row, cellvalue, editor) {
-                  editor.jqxNumberInput({ decimalDigits: 0, digits: 3 });
-              }
-          },
-          { text: '金额', datafield: 'Amount', width: '10%' ,align: 'center', cellsalign: 'center', cellsformat: 'c2', columntype: 'numberinput',
+          { text: '金额', datafield: 'je', width: '20%' ,align: 'center', cellsalign: 'center', cellsformat: 'c2', columntype: 'numberinput',
               validation: function (cell, value) {
                   if (value < 0 || value > 15) {
                       return { result: false, message: "Price should be in the 0-15 interval" };
@@ -380,8 +439,8 @@ function InitProjectMarginGrid(dict,project){
 	var data = generatedata(7);
     var source =
     {
-        localdata: data,
-        datatype: "array",
+        url: "getttbzj_tbzj",
+        datatype: "json",
         updaterow: function (rowid, rowdata, commit) {
             // synchronize with the server - send update command
             // call commit with parameter true if the synchronization with the server is successful 
@@ -389,16 +448,21 @@ function InitProjectMarginGrid(dict,project){
             commit(true);
         },
         datafields:
-        [
-	         { name: 'Customer', type: 'string' },
-	         { name: 'DocumentID', type: 'string' },
-	         { name: 'PackageName', type: 'string' },
-	         { name: 'HasPaidMargin', type: 'bool' },
-	         { name: 'PaidDate', type: 'date' },
-	         { name: 'Amount', type: 'number' },
-	         { name: 'HasReturnedMargin', type: 'bool' },
-	         { name: 'ReturnedDate', type: 'date' },
-        ]
+        	[{name : 'bzjlx',type : 'string'	},
+        	 {name : 'tje',type : 'string'	},
+        	 {name : 'rq',type : 'string'	},
+        	 {name : 'khyh',type : 'string'	},
+        	 {name : 'fkfs',type : 'string'	},
+        	 {name : 'dwmc',type : 'string'	},
+        	 {name : 'trq',type : 'string'	},
+        	 {name : 'je',type : 'string'	},
+        	 {name : 'bsbh',type : 'string'	},
+        	 {name : 'Id',type : 'string'	},
+        	 {name : 'returned',type : 'string'	},
+        	 {name : 'yhzh',type : 'string'	},
+        	 {name : 'ly',type : 'string'	}
+        	
+        	 ]
     };
     var dataAdapter = new $.jqx.dataAdapter(source);
     // initialize jqxGrid
@@ -407,17 +471,79 @@ function InitProjectMarginGrid(dict,project){
     	 height: 265,
          width: "100%",
          pageable: true,
+         showToolbar: true,
         source: dataAdapter,
+        columnsresize: true,
         editable: true,
         selectionmode: 'singlerow',
         editmode: 'selectedrow',
+        renderToolbar: function(toolBar) {
+        	//添加打印按钮、导出Excel按钮和其他按钮
+            var me = this;
+            var container = $("<div style='margin-left: auto; margin-right: auto; '></div>");
+            var container = $("<div style='margin: 5px;'></div>");
+            var addNewButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>新增</span></div>");
+            var refreshButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>刷新</span></div>");
+            var deleteButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>删除</span></div>");
+            var printButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
+            var exportButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>导出</span></div>");
+            var columnSettingButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>设置</span></div>");
+            toolBar.append(container);
+            container.append(addNewButton);
+            container.append(refreshButton);
+            container.append(deleteButton);
+            container.append(printButton);
+            container.append(exportButton);
+            container.append(columnSettingButton);
+            addNewButton.jqxButton({ template: "success" });
+            refreshButton.jqxButton({ template: "primary" });
+            printButton.jqxButton({ template: "info" });
+            exportButton.jqxButton({ template: "warning" });
+            deleteButton.jqxButton({ template: "danger" });
+            columnSettingButton.jqxButton({ template: "inverse" });
+            addNewButton.click(function (event) {
+            	$("#popupWindow_PackageADD").jqxWindow('show');
+            });
+            refreshButton.click(function (event) {
+                $("#EditProject_MarginTable").jqxGrid({ source:projectPackageurldataAdapter });
+            });
+            columnSettingButton.click(function (event) {
+            	$("#popupWindow_PackageADD").jqxWindow('open');
+            });
+            printButton.click(function (event) {
+                var gridContent = $("#EditProject_MarginTable").jqxGrid('exportdata', 'html');
+                var newWindow = window.open('', '', 'width=800, height=500'),
+                document = newWindow.document.open(),
+                pageContent =
+                    '<!DOCTYPE html>\n' +
+                    '<html>\n' +
+                    '<head>\n' +
+                    '<meta charset="utf-8" />\n' +
+                    '<title>打印原始单据</title>\n' +
+                    '</head>\n' +
+                    '<body>\n' + gridContent + '\n</body>\n</html>';
+                document.write(pageContent);
+                document.close();
+                newWindow.print();
+            });
+            exportButton.click(function (event) {
+            	$("#EditProject_MarginTable").jqxGrid('exportdata', 'xls', 'jqxGrid'); 
+            });
+            // delete selected row.
+            deleteButton.click(function (event) {
+                var selectedrowindex = $("#EditProject_MarginTable").jqxGrid('getselectedrowindex');
+                var rowscount = $("#EditProject_MarginTable").jqxGrid('getdatainformation').rowscount;
+                var id = $("#EditProject_MarginTable").jqxGrid('getrowid', selectedrowindex);
+                $("#EditProject_MarginTable").jqxGrid('deleterow', id);
+            });
+        
+        },
         columns: [
-          { text: '客户名称', columntype: 'textbox', datafield: 'Customer', align: 'center', cellsalign: 'center',width: '18%' },
-          { text: '招标书编号', datafield: 'lastname', columntype: 'DocumentID', align: 'center', cellsalign: 'center',width: '18%'  },
-          { text: '包件名称', columntype: 'dropdownlist', datafield: 'PackageName', align: 'center', cellsalign: 'center',width: '18%'  },
-          { text: '已交保证金', datafield: 'HasPaidMargin', columntype: 'checkbox', align: 'center', cellsalign: 'center',width:'8%' },
+          { text: '客户名称', datafield: 'dwmc', columntype: 'textbox', align: 'center', cellsalign: 'center',width: '18%' },
+          { text: '招标书编号', datafield: 'bsbh', columntype: 'textbox', align: 'center', cellsalign: 'center',width: '18%'  },
+          { text: '保证金类型', datafield: 'bzjlx', columntype: 'dropdownlist',align: 'center', cellsalign: 'center',width: '18%'  },
           {
-              text: '交保证金日期', datafield: 'PaidDate', columntype: 'datetimeinput', width: '10%', align: 'center', cellsalign: 'center', cellsformat: 'd',
+              text: '交保证金日期', datafield: 'rq', columntype: 'datetimeinput', width: '10%', align: 'center', cellsalign: 'center', cellsformat: 'd',
           validation: function (cell, value) {
                   if (value == "")
                      return true;
@@ -428,20 +554,7 @@ function InitProjectMarginGrid(dict,project){
                   return true;
               }
           },
-          { text: '已退保证金', datafield: 'HasReturnedMargin', columntype: 'checkbox', align: 'center', cellsalign: 'center',width:'8%' },
-          {
-              text: '退款日期', datafield: 'ReturnedDate', columntype: 'datetimeinput', width: '10%', align: 'center', cellsalign: 'center', cellsformat: 'd',
-          validation: function (cell, value) {
-                  if (value == "")
-                     return true;
-                  var year = value.getFullYear();
-                  if (year >= 2017) {
-                      return { result: false, message: "Ship Date should be before 1/1/2017" };
-                  }
-                  return true;
-              }
-          },
-          { text: '金额', datafield: 'Amount', align: 'right', width: '10%',align: 'center', cellsalign: 'center',  cellsformat: 'c2', columntype: 'numberinput',
+          { text: '金额', datafield: 'je', align: 'right', width: '10%',align: 'center', cellsalign: 'center',  cellsformat: 'c2', columntype: 'numberinput',
               validation: function (cell, value) {
                   if (value < 0 || value > 15) {
                       return { result: false, message: "Price should be in the 0-15 interval" };
@@ -451,7 +564,35 @@ function InitProjectMarginGrid(dict,project){
               createeditor: function (row, cellvalue, editor) {
                   editor.jqxNumberInput({ digits: 3 });
               }
-          }
+          },
+          { text: '已退保证金', datafield: 'returned', columntype: 'checkbox', align: 'center', cellsalign: 'center',width:'8%' },
+          {
+              text: '退款日期', datafield: 'trq', columntype: 'datetimeinput', width: '10%', align: 'center', cellsalign: 'center', cellsformat: 'd',
+          validation: function (cell, value) {
+                  if (value == "")
+                     return true;
+                  var year = value.getFullYear();
+                  if (year >= 2017) {
+                      return { result: false, message: "Ship Date should be before 1/1/2017" };
+                  }
+                  return true;
+              }
+          },
+          { text: '退还金额', datafield: 'tje', align: 'right', width: '10%',align: 'center', cellsalign: 'center',  cellsformat: 'c2', columntype: 'numberinput',
+              validation: function (cell, value) {
+                  if (value < 0 || value > 15) {
+                      return { result: false, message: "Price should be in the 0-15 interval" };
+                  }
+                  return true;
+              },
+              createeditor: function (row, cellvalue, editor) {
+                  editor.jqxNumberInput({ digits: 3 });
+              }
+          },
+          { text: '开户银行', datafield: 'khyh', columntype: 'textbox', align: 'center', cellsalign: 'center',width: '18%'  },
+          { text: '银行账号', datafield: 'yhzh', columntype: 'textbox', align: 'center', cellsalign: 'center',width: '18%'  },
+          { text: '退还方式', datafield: 'fkfs', columntype: 'dropdownlist',align: 'center', cellsalign: 'center',width: '18%'  },
+
         ]
     });
     // events

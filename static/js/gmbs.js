@@ -112,7 +112,7 @@ $(document).ready(function() {
 							.jqxGrid(
 									{
 										columnsresize: true,
-										height : "400",
+										height : "550",
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '购标书单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },

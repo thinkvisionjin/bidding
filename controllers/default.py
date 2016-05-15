@@ -953,3 +953,59 @@ def getzbpz():
 
     result[u'bsbh'] = p_getbsbh(uid);
     return json.dumps(result) 
+
+def getttbzj_tbzj():
+    uid = u''
+    sql = u"""select a.*,b.rq as trq, ISNULL (b.je,0 ) as tje,b.fkfs,khyh,
+CASE ISNULL (b.je,0 )
+WHEN 0 THEN 0
+ELSE 1 
+end as returned,b.yhzh
+from [dbo].[tbbzj] a left join [dbo].[tbzj] b
+on a.dwmc = b.dwmc and a.bsbh = b.bsbh1 """;
+    return sqltojson(sql)
+
+#主页
+def grtjb():
+    return dict();
+#获取所有
+def select_grtjb():
+    username = u'Test'
+#    where = u"where username='"+username+u"'"
+    
+#    xm = request.vars.xm
+#    if xm==None:
+#        xm=u''
+#    where += u"and xm like '%"+xm+u"%'"
+    
+
+#    gngk = request.vars.gngk
+#    if gngk==None:
+#        gngk=u''
+#    where += u"and gngk like '%"+gngk+u"%'"
+    
+#    order = u" order by rq desc"
+    ksrq = request.vars.ksrq
+    jsrq = request.vars.jsrq
+    if ksrq <> None:
+        ksrq = ksrq[6:10]+u'-'+ksrq[3:5]+u'-'+ksrq[0:2]
+    if jsrq <> None:
+        jsrq = jsrq[6:10]+u'-'+jsrq[3:5]+u'-'+jsrq[0:2]
+
+    sql = u"""select * from grtjb """ ;
+    print sql   
+    return sqltojson(sql);
+
+def select_grtjbfb():
+    sql = u"""select * from grtjbfb """ ;
+    print sql   
+    return sqltojson(sql);
+
+def zzxmtjb():
+    return dict();
+ 
+def select_zzxmtjb():
+    sql = u"""select * from grtjb """ ;
+    print sql   
+    return sqltojson(sql);   
+    

@@ -107,7 +107,7 @@ $(document).ready(function() {
 									{
 										enabletooltips: true,
 										columnsresize: true,
-										height : "80%",
+										height : "550px",
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '3%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },

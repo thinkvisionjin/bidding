@@ -95,7 +95,7 @@ $(document).ready(function() {
 							.jqxGrid(
 									{
 										columnsresize: true,
-										height : "80%",
+										height : "550",
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '标书编号', datafield: 'bsbh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
