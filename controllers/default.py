@@ -424,10 +424,12 @@ def gmbs():
 #操作
 def gmbsmx():
     if request.vars.oper == u'modify':
-        return dict(title=u"修改", Id=request.vars.Id)
+        return dict(title=u"修改", Id=request.vars.Id, bsbh=request.vars.bsbh)
     if request.vars.oper == u'detail':
-        return dict(title=u"详细", Id=request.vars.Id)    
-    return dict(title=u"新增", Id=request.vars.Id)
+        return dict(title=u"详细", Id=request.vars.Id, bsbh=request.vars.bsbh)   
+    if request.vars.oper == u'add':
+        return dict(title=u"新增-购买标书", Id=request.vars.Id, bsbh=request.vars.bsbh)       
+    return dict(title=u"新增", Id=request.vars.Id, bsbh=request.vars.bsbh)
 
 #获取所有
 def getgmbs():
@@ -806,3 +808,49 @@ def getzbpz():
 
     result[u'bsbh'] = p_getbsbh(uid);
     return json.dumps(result) 
+
+#############################
+
+#主页
+def grtjb():
+    return dict();
+#获取所有
+def select_grtjb():
+    username = u'Test'
+#    where = u"where username='"+username+u"'"
+    
+#    xm = request.vars.xm
+#    if xm==None:
+#        xm=u''
+#    where += u"and xm like '%"+xm+u"%'"
+    
+
+#    gngk = request.vars.gngk
+#    if gngk==None:
+#        gngk=u''
+#    where += u"and gngk like '%"+gngk+u"%'"
+    
+#    order = u" order by rq desc"
+    ksrq = request.vars.ksrq
+    jsrq = request.vars.jsrq
+    if ksrq <> None:
+        ksrq = ksrq[6:10]+u'-'+ksrq[3:5]+u'-'+ksrq[0:2]
+    if jsrq <> None:
+        jsrq = jsrq[6:10]+u'-'+jsrq[3:5]+u'-'+jsrq[0:2]
+
+    sql = u"""select * from grtjb """ ;
+    print sql   
+    return sqltojson(sql);
+
+def select_grtjbfb():
+    sql = u"""select * from grtjbfb """ ;
+    print sql   
+    return sqltojson(sql);
+
+def zzxmtjb():
+    return dict();
+ 
+def select_zzxmtjb():
+    sql = u"""select * from grtjb """ ;
+    print sql   
+    return sqltojson(sql);   

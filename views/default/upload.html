@@ -157,26 +157,18 @@
 				 $("#projectcode").jqxInput({width:200,height: 25 });
 				 var lxsource = ['投标保证金', '购买标书', '中标服务费', '退投标保证金'];
 				 $("#lx").jqxDropDownList({ height:25, width:200, source: lxsource, selectedIndex: -1});
-				
-			   $("#Cancel").jqxButton({ theme: theme });
+  			   $("#Cancel").jqxButton({ theme: theme });
 			   $("#Save").jqxButton({ theme: theme, template: "success" });
-			   
 				$("#Save").click(function () {
-
 						var row = { lx: $("#lx").val(), je: $("#quantity").val()};
 						$('#qr-jqxgrid').jqxGrid('addrow', null, row);
 						$("#popupWindow").jqxWindow('hide');
-
 				});
 				$("#addrowbutton").click(function () {
-
 					$("#popupWindow").jqxWindow('open');
-
 				});
 				$("#updaterowbutton").click(function () {
-
 					$("#popupWindow").jqxWindow('open');
-
 				});				
         });
         
