@@ -1,6 +1,23 @@
 function edit(){
 	
 }
+
+function search(keyword){
+	url = "getzbgg?title="+keyword;
+	var source =
+	{
+		datatype: "json",
+		datafields: [
+		    { name: 'id', type: 'string' },         
+			{ name: 'title', type: 'string' },
+			{ name: 'addtime', type: 'date' }
+		],
+		id: 'id',
+		url: url
+	};
+	var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#gg-jqxgrid").jqxGrid({source:dataAdapter, selectedrowindex: -1});	
+}
 $(document).ready(function () {
 	$("#search").jqxButton({ theme: theme, template: "success" });
 	$("#txtKeyword").jqxInput({width:200,height: 25 });
@@ -11,7 +28,7 @@ $(document).ready(function () {
 			  {
                   text: '操作', editable: false, datafield: 'edit',
                   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                	  var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="zbgg?id=">修改</a>';
+                	  var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="zbgg?id='+rowdata.id+'">修改</a>';
                 	  var a = '<div class="jqx-grid-cell-middle-align" style="margin-top: 6px;">'+a+'</div>';
                       return a;
                   }
@@ -48,6 +65,9 @@ $(document).ready(function () {
 		};
 		var dataAdapter = new $.jqx.dataAdapter(source);
 		$("#gg-jqxgrid").jqxGrid({source:dataAdapter, selectedrowindex: -1});
+		$("#search").click(function () {
+			search($("#txtKeyword").val());
+		});		
 	 
 }
 );

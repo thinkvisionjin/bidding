@@ -39,7 +39,6 @@
 			$('#jqxDropDownList').on('select', function (event) {
                     var args = event.args;
                     var item = $('#jqxDropDownList').jqxDropDownList('getItem', args.index);
-
                     if (item != null) {
  //                       $('#Events').jqxPanel('prepend', '<div style="margin-top: 5px;">Selected: ' + item.label + '</div>');
                     }
@@ -74,9 +73,9 @@
 					  { text: '确认金额', datafield: 'qrje', width: 100, cellsalign: 'center', align: 'center' },
 					  { text: '财务确认金额', datafield: 'cwqrje', width: 100, cellsalign: 'center', align: 'center' },
 					  { text: '摘要', datafield: 'zy', width: 190, cellsalign: 'center', align: 'center' },
-					  { text: '对方账号', datafield: 'zh', width: 90, cellsalign: 'center', align: 'center'},
-					  { text: '对方名称', datafield: 'mc', width: 90, cellsalign: 'center', align: 'center'},
-					  { text: '确认', datafield: 'Edit', columntype: 'button', cellsrenderer: function () {
+					  { text: '对方账号', datafield: 'dfzh', width: 90, cellsalign: 'center', align: 'center'},
+					  { text: '对方名称', datafield: 'dfdw', width: 90, cellsalign: 'center', align: 'center'},
+					  { text: '确认', datafield: 'Edit', width:50, columntype: 'button', cellsrenderer: function () {
 						 return "确认";
 					  }, buttonclick: function (row) {
 						 // open the popup window when the user clicks a button.
@@ -152,7 +151,7 @@
 
 				});
 				$("#popupWindow").jqxWindow({
-					width: 400, height:400, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.01           
+					width: 400, height:400, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.4           
 				});
 				 $("#quantity").jqxNumberInput({width:200,height: 25 });
 				 $("#projectcode").jqxInput({width:200,height: 25 });
