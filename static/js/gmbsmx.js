@@ -35,6 +35,7 @@ function configpage()
 		//需特殊处理
     	$('#dwmc').jqxInput({source:result['dwmc']})
     	$('#bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh'], displayMember: "PackageNumber", valueMember: "PackageNumber"});
+    	$('#bsbh').val($('#bsbh')[0].getAttribute('value'));
     }, 'json');	
     $("#dwmc").blur(function(){getkh($("#dwmc").val())});  
 }
@@ -199,4 +200,9 @@ $('#tr_ly').hide();
 		state = 'detail';
 		setupdetail();
 	}  	
+	if (title.innerHTML=='新增-购买标书')
+		{
+		state = 'add';
+		
+		}
 });
