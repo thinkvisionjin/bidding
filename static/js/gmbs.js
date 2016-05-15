@@ -91,7 +91,7 @@ function deletegmbs(id)
 
 function printgmbs(id)
 {
-    var newWindow = window.open('print_gmbs?Id='+id, '');
+    var newWindow = window.open('gmbs_print?Id='+id, '');
     newWindow.print();		
 //	window.location.replace ('gmbsmx?oper=modify&Id='+id);
 }
@@ -112,7 +112,7 @@ $(document).ready(function() {
 							.jqxGrid(
 									{
 										columnsresize: true,
-										height : "80%",
+										height : "400",
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '购标书单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },

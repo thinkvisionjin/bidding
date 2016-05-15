@@ -78,6 +78,7 @@ def Num2MoneyFormat( change_number ):
         change_words.append("整")
 
     return ''.join(change_words)
+
 def user():
     """
     exposes:
@@ -228,24 +229,18 @@ def scheduler():
 def upload():
     return dict();
 
-def ProtocolCode():
+def xybh():
     return dict();
-def ProjectCode():
+def xmbh():
     return dict();
-def Project():
+def xmgl():
     return dict();
-def ProjectPackage():
-    return dict();
-def ProjectMangement():
-    return dict();
-
-def EditProject():
+def xmglmx():
     id = request.vars.id
     strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  Id = " +id;
     project=sqltojson(strSQL)
     return dict(project=project)
-
-def ViewProject():
+def xmglmxv():
     id = request.vars.id
     strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  Id = " +id;
     project=sqltojson(strSQL)
@@ -314,6 +309,7 @@ def SelectProjectsSummary():
 group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete]
       order by a.[Id] desc'''
     return  sqltojson(strSQL)
+
 def gmbs():
     return dict();
 
@@ -437,7 +433,6 @@ def sqltoarraynodict(sql):
             dic_rows.append(row[key])
     return dic_rows 
 
-
 def sqltoarray(sql):
     dic_rows=[]
     rows = db.executesql(sql, as_dict=True)
@@ -524,9 +519,6 @@ def zbgg():
 def zbggs():
     return dict();
 
-
-
-
 def insertrow(table_name, rowData):
     try:    
         id = db[table_name].insert(**rowData)
@@ -534,16 +526,12 @@ def insertrow(table_name, rowData):
         return u"fail"
     return u"success" ; 
 
-
-
 def updaterow():
     try:    
         db(db[table_name]._id == id).update(**rowData)
     except:
         return u"fail"
     return u"success"     
-
-
 
 
 def deleterow(table_name, id):
@@ -574,6 +562,7 @@ def getgmbspz():
     return json.dumps(result)   
 
 #主页
+
 def gmbs():
     return dict();
 #操作
@@ -585,6 +574,7 @@ def gmbsmx():
     return dict(title=u"新增", Id=request.vars.Id)
 
 #获取所有
+
 def getgmbs():
     dwmc = request.vars.dwmc
     bsbh = request.vars.bsbh
@@ -599,7 +589,7 @@ def getgmbs():
     print sql   
     return sqltojson(sql);
 
-def print_gmbs():
+def gmbs_print():
     table_name = u'gmbs'
     sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
     rows = rawsqltojson(sql);    
@@ -646,8 +636,6 @@ def deleterow_gmbs():
     print table_name
     print id
     return deleterow(table_name, id)
-   
-
 def selectone_gmbs():
     table_name = u'gmbs'
     sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
@@ -655,9 +643,11 @@ def selectone_gmbs():
 
 #################################################3
 #主页
+
 def kh():
     return dict();
 #操作
+
 def khmx():
     if request.vars.oper == u'modify':
         return dict(title=u"修改", Id=request.vars.Id)
@@ -666,6 +656,7 @@ def khmx():
     return dict(title=u"新增", Id=request.vars.Id)
 
 #获取所有
+
 def select_kh():
     username = u'Test'
     where = u"where username='"+username+u"'"
@@ -701,7 +692,6 @@ def deleterow_kh():
     print id
     return deleterow(table_name, id)
    
-
 def selectone_kh():
     table_name = u'kh'
     sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
@@ -709,9 +699,11 @@ def selectone_kh():
 
 ##########################################################33
 #主页
+
 def tbbzj():
     return dict();
 #操作
+
 def tbbzjmx():
     if request.vars.oper == u'modify':
         return dict(title=u"修改", Id=request.vars.Id)
@@ -720,6 +712,7 @@ def tbbzjmx():
     return dict(title=u"新增", Id=request.vars.Id)
 
 #获取所有
+
 def select_tbbzj():
     username = u'Test'
     where = u"where username='"+username+u"'"
@@ -761,7 +754,6 @@ def deleterow_tbbzj():
     print table_name
     print id
     return deleterow(table_name, id)
-   
 
 def selectone_tbbzj():
     table_name = u'tbbzj'
@@ -780,7 +772,7 @@ def gettbbzjpz():
     result[u'bzjlx'] = [u'现金', u'保函']
     return json.dumps(result)  
 
-def print_tbzj():
+def tbzj_print():
     table_name = u'tbzj'
     sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
     rows = rawsqltojson(sql);    

@@ -211,10 +211,10 @@ function InitProjectGrid(dict){
                            {
                                text: '操作', editable: false, datafield: 'edit',width: "250", cellsalign: 'center', align: 'center',
                                cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                               var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/ViewProject?id='+rowdata.Id + '">查看</a>';
-                               var b = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/EditProject?id='+rowdata.Id + '">修改</a>';
-                               var c = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/EditProject?id='+rowdata.Id + '">购买标书</a>';
-                               var d = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/EditProject?id='+rowdata.Id + '">退保证金</a>';
+                               var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/xmglmxv?id='+rowdata.Id + '">查看</a>';
+                               var b = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/xmglmx?id='+rowdata.Id + '">修改</a>';
+                               var c = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/gmbsmx">购买标书</a>';
+                               var d = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/tbzjmx">退保证金</a>';
                                var e = '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+a+b+c+d+'</div>';
                                return e;
                                }

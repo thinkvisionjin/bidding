@@ -85,7 +85,7 @@ function deletetbzj(id)
 
 function printtbzj(id)
 {
-    var newWindow = window.open('print_tbzj?Id='+id, '');
+    var newWindow = window.open('tbzj_print?Id='+id, '');
     newWindow.print();	
 //	window.location.replace ('tbzjmx?oper=modify&Id='+id);
 }
