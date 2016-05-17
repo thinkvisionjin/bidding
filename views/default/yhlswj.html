@@ -14,13 +14,13 @@
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxlistbox.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdropdownlist.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdropdownbutton.js')}}"></script>
-    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdatetimeinput.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcolorpicker.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxeditor.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtooltip.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdata.js')}}"></script> 
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxinput.js')}}"></script>
-    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcalendar.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcheckbox.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxexpander.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.pager.js')}}"></script>
@@ -28,26 +28,30 @@
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxlistbox.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.selection.js')}}"></script> 
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.columnsresize.js')}}"></script>
-
-    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdata.js')}}"></script>
-    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdata.export.js')}}"></script>
-    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.export.js')}}"></script>
-    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdraw.js')}}"></script>
-    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxchart.core.js')}}"></script>
-   
-    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/globalization/globalize.js')}}"></script>
-    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/globalization/globalize.culture.zh-CN.js')}}"></script>
-    <script type="text/javascript" src="{{=URL('static','js/zzxmtjb.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxfileupload.js')}}"></script>
+    
+    <script type="text/javascript" src="{{=URL('static','js/yhlswj.js')}}"></script>
     
 </head>
 <body>
 
-    <div id="zzxmtjb-expander" style='overflow:auto'>
-    <div>在做项目统计表</div>
+    <div id="yhlswj-expander">
+    <div>银行流水文件</div>
     <div >
+    	<div>
+    		<table align="center" >
+				<tr >
+					<td><div id="yhlswj-upload" ></div></td><td class='tbinputtitle'>文件名:</td><td><input class='tbinput' type='text' id='wjm'/></td>
 
-    	<div id='zzxmtjb-grid' style='margin: 1%;'></div>
-    	<div id='chartContainer' style="width:98%; height:510px;"/>
+				</tr>
+				<tr id='tr_search'>
+				<td  colspan=4>
+					<input id="search" style="float:right" type="button" value="查询" />
+				</td>
+				</tr>
+    		</table>
+    	</div>
+    	<div id='yhlswj-grid' style='margin: 1%;'></div>
     </div>
     </div>
        

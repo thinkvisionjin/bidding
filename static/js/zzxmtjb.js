@@ -90,6 +90,7 @@ function search()
 $(document).ready(function() {
 	
 					$("#zzxmtjb-expander").jqxExpander({
+						height:1000,
 						toggleMode : 'none',
 						showArrow : false
 					});
