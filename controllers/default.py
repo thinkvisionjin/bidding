@@ -10,7 +10,8 @@
 from datetime import datetime
 from decimal import *
 from _sqlite3 import Row
-
+from pip.util import file_contents
+import xlrd
 @auth.requires_login()
 def index():
     """
@@ -344,10 +345,8 @@ def CreateNewProject():
     result= json.dumps(dict_row,ensure_ascii=False)
     return result
 
-def fileUpload():
-    f= request.vars.fileToUpload
-    print f.filename
-    return '上传成功' 
+
+
 
 def getyhls():
     print "getyhls"
@@ -520,9 +519,15 @@ def zbggs():
     return dict();
 
 def insertrow(table_name, rowData):
+    strrow = json.dumps(rowData);
+    strrow = unicode(strrow)
+    rowData1 = json.loads(strrow)
+    print u"----------2------"
+    print rowData1
     try:    
-        id = db[table_name].insert(**rowData)
-    except:
+        id = db[table_name].insert(**rowData1)
+    except Exception as e:
+        print e
         return u"fail"
     return u"success" ; 
 
@@ -1009,3 +1014,56 @@ def select_zzxmtjb():
     print sql   
     return sqltojson(sql);   
 
+def yhlswj():
+    return dict()
+
+def select_yhlswj():
+    username = u'Test'
+    where = u"where username='"+username+u"'"
+    
+    wjm = request.vars.wjm
+    if wjm==None:
+        wjm=u''
+    where += u"and wjm like '%"+wjm+u"%'"
+    
+    order = u" order by rq desc"
+    sql = u"""select * from yhlswj """ + where+order;
+    print sql   
+    return sqltojson(sql);
+
+def insertrow_yhlswj():
+    table_name = u'yhlswj'
+    username = u'Test'
+    rowData = request.post_vars
+    rowData[u'username'] = username
+    print u"insertrow yhlswj"
+    print rowData
+    return insertrow(table_name, rowData)
+
+def deleterow_yhlswj():
+    table_name = u'yhlswj'
+    id = request.vars.Id
+    print table_name
+    print id
+    return deleterow(table_name, id)
+   
+
+def selectone_yhlswj():
+    table_name = u'yhlswj'
+    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+
+
+def fileUpload():
+    f= request.vars.fileToUpload
+    wb = xlrd.open_workbook(file_contents=f.value)
+    sh = wb.sheet_by_index(0)
+    print f.filename
+    table_name = u'yhlswj'
+    username = u'Test'
+    rowData = {}
+
+    rowData[u'username'] = username
+
+    rowData[u'wjm'] = unicode(f.filename)
+    print rowData
+    return insertrow(table_name, rowData)    
