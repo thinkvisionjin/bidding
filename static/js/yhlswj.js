@@ -120,14 +120,11 @@ $(document).ready(function() {
 															value,
 															defaultvalue,
 															column, rowdata) {
-														var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printyhlswj('+rowdata.Id+')">打印</a>';
 
-														var b = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="modifyyhlswj('+rowdata.Id+')">修改</a>';
+														var d = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deleteyhlswj('+rowdata.Id+')">删除</a>';
 
-														var c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deleteyhlswj('+rowdata.Id+')">删除</a>';
-														var d = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="detailyhlswj('+rowdata.Id+')">详细</a>';
 														var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 6px;">'
-																+ a+b+c+d + '</div>';
+																+ d + '</div>';
 														return d;
 													}
 												} ],
@@ -136,10 +133,7 @@ $(document).ready(function() {
 											var me = this;
 											var container = $("<div style='margin: 5px;'></div>");
 											toolbar.append(container);
-											container.append('<input id="yhlswjadd" type="button" value="新增" />');
-											$("#yhlswjadd").jqxButton({
-												template : 'success'
-											});
+
 											container.append('<input id="selectfiled" style="float: right" type="button" value="设置" />');
 											$("#selectfiled").jqxButton({
 												template : 'info'
@@ -149,11 +143,7 @@ $(document).ready(function() {
 									});
 					//$("#yhlswj-grid").('hidecolumn', 'id');
 					search();
-					$("#yhlswjadd").click(function() {
-						window.location.href = 'yhlswjmx';
-						//window.location.replace('yhlswjmx');
-						//$("#popupWindow").jqxWindow('open');
-					});
+
 					$("#selectfiled").click(function() {
 						$("#popupWindow").jqxWindow('open');
 					});					

@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <title id='Description'>jqxEditor represents a ready-for-use HTML editor which can simplify web content creation or be a replacement of your HTML Text Areas.</title>
+    <link rel="stylesheet" href="{{=URL('static','css/vendor/jqwidgets/styles/jqx.base.css')}}" type="text/css" />
+    <link type="text/css" rel="Stylesheet" href="{{=URL('static','css/site.css')}}" />
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jquery/jquery-1.11.1.min.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/demos.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcore.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxbuttons.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxscrollbar.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxlistbox.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdropdownlist.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdropdownbutton.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcolorpicker.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxeditor.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtooltip.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdata.js')}}"></script> 
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxinput.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcheckbox.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxexpander.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.pager.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"></script> 
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxlistbox.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.selection.js')}}"></script> 
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"></script>
+<script type="text/javascript"
+	src="{{=URL('static','js/vendor/jqwidgets/jqxnumberinput.js')}}"></script>	
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.columnsresize.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/yhls.js')}}"></script>
+    
+</head>
+<body>
+
+    <div id="yhls-expander">
+    <div>银行流水</div>
+    <div >
+    	<div>
+    		<table align="center" >
+				<tr >
+					<td class='tbinputtitle'>对方名称:</td><td><input class='tbinput' type='text' id='dfmc'/></td>
+<td class='tbinputtitle'>对方账号:</td><td><input class='tbinput' type='text' id='dfzh'/></td>
+				<td >
+					<input id="search" style="float:right" type="button" value="查询" />
+				</td>
+				</tr>
+
+    		</table>
+    	</div>
+    	<div id='yhls-grid' style='margin: 1%;'></div>
+    	<div id='yhlsqr-grid' style='margin: 1%;'></div>
+    	
+  	
+    	
+    </div>
+    </div>
+		<div id='yhls-popupWindow'>
+            <div>银行流水确认</div>
+            <div style="overflow: hidden;">		
+		<table align="center" width="600px" valign="middle">
+			<tr id='tr_Id' style="display:none"><td class='tbinputtitle'>序号:</td><td><input class='tbinput' type='text' id='Id'/></td></tr>
+<tr id='tr_dwmc'><td class='tbinputtitle'>单位名称:</td><td><input class='tbinput' type='text' id='dwmc'/></td></tr>
+
+<tr id='tr_qrlx'><td class='tbinputtitle'>确认类型:</td><td><div class='tbinput' type='text' id='qrlx'/></td></tr>
+
+<tr id='tr_qrje'><td class='tbinputtitle'>确认金额:</td><td><input class='tbinput' type='text' id='qrje'/></td></tr>
+<tr id='tr_yhlsId'><td class='tbinputtitle'>银行流水Id:</td><td><input class='tbinput' type='text' id='yhlsId'/></td></tr>
+<tr id='tr_cwqrbz'><td class='tbinputtitle'>财务确认标志:</td><td><input class='tbinput' type='text' id='cwqrbz'/></td></tr>
+<tr id='tr_rq'><td class='tbinputtitle'>日期:</td><td><input class='tbinput' type='text' id='rq'/></td></tr>
+<tr id='tr_username'><td class='tbinputtitle'>操作人:</td><td><input class='tbinput' type='text' id='username'/></td></tr>
+                    <tr>
+                        <td align="right"></td>
+                        <td style="padding-top: 10px;" align="right"><input style="margin-right: 5px;" type="button" id="Save" value="保存" /><input id="Cancel" type="button" value="取消" /></td>
+                    </tr>
+                </table>	
+                </div>	
+		</div>         
+    
+</body>
+</html>

@@ -519,19 +519,25 @@ def zbggs():
     return dict();
 
 def insertrow(table_name, rowData):
-    strrow = json.dumps(rowData);
-    strrow = unicode(strrow)
-    rowData1 = json.loads(strrow)
+    for k in rowData.keys():
+        if isinstance(rowData[k], str):
+            rowData[k] = rowData[k].decode(u'utf-8')
     print u"----------2------"
-    print rowData1
+    print rowData
     try:    
-        id = db[table_name].insert(**rowData1)
+        id = db[table_name].insert(**rowData)
     except Exception as e:
         print e
         return u"fail"
     return u"success" ; 
 
-def updaterow():
+def updaterow(table_name, id, rowData):
+    for k in rowData.keys():
+        if isinstance(rowData[k], str):
+            rowData[k] = unicode(rowData[k])
+    print u"----------update record------"
+    
+    print rowData    
     try:    
         db(db[table_name]._id == id).update(**rowData)
     except:
@@ -1043,8 +1049,14 @@ def insertrow_yhlswj():
 def deleterow_yhlswj():
     table_name = u'yhlswj'
     id = request.vars.Id
-    print table_name
-    print id
+    row = db(db[table_name]._id ==id).select().first()
+    print row[u'wjm']
+
+    try:
+        db((db.yhls.wjm == row[u'wjm'])&(db.yhls.wjmId==id)).delete()
+    except Exception as e:
+        print e
+
     return deleterow(table_name, id)
    
 
@@ -1055,15 +1067,106 @@ def selectone_yhlswj():
 
 def fileUpload():
     f= request.vars.fileToUpload
-    wb = xlrd.open_workbook(file_contents=f.value)
-    sh = wb.sheet_by_index(0)
-    print f.filename
+    
     table_name = u'yhlswj'
     username = u'Test'
     rowData = {}
-
     rowData[u'username'] = username
-
     rowData[u'wjm'] = unicode(f.filename)
     print rowData
-    return insertrow(table_name, rowData)    
+    id = db[table_name].insert(**rowData)    
+    
+    wb = xlrd.open_workbook(file_contents=f.value)
+    sh = wb.sheet_by_index(0)
+
+    for i in range(1, sh.nrows):
+        row = sh.row_values(i)
+        print row
+        print type(xlrd.xldate.xldate_as_datetime(row[1], 1)) 
+        rowData={}
+        rowData[u'jysj'] = xlrd.xldate.xldate_as_datetime(row[1], 1)
+        rowData[u'je'] = row[2]
+        rowData[u'zy'] = row[3]
+        rowData[u'dfmc'] = row[4]
+        rowData[u'dfzh'] = row[5]
+        rowData[u'qrje'] = 0
+        rowData[u'cwqrje'] = 0
+        rowData[u'wjm'] = unicode(f.filename)
+        rowData[u'wjmId'] = id
+        insertrow(u'yhls', rowData)
+    print f.filename
+
+    return u"success"
+
+def yhls():
+    return dict()
+
+#获取所有
+#获取所有
+def select_yhls():
+    username = u'Test'
+    where = u"where "
+    
+    dfmc = request.vars.dfmc
+    if dfmc==None:
+        dfmc=u''
+    where += u" dfmc like '%"+dfmc+u"%'"
+    
+
+    dfzh = request.vars.dfzh
+    if dfzh==None:
+        dfzh=u''
+    where += u"and dfzh like '%"+dfzh+u"%'"
+    
+    order = u" order by jysj desc"
+    sql = u"""select * from yhls """ + where+order;
+    print sql   
+    return sqltojson(sql);
+
+def getyhlsqrpz():
+    result = {};
+    sql = u"""select dwmc from kh""";   
+    result[u'dwmc'] = sqltoarraynodict(sql);    
+    result[u'qrlx'] = [u'购买标书', u'保证金']
+    return json.dumps(result)  
+
+def insertrow_yhlsqr():
+    try:
+        username = u'Test'
+        rowData = request.post_vars
+        table_name = u'yhls'
+        yhlsId = rowData[u'yhlsId']
+        print yhlsId
+        row = db(db[table_name]._id ==yhlsId).select().first()
+        print row
+        if row[u'je']-row[u'qrje']<int(rowData[u'qrje']):
+            return u"fail"
+        row[u'qrje']+=int(rowData[u'qrje'])
+        yhlsrow = {}
+        yhlsrow[u'qrje'] = row[u'qrje']
+        updaterow(table_name, yhlsId, yhlsrow)
+        db.commit()
+        
+        table_name = u'yhlsqr'
+        rowData[u'username'] = username
+        print u"insertrow yhlsqr"
+        print rowData
+        return insertrow(table_name, rowData)
+    except Exception as e:
+        print e
+        return u"fail"
+    
+#获取所有
+def select_yhlsqr():
+    username = u'Test'
+    where = u"where username='"+username+u"'"
+    
+    yhlsId = request.vars.yhlsId
+    if yhlsId==None:
+        yhlsId=u''
+    where += u"and yhlsId = "+yhlsId
+    
+    order = u" order by rq desc"
+    sql = u"""select * from yhlsqr """ + where+order;
+    print sql   
+    return sqltojson(sql);

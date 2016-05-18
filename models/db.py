@@ -53,5 +53,7 @@ db.define_table('tbzj', Field('dwmc'),Field('rq'),Field('bsbh1'),Field('bsbh2'),
 db.define_table('zb', Field('bsbh'),Field('zbdw1'),Field('zbdw2'),Field('zbdw3'),Field('username'),Field('rq'))#########################################################################
 db.define_table('grtjb', Field('xm'),Field('gngk'),Field('gnyq'),Field('dylycg'),Field('jzxtp'),Field('xjcg'),Field('jzxcs'),Field('qt'),Field('gjzb'),Field('zj'))
 db.define_table('yhlswj', Field('rq'),Field('wjm'),Field('username'))
+db.define_table('yhls', Field('jysj'),Field('je'),Field('zy'),Field('dfmc'),Field('dfzh'),Field('qrje'),Field('cwqrje'),Field('wjmId'), Field('wjm'))
+db.define_table('yhlsqr', Field('dwmc'),Field('qrlx'),Field('rq'),Field('qrje'),Field('yhlsId'),Field('cwqrbz'),Field('username'))
 ## after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
