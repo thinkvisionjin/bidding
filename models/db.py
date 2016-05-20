@@ -53,5 +53,6 @@ db.define_table('tbzj', Field('dwmc'),Field('rq'),Field('bsbh1'),Field('bsbh2'),
 db.define_table('zb', Field('bsbh'),Field('zbdw1'),Field('zbdw2'),Field('zbdw3'),Field('username'),Field('rq'))#########################################################################
 db.define_table('grtjb', Field('xm'),Field('gngk'),Field('gnyq'),Field('dylycg'),Field('jzxtp'),Field('xjcg'),Field('jzxcs'),Field('qt'),Field('gjzb'),Field('zj'))
 db.define_table('yhlswj', Field('rq'),Field('wjm'),Field('username'))
+db.define_table('FilesTable', Field('filename'),Field('filecontent','upload'),Field('uid'),Field('uname',Field('createdate'),Field('isdelete'),Field('fileype')))
 ## after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
