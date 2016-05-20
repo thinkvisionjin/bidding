@@ -42,7 +42,7 @@ $('#ly').jqxInput({disabled:true});
 		var data = result[0];
 		$('#Id').val(data['Id']);
 $('#dwmc').val(data['dwmc']);
-$('#rq').val(data['rq']);
+//$('#rq').val(data['rq']);
 $('#bsbh1').val(data['bsbh1']);
 $('#bsbh2').val(data['bsbh2']);
 $('#bsbh3').val(data['bsbh3']);

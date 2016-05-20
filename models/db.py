@@ -47,9 +47,9 @@ db.define_table('TaskLocation',Field('CreationTime'),Field('IsDelete'),Field('Na
 db.define_table('TaskStatus',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('TypeOfTask',Field('CreationDate'),Field('IsDelete'),Field('Name'),Field('OrderId'))
 db.define_table('gmbs',Field('dwmc'),Field('rq'),Field('zzszwmc'),Field('zzsywmc'),Field('zzsgb'),Field('lxdz'),Field('lxr'),Field('sj'),Field('dzxx'),Field('cz'),Field('bsbh'),Field('je'),Field('username'),Field('ly'))
-db.define_table('kh', Field('dwmc'),Field('rq'),Field('khyh'),Field('yhzh'),Field('lxdz'),Field('dzxx'),Field('cz'),Field('lxr1'),Field('sj1'),Field('lxr2'),Field('sj2'),Field('lxr3'),Field('sj3'),Field('username'))
+db.define_table('kh', Field('dwmc'),Field('rq'),Field('khyh'),Field('yhzh'),Field('lxdz'),Field('dzxx'),Field('cz'),Field('username'))
 db.define_table('tbbzj', Field('dwmc'),Field('bsbh'),Field('bzjlx'),Field('je'),Field('rq'),Field('username'),Field('ly'))
-db.define_table('tbzj', Field('dwmc'),Field('rq'),Field('bsbh1'),Field('bsbh2'),Field('bsbh3'),Field('username'),Field('ly'),Field('khyh'),Field('yhzh'),Field('fkfs'),Field('je'))
+db.define_table('tbzj', Field('dwmc'),Field('rq'),Field('bsbh'),Field('username'),Field('ly'),Field('khyh'),Field('yhzh'),Field('fkfs'),Field('je'))
 db.define_table('zb', Field('bsbh'),Field('zbdw1'),Field('zbdw2'),Field('zbdw3'),Field('username'),Field('rq'))#########################################################################
 db.define_table('grtjb', Field('xm'),Field('gngk'),Field('gnyq'),Field('dylycg'),Field('jzxtp'),Field('xjcg'),Field('jzxcs'),Field('qt'),Field('gjzb'),Field('zj'))
 db.define_table('yhlswj', Field('rq'),Field('wjm'),Field('username'))

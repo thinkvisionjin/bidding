@@ -534,12 +534,14 @@ def insertrow(table_name, rowData):
 def updaterow(table_name, id, rowData):
     for k in rowData.keys():
         if isinstance(rowData[k], str):
-            rowData[k] = unicode(rowData[k])
+            rowData[k] = unicode(rowData[k], u'utf-8')
     print u"----------update record------"
     
     print rowData    
+    print table_name
     try:    
         db(db[table_name]._id == id).update(**rowData)
+        db.commit()
     except:
         return u"fail"
     return u"success"     
@@ -554,7 +556,7 @@ def deleterow(table_name, id):
 
 def p_getbsbh(uid):
     sql = u"""select PackageNumber from ProjectPackage""";   
-    return sqltoarray(sql);
+    return sqltoarraynodict(sql);
 
 #购买标书代码
 #定制代码
@@ -628,7 +630,7 @@ def select_gmbs():
 
 def updaterow_gmbs():
     table_name = u'gmbs'
-    id = request.vars.id
+    id = request.vars.Id
     rowData = request.post_vars
     return updaterow(table_name, id, rowData)
 
@@ -683,7 +685,7 @@ def select_kh():
 
 def updaterow_kh():
     table_name = u'kh'
-    id = request.vars.id
+    id = request.vars.Id
     rowData = request.post_vars
     return updaterow(table_name, id, rowData)
 
@@ -746,7 +748,7 @@ def select_tbbzj():
 
 def updaterow_tbbzj():
     table_name = u'tbbzj'
-    id = request.vars.id
+    id = request.vars.Id
     rowData = request.post_vars
     return updaterow(table_name, id, rowData)
 
@@ -853,7 +855,7 @@ def select_tbzj():
 
 def updaterow_tbzj():
     table_name = u'tbzj'
-    id = request.vars.id
+    id = request.vars.Id
     rowData = request.post_vars
     return updaterow(table_name, id, rowData)
 
@@ -929,7 +931,7 @@ def select_zb():
 
 def updaterow_zb():
     table_name = u'zb'
-    id = request.vars.id
+    id = request.vars.Id
     rowData = request.post_vars
     return updaterow(table_name, id, rowData)
 
@@ -1145,7 +1147,7 @@ def insertrow_yhlsqr():
         yhlsrow = {}
         yhlsrow[u'qrje'] = row[u'qrje']
         updaterow(table_name, yhlsId, yhlsrow)
-        db.commit()
+        
         
         table_name = u'yhlsqr'
         rowData[u'username'] = username

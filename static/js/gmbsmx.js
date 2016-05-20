@@ -155,7 +155,7 @@ ly:$('#ly').val(),
 
 $(document).ready(function () {
 
-	$("#gmbs-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
+	$("#gmbsmx-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
 
     // Create a jqxInput
     
