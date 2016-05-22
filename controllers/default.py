@@ -522,37 +522,21 @@ def insertrow(table_name, rowData):
     for k in rowData.keys():
         if isinstance(rowData[k], str):
             rowData[k] = rowData[k].decode(u'utf-8')
-    print u"----------2------"
-    print rowData
-    try:    
-        id = db[table_name].insert(**rowData)
-    except Exception as e:
-        print e
-        return u"fail"
-    return u"success" ; 
+    return db[table_name].insert(**rowData)
 
 def updaterow(table_name, id, rowData):
     for k in rowData.keys():
         if isinstance(rowData[k], str):
             rowData[k] = unicode(rowData[k], u'utf-8')
-    print u"----------update record------"
-    
-    print rowData    
-    print table_name
-    try:    
-        db(db[table_name]._id == id).update(**rowData)
-        db.commit()
-    except:
-        return u"fail"
-    return u"success"     
+
+    db(db[table_name]._id == id).update(**rowData)
+    db.commit()
+   
 
 
 def deleterow(table_name, id):
-    try:   
-        db(db[table_name]._id == id).delete()
-    except:
-        return u"fail"
-    return u"success" 
+    db(db[table_name]._id == id).delete()
+
 
 def p_getbsbh(uid):
     sql = u"""select PackageNumber from ProjectPackage""";   
@@ -562,7 +546,15 @@ def p_getbsbh(uid):
 #定制代码
 def getkh():
     sql = u"""select * from kh where dwmc='"""+request.vars.dwmc+u"'";
-    return sqltojson(sql);
+    
+    row = db(db[u'kh'].dwmc ==request.vars.dwmc).select().first()
+    khId = row[u'id']
+    result = {};
+    sql = u"""select lxr from lxr where khId="""+unicode(khId);   
+    result[u'lxr'] =  sqltoarraynodict(sql);    
+    sql = u"""select sj from lxr where khId="""+unicode(khId);   
+    result[u'sj'] =  sqltoarraynodict(sql);        
+    return json.dumps(result)
 
 #购买标书配置信息需定制
 def getgmbspz():
@@ -613,46 +605,114 @@ def gmbs_print():
     return dict(**row)
 
 def select_gmbs():
-    dwmc = request.vars.dwmc
-    bsbh = request.vars.bsbh
-    username = u'Test'
-    if dwmc==None:
-        dwmc=u''
-    if bsbh==None:
-        bsbh=u''
-    where = u"where username='"+username+u"'"
-    where += u"and dwmc like '%"+dwmc+u"%'"
-    where += u"and bsbh like '%"+bsbh+u"%'"
-    order = u" order by rq desc"
-    sql = u"""select * from gmbs """ + where+order;
-    print sql   
-    return sqltojson(sql);
+    try:
+        dwmc = request.vars.dwmc
+        bsbh = request.vars.bsbh
+        username = u'Test'
+        if dwmc==None:
+            dwmc=u''
+        if bsbh==None:
+            bsbh=u''
+        where = u"where username='"+username+u"'"
+        where += u"and dwmc like '%"+dwmc+u"%'"
+        where += u"and bsbh like '%"+bsbh+u"%'"
+        order = u" order by rq desc"
+        sql = u"""select * from gmbs """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail"    
 
 def updaterow_gmbs():
-    table_name = u'gmbs'
-    id = request.vars.Id
-    rowData = request.post_vars
-    return updaterow(table_name, id, rowData)
+    try:
+        table_name = u'gmbs'
+        id = request.vars.Id
+        rowData = request.post_vars
+        updaterow(table_name, id, rowData)
+        return u"success"
+    except:
+        return u"fail"        
+
+def p_addkh(rowData):
+    table_name = u'kh'
+    row = db(db[table_name].dwmc ==rowData[u'dwmc']).select().first()
+    if row==None:
+        khrow = {}
+        khrow[u'username'] = rowData[u'username']
+        khrow[u'dwmc'] = rowData[u'dwmc']
+        id = db[table_name].insert(**khrow)
+    else:
+        id = row[u'id']
+        
+    table_name = u'lxr'
+    row = db((db.lxr.lxr == rowData[u'lxr'])&(db.lxr.sj==rowData[u'sj'])).select().first()
+    if row==None:
+        khrow = {}
+        khrow[u'lxr'] = rowData[u'lxr']
+        khrow[u'sj'] = rowData[u'sj']
+        khrow[u'username'] = rowData[u'username']
+        khrow[u'khId'] = unicode(id)
+        insertrow(table_name, khrow)    
+
+def p_insertcwls(ywlx, id, sz, rowData):
+    table_name = u'cwls'
+    row = {}
+    row[u'ywlx'] = ywlx
+    row[u'lyId'] = id
+    row[u'sz'] = sz
+    row[u'bsbh'] = rowData[u'bsbh']
+    row[u'je'] = rowData[u'je']
+    row[u'username'] = rowData[u'username']
+    insertrow(table_name, row)
+    
+def p_updatecwls(ywlx, id, sz, rowData):
+    table_name = u'cwls'
+    row = {}
+    row[u'ywlx'] = ywlx
+    row[u'lyId'] = id
+    row[u'sz'] = sz
+    row[u'bsbh'] = rowData[u'bsbh']
+    row[u'je'] = rowData[u'je']
+    row[u'username'] = rowData[u'username']
+    db(db[table_name].lyId == id).update(**row)
 
 def insertrow_gmbs():
-    table_name = u'gmbs'
-    username = u'Test'
-    rowData = request.post_vars
-    rowData[u'username'] = username
-    print u"insertrow gmbs"
-    print rowData
-    return insertrow(table_name, rowData)
+    try:
+        table_name = u'gmbs'
+        username = u'Test'
+        rowData = request.post_vars
+        rowData[u'username'] = username
+        print u"insertrow gmbs"
+        print rowData
+        id = insertrow(table_name, rowData)
+        p_addkh(rowData)
+        p_insertcwls(u'购买标书', id, u'收入',  rowData)
+        db.commit()
+        return u"success"
+    except Exception as e:
+        print e
+        db.rollback()
+        return u"fail"
+    
 
 def deleterow_gmbs():
-    table_name = u'gmbs'
-    id = request.vars.Id
-    print table_name
-    print id
-    return deleterow(table_name, id)
+    try:
+        table_name = u'gmbs'
+        id = request.vars.Id
+        print table_name
+        print id
+        deleterow(table_name, id)
+        return u"success"
+    except:
+        return u"fail"    
+    
 def selectone_gmbs():
-    table_name = u'gmbs'
-    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
-    return sqltojson(sql);
+    try:
+        table_name = u'gmbs'
+        sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+        return sqltojson(sql);
+    except:
+        return u"fail"    
 
 #################################################3
 #主页
@@ -671,45 +731,65 @@ def khmx():
 #获取所有
 
 def select_kh():
-    username = u'Test'
-    where = u"where username='"+username+u"'"
-    dwmc = request.vars.dwmc
-    if dwmc==None:
-        dwmc=u''
-    where += u"and dwmc like '%"+dwmc+u"%'"
-    
-    order = u" order by rq desc"
-    sql = u"""select * from kh """ + where+order;
-    print sql   
-    return sqltojson(sql);
+    try:
+        username = u'Test'
+        where = u"where username='"+username+u"'"
+        dwmc = request.vars.dwmc
+        if dwmc==None:
+            dwmc=u''
+        where += u"and dwmc like '%"+dwmc+u"%'"
+        
+        order = u" order by rq desc"
+        sql = u"""select * from kh """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail"    
 
 def updaterow_kh():
-    table_name = u'kh'
-    id = request.vars.Id
-    rowData = request.post_vars
-    return updaterow(table_name, id, rowData)
+    try:
+        table_name = u'kh'
+        id = request.vars.Id
+        rowData = request.post_vars
+        updaterow(table_name, id, rowData)
+        return u"success"
+    except:
+        return u"fail"
 
 def insertrow_kh():
-    table_name = u'kh'
-    username = u'Test'
-    rowData = request.post_vars
-    rowData[u'username'] = username
-    print u"insertrow kh"
-    print rowData
-    return insertrow(table_name, rowData)
+    try:
+        table_name = u'kh'
+        username = u'Test'
+        rowData = request.post_vars
+        rowData[u'username'] = username
+        print u"insertrow kh"
+        print rowData
+        insertrow(table_name, rowData)
+        return u"success"
+    except:
+        return u"fail"
 
 def deleterow_kh():
-    table_name = u'kh'
-    id = request.vars.Id
-    print table_name
-    print id
-    return deleterow(table_name, id)
+    try:
+        table_name = u'kh'
+        id = request.vars.Id
+        print table_name
+        print id
+        deleterow(table_name, id)
+        table_name = u'lxr'
+        db(db[table_name].khId == id).delete()
+        return u"success"
+    except:
+        return u"fail"
    
 def selectone_kh():
-    table_name = u'kh'
-    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
-    return sqltojson(sql);
-
+    try:       
+        table_name = u'kh'
+        sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+        return sqltojson(sql);
+    except:
+        return u"fail"
+    
 ##########################################################33
 #主页
 
@@ -727,63 +807,84 @@ def tbbzjmx():
 #获取所有
 
 def select_tbbzj():
-    username = u'Test'
-    where = u"where username='"+username+u"'"
+    try:
+        username = u'Test'
+        where = u"where username='"+username+u"'"
+        
+        dwmc = request.vars.dwmc
+        if dwmc==None:
+            dwmc=u''
+        where += u"and dwmc like '%"+dwmc+u"%'"
+        
     
-    dwmc = request.vars.dwmc
-    if dwmc==None:
-        dwmc=u''
-    where += u"and dwmc like '%"+dwmc+u"%'"
+        bsbh = request.vars.bsbh
+        if bsbh==None:
+            bsbh=u''
+        where += u"and bsbh like '%"+bsbh+u"%'"
+        
+        order = u" order by rq desc"
+        sql = u"""select * from tbbzj """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail"
     
-
-    bsbh = request.vars.bsbh
-    if bsbh==None:
-        bsbh=u''
-    where += u"and bsbh like '%"+bsbh+u"%'"
-    
-    order = u" order by rq desc"
-    sql = u"""select * from tbbzj """ + where+order;
-    print sql   
-    return sqltojson(sql);
-
 def updaterow_tbbzj():
-    table_name = u'tbbzj'
-    id = request.vars.Id
-    rowData = request.post_vars
-    return updaterow(table_name, id, rowData)
+    try:
+        table_name = u'tbbzj'
+        id = request.vars.Id
+        rowData = request.post_vars
+        updaterow(table_name, id, rowData)
+        return u"success"
+    except:
+        return u"fail"    
 
 def insertrow_tbbzj():
-    table_name = u'tbbzj'
-    username = u'Test'
-    rowData = request.post_vars
-    rowData[u'username'] = username
-    print u"insertrow tbbzj"
-    print rowData
-    return insertrow(table_name, rowData)
+    try:
+        table_name = u'tbbzj'
+        username = u'Test'
+        rowData = request.post_vars
+        rowData[u'username'] = username
+        print u"insertrow tbbzj"
+        print rowData
+        insertrow(table_name, rowData)
+        p_insertcwls(u'投标保证金', id, u'收入',  rowData)
+        return u"success"
+    except:
+        return u"fail"
 
 def deleterow_tbbzj():
-    table_name = u'tbbzj'
-    id = request.vars.Id
-    print table_name
-    print id
-    return deleterow(table_name, id)
+    try:
+        table_name = u'tbbzj'
+        id = request.vars.Id
+        print table_name
+        print id
+        deleterow(table_name, id)
+        return u"success"
+    except:
+        return u"fail"
 
 def selectone_tbbzj():
-    table_name = u'tbbzj'
-    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
-    return sqltojson(sql);
-
+    try:
+        table_name = u'tbbzj'
+        sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+        return sqltojson(sql);
+    except:
+        return u"fail"
 
 
 def gettbbzjpz():
-    uid = u''
-    result = {};
-    sql = u"""select dwmc from kh""";   
-    result[u'dwmc'] = sqltoarraynodict(sql);
-
-    result[u'bsbh'] = p_getbsbh(uid)
-    result[u'bzjlx'] = [u'现金', u'保函']
-    return json.dumps(result)  
+    try:
+        uid = u''
+        result = {};
+        sql = u"""select dwmc from kh""";   
+        result[u'dwmc'] = sqltoarraynodict(sql);
+    
+        result[u'bsbh'] = p_getbsbh(uid)
+        result[u'bzjlx'] = [u'现金', u'保函']
+        return json.dumps(result)  
+    except:
+        return u"fail"
 
 def tbzj_print():
     table_name = u'tbzj'
@@ -840,46 +941,65 @@ def tbzjmx():
 
 #获取所有
 def select_tbzj():
-    username = u'Test'
-    where = u"where username='"+username+u"'"
+    try:
+        username = u'Test'
+        where = u"where username='"+username+u"'"
+        
+        dwmc = request.vars.dwmc
+        if dwmc==None:
+            dwmc=u''
+        where += u"and dwmc like '%"+dwmc+u"%'"
+        
+        order = u" order by rq desc"
+        sql = u"""select * from tbzj """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail"
     
-    dwmc = request.vars.dwmc
-    if dwmc==None:
-        dwmc=u''
-    where += u"and dwmc like '%"+dwmc+u"%'"
-    
-    order = u" order by rq desc"
-    sql = u"""select * from tbzj """ + where+order;
-    print sql   
-    return sqltojson(sql);
-
 def updaterow_tbzj():
-    table_name = u'tbzj'
-    id = request.vars.Id
-    rowData = request.post_vars
-    return updaterow(table_name, id, rowData)
-
+    try:
+        table_name = u'tbzj'
+        id = request.vars.Id
+        rowData = request.post_vars
+        updaterow(table_name, id, rowData)
+        return u"success"
+    except:
+        return u"fail"
+    
 def insertrow_tbzj():
-    table_name = u'tbzj'
-    username = u'Test'
-    rowData = request.post_vars
-    rowData[u'username'] = username
-    print u"insertrow tbzj"
-    print rowData
-    return insertrow(table_name, rowData)
+    try:
+        table_name = u'tbzj'
+        username = u'Test'
+        rowData = request.post_vars
+        rowData[u'username'] = username
+        print u"insertrow tbzj"
+        print rowData
+        insertrow(table_name, rowData)
+        p_insertcwls(u'退保证金', id, u'支出',  rowData)
+        return u"success"
+    except:
+        return u"fail"    
 
 def deleterow_tbzj():
-    table_name = u'tbzj'
-    id = request.vars.Id
-    print table_name
-    print id
-    return deleterow(table_name, id)
-   
+    try:
+        table_name = u'tbzj'
+        id = request.vars.Id
+        print table_name
+        print id
+        deleterow(table_name, id)
+        return u"success"
+    except:
+        return u"fail"   
 
 def selectone_tbzj():
-    table_name = u'tbzj'
-    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
-    return sqltojson(sql);
+    try:
+        table_name = u'tbzj'
+        sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+        return sqltojson(sql);
+
+    except:
+        return u"fail"
 
 #购买标书配置信息需定制
 def gettbzjpz():
@@ -908,55 +1028,71 @@ def zbmx():
 
 #获取所有
 def select_zb():
-    username = u'Test'
-    where = u"where username='"+username+u"'"
+    try:
+        username = u'Test'
+        where = u"where username='"+username+u"'"
+        
+        bsbh = request.vars.bsbh
+        if bsbh==None:
+            bsbh=u''
+        where += u"and bsbh like '%"+bsbh+u"%'"
+        
     
-    bsbh = request.vars.bsbh
-    if bsbh==None:
-        bsbh=u''
-    where += u"and bsbh like '%"+bsbh+u"%'"
+        zbdw1 = request.vars.zbdw1
+        if zbdw1==None:
+            zbdw1=u''
+        where += u"and (zbdw1 like '%"+zbdw1+u"%'"
+        where += u"or zbdw2 like '%"+zbdw1+u"%'"
+        where += u"or zbdw3 like '%"+zbdw1+u"%')"
+        
+        order = u" order by rq desc"
+        sql = u"""select * from zb """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail"
     
-
-    zbdw1 = request.vars.zbdw1
-    if zbdw1==None:
-        zbdw1=u''
-    where += u"and (zbdw1 like '%"+zbdw1+u"%'"
-    where += u"or zbdw2 like '%"+zbdw1+u"%'"
-    where += u"or zbdw3 like '%"+zbdw1+u"%')"
-    
-    order = u" order by rq desc"
-    sql = u"""select * from zb """ + where+order;
-    print sql   
-    return sqltojson(sql);
-
 def updaterow_zb():
-    table_name = u'zb'
-    id = request.vars.Id
-    rowData = request.post_vars
-    return updaterow(table_name, id, rowData)
-
+    try:
+        table_name = u'zb'
+        id = request.vars.Id
+        rowData = request.post_vars
+        updaterow(table_name, id, rowData)
+        return u"success"
+    except:
+        return u"fail"
+    
 def insertrow_zb():
-    table_name = u'zb'
-    username = u'Test'
-    rowData = request.post_vars
-    rowData[u'username'] = username
-    print u"insertrow zb"
-    print rowData
-    return insertrow(table_name, rowData)
+    try:
+        table_name = u'zb'
+        username = u'Test'
+        rowData = request.post_vars
+        rowData[u'username'] = username
+        print u"insertrow zb"
+        print rowData
+        insertrow(table_name, rowData)
+        return u"success"
+    except:
+        return u"fail"    
 
 def deleterow_zb():
-    table_name = u'zb'
-    id = request.vars.Id
-    print table_name
-    print id
-    return deleterow(table_name, id)
-   
+    try:
+        table_name = u'zb'
+        id = request.vars.Id
+        print table_name
+        print id
+        deleterow(table_name, id)
+        return u"success"
+    except:
+        return u"fail"
 
 def selectone_zb():
-    table_name = u'zb'
-    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
-    return sqltojson(sql);
-
+    try:
+        table_name = u'zb'
+        sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+        return sqltojson(sql);
+    except:
+        return u"fail"
 
 def getzbpz():
     uid = u'';
@@ -983,78 +1119,95 @@ def grtjb():
     return dict();
 #获取所有
 def select_grtjb():
-    username = u'Test'
-#    where = u"where username='"+username+u"'"
+    try:
+        username = u'Test'
+    #    where = u"where username='"+username+u"'"
+        
+    #    xm = request.vars.xm
+    #    if xm==None:
+    #        xm=u''
+    #    where += u"and xm like '%"+xm+u"%'"
+        
     
-#    xm = request.vars.xm
-#    if xm==None:
-#        xm=u''
-#    where += u"and xm like '%"+xm+u"%'"
+    #    gngk = request.vars.gngk
+    #    if gngk==None:
+    #        gngk=u''
+    #    where += u"and gngk like '%"+gngk+u"%'"
+        
+    #    order = u" order by rq desc"
+        ksrq = request.vars.ksrq
+        jsrq = request.vars.jsrq
+        if ksrq <> None:
+            ksrq = ksrq[6:10]+u'-'+ksrq[3:5]+u'-'+ksrq[0:2]
+        if jsrq <> None:
+            jsrq = jsrq[6:10]+u'-'+jsrq[3:5]+u'-'+jsrq[0:2]
     
-
-#    gngk = request.vars.gngk
-#    if gngk==None:
-#        gngk=u''
-#    where += u"and gngk like '%"+gngk+u"%'"
-    
-#    order = u" order by rq desc"
-    ksrq = request.vars.ksrq
-    jsrq = request.vars.jsrq
-    if ksrq <> None:
-        ksrq = ksrq[6:10]+u'-'+ksrq[3:5]+u'-'+ksrq[0:2]
-    if jsrq <> None:
-        jsrq = jsrq[6:10]+u'-'+jsrq[3:5]+u'-'+jsrq[0:2]
-
-    sql = u"""select * from grtjb """ ;
-    print sql   
-    return sqltojson(sql);
+        sql = u"""select * from grtjb """ ;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail"    
 
 def select_grtjbfb():
-    sql = u"""select * from grtjbfb """ ;
-    print sql   
-    return sqltojson(sql);
+    try:
+        sql = u"""select * from grtjbfb """ ;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail"    
 
 def zzxmtjb():
     return dict();
  
 def select_zzxmtjb():
-    sql = u"""select * from grtjb """ ;
-    print sql   
-    return sqltojson(sql);   
-
+    try:
+        sql = u"""select * from grtjb """ ;
+        print sql   
+        return sqltojson(sql);   
+    except:
+        return u"fail"
+    
 def yhlswj():
     return dict()
 
 def select_yhlswj():
-    username = u'Test'
-    where = u"where username='"+username+u"'"
-    
-    wjm = request.vars.wjm
-    if wjm==None:
-        wjm=u''
-    where += u"and wjm like '%"+wjm+u"%'"
-    
-    order = u" order by rq desc"
-    sql = u"""select * from yhlswj """ + where+order;
-    print sql   
-    return sqltojson(sql);
+    try:
+        username = u'Test'
+        where = u"where username='"+username+u"'"
+        
+        wjm = request.vars.wjm
+        if wjm==None:
+            wjm=u''
+        where += u"and wjm like '%"+wjm+u"%'"
+        
+        order = u" order by rq desc"
+        sql = u"""select * from yhlswj """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail"    
 
 def insertrow_yhlswj():
-    table_name = u'yhlswj'
-    username = u'Test'
-    rowData = request.post_vars
-    rowData[u'username'] = username
-    print u"insertrow yhlswj"
-    print rowData
-    return insertrow(table_name, rowData)
+    try:
+        table_name = u'yhlswj'
+        username = u'Test'
+        rowData = request.post_vars
+        rowData[u'username'] = username
+        print u"insertrow yhlswj"
+        print rowData
+        insertrow(table_name, rowData)
+        return u"success"
+    except:
+        return u"fail"        
 
 def deleterow_yhlswj():
-    table_name = u'yhlswj'
-    id = request.vars.Id
-    row = db(db[table_name]._id ==id).select().first()
-    print row[u'wjm']
 
-    try:
+    try:    
+        table_name = u'yhlswj'
+        id = request.vars.Id
+        row = db(db[table_name]._id ==id).select().first()
+        print row[u'wjm']
+
         db((db.yhls.wjm == row[u'wjm'])&(db.yhls.wjmId==id)).delete()
     except Exception as e:
         print e
@@ -1106,31 +1259,37 @@ def yhls():
 #获取所有
 #获取所有
 def select_yhls():
-    username = u'Test'
-    where = u"where "
+    try:
+        username = u'Test'
+        where = u"where "
+        
+        dfmc = request.vars.dfmc
+        if dfmc==None:
+            dfmc=u''
+        where += u" dfmc like '%"+dfmc+u"%'"
+        
     
-    dfmc = request.vars.dfmc
-    if dfmc==None:
-        dfmc=u''
-    where += u" dfmc like '%"+dfmc+u"%'"
+        dfzh = request.vars.dfzh
+        if dfzh==None:
+            dfzh=u''
+        where += u"and dfzh like '%"+dfzh+u"%'"
+        
+        order = u" order by jysj desc"
+        sql = u"""select * from yhls """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail"
     
-
-    dfzh = request.vars.dfzh
-    if dfzh==None:
-        dfzh=u''
-    where += u"and dfzh like '%"+dfzh+u"%'"
-    
-    order = u" order by jysj desc"
-    sql = u"""select * from yhls """ + where+order;
-    print sql   
-    return sqltojson(sql);
-
 def getyhlsqrpz():
-    result = {};
-    sql = u"""select dwmc from kh""";   
-    result[u'dwmc'] = sqltoarraynodict(sql);    
-    result[u'qrlx'] = [u'购买标书', u'保证金']
-    return json.dumps(result)  
+    try:
+        result = {};
+        sql = u"""select dwmc from kh""";   
+        result[u'dwmc'] = sqltoarraynodict(sql);    
+        result[u'qrlx'] = [u'购买标书', u'保证金']
+        return json.dumps(result)  
+    except:
+        return u"fail"    
 
 def insertrow_yhlsqr():
     try:
@@ -1153,22 +1312,163 @@ def insertrow_yhlsqr():
         rowData[u'username'] = username
         print u"insertrow yhlsqr"
         print rowData
-        return insertrow(table_name, rowData)
+        insertrow(table_name, rowData)
+        return u"success"
     except Exception as e:
         print e
         return u"fail"
     
 #获取所有
 def select_yhlsqr():
-    username = u'Test'
-    where = u"where username='"+username+u"'"
+    try:
+        username = u'Test'
+        where = u"where username='"+username+u"'"
+        
+        yhlsId = request.vars.yhlsId
+        if yhlsId==None:
+            yhlsId=u''
+        where += u"and yhlsId = "+yhlsId
+        
+        order = u" order by rq desc"
+        sql = u"""select * from yhlsqr """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail"
+
+
+def select_lxr():
+    try:
+        username = u'Test'
+        where = u"where username='"+username+u"'"
+        khId = request.vars.khId   
+        where += u"and khId = "+khId 
+        order = u" order by rq desc"
+        sql = u"""select * from lxr """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail"
+
+def updaterow_lxr():
+    try:
+        table_name = u'lxr'
+        id = request.vars.Id
+        rowData = request.post_vars
+        updaterow(table_name, id, rowData)
+        return u"success"
+    except:
+        return u"fail"
     
-    yhlsId = request.vars.yhlsId
-    if yhlsId==None:
-        yhlsId=u''
-    where += u"and yhlsId = "+yhlsId
+def insertrow_lxr():
+    try:
+        table_name = u'lxr'
+        username = u'Test'
+        rowData = request.post_vars
+        rowData[u'username'] = username
+        print u"insertrow lxr"
+        print rowData
+        insertrow(table_name, rowData)
+        return u"success"
+    except:
+        return u"fail"
     
-    order = u" order by rq desc"
-    sql = u"""select * from yhlsqr """ + where+order;
-    print sql   
-    return sqltojson(sql);
+def deleterow_lxr():
+    try:
+        table_name = u'lxr'
+        id = request.vars.Id
+        print table_name
+        print id
+        deleterow(table_name, id)
+        return u"success"
+    except:
+        return u"fail"   
+
+def selectone_lxr():
+    try:
+        table_name = u'lxr'
+        sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+        return sqltojson(sql);
+    except:
+        return u"fail"
+
+
+#主页
+def cwls():
+    return dict();
+#操作
+def cwlsmx():
+    if request.vars.oper == u'modify':
+        return dict(title=u"修改", Id=request.vars.Id)
+    if request.vars.oper == u'detail':
+        return dict(title=u"详细", Id=request.vars.Id)    
+    return dict(title=u"新增", Id=request.vars.Id)
+
+#获取所有
+def select_cwls():
+    try:
+        username = u'Test'
+        where = u"where username='"+username+u"'"
+        
+        bsbh = request.vars.bsbh
+        if bsbh==None:
+            bsbh=u''
+        where += u"and bsbh like '%"+bsbh+u"%'"
+    
+        order = u" order by rq desc"
+        sql = u"""select * from cwls """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail";
+
+def updaterow_cwls():
+    try:
+        table_name = u'cwls'
+        id = request.vars.d
+        rowData = request.post_vars
+        updaterow(table_name, id, rowData)
+        return u"success";
+    except:
+        return u"fail";
+
+def insertrow_cwls():
+    try:
+        table_name = u'cwls'
+        username = u'Test'
+        rowData = request.post_vars
+        rowData[u'username'] = username
+        print u"insertrow cwls"
+        print rowData
+        insertrow(table_name, rowData)
+        return u"success";
+    except:
+        return u"fail";
+
+def deleterow_cwls():
+    try:
+        table_name = u'cwls'
+        id = request.vars.Id
+        print table_name
+        print id
+        deleterow(table_name, id)
+        return u"success";
+    except:
+        return u"fail";
+   
+
+def selectone_cwls():
+    try:
+        table_name = u'cwls'
+        sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+        return sqltojson(sql);
+    except:
+        return u"fail";    
+
+def getcwlspz():
+    uid = u'';
+    result = {};
+    result[u'bsbh'] = p_getbsbh(uid);
+    result[u'sz'] = [u'收入', u'支出']
+    result[u'ywlx'] = [u'购买标书', u'投标保证金', u'退保证金', u'中标服务费', u'专家评审费', u'其他']
+    return json.dumps(result)   

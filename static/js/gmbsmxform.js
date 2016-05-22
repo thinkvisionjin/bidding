@@ -6,7 +6,9 @@ function getkh(dwmc)
 		return;
 		}
 	$.get('getkh?dwmc='+dwmc, function(result){
-		if (result.length==1) {
+		$('#gmbs_lxr').jqxComboBox({ placeHolder: "", source: result['lxr']});
+		$('#gmbs_sj').jqxComboBox({ placeHolder: "", source: result['sj']});		
+		/*if (result.length==1) {
 			var data = result[0];
 			$('#gmbs_lxdz').val(data['lxdz']);
 			$('#gmbs_dzxx').val(data['dzxx']);
@@ -17,10 +19,11 @@ function getkh(dwmc)
 			$('#gmbs_lxdz').val('');
 			$('#gmbs_dzxx').val('');
 			$('#gmbs_cz').val('');
-		}
-		olddwmc = dwmc;
+		}*/
+		
 		
 	}, 'json');	
+	olddwmc = dwmc;
 }
 function gmbs_configpage()
 {
@@ -28,7 +31,8 @@ function gmbs_configpage()
     $.get('getgmbspz', function(result){
 		//需特殊处理
     	$('#gmbs_dwmc').jqxComboBox({ placeHolder: "", source: result['dwmc']});
-$('#gmbs_bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh']});
+		$('#gmbs_bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh']});
+
     }, 'json');	
     $("#gmbs_dwmc input").blur(function(){getkh($("#gmbs_dwmc").val())});  
 }
@@ -47,6 +51,7 @@ $('#gmbs_lxr').val('');
 $('#gmbs_sj').val('');
 $('#gmbs_dzxx').val('');
 $('#gmbs_cz').val('');
+$('#gmbs_je').val('');
 $('#gmbs_bsbh').jqxDropDownList('selectIndex',-1);
 $('#gmbs_username').val('');
 $('#gmbs_ly').val('');;
@@ -78,6 +83,7 @@ $('#gmbs_lxr').val(data['lxr']);
 $('#gmbs_sj').val(data['sj']);
 $('#gmbs_dzxx').val(data['dzxx']);
 $('#gmbs_cz').val(data['cz']);
+$('#gmbs_je').val(data['je']);
 $('#gmbs_bsbh').val(data['bsbh']);
 $('#gmbs_username').val(data['username']);
 $('#gmbs_ly').val(data['ly']);		
@@ -109,13 +115,14 @@ $('#gmbs_lxr').val(data['lxr']);
 $('#gmbs_sj').val(data['sj']);
 $('#gmbs_dzxx').val(data['dzxx']);
 $('#gmbs_cz').val(data['cz']);
+$('#gmbs_je').val(data['je']);
 $('#gmbs_bsbh').val(data['bsbh']);
 $('#gmbs_username').val(data['username']);
 $('#gmbs_ly').val(data['ly']);			
 	}, 'json');	
 }
 
-
+var ggmbscallbak;
 function gmbs_save()
 {
 	if (state == 'add')
@@ -136,6 +143,7 @@ lxr:$('#gmbs_lxr').val(),
 sj:$('#gmbs_sj').val(),
 dzxx:$('#gmbs_dzxx').val(),
 cz:$('#gmbs_cz').val(),
+je:$('#gmbs_je').val(),
 bsbh:$('#gmbs_bsbh').val(),
 username:$('#gmbs_username').val(),
 ly:$('#gmbs_ly').val(),
@@ -151,6 +159,7 @@ ly:$('#gmbs_ly').val(),
             	{
 				alert('成功');
             	$('#gmbs_popupWindow').jqxWindow('hide');
+				ggmbscallbak();
             	}
 			else
 			{
@@ -179,11 +188,12 @@ function gmbs_init () {
 <tr id='tr_gmbs_zzsywmc'><td class='tbinputtitle'>制造商单位英文名称:</td><td><input class='tbinput' type='text' id='gmbs_zzsywmc'/></td></tr>\
 <tr id='tr_gmbs_zzsgb'><td class='tbinputtitle'>制造商国别:</td><td><input class='tbinput' type='text' id='gmbs_zzsgb'/></td></tr>\
 <tr id='tr_gmbs_lxdz'><td class='tbinputtitle'>联系地址:</td><td><input class='tbinput' type='text' id='gmbs_lxdz'/></td></tr>\
-<tr id='tr_gmbs_lxr'><td class='tbinputtitle'>联系人:</td><td><input class='tbinput' type='text' id='gmbs_lxr'/></td></tr>\
-<tr id='tr_gmbs_sj'><td class='tbinputtitle'>手机:</td><td><input class='tbinput' type='text' id='gmbs_sj'/></td></tr>\
+<tr id='tr_gmbs_lxr'><td class='tbinputtitle'>联系人:</td><td><div class='tbinput' type='text' id='gmbs_lxr'/></td></tr>\
+<tr id='tr_gmbs_sj'><td class='tbinputtitle'>手机:</td><td><div class='tbinput' type='text' id='gmbs_sj'/></td></tr>\
 <tr id='tr_gmbs_dzxx'><td class='tbinputtitle'>电子信箱:</td><td><input class='tbinput' type='text' id='gmbs_dzxx'/></td></tr>\
 <tr id='tr_gmbs_cz'><td class='tbinputtitle'>传真:</td><td><input class='tbinput' type='text' id='gmbs_cz'/></td></tr>\
 <tr id='tr_gmbs_bsbh'><td class='tbinputtitle'>标书编号:</td><td><div class='tbinput' type='text' id='gmbs_bsbh'/></td></tr>\
+<tr id='tr_gmbs_je'><td class='tbinputtitle'>金额:</td><td><input class='tbinput' type='text' id='gmbs_je'/></td></tr>\
 <tr id='tr_gmbs_username'><td class='tbinputtitle'>操作人:</td><td><input class='tbinput' type='text' id='gmbs_username'/></td></tr>\
 <tr id='tr_gmbs_ly'><td class='tbinputtitle'>来源:</td><td><input class='tbinput' type='text' id='gmbs_ly'/></td></tr>\
 \
@@ -209,8 +219,8 @@ $('#gmbs_zzszwmc').jqxInput();
 $('#gmbs_zzsywmc').jqxInput();
 $('#gmbs_zzsgb').jqxInput();
 $('#gmbs_lxdz').jqxInput();
-$('#gmbs_lxr').jqxInput();
-$('#gmbs_sj').jqxInput();
+$('#gmbs_lxr').jqxComboBox({ placeHolder: '',autoComplete:true});
+$('#gmbs_sj').jqxComboBox({ placeHolder: '',autoComplete:true});
 $('#gmbs_dzxx').jqxInput();
 $('#gmbs_cz').jqxInput();
 $('#gmbs_bsbh').jqxDropDownList({ placeHolder: ''});
@@ -232,11 +242,12 @@ $('#tr_gmbs_ly').hide();
   	
 }
 
-function gmbs_popupwindow(flag_state, id, bsbh)
+function gmbs_popupwindow(flag_state, id, search, bsbh)
 {
 	state = flag_state;
 	$('#gmbs_Id').val(id);
-	$('#gmbs_bsbh').val(bsbh);
+	ggmbscallbak = search;
+	
 	if (state == 'add')
 	{
 		gmbs_title.innerHTML='新增';
@@ -253,5 +264,7 @@ function gmbs_popupwindow(flag_state, id, bsbh)
 			gmbs_title.innerHTML='详情';
 			gmbs_setupdetail();
 		}
+	$('#gmbs_bsbh').val(bsbh);	
 	$('#gmbs_popupWindow').jqxWindow('open');
+	
 }

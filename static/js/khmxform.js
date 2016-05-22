@@ -32,6 +32,7 @@ var state = 'add';
 function kh_setupadd()
 {
 	$('#kh_Id').val('');
+$('#kh_nsrsbh').val('');	
 $('#kh_dwmc').val('');
 $('#kh_rq').val('');
 $('#kh_khyh').val('');
@@ -55,6 +56,7 @@ $('#kh_username').jqxInput({disabled:true});
 	$.get('selectone_kh?Id='+$('#kh_Id').val(), function(result){
 		var data = result[0];
 		$('#kh_Id').val(data['Id']);
+$('#kh_nsrsbh').val(data['nsrsbh']);
 $('#kh_dwmc').val(data['dwmc']);
 $('#kh_rq').val(data['rq']);
 $('#kh_khyh').val(data['khyh']);
@@ -79,6 +81,7 @@ $('#kh_username').jqxInput({disabled:true});;
 	$.get('selectone_kh?Id='+$('#kh_Id').val(), function(result){
 		var data = result[0];
 		$('#kh_Id').val(data['Id']);
+$('#kh_nsrsbh').val(data['nsrsbh']);		
 $('#kh_dwmc').val(data['dwmc']);
 $('#kh_rq').val(data['rq']);
 $('#kh_khyh').val(data['khyh']);
@@ -102,6 +105,7 @@ function kh_save()
 		url = 'updaterow_kh?Id='+$('#kh_Id').val();
 		}
 	var row = {	
+	nsrsbh:$('#kh_nsrsbh').val(),
 	dwmc:$('#kh_dwmc').val(),
 khyh:$('#kh_khyh').val(),
 yhzh:$('#kh_yhzh').val(),
@@ -144,6 +148,7 @@ function kh_init () {
 		\
 			<table align='center' >\
 			<tr id='tr_kh_Id' style='display:none'><td class='tbinputtitle'>序号:</td><td><input class='tbinput' type='text' id='kh_Id'/></td></tr>\
+<tr id='tr_kh_nsrsbh'><td class='tbinputtitle'>纳税人识别号:</td><td><input class='tbinput' type='text' id='kh_nsrsbh'/></td></tr>\
 <tr id='tr_kh_dwmc'><td class='tbinputtitle'>单位名称:</td><td><input class='tbinput' type='text' id='kh_dwmc'/></td></tr>\
 <tr id='tr_kh_rq'><td class='tbinputtitle'>日期:</td><td><input class='tbinput' type='text' id='kh_rq'/></td></tr>\
 <tr id='tr_kh_khyh'><td class='tbinputtitle'>开户银行:</td><td><input class='tbinput' type='text' id='kh_khyh'/></td></tr>\
@@ -169,6 +174,7 @@ function kh_init () {
     
 
     $('#kh_Id').jqxInput();
+$('#kh_nsrsbh').jqxInput();
 $('#kh_dwmc').jqxInput();
 $('#kh_rq').jqxInput();
 $('#kh_khyh').jqxInput();

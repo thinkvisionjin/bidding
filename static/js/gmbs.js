@@ -23,6 +23,7 @@ function search()
 {name : 'sj',type : 'string'	},
 {name : 'dzxx',type : 'string'	},
 {name : 'cz',type : 'string'	},
+{name : 'je',type : 'string'	},
 {name : 'bsbh',type : 'string'	},
 {name : 'username',type : 'string'	},
 {name : 'ly',type : 'string'	}],
@@ -51,6 +52,7 @@ function addselectfieldwindows()
 { label: '电子信箱', value: 'dzxx', checked: false },,
 { label: '传真', value: 'cz', checked: false },,
 { label: '标书编号', value: 'bsbh', checked: true },,
+{ label: '金额', value: 'je', checked: true },,
 { label: '操作人', value: 'username', checked: false },,
 { label: '来源', value: 'ly', checked: false },];
 	$('#gmbs_zdlistbox').jqxListBox({ source: listSource, width:'100%', height:'100%', checkboxes: true });
@@ -69,7 +71,7 @@ function addselectfieldwindows()
 
 function modifygmbs(id)
 {
-	gmbs_popupwindow('modify', id);
+	gmbs_popupwindow('modify', id, search);
 
 }
 
@@ -130,6 +132,7 @@ $(document).ready(function() {
 { text: '电子信箱', datafield: 'dzxx', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '传真', datafield: 'cz', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '标书编号', datafield: 'bsbh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '金额', datafield: 'je', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '操作人', datafield: 'username', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '来源', datafield: 'ly', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 												{
@@ -172,7 +175,7 @@ $(document).ready(function() {
 					//$("#gmbs-grid").('hidecolumn', 'id');
 					search();
 					$("#gmbsadd").click(function() {
-						gmbs_popupwindow('add');
+						gmbs_popupwindow('add', '', search);
 						//window.location.replace('gmbsmx');
 						//$("#popupWindow").jqxWindow('open');
 					});
