@@ -29,6 +29,8 @@
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.selection.js')}}"></script> 
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.columnsresize.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/kh.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/khmxform.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/lxrmxform.js')}}"></script>
     
 </head>
 <body>
@@ -40,16 +42,12 @@
     		<table align="center" >
 				<tr >
 					<td class='tbinputtitle'>单位名称:</td><td><input class='tbinput' type='text' id='dwmc'/></td>
-
-				</tr>
-				<tr id='tr_search'>
-				<td  colspan=4>
-					<input id="search" style="float:right" type="button" value="查询" />
-				</td>
+                    <td><input id="search" style="float:right" type="button" value="查询" /></td>
 				</tr>
     		</table>
     	</div>
     	<div id='kh-grid' style='margin: 1%;'></div>
+        <div id='lxr-grid' style='margin: 1%;'></div>
     </div>
     </div>
        

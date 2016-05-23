@@ -17,7 +17,7 @@ function search()
 {name : 'bsbh',type : 'string'	},
 {name : 'bzjlx',type : 'string'	},
 {name : 'je',type : 'string'	},
-{name : 'rq',type : 'string'	},
+{name : 'rq',type : 'date'	},
 {name : 'username',type : 'string'	},
 {name : 'ly',type : 'string'	}],
 		id : 'Id',
@@ -31,18 +31,18 @@ function search()
 
 function addselectfieldwindows()
 {
-	$(document.body).append('<div id="popupWindow" ><div>字段选择</div><div style="overflow: hidden;"><div  id="zdlistbox"></div></div></div>');
-	$("#popupWindow").jqxWindow({ isModal: true, autoOpen: false, height: 300, width: 200 , modalOpacity: 0.5});
+	$(document.body).append('<div id="tbbzjzd_popupWindow" ><div>字段选择</div><div style="overflow: hidden;"><div  id="tbbzj_zdlistbox"></div></div></div>');
+	$("#tbbzjzd_popupWindow").jqxWindow({ isModal: true, autoOpen: false, height: 300, width: 200 , modalOpacity: 0.5});
 	 var listSource = [{ label: '序号', value: 'Id', checked: true },,
 { label: '单位名称', value: 'dwmc', checked: true },,
 { label: '标书编号', value: 'bsbh', checked: true },,
 { label: '保证金类型', value: 'bzjlx', checked: true },,
 { label: '金额', value: 'je', checked: true },,
 { label: '日期', value: 'rq', checked: true },,
-{ label: '操作人', value: 'username', checked: false },
+{ label: '操作人', value: 'username', checked: false },,
 { label: '来源', value: 'ly', checked: false },];
-	$('#zdlistbox').jqxListBox({ source: listSource, width:'100%', height:'100%', checkboxes: true });
-    $("#zdlistbox").on('checkChange', function (event) {
+	$('#tbbzj_zdlistbox').jqxListBox({ source: listSource, width:'100%', height:'100%', checkboxes: true });
+    $("#tbbzj_zdlistbox").on('checkChange', function (event) {
         $("#tbbzj-grid").jqxGrid('beginupdate');
         if (event.args.checked) {
             $("#tbbzj-grid").jqxGrid('showcolumn', event.args.value);
@@ -57,7 +57,7 @@ function addselectfieldwindows()
 
 function modifytbbzj(id)
 {
-	window.location.href='tbbzjmx?oper=modify&Id='+id;
+	tbbzj_popupwindow('modify', id, search);
 
 }
 
@@ -67,24 +67,30 @@ function deletetbbzj(id)
     var rowscount = $("#tbbzj-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
         var rowid = $("#tbbzj-grid").jqxGrid('getrowid', selectedrowindex);
-        $("#tbbzj-grid").jqxGrid('deleterow', rowid);
+        
     }
 
 	$.get('deleterow_tbbzj?Id='+id, function(result){
 		alert(result);
+		$("#tbbzj-grid").jqxGrid('deleterow', rowid);
 	});
 }
 
 function printtbbzj(id)
 {
-	window.location.href='printtbbzj?Id='+id;
+	window.location.href='tbbzj_print?Id='+id;
 //	window.location.replace ('tbbzjmx?oper=modify&Id='+id);
 }
 
 function detailtbbzj(id)
 {
-	window.location.href='tbbzjmx?oper=detail&Id='+id;
+	tbbzj_popupwindow('detail', id);
 //	window.location.replace ('tbbzjmx?oper=modify&Id='+id);
+}
+function configpopupwindow()
+{
+
+	tbbzj_init();
 }
 
 $(document).ready(function() {
@@ -96,15 +102,16 @@ $(document).ready(function() {
 					$("#tbbzj-grid")
 							.jqxGrid(
 									{
+										enabletooltips: true,
 										columnsresize: true,
-										height : "550px",
+										height : "80%",
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '标书编号', datafield: 'bsbh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '保证金类型', datafield: 'bzjlx', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '金额', datafield: 'je', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '日期', datafield: 'rq', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd hh:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '操作人', datafield: 'username', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '来源', datafield: 'ly', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 												{
@@ -147,12 +154,12 @@ $(document).ready(function() {
 					//$("#tbbzj-grid").('hidecolumn', 'id');
 					search();
 					$("#tbbzjadd").click(function() {
-						window.location.href = 'tbbzjmx';
+						tbbzj_popupwindow('add', '', search);
 						//window.location.replace('tbbzjmx');
 						//$("#popupWindow").jqxWindow('open');
 					});
 					$("#selectfiled").click(function() {
-						$("#popupWindow").jqxWindow('open');
+						$("#tbbzjzd_popupWindow").jqxWindow('open');
 					});					
 					$("#search").jqxButton({
 						template : 'primary'
@@ -164,5 +171,6 @@ $(document).ready(function() {
 					$('#dwmc').jqxInput();
 $('#bsbh').jqxInput();
 					addselectfieldwindows();
+					configpopupwindow();
 
 				});

@@ -26,38 +26,59 @@
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.pager.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"></script> 
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxlistbox.js')}}"></script>
-	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxnumberinput.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.selection.js')}}"></script> 
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"></script>
+<script type="text/javascript"
+	src="{{=URL('static','js/vendor/jqwidgets/jqxnumberinput.js')}}"></script>	
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.columnsresize.js')}}"></script>
-    <script type="text/javascript" src="{{=URL('static','js/zb.js')}}"></script>
-	<script type="text/javascript" src="{{=URL('static','js/zbmxform.js')}}"></script>
-
-	
+    <script type="text/javascript" src="{{=URL('static','js/yhls.js')}}"></script>
     
 </head>
 <body>
 
-    <div id="zb-expander">
-    <div>中标</div>
+    <div id="yhls-expander">
+    <div>银行流水</div>
     <div >
     	<div>
     		<table align="center" >
 				<tr >
-					<td class='tbinputtitle'>标书编号:</td><td><input class='tbinput' type='text' id='bsbh'/></td>
-<td class='tbinputtitle'>中标备选一:</td><td><input class='tbinput' type='text' id='zbdw1'/></td>
-
-				</tr>
-				<tr id='tr_search'>
-				<td  colspan=4>
+					<td class='tbinputtitle'>对方名称:</td><td><input class='tbinput' type='text' id='dfmc'/></td>
+<td class='tbinputtitle'>对方账号:</td><td><input class='tbinput' type='text' id='dfzh'/></td>
+				<td >
 					<input id="search" style="float:right" type="button" value="查询" />
 				</td>
 				</tr>
+
     		</table>
     	</div>
-    	<div id='zb-grid' style='margin: 1%;'></div>
+    	<div id='yhls-grid' style='margin: 1%;'></div>
+    	<div id='yhlsqr-grid' style='margin: 1%;'></div>
+    	
+  	
+    	
     </div>
     </div>
-       
+		<div id='yhls-popupWindow'>
+            <div>银行流水确认</div>
+            <div style="overflow: hidden;">		
+		<table align="center" width="600px" valign="middle">
+			<tr id='tr_Id' style="display:none"><td class='tbinputtitle'>序号:</td><td><input class='tbinput' type='text' id='Id'/></td></tr>
+<tr id='tr_dwmc'><td class='tbinputtitle'>单位名称:</td><td><input class='tbinput' type='text' id='dwmc'/></td></tr>
+
+<tr id='tr_qrlx'><td class='tbinputtitle'>确认类型:</td><td><div class='tbinput' type='text' id='qrlx'/></td></tr>
+
+<tr id='tr_qrje'><td class='tbinputtitle'>确认金额:</td><td><input class='tbinput' type='text' id='qrje'/></td></tr>
+<tr id='tr_yhlsId'><td class='tbinputtitle'>银行流水Id:</td><td><input class='tbinput' type='text' id='yhlsId'/></td></tr>
+<tr id='tr_cwqrbz'><td class='tbinputtitle'>财务确认标志:</td><td><input class='tbinput' type='text' id='cwqrbz'/></td></tr>
+<tr id='tr_rq'><td class='tbinputtitle'>日期:</td><td><input class='tbinput' type='text' id='rq'/></td></tr>
+<tr id='tr_username'><td class='tbinputtitle'>操作人:</td><td><input class='tbinput' type='text' id='username'/></td></tr>
+                    <tr>
+                        <td align="right"></td>
+                        <td style="padding-top: 10px;" align="right"><input style="margin-right: 5px;" type="button" id="Save" value="保存" /><input id="Cancel" type="button" value="取消" /></td>
+                    </tr>
+                </table>	
+                </div>	
+		</div>         
     
 </body>
 </html>
