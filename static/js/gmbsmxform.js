@@ -223,6 +223,7 @@ $('#gmbs_lxr').jqxComboBox({ placeHolder: '',autoComplete:true});
 $('#gmbs_sj').jqxComboBox({ placeHolder: '',autoComplete:true});
 $('#gmbs_dzxx').jqxInput();
 $('#gmbs_cz').jqxInput();
+$('#gmbs_je').jqxNumberInput({inputMode: 'simple'});
 $('#gmbs_bsbh').jqxDropDownList({ placeHolder: ''});
 $('#gmbs_username').jqxInput();
 $('#gmbs_ly').jqxInput();

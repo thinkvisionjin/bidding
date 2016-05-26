@@ -213,7 +213,7 @@ function tbzj_popupwindow(flag_state, id, callback, bsbh)
 	state = flag_state;
 	gkhcallback = callback;
 	$('#tbzj_Id').val(id);
-	$('#tbzj_bsbh').val(bsbh);
+	
 	if (state == 'add')
 	{
 		tbzj_title.innerHTML='新增';
@@ -230,5 +230,6 @@ function tbzj_popupwindow(flag_state, id, callback, bsbh)
 			tbzj_title.innerHTML='详情';
 			tbzj_setupdetail();
 		}
+	$('#tbzj_bsbh').val(bsbh);	
 	$('#tbzj_popupWindow').jqxWindow('open');
 }

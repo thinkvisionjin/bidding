@@ -192,7 +192,7 @@ function zb_popupwindow(flag_state, id, callback, bsbh)
 	state = flag_state;
 	gkhcallback = callback;
 	$('#zb_Id').val(id);
-	$('#zb_bsbh').val(bsbh);
+	
 	if (state == 'add')
 	{
 		zb_title.innerHTML='新增';
@@ -209,5 +209,6 @@ function zb_popupwindow(flag_state, id, callback, bsbh)
 			zb_title.innerHTML='详情';
 			zb_setupdetail();
 		}
+		$('#zb_bsbh').val(bsbh);
 	$('#zb_popupWindow').jqxWindow('open');
 }

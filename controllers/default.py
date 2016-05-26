@@ -1472,3 +1472,86 @@ def getcwlspz():
     result[u'sz'] = [u'收入', u'支出']
     result[u'ywlx'] = [u'购买标书', u'投标保证金', u'退保证金', u'中标服务费', u'专家评审费', u'其他']
     return json.dumps(result)   
+
+
+
+############
+def pbcy():
+    return dict();
+#操作
+def pbcymx():
+    if request.vars.oper == u'modify':
+        return dict(title=u"修改", Id=request.vars.Id)
+    if request.vars.oper == u'detail':
+        return dict(title=u"详细", Id=request.vars.Id)    
+    return dict(title=u"新增", Id=request.vars.Id)
+
+#获取所有
+def select_pbcy():
+    try:
+        username = u'Test'
+        where = u"where username='"+username+u"'"
+        
+        bsbh = request.vars.bsbh
+        if bsbh==None:
+            bsbh=u''
+        where += u"and bsbh like '%"+bsbh+u"%'"
+    
+        order = u" order by rq desc"
+        sql = u"""select * from pbcy """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail";
+
+def updaterow_pbcy():
+    try:
+        table_name = u'pbcy'
+        id = request.vars.d
+        rowData = request.post_vars
+        updaterow(table_name, id, rowData)
+        return u"success";
+    except:
+        return u"fail";
+
+def insertrow_pbcy():
+    try:
+        table_name = u'pbcy'
+        username = u'Test'
+        rowData = request.post_vars
+        rowData[u'username'] = username
+        print u"insertrow pbcy"
+        print rowData
+        insertrow(table_name, rowData)
+        return u"success";
+    except:
+        return u"fail";
+
+def deleterow_pbcy():
+    try:
+        table_name = u'pbcy'
+        id = request.vars.Id
+        print table_name
+        print id
+        deleterow(table_name, id)
+        return u"success";
+    except:
+        return u"fail";
+   
+
+def selectone_pbcy():
+    try:
+        table_name = u'pbcy'
+        sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+        return sqltojson(sql);
+    except:
+        return u"fail";
+
+def getpbcypz():
+    uid = u'';
+    result = {};
+    sql = u"""select * from zj""";   
+    result[u'zj'] = sqltojson(sql);
+
+    result[u'bsbh'] = p_getbsbh(uid);
+    return json.dumps(result)  
