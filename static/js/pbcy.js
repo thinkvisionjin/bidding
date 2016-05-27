@@ -106,7 +106,7 @@ $(document).ready(function() {
 										height : "80%",
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '标书编号', datafield: 'bsbh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '标书编号', datafield: 'bsbh', width: '30%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '专家信息', datafield: 'zjxx', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '总费用', datafield: 'zfy', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '操作人', datafield: 'username', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
@@ -121,14 +121,13 @@ $(document).ready(function() {
 															value,
 															defaultvalue,
 															column, rowdata) {
-														var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printpbcy('+rowdata.Id+')">打印</a>';
-
+	
 														var b = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="modifypbcy('+rowdata.Id+')">修改</a>';
 
 														var c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deletepbcy('+rowdata.Id+')">删除</a>';
 														var d = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="detailpbcy('+rowdata.Id+')">详细</a>';
 														var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 6px;">'
-																+ a+b+c+d + '</div>';
+																+ b+c+d + '</div>';
 														return d;
 													}
 												} ],

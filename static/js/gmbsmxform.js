@@ -88,7 +88,7 @@ $('#gmbs_bsbh').val(data['bsbh']);
 $('#gmbs_username').val(data['username']);
 $('#gmbs_ly').val(data['ly']);		
 	}, 'json');	
-	$('gmbs_Save').hide();
+	$('#gmbs_Save').hide();
 	$('#gmbs_Cancel').val('关闭');
 	
 }

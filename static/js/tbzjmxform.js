@@ -73,7 +73,7 @@ $('#tbzj_yhzh').val(data['yhzh']);
 $('#tbzj_fkfs').val(data['fkfs']);
 $('#tbzj_je').val(data['je']);		
 	}, 'json');	
-	$('tbzj_Save').hide();
+	$('#tbzj_Save').hide();
 	$('#tbzj_Cancel').val('关闭');
 	
 }

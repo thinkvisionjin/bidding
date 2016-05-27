@@ -56,7 +56,7 @@ db.define_table('yhlswj', Field('rq'),Field('wjm'),Field('username'))
 db.define_table('yhls', Field('jysj'),Field('je'),Field('zy'),Field('dfmc'),Field('dfzh'),Field('qrje'),Field('cwqrje'),Field('wjmId'), Field('wjm'))
 db.define_table('yhlsqr', Field('dwmc'),Field('qrlx'),Field('rq'),Field('qrje'),Field('yhlsId'),Field('cwqrbz'),Field('username'))
 db.define_table('lxr', Field('khId'),Field('lxr'),Field('sj'),Field('rq'),Field('username'))
-db.define_table('cwls', Field('bsbh'),Field('sz'),Field('je'),Field('ywlx'),Field('lyId'),Field('username'),Field('rq'))
+db.define_table('cwls', Field('bsbh'),Field('sz'),Field('je'),Field('zy'),Field('ywlx'),Field('lyId'),Field('username'),Field('rq'))
 db.define_table('pbcy', Field('bsbh'),Field('zjxx'),Field('zfy'),Field('username'),Field('rq'))
 db.define_table('zj', Field('xm'),Field('gzdw'),Field('username'),Field('rq'))
 ## after defining tables, uncomment below to enable auditing

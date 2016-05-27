@@ -625,10 +625,13 @@ def select_gmbs():
 
 def updaterow_gmbs():
     try:
+        print u'updaterow_gmbs'
         table_name = u'gmbs'
         id = request.vars.Id
         rowData = request.post_vars
+        print rowData
         updaterow(table_name, id, rowData)
+        p_updatecwls( id,  rowData)
         return u"success"
     except:
         return u"fail"        
@@ -665,16 +668,17 @@ def p_insertcwls(ywlx, id, sz, rowData):
     row[u'username'] = rowData[u'username']
     insertrow(table_name, row)
     
-def p_updatecwls(ywlx, id, sz, rowData):
+def p_updatecwls(id, rowData):
     table_name = u'cwls'
     row = {}
-    row[u'ywlx'] = ywlx
-    row[u'lyId'] = id
-    row[u'sz'] = sz
     row[u'bsbh'] = rowData[u'bsbh']
     row[u'je'] = rowData[u'je']
     row[u'username'] = rowData[u'username']
     db(db[table_name].lyId == id).update(**row)
+
+def p_deletecwls(id):
+    table_name = u'cwls'
+    db(db[table_name].lyId == id).delete()
 
 def insertrow_gmbs():
     try:
@@ -702,6 +706,7 @@ def deleterow_gmbs():
         print table_name
         print id
         deleterow(table_name, id)
+        p_deletecwls(id)
         return u"success"
     except:
         return u"fail"    
@@ -1336,7 +1341,14 @@ def select_yhlsqr():
     except:
         return u"fail"
 
-
+def selectone_yhlsqr():
+    try:
+        table_name = u'yhlsqr'
+        sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+        return sqltojson(sql);
+    except:
+        return u"fail";
+    
 def select_lxr():
     try:
         username = u'Test'
@@ -1425,7 +1437,7 @@ def select_cwls():
 def updaterow_cwls():
     try:
         table_name = u'cwls'
-        id = request.vars.d
+        id = request.vars.Id
         rowData = request.post_vars
         updaterow(table_name, id, rowData)
         return u"success";
@@ -1442,7 +1454,8 @@ def insertrow_cwls():
         print rowData
         insertrow(table_name, rowData)
         return u"success";
-    except:
+    except Exception as e:
+        print e 
         return u"fail";
 
 def deleterow_cwls():
@@ -1507,9 +1520,12 @@ def select_pbcy():
 def updaterow_pbcy():
     try:
         table_name = u'pbcy'
-        id = request.vars.d
+        id = request.vars.Id
         rowData = request.post_vars
+        
         updaterow(table_name, id, rowData)
+        rowData[u'je'] = rowData[u'zfy']
+        p_updatecwls(id, rowData)
         return u"success";
     except:
         return u"fail";
@@ -1522,7 +1538,9 @@ def insertrow_pbcy():
         rowData[u'username'] = username
         print u"insertrow pbcy"
         print rowData
-        insertrow(table_name, rowData)
+        id = insertrow(table_name, rowData)
+        rowData[u'je'] = rowData[u'zfy']
+        p_insertcwls(u'专家评审费', id, u'支出',  rowData)
         return u"success";
     except:
         return u"fail";
@@ -1534,6 +1552,7 @@ def deleterow_pbcy():
         print table_name
         print id
         deleterow(table_name, id)
+        p_deletecwls(id)
         return u"success";
     except:
         return u"fail";
@@ -1551,7 +1570,7 @@ def getpbcypz():
     uid = u'';
     result = {};
     sql = u"""select * from zj""";   
-    result[u'zj'] = sqltojson(sql);
+    result[u'zj'] = sqltoarray(sql);
 
     result[u'bsbh'] = p_getbsbh(uid);
     return json.dumps(result)  

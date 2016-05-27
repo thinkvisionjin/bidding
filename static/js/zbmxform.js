@@ -67,7 +67,7 @@ $('#zb_zbdw3').val(data['zbdw3']);
 $('#zb_username').val(data['username']);
 $('#zb_rq').val(data['rq']);		
 	}, 'json');	
-	$('zb_Save').hide();
+	$('#zb_Save').hide();
 	$('#zb_Cancel').val('关闭');
 	
 }

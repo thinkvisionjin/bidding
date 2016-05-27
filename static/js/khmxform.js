@@ -66,7 +66,7 @@ $('#kh_dzxx').val(data['dzxx']);
 $('#kh_cz').val(data['cz']);
 $('#kh_username').val(data['username']);		
 	}, 'json');	
-	$('kh_Save').hide();
+	$('#kh_Save').hide();
 	$('#kh_Cancel').val('关闭');
 	
 }

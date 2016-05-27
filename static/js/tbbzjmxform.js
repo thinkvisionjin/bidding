@@ -71,7 +71,7 @@ $('#tbbzj_rq').val(data['rq']);
 $('#tbbzj_username').val(data['username']);
 $('#tbbzj_ly').val(data['ly']);		
 	}, 'json');	
-	$('tbbzj_Save').hide();
+	$('#tbbzj_Save').hide();
 	$('#tbbzj_Cancel').val('关闭');
 	
 }

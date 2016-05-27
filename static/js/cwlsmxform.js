@@ -70,7 +70,7 @@ $('#cwls_lyId').val(data['lyId']);
 $('#cwls_username').val(data['username']);
 $('#cwls_rq').val(data['rq']);		
 	}, 'json');	
-	$('cwls_Save').hide();
+	$('#cwls_Save').hide();
 	$('#cwls_Cancel').val('关闭');
 	
 }

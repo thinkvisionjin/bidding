@@ -131,10 +131,18 @@ $(document).ready(function() {
 															defaultvalue,
 															column, rowdata) {
 														var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printcwls('+rowdata.Id+')">打印</a>';
+														var b = '';
+														var c = '';
+														if (rowdata['lyId']=='0')
+														{
+															b = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="modifycwls('+rowdata.Id+')">修改</a>';
 
-														var b = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="modifycwls('+rowdata.Id+')">修改</a>';
-
-														var c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deletecwls('+rowdata.Id+')">删除</a>';
+															c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deletecwls('+rowdata.Id+')">删除</a>';
+														}
+														else
+														{
+															
+														}
 														var d = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="detailcwls('+rowdata.Id+')">详细</a>';
 														var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 6px;">'
 																+ a+b+c+d + '</div>';
