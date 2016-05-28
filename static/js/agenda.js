@@ -1,70 +1,88 @@
+var gflag = 0;
+var gappointment;
+function appointment_save(state, appointment)
+{
+	if (gflag == 1)
+	{
+		return;
+	}
+	if (state == 'add')
+		{
+		url = 'insertrow_rcb';
+		}
+	else if (state == 'modify')
+		{
+		url = 'updaterow_rcb ';
+		}
+	else if (state == 'delete')
+		{
+		url = 'deleterow_rcb ';
+		}
+	var row={
+		start:appointment['from'].toString(),
+		end:appointment['to'].toString(),
+		description:appointment['description'],
+		id:appointment['id'],
+		subject:appointment['subject'],
+		applyuser:appointment['location'],	
+		calendar:appointment['resourceId'],
+		bsbh:appointment['tooltip']
+	};
+    $.ajax({
+        url:url,
+        type:'POST',
+        data:row,
+        success:function(response,status,xhr){
+            if (response == 'success')
+            {
+					alert(response);
+            }
+			else
+			{
+				gflag = 1;
+				if (state == 'add')
+				{
+					$('#scheduler').jqxScheduler('deleteAppointment', appointment.id);
+				}
+				else if (state == 'modify')
+				{
+					$('#scheduler').jqxScheduler('deleteAppointment', appointment.id);
+					$('#scheduler').jqxScheduler('addAppointment', gappointment);
+				}
+				else if (state == 'delete')
+				{
+					$('#scheduler').jqxScheduler('addAppointment', appointment);
+				}	
+				gflag = 0;		
+				alert(response);		
+			}
+             
+        },
+        error:function(xhr,errorText,errorType){
+            
+			gflag = 1;
+			if (state == 'add')
+			{
+				$('#scheduler').jqxScheduler('deleteAppointment', appointment.id);
+			}
+			else if (state == 'modify')
+			{
+				$('#scheduler').jqxScheduler('deleteAppointment', appointment.id);
+				$('#scheduler').jqxScheduler('addAppointment', gappointment);
+			}
+			else if (state == 'delete')
+			{
+				$('#scheduler').jqxScheduler('addAppointment', appointment);
+			}	
+			gflag = 0;	
+			alert("操作不成功");	
+        },
+    })	
+}
+
+
 $(document).ready(function () {
-            var appointments = new Array();
 
-            var appointment1 = {
-                id: "id1",
-                description: "数字化智能审计例会.",
-                location: "f",
-                calendar: "第一会议室",
-                start: new Date(2016, 10, 23, 9, 0, 0),
-                end: new Date(2016, 10, 23, 16, 0, 0)
-            }
-
-            var appointment2 = {
-                id: "id2",
-                description: "",
-                location: "e",
-                subject: "马克威交流.",
-                calendar: "第二会议室 2",
-                start: new Date(2016, 10, 24, 10, 0, 0),
-                end: new Date(2016, 10, 24, 15, 0, 0)
-            }
-
-            var appointment3 = {
-                id: "id3",
-                description: "aaa",
-                location: "d",
-                subject: "万达交流",
-                calendar: "第三会议室 3",
-                start: new Date(2016, 10, 21, 11, 0, 0),
-                end: new Date(2016, 10, 21, 13, 0, 0)
-            }
-
-            var appointment4 = {
-                id: "id4",
-                description: "",
-                location: "c",
-                subject: "第四会议室",
-                calendar: "第四会议室",
-                start: new Date(2016, 10, 23, 16, 0, 0),
-                end: new Date(2016, 10, 23, 18, 0, 0)
-            }
-
-            var appointment5 = {
-                id: "id5",
-                description: "",
-                location: "b",
-                subject: "公积金中心交流",
-                calendar: "第五会议室",
-                start: new Date(2016, 10, 25, 15, 0, 0),
-                end: new Date(2016, 10, 25, 17, 0, 0)
-            }
-
-            var appointment6 = {
-                id: "id6",
-                description: "",
-                location: "a",
-                subject: "建交委",
-                calendar: "第六会议室",
-                start: new Date(2016, 10, 26, 14, 0, 0),
-                end: new Date(2016, 10, 26, 16, 0, 0)
-            }
-            appointments.push(appointment1);
-            appointments.push(appointment2);
-            appointments.push(appointment3);
-            appointments.push(appointment4);
-            appointments.push(appointment5);
-            appointments.push(appointment6);
 
             // prepare the data
             var source =
@@ -77,11 +95,14 @@ $(document).ready(function () {
 					{ name: 'applyuser', type: 'string' },
                     { name: 'subject', type: 'string' },
                     { name: 'calendar', type: 'string' },
-                    { name: 'start', type: 'date', format: "yyyy-MM-dd HH:mm"  },
-                    { name: 'end', type: 'date', format: "yyyy-MM-dd HH:mm"  }
+                    { name: 'rcbstart', type: 'date' },
+                    { name: 'rcbend', type: 'date' },
+					{ name: 'rq', type: 'date' },
+					{ name: 'bsbh', type: 'string' }
                 ],
                 id: 'id',
-				url: 'getappointment'
+	//		url: 'getappointment'
+				url: 'select_rcb'
             //    localData: appointments
             };
             var tsource =
@@ -96,7 +117,7 @@ $(document).ready(function () {
             var adapter = new $.jqx.dataAdapter(source);
 
             $("#scheduler").jqxScheduler({
-                date: new $.jqx.date(2016, 10, 25),
+                date: new $.jqx.date(),
                 width: '100%',
                 height: '670px',
                 source: adapter,
@@ -127,13 +148,14 @@ $(document).ready(function () {
                 },
                 appointmentDataFields:
                 {
-                    from: "start",
-                    to: "end",
+                    from: "rcbstart",
+                    to: "rcbend",
                     id: "id",
                     description: "description",
                     subject: "subject",
                     resourceId: "calendar",
-					location: "applyuser"
+					location: "applyuser",
+					tooltip:"bsbh"
                 },
 				dayNameFormat: 'full',
 
@@ -162,8 +184,9 @@ $(document).ready(function () {
 					fields.saveButton.html("保存");
 					fields.deleteButton.html("删除");
 					fields.cancelButton.html("取消");
-
-										
+					fields.saveButton.jqxButton({ template:'success' });
+					fields.deleteButton.jqxButton({ template:'danger' });
+					fields.cancelButton.jqxButton({ template:'warning' });					
 				},
 				localization: {
 					firstDay: 1,
@@ -269,9 +292,8 @@ $(document).ready(function () {
 
                 ]
             });
-			$('#scheduler').on('editDialogCreate', function (event) { 
-				var args = event.args; var dialog = args.dialog; var fields = args.fields; var appointment = args.appointment;
-				fields.repeatContainer.hide();
+			$('#scheduler').on('appointmentClick', function (event) { 
+				var args = event.args; gappointment = args.appointment; 
 			});
 			$('#scheduler').on('editDialogOpen', function (event) { 
 				var args = event.args; var dialog = args.dialog; var fields = args.fields; var appointment = args.appointment;
@@ -290,12 +312,15 @@ $(document).ready(function () {
 			});
 			$('#scheduler').on('appointmentChange', function (event) { 
 				var args = event.args; var appointment = args.appointment; 
+				alert("change")
+				appointment_save('modify', appointment);
 
 			});
             $("#scheduler").on('appointmentDelete', function (event) {
                 var args = event.args;
                 var appointment = args.appointment;
                 console.log("appointmentDelete is raised");
+				appointment_save('delete', appointment);
 				//判断是否有权限删除 userid是否一致
 				//$('#jqxScheduler').jqxScheduler('addAppointment', appointment);
             });
@@ -304,7 +329,7 @@ $(document).ready(function () {
                 var args = event.args;
                 var appointment = args.appointment;
 				$('#scheduler').jqxScheduler('setAppointmentProperty', appointment.id, "location", "张三");
-				
+				appointment_save('add', appointment);
 
             });
 			$('#scheduler').on('viewChange', function (event) { var args = event.args; var date = args.date; var from = args.from; var to = args.to; var oldViewType = args.oldViewType; var newViewType = args.newViewType;

@@ -157,8 +157,8 @@ $(document).ready(function() {
 						searchfb(rowData['xm']);						
 					});
 
-					$('#ksrq').jqxDateTimeInput({culture:'zh-CN', height: '25px'});
-					$('#jsrq').jqxDateTimeInput({culture:'zh-CN', height: '25px'});
+					$('#ksrq').jqxDateTimeInput({formatString: "yyyy-MM-dd",culture:'zh-CN', height: '25px'});
+					$('#jsrq').jqxDateTimeInput({formatString: "yyyy-MM-dd",culture:'zh-CN', height: '25px'});
 					
 					initgrtjbfb();
 				});

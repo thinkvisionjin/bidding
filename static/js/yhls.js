@@ -2,6 +2,7 @@ var state = 'add';
 var g_rowid;
 var g_row; var olddwmc = '';
 var state = 'add';
+var g_beforqrje;
 function yhlsqr_setupadd() {
 	$('#Id').val('');
 	$('#dwmc').val('');
@@ -14,6 +15,7 @@ function yhlsqr_setupadd() {
 	$('#tr_rq').hide();
 	$('#tr_cwqrbz').hide();
 	$('#tr_username').hide();;
+	g_beforqrje = 0;
 }
 function yhlsqr_setupdetail() {
 	$('#tr_rq').show();
@@ -54,10 +56,11 @@ function yhlsqr_setupmodify() {
 		$('#yhlsId').val(data['yhlsId']);
 		$('#cwqrbz').val(data['cwqrbz']);
 		$('#username').val(data['username']);
+		g_beforqrje = data['qrje']
 	}, 'json');
 }
 
-function yhlsqr_popupwindow(flag_state, id, callback) {
+function yhlsqr_popupwindow(flag_state, id, callback, yhlsId) {
 	state = flag_state;
 	gkhcallback = callback;
 	$('#Id').val(id);
@@ -75,6 +78,7 @@ function yhlsqr_popupwindow(flag_state, id, callback) {
 		yhlsqr_title.innerHTML = '详情';
 		yhlsqr_setupdetail();
 	}
+	$('#yhlsId').val(yhlsId);
 	$('#yhls_popupWindow').jqxWindow('open');
 }
 
@@ -86,11 +90,11 @@ var g_selectedrowindex;
 
 
 function search() {
-	if ($("#dfmc").val() == '' && $("#dfzh").val() == '') {
+	if ($("#dfmc").val() == '' && $("#dfzh").val() == '' &&$("#wjm").val()=='') {
 		url = "select_yhls";
 	}
 	else {
-		url = "select_yhls?dfmc=" + $("#dfmc").val() + "&dfzh=" + $("#dfzh").val()
+		url = "select_yhls?dfmc=" + $("#dfmc").val() + "&dfzh=" + $("#dfzh").val() + "&wjm=" + $("#wjm").val()
 	}
 
 	var source = {
@@ -147,11 +151,22 @@ function deleteyhlsqr(id) {
     var rowscount = $("#yhlsqr-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
         var rowid = $("#yhlsqr-grid").jqxGrid('getrowid', selectedrowindex);
-
+		row = $("#yhlsqr-grid").jqxGrid('getrowdata', selectedrowindex);
+		qrje = row['qrje'];
     }
+	var selectedrowindex = $("#yhls-grid").jqxGrid('getselectedrowindex');
+	g_row = $("#yhls-grid").jqxGrid('getrowdata', selectedrowindex);	
 	$.get('deleterow_yhlsqr?Id=' + id, function (result) {
-		alert(result);
-		$("#zb-grid").jqxGrid('deleterow', rowid);
+			alert(result);
+			if (response == 'success') {
+			$("#yhlsqr-grid").jqxGrid('deleterow', rowid);
+			g_row['qrje'] -= qrje;
+			$('#yhls-grid').jqxGrid('updaterow', g_selectedrowindex, g_row);
+		}
+		else
+		{
+			
+		}
 	});
 }
 function modifyyhls(id) {
@@ -169,13 +184,15 @@ function deleteyhls(id) {
 
 	$.get('deleterow_yhls?Id=' + id, function (result) {
 		alert(result);
+		
 	});
 }
 
 function qryhls(id) {
 	state = 'add';
 	g_rowid = id;
-	$("#yhls_popupWindow").jqxWindow('open');
+	yhlsqr_popupwindow('add', '', searchqryhls, id);
+	//$("#yhls_popupWindow").jqxWindow('open');
 }
 
 function detailyhls(id) {
@@ -186,27 +203,40 @@ function detailyhls(id) {
 
 
 function save(state) {
+	var row = {};
+	qrje = $('#qrje').val();
 	if (state == 'add') {
 		url = 'insertrow_yhlsqr';
+		row = {
+			dwmc: $('#dwmc').val(),
+			qrje: qrje,
+			yhlsId: $('#yhlsId').val(),
+			cwqrbz: '未确认',
+			qrlx: $('#qrlx').val(),
+			//////////来源////需特殊处理//////
+		};		
 	}
 	else if (state == 'modify') {
 		url = 'updaterow_yhlsqr?Id=' + $('#Id').val();
+		row = {
+			dwmc: $('#dwmc').val(),
+			qrje: qrje,
+			yhlsId: $('#yhlsId').val(),
+			cwqrbz: $('#cwqrbz').val(),
+			qrlx: $('#qrlx').val(),
+			//////////来源////需特殊处理//////
+		};		
 	}
-	qrje = $('#qrje').val()
-	var row = {
-		dwmc: $('#dwmc').val(),
-		qrje: qrje,
-		yhlsId: g_rowid,
-		cwqrbz: '未确认',
-		qrlx: $('#qrlx').val(),
-		//////////来源////需特殊处理//////
-	};
+	
+
+	
+	
     var selectedrowindex = $("#yhls-grid").jqxGrid('getselectedrowindex');
     g_selectedrowindex = selectedrowindex;
     var rowscount = $("#yhls-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
         g_row = $("#yhls-grid").jqxGrid('getrowdata', selectedrowindex);
-        if ((g_row['je'] - g_row['qrje']) < qrje) {
+        if ((g_row['je'] - g_row['qrje']+g_beforqrje) < qrje) {
 			alert('确认金额超过实际金额');
 			return;
         }
@@ -220,10 +250,10 @@ function save(state) {
 
             if (response == 'success') {
 				alert('成功');
-				g_row['qrje'] += $('#qrje').val();
-				$('#yhls-grid').jqxGrid('updaterow', g_selectedrowindex, row);
+				g_row['qrje'] += $('#qrje').val()-g_beforqrje;
+				$('#yhls-grid').jqxGrid('updaterow', g_selectedrowindex, g_row);
 				$("#yhls_popupWindow").jqxWindow('hide');
-				searchqryhls(g_rowid);
+				searchqryhls($('#yhlsId').val());
 				return;
 
             }
@@ -282,13 +312,16 @@ function inityhlsqr() {
 						value,
 						defaultvalue,
 						column, rowdata) {
-
+						if (rowdata['cwqrbz']=='未确认')
+						{
 						var b = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="modifyyhlsqr(' + rowdata.Id + ')">修改</a>';
 
 						var c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deleteyhlsqr(' + rowdata.Id + ')">删除</a>';
 						var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 6px;">'
 							+ b + c + '</div>';
 						return d;
+						}
+						return '';
 					}
 				}],
 			showtoolbar: true,
@@ -296,7 +329,7 @@ function inityhlsqr() {
 				var me = this;
 				var container = $("<div style='margin: 5px;'></div>");
 				toolbar.append(container);
-				container.append('<input id="yhlsqradd" type="button" value="新增" />');
+				container.append('<input id="yhlsqradd" type="button" value="确认信息" />');
 				$("#yhlsqradd").jqxButton({
 					template: 'success'
 				});
@@ -305,7 +338,7 @@ function inityhlsqr() {
 		});
 
 	$("#yhls_popupWindow").jqxWindow({
-		width: 400, height: 300, resizable: false, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.4
+		width: 400, height: 350, resizable: false, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.4
 	});
     $('#Id').jqxInput();
     $('#rq').jqxInput();
@@ -330,6 +363,7 @@ function inityhlsqr() {
 
 	$.get('getyhlsqrpz', function (result) {
 		//需特殊处理
+		$('#wjm').jqxComboBox({ source: result['wjm']});
 		$('#dwmc').jqxInput({ source: result['dwmc'] });
 		$('#qrlx').jqxDropDownList({ placeHolder: "", source: result['qrlx'], displayMember: "PackageNumber", valueMember: "PackageNumber" });
 	}, 'json');
@@ -402,7 +436,7 @@ $(document).ready(function () {
 	$("#search").click(function () {
 		search();
 	});
-
+	$('#wjm').jqxComboBox({ placeHolder: "", autoComplete:true});
 	$('#dfmc').jqxInput();
 	$('#dfzh').jqxInput();
 	addselectfieldwindows();

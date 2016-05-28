@@ -59,5 +59,7 @@ db.define_table('lxr', Field('khId'),Field('lxr'),Field('sj'),Field('rq'),Field(
 db.define_table('cwls', Field('bsbh'),Field('sz'),Field('je'),Field('zy'),Field('ywlx'),Field('lyId'),Field('username'),Field('rq'))
 db.define_table('pbcy', Field('bsbh'),Field('zjxx'),Field('zfy'),Field('username'),Field('rq'))
 db.define_table('zj', Field('xm'),Field('gzdw'),Field('username'),Field('rq'))
+db.define_table('rcb', Field('description'),Field('applyuser'),Field('bsbh'),Field('subject'),Field('calendar'),Field('rcbstart'),Field('rcbend'),Field('rcbid'),Field('rq'))
+
 ## after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
