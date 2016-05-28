@@ -1,4 +1,9 @@
 
+function popup_gmbswindow() {
+	
+}
+
+
 function InitEditProjectPage(dict,project){
 	$("#jqxProjectBasicExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
 	$("#jqxProjectPackagesExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
@@ -346,10 +351,13 @@ function InitProjectDocumentGrid(dict,project){
             deleteButton.jqxButton({ template: "danger" });
             columnSettingButton.jqxButton({ template: "inverse" });
             addNewButton.click(function (event) {
-            	$("#popupWindow_PackageADD").jqxWindow('show');
+            	gmbs_init();
+            	gmbs_popupwindow("add", "", function(){
+            		$("#EditProject_DocumentTable").jqxGrid({ source:dataAdapter });
+            	});
             });
             refreshButton.click(function (event) {
-                $("#EditProject_DocumentTable").jqxGrid({ source:projectPackageurldataAdapter });
+                $("#EditProject_DocumentTable").jqxGrid({ source:dataAdapter });
             });
             columnSettingButton.click(function (event) {
             	$("#popupWindow_PackageADD").jqxWindow('open');
@@ -502,10 +510,14 @@ function InitProjectMarginGrid(dict,project){
             deleteButton.jqxButton({ template: "danger" });
             columnSettingButton.jqxButton({ template: "inverse" });
             addNewButton.click(function (event) {
-            	$("#popupWindow_PackageADD").jqxWindow('show');
+            	tbzj_init ()
+            	tbzj_popupwindow('add', '', function(){
+            		//refresh the grid when load completed
+            		$("#EditProject_MarginTable").jqxGrid({ source:dataAdapter });
+            	})
             });
             refreshButton.click(function (event) {
-                $("#EditProject_MarginTable").jqxGrid({ source:projectPackageurldataAdapter });
+                $("#EditProject_MarginTable").jqxGrid({ source:dataAdapter });
             });
             columnSettingButton.click(function (event) {
             	$("#popupWindow_PackageADD").jqxWindow('open');
