@@ -6,7 +6,9 @@ var g_beforqrje;
 function yhlsqr_setupadd() {
 	$('#Id').val('');
 	$('#dwmc').val('');
+	$('#bsbh').jqxDropDownList('selectIndex', -1);
 	$('#qrlx').jqxDropDownList('selectIndex', -1);
+	
 	$('#rq').val('');
 	$('#qrje').val('');
 	$('#yhlsId').val('');
@@ -28,6 +30,7 @@ function yhlsqr_setupdetail() {
 		var data = result[0];
 		$('#Id').val(data['Id']);
 		$('#dwmc').val(data['dwmc']);
+		$('#bsbh').val(data['bsbh']);
 		$('#qrlx').val(data['qrlx']);
 		$('#rq').val(data['rq']);
 		$('#qrje').val(data['qrje']);
@@ -50,6 +53,7 @@ function yhlsqr_setupmodify() {
 		var data = result[0];
 		$('#Id').val(data['Id']);
 		$('#dwmc').val(data['dwmc']);
+		$('#bsbh').val(data['bsbh']);
 		$('#qrlx').val(data['qrlx']);
 		$('#rq').val(data['rq']);
 		$('#qrje').val(data['qrje']);
@@ -150,7 +154,7 @@ function deleteyhlsqr(id) {
     var selectedrowindex = $("#yhlsqr-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#yhlsqr-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
-        var rowid = $("#yhlsqr-grid").jqxGrid('getrowid', selectedrowindex);
+        rowid = $("#yhlsqr-grid").jqxGrid('getrowid', selectedrowindex);
 		row = $("#yhlsqr-grid").jqxGrid('getrowdata', selectedrowindex);
 		qrje = row['qrje'];
     }
@@ -158,10 +162,11 @@ function deleteyhlsqr(id) {
 	g_row = $("#yhls-grid").jqxGrid('getrowdata', selectedrowindex);	
 	$.get('deleterow_yhlsqr?Id=' + id, function (result) {
 			alert(result);
-			if (response == 'success') {
+			if (result == 'success') {
 			$("#yhlsqr-grid").jqxGrid('deleterow', rowid);
 			g_row['qrje'] -= qrje;
-			$('#yhls-grid').jqxGrid('updaterow', g_selectedrowindex, g_row);
+			rowid = $("#yhls-grid").jqxGrid('getrowid', g_selectedrowindex);
+			$('#yhls-grid').jqxGrid('updaterow', rowid, g_row);
 		}
 		else
 		{
@@ -209,6 +214,7 @@ function save(state) {
 		url = 'insertrow_yhlsqr';
 		row = {
 			dwmc: $('#dwmc').val(),
+			bsbh: $('#bsbh').val(),
 			qrje: qrje,
 			yhlsId: $('#yhlsId').val(),
 			cwqrbz: '未确认',
@@ -220,6 +226,7 @@ function save(state) {
 		url = 'updaterow_yhlsqr?Id=' + $('#Id').val();
 		row = {
 			dwmc: $('#dwmc').val(),
+			bsbh: $('#bsbh').val(),
 			qrje: qrje,
 			yhlsId: $('#yhlsId').val(),
 			cwqrbz: $('#cwqrbz').val(),
@@ -251,7 +258,8 @@ function save(state) {
             if (response == 'success') {
 				alert('成功');
 				g_row['qrje'] += $('#qrje').val()-g_beforqrje;
-				$('#yhls-grid').jqxGrid('updaterow', g_selectedrowindex, g_row);
+				rowid = $("#yhls-grid").jqxGrid('getrowid', g_selectedrowindex);
+				$('#yhls-grid').jqxGrid('updaterow', rowid, g_row);
 				$("#yhls_popupWindow").jqxWindow('hide');
 				searchqryhls($('#yhlsId').val());
 				return;
@@ -273,6 +281,7 @@ function searchqryhls(id) {
 		datatype: "json",
 		datafields: [{ name: 'Id', type: 'string' },
 			{ name: 'dwmc', type: 'string' },
+			{ name: 'bsbh', type: 'string' },
 			{ name: 'qrlx', type: 'string' },
 			{ name: 'rq', type: 'date' },
 			{ name: 'qrje', type: 'string' },
@@ -296,8 +305,9 @@ function inityhlsqr() {
 			width: "98%",
 			columns: [{ text: '序号', datafield: 'Id', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '单位名称', datafield: 'dwmc', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '标书编号', datafield: 'bsbh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '确认类型', datafield: 'qrlx', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd hh:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '确认金额', datafield: 'qrje', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '银行流水Id', datafield: 'yhlsId', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '财务确认标志', datafield: 'cwqrbz', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
@@ -346,6 +356,7 @@ function inityhlsqr() {
     $('#yhlsId').jqxInput();
     $('#cwqrbz').jqxInput();
     $('#qrlx').jqxDropDownList({ placeHolder: '' });
+	$('#bsbh').jqxDropDownList({ placeHolder: '' });
     $('#username').jqxInput();
 	$('#tr_rq').hide();
 	$('#tr_cwqrbz').hide();
@@ -365,6 +376,7 @@ function inityhlsqr() {
 		//需特殊处理
 		$('#wjm').jqxComboBox({ source: result['wjm']});
 		$('#dwmc').jqxInput({ source: result['dwmc'] });
+		$('#bsbh').jqxDropDownList({source : result['bsbh']});
 		$('#qrlx').jqxDropDownList({ placeHolder: "", source: result['qrlx'], displayMember: "PackageNumber", valueMember: "PackageNumber" });
 	}, 'json');
 
@@ -383,7 +395,7 @@ $(document).ready(function () {
 			height: "80%",
 			width: "98%",
 			columns: [{ text: '序号', datafield: 'Id', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '交易时间', datafield: 'jysj', cellsformat: 'yyyy-MM-dd hh:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '交易时间', datafield: 'jysj', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '金额', datafield: 'je', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '摘要', datafield: 'zy', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '对方名称', datafield: 'dfmc', width: '10%', cellsalign: 'center', align: 'center', hidden: false },

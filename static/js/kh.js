@@ -156,7 +156,7 @@ function initlxr() {
 			columns: [{ text: '序号', datafield: 'Id', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '联系人', datafield: 'lxr', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '手机', datafield: 'sj', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd hh:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '操作人', datafield: 'username', width: '10%', cellsalign: 'center', align: 'center', hidden: true },
 				{
 					text: '操作',
@@ -214,7 +214,7 @@ $(document).ready(function () {
 			columns: [{ text: '序号', datafield: 'Id', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '纳税人识别号', datafield: 'nsrsbh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '单位名称', datafield: 'dwmc', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd hh:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '开户银行', datafield: 'khyh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '银行账号', datafield: 'yhzh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '联系地址', datafield: 'lxdz', width: '10%', cellsalign: 'center', align: 'center', hidden: false },

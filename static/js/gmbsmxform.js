@@ -146,7 +146,7 @@ cz:$('#gmbs_cz').val(),
 je:$('#gmbs_je').val(),
 bsbh:$('#gmbs_bsbh').val(),
 username:$('#gmbs_username').val(),
-ly:$('#gmbs_ly').val(),
+ly:'现场',
 	//////////来源////需特殊处理//////
 	};
     $.ajax({

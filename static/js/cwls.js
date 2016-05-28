@@ -119,7 +119,7 @@ $(document).ready(function() {
 { text: '业务类型', datafield: 'ywlx', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '来源序号', datafield: 'lyId', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '操作人', datafield: 'username', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
-{ text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd hh:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
+{ text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 												{
 													text : '操作',
 													width: '200',

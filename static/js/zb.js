@@ -101,7 +101,7 @@ $(document).ready(function () {
 				{ text: '中标备选二', datafield: 'zbdw2', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '中标备选三', datafield: 'zbdw3', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '操作人', datafield: 'username', width: '10%', cellsalign: 'center', align: 'center', hidden: true },
-				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd hh:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{
 					text: '操作',
 					width: '200',

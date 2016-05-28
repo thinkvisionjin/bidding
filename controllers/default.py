@@ -623,17 +623,24 @@ def select_gmbs():
     except:
         return u"fail"    
 
+def p_updaterow_gmbs(id, rowData):
+    table_name = u'gmbs'
+    updaterow(table_name, id, rowData)
+    p_updatecwls(u'购买标书', id,  rowData)   
+    p_addkh(rowData) 
+
 def updaterow_gmbs():
     try:
         print u'updaterow_gmbs'
-        table_name = u'gmbs'
+        
         id = request.vars.Id
         rowData = request.post_vars
         print rowData
-        updaterow(table_name, id, rowData)
-        p_updatecwls( id,  rowData)
+        p_updaterow_gmbs(id,rowData)
+        db.commit()
         return u"success"
     except:
+        db.rollback()
         return u"fail"        
 
 def p_addkh(rowData):
@@ -668,45 +675,50 @@ def p_insertcwls(ywlx, id, sz, rowData):
     row[u'username'] = rowData[u'username']
     insertrow(table_name, row)
     
-def p_updatecwls(id, rowData):
+def p_updatecwls(ywlx, id, rowData):
     table_name = u'cwls'
     row = {}
     row[u'bsbh'] = rowData[u'bsbh']
     row[u'je'] = rowData[u'je']
     row[u'username'] = rowData[u'username']
-    db(db[table_name].lyId == id).update(**row)
+    db((db[table_name].lyId == id)&(db[table_name].ywlx==ywlx)).update(**row)
 
-def p_deletecwls(id):
+def p_deletecwls(ywlx, id):
     table_name = u'cwls'
-    db(db[table_name].lyId == id).delete()
+    db((db[table_name].lyId == id)&(db[table_name].ywlx==ywlx)).delete()
+
+def p_insertrow_gmbs(rowData):
+    table_name = u'gmbs'
+    print u"insertrow gmbs"
+    print rowData
+    id = insertrow(table_name, rowData)
+    p_addkh(rowData)
+    p_insertcwls(u'购买标书', id, u'收入',  rowData)
 
 def insertrow_gmbs():
     try:
-        table_name = u'gmbs'
         username = u'Test'
         rowData = request.post_vars
         rowData[u'username'] = username
-        print u"insertrow gmbs"
-        print rowData
-        id = insertrow(table_name, rowData)
-        p_addkh(rowData)
-        p_insertcwls(u'购买标书', id, u'收入',  rowData)
+        p_insertrow_gmbs(rowData)
         db.commit()
         return u"success"
     except Exception as e:
         print e
         db.rollback()
         return u"fail"
-    
-
+def p_deleterow_gmbs(id):
+    table_name = u'gmbs'
+    deleterow(table_name, id)
+    p_deletecwls(u'购买标书',id)
+        
 def deleterow_gmbs():
     try:
-        table_name = u'gmbs'
+        
         id = request.vars.Id
         print table_name
         print id
-        deleterow(table_name, id)
-        p_deletecwls(id)
+        p_deleterow_gmbs(id)
         db.commit()
         return u"success"
     except:
@@ -842,42 +854,52 @@ def select_tbbzj():
         return sqltojson(sql);
     except:
         return u"fail"
+def p_updaterow_tbbzj(id, rowData):
+    table_name = u'tbbzj'
+    updaterow(table_name, id, rowData)
+    p_updatecwls(u'投标保证金', id, rowData)    
     
 def updaterow_tbbzj():
     try:
-        table_name = u'tbbzj'
         id = request.vars.Id
         rowData = request.post_vars
-        updaterow(table_name, id, rowData)
+        p_updaterow_tbbzj(id, rowData)
         db.commit()
         return u"success"
     except:
         db.rollback()
         return u"fail"    
-
+def p_insertrow_tbbzj(rowData):
+    table_name = u'tbbzj'
+    print u"insertrow tbbzj"
+    print rowData
+    id = insertrow(table_name, rowData)
+    p_insertcwls(u'投标保证金', id, u'收入',  rowData)    
+    
 def insertrow_tbbzj():
     try:
-        table_name = u'tbbzj'
+        
         username = u'Test'
         rowData = request.post_vars
         rowData[u'username'] = username
-        print u"insertrow tbbzj"
-        print rowData
-        insertrow(table_name, rowData)
-        p_insertcwls(u'投标保证金', id, u'收入',  rowData)
+        p_insertrow_tbbzj(rowData)
         db.commit()
         return u"success"
-    except:
+    except Exception as e:
+        print e
         db.rollback()
         return u"fail"
-
+def p_deleterow_tbbzj(id):
+    table_name = u'tbbzj'
+    deleterow(table_name, id)
+    p_deletecwls(u'投标保证金', id)
+    
 def deleterow_tbbzj():
     try:
-        table_name = u'tbbzj'
         id = request.vars.Id
         print table_name
         print id
-        deleterow(table_name, id)
+        p_deleterow_tbbzj(id)
         db.commit()
         return u"success"
     except:
@@ -983,6 +1005,7 @@ def updaterow_tbzj():
         id = request.vars.Id
         rowData = request.post_vars
         updaterow(table_name, id, rowData)
+        p_updatecwls(u'退保证金', id, rowData)
         db.commit()
         return u"success"
     except:
@@ -997,7 +1020,7 @@ def insertrow_tbzj():
         rowData[u'username'] = username
         print u"insertrow tbzj"
         print rowData
-        insertrow(table_name, rowData)
+        id = insertrow(table_name, rowData)
         p_insertcwls(u'退保证金', id, u'支出',  rowData)
         db.commit()
         return u"success"
@@ -1012,6 +1035,7 @@ def deleterow_tbzj():
         print table_name
         print id
         deleterow(table_name, id)
+        p_deletecwls(u'退保证金', id)
         db.commit()
         return u"success"
     except:
@@ -1331,11 +1355,13 @@ def select_yhls():
 def getyhlsqrpz():
     try:
         result = {};
+        uid = u'';
         sql = u"""select dwmc from kh""";   
         result[u'dwmc'] = sqltoarraynodict(sql);    
         sql = u"""select distinct wjm from yhls""";   
         result[u'wjm'] = sqltoarraynodict(sql);          
-        result[u'qrlx'] = [u'购买标书', u'保证金']
+        result[u'bsbh'] = p_getbsbh(uid);
+        result[u'qrlx'] = [u'购买标书', u'投标保证金']
         return json.dumps(result)  
     except:
         return u"fail"    
@@ -1361,7 +1387,30 @@ def insertrow_yhlsqr():
         rowData[u'username'] = username
         print u"insertrow yhlsqr"
         print rowData
-        insertrow(table_name, rowData)
+        id = insertrow(table_name, rowData)
+##########gmbs###############
+        if rowData[u'qrlx'] == u'购买标书':
+            gmbsrow = {}
+            gmbsrow[u'lyId'] = id
+            gmbsrow[u'dwmc'] = rowData[u'dwmc']
+            gmbsrow[u'bsbh'] = rowData[u'bsbh']
+            gmbsrow[u'je'] = rowData[u'qrje']
+            gmbsrow[u'username'] = username
+            gmbsrow[u'ly'] = u'交易流水确认'
+            gmbsrow[u'lxr'] = u''
+            gmbsrow[u'sj'] = u''
+            p_insertrow_gmbs(gmbsrow)
+        if rowData[u'qrlx'] == u'投标保证金':
+            tbbzjrow = {}
+            tbbzjrow[u'lyId'] = id
+            tbbzjrow[u'dwmc'] = rowData[u'dwmc']
+            tbbzjrow[u'bsbh'] = rowData[u'bsbh']
+            tbbzjrow[u'ly'] = u'交易流水确认'
+            tbbzjrow[u'je'] = rowData[u'qrje']
+            tbbzjrow[u'username'] = username
+            p_insertrow_tbbzj(tbbzjrow)             
+#########################
+
         db.commit()
         return u"success"
     except Exception as e:
@@ -1387,7 +1436,29 @@ def updaterow_yhlscwqr():
         row[u'cwqrje']+=int(qrje)
         yhlsrow = {}
         yhlsrow[u'cwqrje'] = row[u'cwqrje']
-        updaterow(table_name, yhlsId, yhlsrow)     
+        updaterow(table_name, yhlsId, yhlsrow)
+#########################
+        if rowData[u'qrlx'] == u'购买标书':
+            gmbsrow = {}
+            gmbsrow[u'lyId'] = id
+            gmbsrow[u'dwmc'] = rowData[u'dwmc']
+            gmbsrow[u'bsbh'] = rowData[u'bsbh']
+            gmbsrow[u'je'] = rowData[u'qrje']
+            gmbsrow[u'username'] = username
+            gmbsrow[u'ly'] = u'交易流水确认'
+            gmbsrow[u'lxr'] = u''
+            gmbsrow[u'sj'] = u''
+            p_insertrow_gmbs(gmbsrow)
+        if rowData[u'qrlx'] == u'投标保证金':
+            tbbzjrow = {}
+            tbbzjrow[u'lyId'] = id
+            tbbzjrow[u'dwmc'] = rowData[u'dwmc']
+            tbbzjrow[u'bsbh'] = rowData[u'bsbh']
+            tbbzjrow[u'ly'] = u'交易流水确认'
+            tbbzjrow[u'je'] = rowData[u'qrje']
+            tbbzjrow[u'username'] = username
+            p_insertrow_tbbzj(tbbzjrow)  
+#########################
         db.commit()   
         return u"success"
     except Exception as e:
@@ -1428,7 +1499,7 @@ def updaterow_yhlsqr():
         rowData = request.post_vars
         table_name = u'yhlsqr'
         row = db(db[table_name]._id ==id).select().first()
-        
+        qrlx = row[u'qrlx']
         before_qrje = row[u'qrje']
           
         table_name = u'yhls'
@@ -1447,6 +1518,43 @@ def updaterow_yhlsqr():
         print u"update yhlsqr"
         print rowData
         updaterow(table_name, id, rowData)
+        print u'............'
+############################
+        if rowData[u'qrlx'] == u'购买标书':
+            gmbsrow = {}
+            gmbsrow[u'lyId'] = id
+            gmbsrow[u'dwmc'] = rowData[u'dwmc']
+            gmbsrow[u'bsbh'] = rowData[u'bsbh']
+            gmbsrow[u'je'] = rowData[u'qrje']
+            gmbsrow[u'username'] = username
+            gmbsrow[u'ly'] = u'交易流水确认'
+            gmbsrow[u'lxr'] = u''
+            gmbsrow[u'sj'] = u''            
+            
+            if rowData[u'qrlx']==unicode(qrlx, u'utf-8'):
+                row = db(db.gmbs.lyId == id).select().first()
+                p_updaterow_gmbs(row[u'id'], gmbsrow)
+            else:
+                row = db(db.tbbzj.lyId == id).select().first()
+                p_deleterow_tbbzj(row[u'id'])
+                p_insertrow_gmbs(gmbsrow)
+        if rowData[u'qrlx'] == u'投标保证金':
+            tbbzjrow = {}
+            tbbzjrow[u'lyId'] = id
+            tbbzjrow[u'dwmc'] = rowData[u'dwmc']
+            tbbzjrow[u'bsbh'] = rowData[u'bsbh']
+            tbbzjrow[u'ly'] = u'交易流水确认'
+            tbbzjrow[u'je'] = rowData[u'qrje']
+            tbbzjrow[u'username'] = username
+            if rowData[u'qrlx']==unicode(qrlx, u'utf-8'):
+                row = db(db.tbbzj.lyId == id).select().first()
+                p_updaterow_tbbzj(row[u'id'], tbbzjrow) 
+            else:
+                row = db(db.gmbs.lyId == id).select().first()
+                p_deleterow_gmbs(row[u'id'])
+                p_insertrow_tbbzj(tbbzjrow)            
+  
+############################        
         db.commit()
         return u"success"
     except Exception as e:
@@ -1459,6 +1567,7 @@ def deleterow_yhlsqr():
         table_name = u'yhlsqr'
         id = request.vars.Id
         row = db(db[table_name]._id ==id).select().first()
+        qrlx = row[u'qrlx']
         qrje = row[u'qrje']
         table_name = u'yhls'
         yhlsId = row[u'yhlsId']
@@ -1472,6 +1581,14 @@ def deleterow_yhlsqr():
         print id
         table_name = u'yhlsqr'
         deleterow(table_name, id)
+######################
+        if qrlx == u'购买标书':
+            trow = db(db.gmbs.lyId == id).select().first()
+            p_deleterow_gmbs(trow[u'id'], gmbsrow)
+        if qrlx == u'投标保证金':
+            trow = db(db.tbbzj.lyId == id).select().first()
+            p_deleterow_tbbzj(trow[u'id'], tbbzjrow)   
+######################        
         db.commit()
         return u"success";
     except Exception as e:
@@ -1699,7 +1816,7 @@ def updaterow_pbcy():
         
         updaterow(table_name, id, rowData)
         rowData[u'je'] = rowData[u'zfy']
-        p_updatecwls(id, rowData)
+        p_updatecwls(u'专家评审费',id, rowData)
         db.commit()
         return u"success";
     except:
@@ -1730,7 +1847,7 @@ def deleterow_pbcy():
         print table_name
         print id
         deleterow(table_name, id)
-        p_deletecwls(id)
+        p_deletecwls(u'专家评审费',id)
         db.commit()
         return u"success";
     except:

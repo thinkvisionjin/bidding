@@ -122,7 +122,7 @@ $(document).ready(function() {
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '购标书单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd hh:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '制造商单位中文名称', datafield: 'zzszwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '制造商单位英文名称', datafield: 'zzsywmc', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '制造商国别', datafield: 'zzsgb', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
@@ -146,10 +146,18 @@ $(document).ready(function() {
 															defaultvalue,
 															column, rowdata) {
 														var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printgmbs('+rowdata.Id+')">打印</a>';
+														if(rowdata['ly']=='交易流水确认')
+															{
+															b = '';
+															c = '';
+											
+															}
+														else
+															{
+																b = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="modifygmbs('+rowdata.Id+')">修改</a>';
 
-														var b = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="modifygmbs('+rowdata.Id+')">修改</a>';
-
-														var c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deletegmbs('+rowdata.Id+')">删除</a>';
+																c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deletegmbs('+rowdata.Id+')">删除</a>';
+															}
 														var d = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="detailgmbs('+rowdata.Id+')">详细</a>';
 														var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 6px;">'
 																+ a+b+c+d + '</div>';
