@@ -52,6 +52,7 @@ db.define_table('tbbzj', Field('dwmc'),Field('bsbh'),Field('bzjlx'),Field('je'),
 db.define_table('tbzj', Field('dwmc'),Field('rq'),Field('bsbh'),Field('username'),Field('ly'),Field('khyh'),Field('yhzh'),Field('fkfs'),Field('je'))
 db.define_table('zb', Field('bsbh'),Field('zbdw1'),Field('zbdw2'),Field('zbdw3'),Field('username'),Field('rq'))#########################################################################
 db.define_table('grtjb', Field('xm'),Field('gngk'),Field('gnyq'),Field('dylycg'),Field('jzxtp'),Field('xjcg'),Field('jzxcs'),Field('qt'),Field('gjzb'),Field('zj'))
+
 db.define_table('yhlswj', Field('rq'),Field('wjm'),Field('username'))
 db.define_table('yhls', Field('jysj'),Field('je'),Field('zy'),Field('dfmc'),Field('dfzh'),Field('qrje'),Field('cwqrje'),Field('wjmId'), Field('wjm'))
 db.define_table('yhlsqr', Field('dwmc'),Field('bsbh'),Field('qrlx'),Field('rq'),Field('qrje'),Field('yhlsId'),Field('cwqrbz'),Field('username'))
@@ -61,5 +62,3 @@ db.define_table('pbcy', Field('bsbh'),Field('zjxx'),Field('zfy'),Field('username
 db.define_table('zj', Field('xm'),Field('gzdw'),Field('username'),Field('rq'))
 db.define_table('rcb', Field('description'),Field('applyuser'),Field('bsbh'),Field('subject'),Field('calendar'),Field('rcbstart'),Field('rcbend'),Field('rcbid'),Field('rq'))
 
-## after defining tables, uncomment below to enable auditing
-# auth.enable_record_versioning(db)

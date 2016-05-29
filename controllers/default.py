@@ -10,8 +10,10 @@
 from datetime import datetime
 from decimal import *
 from _sqlite3 import Row
-from pip.util import file_contents
-import xlrd
+import time
+
+T.force('zh-cn')
+
 @auth.requires_login()
 def index():
     """
@@ -175,11 +177,12 @@ def update():
     db.commit()
     return dict(table=table_name)
 
+@auth.requires_login()
 def select():
     table_name = request.vars.table
     print u'select data from:'  +table_name +'**************'
     dic_rows = []
-    for row in db().select(db[table_name].ALL):
+    for row in db().select(db[table_name].ALL,orderby=~db[table_name].id):
         dict_row = {}
         for key in row.keys():
             if (key!= u'update_record' and key!= u'delete_record'):
@@ -217,8 +220,10 @@ def getDictionaries():
     dictionaries["ManagementStyle"] = sqltojson(strSQL)
     strSQL = u"select  Id,Name from [bidding].[dbo].[ProjectStatus]"
     dictionaries["ProjectStatus"] = sqltojson(strSQL)
-    strSQL = u"select  Id,Name from [bidding].[dbo].[Employee]"
-    dictionaries["Employee"] = sqltojson(strSQL)
+    strSQL = u"select  Id,chinesename as Name from [bidding].[dbo].[auth_user]"
+    dictionaries["Employee"] = sqltojson(strSQL,'gbk')
+    strSQL = u"select  TypeId,TypeName from [bidding].[dbo].[ProtocolCodeType]"
+    dictionaries["ProtocolCodeType"] = sqltojson(strSQL)
     return json.dumps(dictionaries,ensure_ascii=False)
 
 def mainframe():
@@ -232,6 +237,13 @@ def upload():
 
 def xybh():
     return dict();
+def xybh_ss():
+    searchkey = request.vars.searchkey
+    strSQL = u"select *  from [bidding].[dbo].[ProtocolCode] where  ProtocolNumber like '%" +unicode(searchkey)+u"%' order by Id desc";
+    print  strSQL
+    protocols=sqltojson(strSQL)
+    return protocols
+
 def xmbh():
     return dict();
 def xmgl():
@@ -251,6 +263,18 @@ def SelectPackagesByProjectId():
     id = request.vars.id
     strSQL = u"select * from [bidding].[dbo].[ProjectPackage] where  ProjectId = " +id;
     return sqltojson(strSQL)
+
+def GenerateProtocolCode(protocal_type,id):
+    protocol_code = "SPMCEC-"+time.strftime('%y')
+    if protocal_type == u'0':
+        protocol_code += 'ZC'
+    if protocal_type == u'1':
+        protocol_code += 'SM'
+    if protocal_type == u'2':
+        protocol_code += 'ND'
+    if protocal_type == u'3':
+        protocol_code += 'QT'
+    return protocol_code+unicode(id).zfill(5);
 
 def GenerateProjectCode(project,id):
     ProjectCode = u"2016" 
@@ -345,7 +369,36 @@ def CreateNewProject():
     result= json.dumps(dict_row,ensure_ascii=False)
     return result
 
-
+def CreateNewProtocol():
+    print 'CreateNewProtocal'
+    rowData = request.post_vars
+    print rowData
+    for key in rowData:
+        rowData[key] = rowData[key].decode('utf-8')
+    id = db['ProtocolCode'].insert(**rowData)
+    print id 
+    db.commit()
+    updateProtocolStr = u"update [bidding].[dbo].[ProtocolCode]  set ProtocolNumber = '"+GenerateProtocolCode(rowData['TypeId'],id)+u"' where id ="+unicode(id)
+    print updateProtocolStr
+    db.executesql(updateProtocolStr)
+    db.commit()
+    row = db(db['ProtocolCode']._id ==id).select().first()
+    print row
+    dict_row = {}
+    for key in row.keys():
+        if (key!= u'update_record' and key!= u'delete_record'):
+                if key==u'id':
+                    dict_row[u'Id']  = row[key]
+                elif isinstance(row[key], bool):
+                    dict_row[key] = row[key]
+                elif isinstance(row[key], str):
+                    dict_row[key] = row[key].decode('utf-8')
+                elif isinstance(row[key], datetime):
+                    dict_row[key] = unicode(row[key])
+                else:
+                    dict_row[key] = row[key]
+    result= json.dumps(dict_row,ensure_ascii=False)
+    return result
 
 
 def getyhls():
@@ -366,14 +419,20 @@ def getappointment():
 def getmeetroom():
     redirect(URL('../../static/data/appointment.txt'))
 
-def sqltojson(sql):
+def sqltojson(sql,decode=None):
     dic_rows=[]
     rows = db.executesql(sql, as_dict=True)
     for row in rows:
         print row
         dict_row = {}
         for key in row.keys():
-            dict_row[key] = unicode(row[key])
+            if decode!=None :
+                if isinstance(row[key],int):
+                    dict_row[key] = row[key]
+                else:
+                    dict_row[key] = row[key].decode(decode);
+            else:
+                dict_row[key] = unicode(row[key])
         dic_rows.append(dict_row)
     return json.dumps(dic_rows) 
 
