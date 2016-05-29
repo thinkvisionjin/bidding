@@ -1,6 +1,4 @@
 
-var gCustomer ;
-
 function addselectfieldwindows()
 {
 	$(document.body).append('<div id="popupWindow" ><div>字段选择</div><div style="overflow: hidden;"><div  id="zdlistbox"></div></div></div>');
@@ -8,6 +6,7 @@ function addselectfieldwindows()
 	 var listSource = [{ label: '序号', value: 'Id', checked: false },
 	                   { label: '项目编号', value: 'ProjectCode', checked: true },
 	                   { label: '项目名称', value: 'ProjectName', checked: true },
+	                   { label: '协议编号', value: 'ProtocolCodeId', checked: false },
 	                   { label: '项目类型', value: 'ProjectTypeId', checked: true },
 	                   { label: '采购单位', value: 'CustomerId', checked: true },
 	                   { label: '负责人', value: 'EmployeeId', checked: true },
@@ -39,8 +38,8 @@ function addselectfieldwindows()
     });	
 }
 
-function InitProjectGrid(dict){
-	var datafields_content = [
+var data_url = "/bidding/default/SelectProjectsSummary"
+var datafields_content = [
 	                          {"name":"Id","type":"string"},
 	                          {"name":"ProtocolCodeId","type":"string"},
 	                          {"name":"ProjectCode","type":"string"},
@@ -63,44 +62,59 @@ function InitProjectGrid(dict){
 	                          {"name":"EntrustMoney","type":"string"},
 	                          {"name":"WinningMoney","type":"string"}
 	                          ]
-    var data_url = "/bidding/default/SelectProjectsSummary"
-    var source =
-    {
-        url: data_url,
-        datatype: "json",
-        datafields:datafields_content,
-        updaterow: function (rowid, rowdata, commit) {
-            // synchronize with the server - send update command
-            // call commit with parameter true if the synchronization with the server is successful 
-            // and with parameter false if the synchronization failed.
-        $.post("/bidding/default/update?table=Project",rowdata,function(result){
-        		 alert("操作成功！");
-        	 });
-            commit(true);
-        },
-        deleterow: function (rowid, commit) {
-            // synchronize with the server - send delete command
-            // call commit with parameter true if the synchronization with the server is successful 
-            // and with parameter false if the synchronization failed.
-        	var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', rowid);
-        	$.post("/bidding/default/delete?table=Project",dataRecord,function(result){
-       		 alert("操作成功！");
-       	 });
-            commit(true);
-        },
-        addrow: function (rowid, rowdata, position, commit) {
-            // synchronize with the server - send insert command
-            // call commit with parameter true if the synchronization with the server was successful. 
-            // and with parameter false if the synchronization has failed.
-            // you can pass additional argument to the commit callback which represents the new ID if it is generated from a Database. Example: commit(true, idInDB) where "idInDB" is the row's ID in the Database.
-            commit(true);
-        },
-    };
+var source =
+{
+    url: data_url,
+    datatype: "json",
+    datafields:datafields_content,
+    updaterow: function (rowid, rowdata, commit) {
+        // synchronize with the server - send update command
+        // call commit with parameter true if the synchronization with the server is successful 
+        // and with parameter false if the synchronization failed.
+    $.post("/bidding/default/update?table=Project",rowdata,function(result){
+    		 alert("操作成功！");
+    	 });
+        commit(true);
+    },
+    deleterow: function (rowid, commit) {
+        // synchronize with the server - send delete command
+        // call commit with parameter true if the synchronization with the server is successful 
+        // and with parameter false if the synchronization failed.
+    	var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', rowid);
+    	$.post("/bidding/default/delete?table=Project",dataRecord,function(result){
+   		 alert("操作成功！");
+   	 });
+        commit(true);
+    },
+    addrow: function (rowid, rowdata, position, commit) {
+        // synchronize with the server - send insert command
+        // call commit with parameter true if the synchronization with the server was successful. 
+        // and with parameter false if the synchronization has failed.
+        // you can pass additional argument to the commit callback which represents the new ID if it is generated from a Database. Example: commit(true, idInDB) where "idInDB" is the row's ID in the Database.
+        commit(true);
+    },
+};
+
+function InitProjectGrid(dict){
+	
+   
+    
     var dataAdapter = new $.jqx.dataAdapter(source);
     var editrow = -1;
     var columns_content  =[{"datafield":"Id","text":"序号",width: "80", cellsalign: 'center', align: 'center',hidden:true,},
                            {"datafield":"ProjectCode","text":"项目编号", width: "185", cellsalign: 'center', align: 'center'},
                            {"datafield":"ProjectName","text":"项目名称", width: "190", cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProtocolCodeId","text":"协议编号", width: "190", cellsalign: 'center', align: 'center',hidden:true,
+                        	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
+                     		  var label="";
+                    		  pt = JSON.parse(dict.ProtocolCode)
+                    		  for(i=0;i<pt.length;i++){
+                    			  if(pt[i].Id==value.toString()) {
+                    				  label = pt[i].ProtocolNumber
+                    			  }
+                    		  }
+               		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
+                           }},             
                            {"datafield":"ProjectTypeId","text":"项目类型", width: "180", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		  var label="";
@@ -112,7 +126,7 @@ function InitProjectGrid(dict){
                         		  }
                    		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                                }},
-                           {"datafield":"CustomerId","text":"采购单位", width: "180", cellsalign: 'center', align: 'center',hidden:true,
+                           {"datafield":"CustomerId","text":"采购单位", width: "180", cellsalign: 'center', align: 'center',hidden:false,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		   var label="";
                          		  pt = JSON.parse(dict.Customer)
@@ -209,14 +223,16 @@ function InitProjectGrid(dict){
 	                          {"datafield":"EntrustMoney","text":"委托金额合计", width: "120", cellsalign: 'center', align: 'center',hidden:true},
 	                          {"datafield":"WinningMoney","text":"中标金额合计", width: "120", cellsalign: 'center', align: 'center',hidden:true},
                            {
-                               text: '操作', editable: false, datafield: 'edit',width: "250", cellsalign: 'center', align: 'center',
+                               text: '操作', editable: false, datafield: 'edit',width: "120", cellsalign: 'center', align: 'center',
                                cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                               var a = '<a style="padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/xmglmxv?id='+rowdata.Id + '">查看</a>';
-                               var b = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/xmglmx?id='+rowdata.Id + '">查看详情</a>';
-                               var c = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="gmbs.html">购买标书</a>';
-                               var d = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="tbzj.html">退保证金</a>';
-                               var e = '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+b+c+d+'</div>';
-                               return e;
+                               
+                               var a = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/xmglmx?id='+rowdata.Id + '">查看详情</a>';
+                               var b = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="gmbs.html">购买标书</a>';
+                               var c = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="tbbzj.html">缴保证金</a>';
+                               var d = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="zb.html">中标管理</a>';
+                               var e = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="tbzj.html">退保证金</a>';
+                               var f = '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+a+'</div>';
+                               return f;
                                }
                              }]            
     var outerDataAdapter = new $.jqx.dataAdapter(source, { autoBind: true });
@@ -298,12 +314,17 @@ function InitProjectGrid(dict){
 }
 
 function InitSearchArea(dict){
-	BindProjectName("#ProjectName_SEARCH")   //input 
+	BindProjectNameOnly("#ProjectName_SEARCH")   //input 
 	$("#ProjectName_SEARCH_Button").jqxButton({ template: "success",height: '19px'});
 	$("#ProjectName_SEARCH_Button").click(function (event) {
-         $("#jqxgrid").jqxGrid({ source:dataAdapter });
+		searchkey = "where "
+		searchkey += "[ProjectName] like '%"+$("#ProjectName_SEARCH").val();
+		source.url = "xmgl_ss?searchkey=" + searchkey;
+		dataAdapter = new $.jqx.dataAdapter(source);
+		$("#jqxgrid").jqxGrid({ source: dataAdapter });
      });
 	$("#ProjectName_ADSEARCH_Button").jqxToggleButton({template: "success", width: '100', toggled: false,height: '19px'});
+	
 	$("#ProjectName_ADSEARCH_Button").click(function (event) {
 		 var toggled = $("#ProjectName_ADSEARCH_Button").jqxToggleButton('toggled');
          if (toggled) {
@@ -339,14 +360,18 @@ function InitNewProjectWindow(dict){
    BindEmployee("#NewProject_Assistant",dict.Employee)
    //项目状态
    BindProjectStatus("#NewProject_ProjectStatus",dict.ProjectStatus)
+   //协议编号
+   BindProtocolNumberWithID("#NewProject_ProtocolCode",dict.ProtocolCode)
+   
+   
 	//项目创建时间
 	$("#NewProject_CreationDate").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
 	//初始化创建项目的loader
 	$("#Loader_CreatingNewProject").jqxLoader({ width: 100, height: 60, imagePosition: 'top' });
 	//初始化整个Window
-	$("#popupWindow_NewProject").jqxWindow({ showCollapseButton: true,
+	$("#popupWindow_NewProject").jqxWindow({ showCollapseButton: true,isModal: true,
     	width: 650, 
-    	height:340,autoOpen: false, cancelButton: $("#NewProject_Cancel"), modalOpacity: 0.01 });    
+    	height:400,autoOpen: false, cancelButton: $("#NewProject_Cancel"), modalOpacity: 0.40 });    
 	$("#NewProject_Cancel").jqxButton({ theme: theme });
     $("#NewProject_Cance").click(function () {
     	$("#popupWindow_NewProject").jqxWindow('hide');
@@ -354,7 +379,9 @@ function InitNewProjectWindow(dict){
     $("#NewProject_Save").jqxButton({ theme: theme, template:"success"  });
     $("#NewProject_Save").click(function () {
 		//添加成功后弹出项目编号创建成功的界面，告知操作人员项目已添加了
-		var row = {ProjectName:$("#NewProject_ProjectName").val()
+		var row = {
+		 ProtocolCodeId:$("#NewProject_ProtocolCode").val()
+		,ProjectName:$("#NewProject_ProjectName").val()
 		,CustomerId:$("#NewProject_Customer").val(),EmployeeId:$("#NewProject_Employee").val(),Assistant:$("#NewProject_Assistant").val(),ProjectSourceId:$("#NewProject_ProjectSource").val()
 		,FundingSourceId:$("#NewProject_FundingSource").val(),ProjectTypeId:$("#NewProject_ProjectType").val(),ManagementStyleId:$("#NewProject_ManagementStyle").val(),PurchaseStyleId:$("#NewProject_PurchaseStyle").val()
 		,ProjectStatusId:$("#NewProject_ProjectStatus").val(),CreationDate:$("#NewProject_CreationDate").val(),IsDelete:'0'
@@ -403,8 +430,7 @@ function AdvancedSearchContent(action,dict){
 
 $(document).ready(function () {
 	
-	$.get("/bidding/default/getDictionaries",function(result){
-			dict = result
+	$.get("/bidding/default/getDictionaries",function(dict){
 			InitSearchArea(dict);
 		    addselectfieldwindows();
 			InitProjectGrid(dict);

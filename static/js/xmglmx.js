@@ -283,7 +283,7 @@ function InitProjectPackageGrid(dict,project){
 }
 
 function InitProjectDocumentGrid(dict,project){
-
+	gmbs_init();
     var source =
     {
         url: "select_gmbs",
@@ -351,7 +351,7 @@ function InitProjectDocumentGrid(dict,project){
             deleteButton.jqxButton({ template: "danger" });
             columnSettingButton.jqxButton({ template: "inverse" });
             addNewButton.click(function (event) {
-            	gmbs_init();
+            	
             	gmbs_popupwindow("add", "", function(){
             		$("#EditProject_DocumentTable").jqxGrid({ source:dataAdapter });
             	});
@@ -444,6 +444,7 @@ function InitProjectDocumentGrid(dict,project){
 }
 
 function InitProjectMarginGrid(dict,project){
+	tbzj_init ()
 	var data = generatedata(7);
     var source =
     {
@@ -510,7 +511,7 @@ function InitProjectMarginGrid(dict,project){
             deleteButton.jqxButton({ template: "danger" });
             columnSettingButton.jqxButton({ template: "inverse" });
             addNewButton.click(function (event) {
-            	tbzj_init ()
+            	
             	tbzj_popupwindow('add', '', function(){
             		//refresh the grid when load completed
             		$("#EditProject_MarginTable").jqxGrid({ source:dataAdapter });

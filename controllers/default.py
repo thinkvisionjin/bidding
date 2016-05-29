@@ -224,6 +224,8 @@ def getDictionaries():
     dictionaries["Employee"] = sqltojson(strSQL,'gbk')
     strSQL = u"select  TypeId,TypeName from [bidding].[dbo].[ProtocolCodeType]"
     dictionaries["ProtocolCodeType"] = sqltojson(strSQL)
+    strSQL = u"select Id,ProtocolNumber from [bidding].[dbo].[ProtocolCode]"
+    dictionaries["ProtocolCode"] = sqltojson(strSQL)
     return json.dumps(dictionaries,ensure_ascii=False)
 
 def mainframe():
@@ -248,11 +250,29 @@ def xmbh():
     return dict();
 def xmgl():
     return dict();
+def xmgl_ss():
+    searchkey = request.vars.searchkey
+    strSQL = u'''select  a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete],
+      count(b.Id) as PackageCount,
+      count(b.Id) as DocumentBuyerCount,
+      count(b.Id) as BidderCount,
+      count(b.Id) as MarginCount,
+      count(b.Id) as ReturnMarginCount,
+      sum(isnull(b.EntrustMoney,0)) as EntrustMoney,
+      sum(isnull(b.WinningMoney,0)) as WinningMoney 
+      from [dbo].[Project] a left join [dbo].[ProjectPackage] b on a.id= b.ProjectId ''' + searchkey.decode(u'utf-8') +u"%'" + u'''group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete]
+      order by a.[Id] desc ''' 
+    print  strSQL
+    protocols=sqltojson(strSQL)
+    return protocols
+
+
 def xmglmx():
     id = request.vars.id
     strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  Id = " +id;
     project=sqltojson(strSQL)
     return dict(project=project)
+
 def xmglmxv():
     id = request.vars.id
     strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  Id = " +id;
@@ -339,19 +359,57 @@ def gmbs():
     return dict();
 
 def CreateNewProject():
-    print 'CreateNewProject'
+    print u'CreateNewPackage'
     rowData = request.post_vars
     print rowData
     for key in rowData:
-        rowData[key] = rowData[key].decode('utf-8')
-    id = db['Project'].insert(**rowData)
+        rowData[key] = rowData[key].decode(u'utf-8')
+    id = db[u'Project'].insert(**rowData)
     print id 
     db.commit()
     updateProjectStr = u"update [bidding].[dbo].[Project]  set ProjectCode = '"+GenerateProjectCode(rowData,id)+u"' where id ="+unicode(id)
     print updateProjectStr
     db.executesql(updateProjectStr)
     db.commit()
-    row = db(db['Project']._id ==id).select().first()
+    row = db(db[u'Project']._id ==id).select().first()
+    print row
+    initPackage = {}
+    initPackage[u"ProjectId"] = id
+    initPackage[u"PackageNumber"] = unicode(row["ProjectCode"])+u'-01'
+    initPackage[u"PackageName"] = row["ProjectName"].decode(u'utf-8')
+    initPackage[u"StateId"] = row["ProjectStatusId"]
+    initPackage[u"CreationDate"] = ''
+    initPackage[u"IsDelete"] = '0'
+    CreateNewPackage(initPackage)
+    dict_row = {}
+    for key in row.keys():
+        if (key!= u'update_record' and key!= u'delete_record'):
+                if key==u'id':
+                    dict_row[u'Id']  = row[key]
+                elif isinstance(row[key], bool):
+                    dict_row[key] = row[key]
+                elif isinstance(row[key], str):
+                    dict_row[key] = row[key].decode(u'utf-8')
+                elif isinstance(row[key], datetime):
+                    dict_row[key] = unicode(row[key])
+                else:
+                    dict_row[key] = row[key]
+    result= json.dumps(dict_row,ensure_ascii=False)
+    return result
+
+def CreateNewPackage(rowData):
+    print u'CreateNewPackage'
+    print rowData
+    for key in rowData:
+        rowData[key] = rowData[key]
+    id = db['ProjectPackage'].insert(**rowData)
+    print id 
+    db.commit()
+#     updateProjectStr = u"update [bidding].[dbo].[Project]  set ProjectCode = '"+GenerateProjectCode(rowData,id)+u"' where id ="+unicode(id)
+#     print updateProjectStr
+#     db.executesql(updateProjectStr)
+#     db.commit()
+    row = db(db['ProjectPackage']._id ==id).select().first()
     print row
     dict_row = {}
     for key in row.keys():
@@ -400,7 +458,6 @@ def CreateNewProtocol():
     result= json.dumps(dict_row,ensure_ascii=False)
     return result
 
-
 def getyhls():
     print "getyhls"
     redirect(URL('../../static/data/yhls.txt'))
@@ -439,8 +496,6 @@ def sqltojson(sql,decode=None):
 def getzbgg():
     return sqltojson(u'SELECT top 10 [id],[title],[addtime] FROM [zhaobiao].[dbo].[Zbgg] order by addtime desc')
 
-
-    
 def zbgg():
     content = """<p style="text-indent:21pt;margin:0cm 0cm 0pt;mso-char-indent-count:2.0;" class="MsoNormal"><span style="font-size:small;"><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">兰州军区医疗设备网上招标采购兰州评标中心受军区卫生部委托，就以下项目组织公开招标采购，欢迎国内合格的供应商前来投标。</span><span style="font-family:Calibri;"> </span></span></p>
 <p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">1. </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">项目名称：</span><span lang="EN-US"><a href="http://www.sohunj.com/member/caigou/moban_view.aspx?id=4851"><span style="font-family:宋体;color:windowtext;text-decoration:none;mso-hansi-font-family:Calibri;text-underline:none;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;" lang="EN-US"><span lang="EN-US">临床诊断听力计</span></span><span style="color:windowtext;text-decoration:none;text-underline:none;"><span style="font-family:Calibri;">+</span></span><span style="font-family:宋体;color:windowtext;text-decoration:none;mso-hansi-font-family:Calibri;text-underline:none;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;" lang="EN-US"><span lang="EN-US">中耳分析仪</span></span></a></span></span></p>

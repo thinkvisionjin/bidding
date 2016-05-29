@@ -43,6 +43,55 @@ function BindProtocolNumber(documentObject,localdata,project){
 }
 
 
+function BindProtocolNumberWithID(documentObject,localdata,project){
+	
+	if (localdata == undefined) {
+		var source = {
+			datatype: "json",
+	        datafields: [
+	            { name: 'Id' },    
+	            { name: 'ProtocolNumber' },
+	        ],
+	        url: "/bidding/default/select?table=ProtocolCode",
+	        async: true
+		}
+	} else {
+		
+		var source = {
+			datatype: "json",
+			datafields: [
+			    {name: 'Id' }, 
+	            {name: 'ProtocolNumber' },
+	        ],
+			localdata: localdata
+		}
+	}
+	var dataAdapter = new $.jqx.dataAdapter(source, {
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapter.records;
+            var length = records.length;
+            if (project != undefined) {
+				var items = $(documentObject).jqxDropDownList('getItems');
+				var item = $(documentObject).jqxDropDownList('getItemByValue', project.Id);
+				$(documentObject).jqxDropDownList('selectItem', item);
+			}
+			$(documentObject).on('select', function (event) {
+				var args = event.args;
+				var item = $(documentObject).jqxDropDownList('getItem', args.index);
+			});
+        }
+    });
+	$(documentObject).jqxDropDownList(
+		{
+			source: dataAdapter, 
+			valueMember: "Id",
+			displayMember: "ProtocolNumber", 
+			width: '200', height: '23'
+		});
+}
+
+
 function BindProtocolType(documentObject,localdata,project){
 	
 	if (localdata == undefined) {
@@ -92,6 +141,49 @@ function BindProtocolType(documentObject,localdata,project){
 		});
 }
 
+
+function BindProjectNameOnly(documentObject, localdata, project){
+	if (localdata == undefined) {
+		var source = {
+			datatype: "json",
+			datafields: [
+				{ name: 'ProjectName' }
+			],
+			url: "/bidding/default/select?table=Project",
+			async: true
+		}
+	} else {
+		var source = {
+			datatype: "json",
+			datafields: [
+				{ name: 'ProjectName' }
+			],
+			localdata: localdata
+		}
+	}
+	var dataAdapter = new $.jqx.dataAdapter(source, {
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapter.records;
+            var length = records.length;
+			if (project != undefined) {
+				var items = $(documentObject).jqxDropDownList('getItems');
+				var item = $(documentObject).jqxDropDownList('getItemByValue', project.Id);
+				$(documentObject).jqxDropDownList('selectItem', item);
+			}
+			$(documentObject).on('select', function (event) {
+				var args = event.args;
+				var item = $(documentObject).jqxDropDownList('getItem', args.index);
+			});
+        }
+    });
+	$(documentObject).jqxInput(
+		{
+			source: dataAdapter,
+			displayMember: "ProjectName",
+			width: '200', height: '25'
+		});
+}
 
 function BindProjectName(documentObject, localdata, project) {
 	if (localdata == undefined) {
