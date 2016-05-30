@@ -6,7 +6,7 @@ html
 	font-family: 'Microsoft YaHei', Arial;
 	font-size: 12px;
 }
-
+body{ margin:0; height:100%; }
 .MdyBtn {
 	cursor : pointer;
 	border-color : #C2DBEA;

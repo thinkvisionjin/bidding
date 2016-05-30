@@ -7,6 +7,7 @@ $(document).ready(function () {
 //			$("#yh").jqxButton({ theme: theme });
 //			$("#yh1").jqxButton({ theme: theme });
 //			$('#jqxTree').jqxTree({ height: '300px', width: '300px'});
+		authuser_password_init();
         });
 		function addTabs(frameid, url)
 		{

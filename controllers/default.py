@@ -224,6 +224,8 @@ def getDictionaries():
     dictionaries["Employee"] = sqltojson(strSQL,'gbk')
     strSQL = u"select  TypeId,TypeName from [bidding].[dbo].[ProtocolCodeType]"
     dictionaries["ProtocolCodeType"] = sqltojson(strSQL)
+    strSQL = u"select Id,ProtocolNumber from [bidding].[dbo].[ProtocolCode]"
+    dictionaries["ProtocolCode"] = sqltojson(strSQL)
     return json.dumps(dictionaries,ensure_ascii=False)
 
 def mainframe():
@@ -248,11 +250,29 @@ def xmbh():
     return dict();
 def xmgl():
     return dict();
+def xmgl_ss():
+    searchkey = request.vars.searchkey
+    strSQL = u'''select  a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete],
+      count(b.Id) as PackageCount,
+      count(b.Id) as DocumentBuyerCount,
+      count(b.Id) as BidderCount,
+      count(b.Id) as MarginCount,
+      count(b.Id) as ReturnMarginCount,
+      sum(isnull(b.EntrustMoney,0)) as EntrustMoney,
+      sum(isnull(b.WinningMoney,0)) as WinningMoney 
+      from [dbo].[Project] a left join [dbo].[ProjectPackage] b on a.id= b.ProjectId ''' + searchkey.decode(u'utf-8') +u"%'" + u'''group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete]
+      order by a.[Id] desc ''' 
+    print  strSQL
+    protocols=sqltojson(strSQL)
+    return protocols
+
+
 def xmglmx():
     id = request.vars.id
     strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  Id = " +id;
     project=sqltojson(strSQL)
     return dict(project=project)
+
 def xmglmxv():
     id = request.vars.id
     strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  Id = " +id;
@@ -339,19 +359,57 @@ def gmbs():
     return dict();
 
 def CreateNewProject():
-    print 'CreateNewProject'
+    print u'CreateNewPackage'
     rowData = request.post_vars
     print rowData
     for key in rowData:
-        rowData[key] = rowData[key].decode('utf-8')
-    id = db['Project'].insert(**rowData)
+        rowData[key] = rowData[key].decode(u'utf-8')
+    id = db[u'Project'].insert(**rowData)
     print id 
     db.commit()
     updateProjectStr = u"update [bidding].[dbo].[Project]  set ProjectCode = '"+GenerateProjectCode(rowData,id)+u"' where id ="+unicode(id)
     print updateProjectStr
     db.executesql(updateProjectStr)
     db.commit()
-    row = db(db['Project']._id ==id).select().first()
+    row = db(db[u'Project']._id ==id).select().first()
+    print row
+    initPackage = {}
+    initPackage[u"ProjectId"] = id
+    initPackage[u"PackageNumber"] = unicode(row["ProjectCode"])+u'-01'
+    initPackage[u"PackageName"] = row["ProjectName"].decode(u'utf-8')
+    initPackage[u"StateId"] = row["ProjectStatusId"]
+    initPackage[u"CreationDate"] = ''
+    initPackage[u"IsDelete"] = '0'
+    CreateNewPackage(initPackage)
+    dict_row = {}
+    for key in row.keys():
+        if (key!= u'update_record' and key!= u'delete_record'):
+                if key==u'id':
+                    dict_row[u'Id']  = row[key]
+                elif isinstance(row[key], bool):
+                    dict_row[key] = row[key]
+                elif isinstance(row[key], str):
+                    dict_row[key] = row[key].decode(u'utf-8')
+                elif isinstance(row[key], datetime):
+                    dict_row[key] = unicode(row[key])
+                else:
+                    dict_row[key] = row[key]
+    result= json.dumps(dict_row,ensure_ascii=False)
+    return result
+
+def CreateNewPackage(rowData):
+    print u'CreateNewPackage'
+    print rowData
+    for key in rowData:
+        rowData[key] = rowData[key]
+    id = db['ProjectPackage'].insert(**rowData)
+    print id 
+    db.commit()
+#     updateProjectStr = u"update [bidding].[dbo].[Project]  set ProjectCode = '"+GenerateProjectCode(rowData,id)+u"' where id ="+unicode(id)
+#     print updateProjectStr
+#     db.executesql(updateProjectStr)
+#     db.commit()
+    row = db(db['ProjectPackage']._id ==id).select().first()
     print row
     dict_row = {}
     for key in row.keys():
@@ -400,7 +458,6 @@ def CreateNewProtocol():
     result= json.dumps(dict_row,ensure_ascii=False)
     return result
 
-
 def getyhls():
     print "getyhls"
     redirect(URL('../../static/data/yhls.txt'))
@@ -429,8 +486,11 @@ def sqltojson(sql,decode=None):
             if decode!=None :
                 if isinstance(row[key],int):
                     dict_row[key] = row[key]
+                elif isinstance(row[key], str):
+                    print row[key]
+                    dict_row[key] = row[key].decode(u'gbk')
                 else:
-                    dict_row[key] = row[key].decode(decode);
+                    dict_row[key] = row[key]#.decode(decode);
             else:
                 dict_row[key] = unicode(row[key])
         dic_rows.append(dict_row)
@@ -439,8 +499,6 @@ def sqltojson(sql,decode=None):
 def getzbgg():
     return sqltojson(u'SELECT top 10 [id],[title],[addtime] FROM [zhaobiao].[dbo].[Zbgg] order by addtime desc')
 
-
-    
 def zbgg():
     content = """<p style="text-indent:21pt;margin:0cm 0cm 0pt;mso-char-indent-count:2.0;" class="MsoNormal"><span style="font-size:small;"><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">兰州军区医疗设备网上招标采购兰州评标中心受军区卫生部委托，就以下项目组织公开招标采购，欢迎国内合格的供应商前来投标。</span><span style="font-family:Calibri;"> </span></span></p>
 <p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">1. </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">项目名称：</span><span lang="EN-US"><a href="http://www.sohunj.com/member/caigou/moban_view.aspx?id=4851"><span style="font-family:宋体;color:windowtext;text-decoration:none;mso-hansi-font-family:Calibri;text-underline:none;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;" lang="EN-US"><span lang="EN-US">临床诊断听力计</span></span><span style="color:windowtext;text-decoration:none;text-underline:none;"><span style="font-family:Calibri;">+</span></span><span style="font-family:宋体;color:windowtext;text-decoration:none;mso-hansi-font-family:Calibri;text-underline:none;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;" lang="EN-US"><span lang="EN-US">中耳分析仪</span></span></a></span></span></p>
@@ -768,6 +826,7 @@ def insertrow_gmbs():
         return u"fail"
 def p_deleterow_gmbs(id):
     table_name = u'gmbs'
+    print table_name
     deleterow(table_name, id)
     p_deletecwls(u'购买标书',id)
         
@@ -775,12 +834,11 @@ def deleterow_gmbs():
     try:
         
         id = request.vars.Id
-        print table_name
-        print id
         p_deleterow_gmbs(id)
         db.commit()
         return u"success"
-    except:
+    except Exception as e:
+        print e
         db.rollback()
         return u"fail"    
     
@@ -956,7 +1014,6 @@ def p_deleterow_tbbzj(id):
 def deleterow_tbbzj():
     try:
         id = request.vars.Id
-        print table_name
         print id
         p_deleterow_tbbzj(id)
         db.commit()
@@ -2011,3 +2068,149 @@ def deleterow_rcb():
         print e
         db.rollback()
         return u"fail";            
+    
+    
+#主页
+def auth_user():
+    return dict();
+
+def select_auth_user():
+    try:
+        username = request.vars.username    
+        if username==None:
+            username=u''
+        where = u"and username like '%"+username+u"%'"
+    
+
+        chinesename = request.vars.chinesename
+        if chinesename==None:
+            chinesename=u''
+        where += u"and chinesename like '%"+chinesename+u"%'"        
+        sql = u"""select a.*, b.role as role from auth_user a, auth_group b, auth_membership c
+         where a.id=c.user_id and c.group_id = b.id """ +where ;
+        print sql   
+        return sqltojson(sql, u'utf-8');
+    except Exception as e:
+        print e
+        return u"fail";
+def getauth_userpz():
+    result = {};
+    sql = u"""select id,role from auth_group""";   
+    result[u'role'] = sqltoarray(sql);    
+    return json.dumps(result)
+
+def testcypt():
+    crypt = CRYPT()(u'public')[0]
+    str = 'pbkdf2(1000,20,sha512)$834ee4458f59522a$9dce6b33f65c5b548b444b64c3cc3547bf29a19a'
+    if crypt == str:
+        return u'success'
+    else:
+        return u'fail'
+    return unicode(str(CRYPT(salt=u'834ee4458f59522a')(u'public')[0]), u'utf-8')
+
+def insertrow_auth_user():
+    try:
+        table_name = u'auth_user'
+        row={}
+        rowData = request.post_vars
+        row[u'username'] = rowData[u'username']
+        row[u'chinesename'] = rowData[u'chinesename']
+
+#        row[u'password'] = str(CRYPT()(rowData[u'password'])[0])
+        print u"insertrow auth_user"
+        print row
+        id = insertrow(table_name, row)
+        table_name = u'auth_membership'
+        row={}
+        row[u'user_id'] = id
+        row[u'group_id'] = rowData[u'role']
+        insertrow(table_name, row)
+        db.commit()
+        return u"success";
+    except Exception as e:
+        db.rollback()
+        print e
+        return u"fail";
+    
+def selectone_auth_user():
+    try:
+        table_name = u'auth_user'
+        sql = u"""select a.*, b.id as role from auth_user a, auth_group b, auth_membership c
+         where a.id=c.user_id and c.group_id = b.id and a.Id="""+request.vars.Id;
+        return sqltojson(sql, u'utf-8');
+    except:
+        return u"fail";
+
+def updaterow_auth_user():
+    try:
+        table_name = u'auth_user'
+        id = request.vars.Id
+        row={}
+        rowData = request.post_vars
+        row[u'username'] = rowData[u'username']
+        row[u'chinesename'] = rowData[u'chinesename']
+        updaterow(table_name, id, row)
+        table_name = u'auth_membership'
+        row={}
+        row[u'group_id'] = rowData[u'role']
+        db(db[table_name].user_id == id).update(**row)
+        db.commit()
+        return u"success";
+    except:
+        db.rollback()
+        return u"fail";
+    
+def updaterow_password_auth_user():
+    try:
+        table_name = u'auth_user'
+        id = request.vars.Id
+        rowData = request.post_vars
+        row={}
+        row[u'password'] = str(CRYPT()(rowData[u'password'])[0])
+        updaterow(table_name, id, row)
+        return u"success";
+    except:
+        return u"fail";    
+
+def deleterow_auth_user():
+    try:
+        table_name = u'auth_user'
+        id = request.vars.Id
+        print table_name
+        print id
+        deleterow(table_name, id)
+        table_name = u'auth_membership'
+        db(db[table_name].user_id == id).delete()
+        db.commit()
+        return u"success";
+    except:
+        db.rollback()
+        return u"fail";
+    
+def updaterow_resetpassword_auth_user():
+    try:
+        table_name = u'auth_user'
+        id = auth.user.id
+        rowData = request.post_vars
+        old = rowData[u'originpassword']
+        new = rowData[u'password']
+        #判断老密码是否正确
+        row = db(db[table_name]._id ==id).select().first()
+        row[u'password']
+        crypt = CRYPT()(old)[0]
+        if crypt == row[u'password']:
+            id = id
+        else:
+            return u'密码错误'        
+        #更新密码
+        table_name = u'auth_user'
+        
+        rowData = request.post_vars
+        row={}
+        row[u'password'] = str(CRYPT()(new)[0])
+        updaterow(table_name, id, row)        
+        db.commit()
+    except Exception as e:
+        print e
+        db.rollback()
+        return u'fail'

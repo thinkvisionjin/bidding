@@ -158,12 +158,14 @@ ly:'现场',
             if (response == 'success')
             	{
 				alert('成功');
+
             	$('#gmbs_popupWindow').jqxWindow('hide');
 				ggmbscallbak();
             	}
 			else
 			{
 				alert(response);
+
 			}
              
         },
@@ -239,7 +241,7 @@ $('#tr_gmbs_ly').hide();
 	$("#gmbs_Save").click(function () {
 		gmbs_save(state);
 	});
- 	
+ 
   	
 }
 

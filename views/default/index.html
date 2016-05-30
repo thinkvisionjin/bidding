@@ -1,4 +1,4 @@
-<html>
+<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <title>招标项目管理</title>
@@ -19,10 +19,17 @@
 <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtabs.js')}}"></script>
 <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxbuttons.js')}}"></script>
 <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtree.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxexpander.js')}}"></script> 
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxinput.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxpasswordinput.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxvalidator.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtooltip.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/auth_userresetpasswordform.js')}}"></script>
 <script type="text/javascript" src="{{=URL('static','js/index.js')}}"></script>
 </head>
 <body>
-	 <div id='jqxWidget' style="width: 100%; height:100%;">
+
         <div id="mainSplitter">
             <div class="splitter-panel">
                 <div id='jqxNavigationBar'>
@@ -96,7 +103,7 @@
 					<div class="NavBtnText">员工管理</div>
 					
 					<div class="NavBtn">
-						<img class="NavBtnImg" src="../static/images/PCProjectStatus.png" onclick="window.open('/bidding/default/user/change_password')" alt="ImageButton">
+						<img class="NavBtnImg" src="../static/images/PCProjectStatus.png" onclick="authuser_password_popupwindow(1);" alt="ImageButton">
 					</div>
 					<div class="NavBtnText">修改密码</div>	
 					
@@ -132,7 +139,7 @@
 				
 			</div>
         </div>
-    </div>
+
 
 </body>
 </html>

@@ -61,4 +61,5 @@ db.define_table('cwls', Field('bsbh'),Field('sz'),Field('je'),Field('zy'),Field(
 db.define_table('pbcy', Field('bsbh'),Field('zjxx'),Field('zfy'),Field('username'),Field('rq'))
 db.define_table('zj', Field('xm'),Field('gzdw'),Field('username'),Field('rq'))
 db.define_table('rcb', Field('description'),Field('applyuser'),Field('bsbh'),Field('subject'),Field('calendar'),Field('rcbstart'),Field('rcbend'),Field('rcbid'),Field('rq'))
-
+db.define_table('auth_user', Field('username'),Field('chinesename'),Field('password'))
+db.define_table('auth_membership', Field('user_id'), Field('group_id'))
