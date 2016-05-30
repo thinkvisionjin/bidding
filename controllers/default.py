@@ -2197,7 +2197,7 @@ def updaterow_resetpassword_auth_user():
         #判断老密码是否正确
         row = db(db[table_name]._id ==id).select().first()
         row[u'password']
-        crypt = CRYPT()(old)[0]
+        crypt = CRYPT()(old)[0] 
         if crypt == row[u'password']:
             id = id
         else:

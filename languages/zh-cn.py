@@ -246,7 +246,6 @@
 'Ticket': '问题清单',
 'Time in Cache (h:m:s)': 'Time in Cache (h:m:s)',
 'Timestamp': '时间戳',
-'Too short': 'Too short',
 'Twitter': 'Twitter',
 'Unable to check for upgrades': '查询新版本失败',
 'Unable to download': '无法下载',
