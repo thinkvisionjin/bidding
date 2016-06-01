@@ -678,6 +678,10 @@ $(document).ready(function () {
 	var project = JSON.parse($("#ProjectData").text())[0]
 	$.get("/bidding/default/getDictionaries",function(result){
 		dict = result
+		
+		$("#navBar4").jqxNavBar({
+            height: 40, selectedItem: 1
+        });
 		InitEditProjectPage(dict,project);
 		InitProjectPackageGrid(dict,project);
 		InitProjectDocumentGrid(dict,project);

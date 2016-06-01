@@ -1,0 +1,32 @@
+#timeline {
+	width: 800px;
+	height: 60px;
+	overflow: hidden;
+	position: relative;
+	background: url('../images/dot.gif') left 45px repeat-x;
+}
+
+#dates {
+	width: 800px;
+	height: 60px;
+	overflow: hidden;
+}
+
+#dates li {
+	list-style: none;
+	float: left;
+	width: 100px;
+	height: 50px;
+	font-size: 24px;
+	text-align: center;
+	background: url('../images/biggerdot.png') center bottom no-repeat;
+}
+
+#dates a {
+	line-height: 38px;
+	padding-bottom: 10px;
+}
+
+#dates .selected {
+	font-size: 38px;
+}
