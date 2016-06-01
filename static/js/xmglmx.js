@@ -9,6 +9,10 @@ function InitEditProjectPage(dict,project){
 	$("#jqxProjectPackagesExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
 	$("#jqxProjectDocumentsExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
 	$("#jqxProjectMarginExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
+	$("#jqxProjectContactsExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
+	$("#jqxProjectFinanceExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
+	
+	
 	
 	$("#EditProject_ProjectCode").addClass('jqx-input')
 	$("#EditProject_ProjectCode").width(200)
@@ -294,7 +298,7 @@ function InitProjectDocumentGrid(dict,project){
         source: dataAdapter,
         editable: true,
         selectionmode: 'singlerow',
-        editmode: 'selectedrow',
+        editmode: 'selectedcell',
         columnsresize: true,
         showToolbar: true,
         renderToolbar: function(toolBar) {
@@ -363,7 +367,7 @@ function InitProjectDocumentGrid(dict,project){
         },
         columns: [
           { text: '客户名称', columntype: 'textbox', datafield: 'dwmc', width: '20%' , align: 'center', cellsalign: 'center',},
-          { text: '招标书编号', columntype: 'textbox', datafield: 'bsbh', width: '20%', align: 'center', cellsalign: 'center',},
+          { text: '招标书编号', columntype: 'dropdownlist', datafield: 'bsbh', width: '20%', align: 'center', cellsalign: 'center',},
           { text: '制造商中文名称', columntype: 'dropdownlist', datafield: 'zzszwmc', width:'20%' , align: 'center', cellsalign: 'center',},
           {
               text: '付款日期', datafield: 'rq', columntype: 'datetimeinput', width: '20%', align: 'center', cellsalign: 'center', cellsformat: 'd',
@@ -375,12 +379,6 @@ function InitProjectDocumentGrid(dict,project){
               }
           },
           { text: '金额', datafield: 'je', width: '20%' ,align: 'center', cellsalign: 'center', cellsformat: 'c2', columntype: 'numberinput',
-              validation: function (cell, value) {
-                  if (value < 0 || value > 15) {
-                      return { result: false, message: "Price should be in the 0-15 interval" };
-                  }
-                  return true;
-              },
               createeditor: function (row, cellvalue, editor) {
                   editor.jqxNumberInput({ digits: 3 });
               }
@@ -389,26 +387,8 @@ function InitProjectDocumentGrid(dict,project){
     });
     // events
     var rowValues = "";
-    $("#EditProject_DocumentTable").on('cellbeginedit', function (event) {
-        var args = event.args;
-        if (args.datafield === "firstname") {
-            rowValues = "";
-        }
-        rowValues += args.value.toString() + "    ";
-        if (args.datafield === "price") {
-            $("#cellbegineditevent").text("Begin Row Edit: " + (1 + args.rowindex) + ", Data: " + rowValues);
-        }
-    });
-    $("#EditProject_DocumentTable").on('cellendedit', function (event) {
-        var args = event.args;
-        if (args.datafield === "firstname") {
-            rowValues = "";
-        }
-        rowValues += args.value.toString() + "    ";
-        if (args.datafield === "price") {
-            $("#cellbegineditevent").text("End Row Edit: " + (1 + args.rowindex) + ", Data: " + rowValues);
-        }
-    });
+    $("#EditProject_DocumentTable").on('cellbeginedit', function (event) {});
+    $("#EditProject_DocumentTable").on('cellendedit', function (event) {});
 }
 
 function InitProjectMarginGrid(dict,project){
@@ -644,19 +624,220 @@ function InitNewPackageWindow(dict,project){
 	});
 }
 
+
+function InitProjectContactsGrid(dict,project){
+	var data = generatedata(7);
+    var exampleTheme = theme;
+    var source =
+    {
+        localdata: data,
+        datafields:
+        [
+            { name: 'firstname', type: 'string' },
+            { name: 'lastname', type: 'string' },
+            { name: 'productname', type: 'string' },
+            { name: 'date', type: 'date' },
+            { name: 'quantity', type: 'number' },
+            { name: 'price', type: 'number' }
+        ],
+        datatype: "array"
+    };
+    var adapter = new $.jqx.dataAdapter(source);
+    var buildFilterPanel = function (filterPanel, datafield) {
+        var textInput = $("<input style='margin:5px;'/>");
+        var applyinput = $("<div class='filter' style='height: 25px; margin-left: 20px; margin-top: 7px;'></div>");
+        var filterbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 2px;">筛选</span>');
+        applyinput.append(filterbutton);
+        var filterclearbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 5px;">清除</span>');
+        applyinput.append(filterclearbutton);
+        filterPanel.append(textInput);
+        filterPanel.append(applyinput);
+        filterbutton.jqxButton({ theme: exampleTheme, height: 20 });
+        filterclearbutton.jqxButton({ theme: exampleTheme, height: 20 });
+        var dataSource =
+        {
+            localdata: adapter.records,
+            datatype: "array",
+            async: false
+        }
+        var dataadapter = new $.jqx.dataAdapter(dataSource,
+        {
+            autoBind: false,
+            autoSort: true,
+            autoSortField: datafield,
+            async: false,
+            uniqueDataFields: [datafield]
+        });
+        var column = $("#EditProject_ContactsTable").jqxGrid('getcolumn', datafield);
+        textInput.jqxInput({ theme: exampleTheme, placeHolder: "Enter " + column.text, popupZIndex: 9999999, displayMember: datafield, source: dataadapter, height: 23, width: 175 });
+        textInput.keyup(function (event) {
+            if (event.keyCode === 13) {
+                filterbutton.trigger('click');
+            }
+        });
+        filterbutton.click(function () {
+            var filtergroup = new $.jqx.filter();
+            var filter_or_operator = 1;
+            var filtervalue = textInput.val();
+            var filtercondition = 'contains';
+            var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);            
+            filtergroup.addfilter(filter_or_operator, filter1);
+            // add the filters.
+            $("#EditProject_ContactsTable").jqxGrid('addfilter', datafield, filtergroup);
+            // apply the filters.
+            $("#EditProject_ContactsTable").jqxGrid('applyfilters');
+            $("#EditProject_ContactsTable").jqxGrid('closemenu');
+        });
+        filterbutton.keydown(function (event) {
+            if (event.keyCode === 13) {
+                filterbutton.trigger('click');
+            }
+        });
+        filterclearbutton.click(function () {
+            $("#EditProject_ContactsTable").jqxGrid('removefilter', datafield);
+            // apply the filters.
+            $("#EditProject_ContactsTable").jqxGrid('applyfilters');
+            $("#EditProject_ContactsTable").jqxGrid('closemenu');
+        });
+        filterclearbutton.keydown(function (event) {
+            if (event.keyCode === 13) {
+                filterclearbutton.trigger('click');
+            }
+            textInput.val("");
+        });
+    }
+    $("#EditProject_ContactsTable").jqxGrid(
+    {
+        width: '100%',
+        height:300,
+        source: adapter,
+        filterable: true,
+        pageable: true,
+        sortable: true,
+        ready: function () {
+        },
+        autoshowfiltericon: true,
+        columnmenuopening: function (menu, datafield, height) {
+            var column = $("#EditProject_ContactsTable").jqxGrid('getcolumn', datafield);
+            if (column.filtertype === "custom") {
+                menu.height(155);
+                setTimeout(function () {
+                    menu.find('input').focus();
+                }, 25);
+            }
+            else menu.height(height);
+        },
+        columns: [
+          {
+              text: '姓名', datafield: 'firstname',width: '17%',align: 'center',
+              filtertype: "custom",
+              cellsalign: 'center',
+              createfilterpanel: function (datafield, filterPanel) {
+                  buildFilterPanel(filterPanel, datafield);
+              }
+          },
+          {
+              text: '公司', datafield: 'lastname',align: 'center',
+              filtertype: "custom",
+              cellsalign: 'center',
+              createfilterpanel: function (datafield, filterPanel) {
+                  buildFilterPanel(filterPanel, datafield );
+              },
+              width: '17%',
+          },
+          { text: '类型', datafield: 'productname', filtertype: 'checkedlist', width: '17%',align: 'center', cellsalign: 'center' },
+          { text: '手机', datafield: 'date', filtertype: 'date', width: '16%', cellsalign: 'center',align: 'center',cellsformat: 'yyyy-MM-dd' },
+          { text: '座机', datafield: 'quantity', width: '16%', calign: 'center',cellsalign: 'center',align: 'center'},
+          { text: '邮件', datafield: 'price', width: '17%',align: 'center',cellsalign: 'center', cellsformat: 'c2' }
+        ]
+    });
+    
+    $("#EditProject_ContactsTable").on("filter", function (event) {
+        
+        var filterinfo = $("#EditProject_ContactsTable").jqxGrid('getfilterinformation');
+        var eventData = "Triggered 'filter' event";
+        for (i = 0; i < filterinfo.length; i++) {
+            var eventData = "Filter Column: " + filterinfo[i].filtercolumntext;
+            
+        }
+    });
+}
+
+function InitProjectFinanceGrid(dict,project){
+    var url = "../sampledata/products.xml";
+    // prepare the data
+    var source =
+    {
+        datatype: "xml",
+        datafields: [
+            { name: 'ProductName', type: 'string' },
+            { name: 'QuantityPerUnit', type: 'int' },
+            { name: 'UnitPrice', type: 'float' },
+            { name: 'UnitsInStock', type: 'float' },
+            { name: 'Discontinued', type: 'bool' }
+        ],
+        root: "Products",
+        record: "Product",
+        id: 'ProductID',
+        url: url
+    };
+    var cellsrenderer = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
+        if (value < 20) {
+            return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + '; color: #ff0000;">' + value + '</span>';
+        }
+        else {
+            return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + '; color: #008000;">' + value + '</span>';
+        }
+    }
+    var dataAdapter = new $.jqx.dataAdapter(source, {
+        downloadComplete: function (data, status, xhr) { },
+        loadComplete: function (data) { },
+        loadError: function (xhr, status, error) { }
+    });
+    // initialize jqxGrid
+    $("#EditProject_FinanceTable").jqxGrid(
+    {
+        width: '100%',
+        height:300,
+        source: dataAdapter,                
+        pageable: true,
+        autoheight: true,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+        editable: true,
+        selectionmode: 'multiplecellsadvanced',
+        columns: [
+          { text: '销售标书', columngroup: '收入', datafield: 'ProductName', cellsalign: 'center', align: 'center',width: '20%' },
+          { text: '中标服务费', columngroup: '收入', datafield: 'QuantityPerUnit', cellsalign: 'center', align: 'center', width: '20%' },
+          { text: '委托协议', columngroup: '收入', datafield: 'UnitPrice', align: 'center', cellsalign: 'center', cellsformat: 'c2', width: '20%' },
+          { text: '聘请专家费用', columngroup: '支出',datafield: 'UnitsInStock', cellsalign: 'center', align: 'center',cellsrenderer: cellsrenderer, width: '20%' },
+          { text: '项目分成费用', columngroup: '支出',datafield: 'Discontinued', cellsalign: 'center', align: 'center',width: '20%' }
+        ],
+        columngroups: [
+            { text: '收入', align: 'center', name: '收入' },
+            { text: '支出', align: 'center', name: '支出' }
+        ]
+    });
+}
+
+
 $(document).ready(function () {
 	var project = JSON.parse($("#ProjectData").text())[0]
 	$.get("/bidding/default/getDictionaries",function(result){
 		dict = result
 		
-		$("#navBar4").jqxNavBar({
-            height: 40, selectedItem: 1
+		$("#navBarProcedure").jqxNavBar({
+            height: 30, selectedItem: 1
         });
+		
 		InitEditProjectPage(dict,project);
 		InitProjectPackageGrid(dict,project);
 		InitProjectDocumentGrid(dict,project);
 		InitProjectMarginGrid(dict,project);
 	    InitNewPackageWindow(dict,project);
+	    InitProjectContactsGrid(dict,project);
+	    InitProjectFinanceGrid(dict,project);
 	},'json');
 	
 	
