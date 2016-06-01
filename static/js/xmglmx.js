@@ -1,9 +1,4 @@
 
-function popup_gmbswindow() {
-	
-}
-
-
 function InitEditProjectPage(dict,project){
 	$("#jqxProjectBasicExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
 	$("#jqxProjectPackagesExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
@@ -48,7 +43,6 @@ function InitEditProjectPage(dict,project){
 	$("#EditProject_Save").click(function () {
 		var row = {Id:project.Id
 				,ProtocolCodeId:''
-				,ProjectCode:project.PojectCode
 				,ProjectCode:project.PojectCode
 				,ProjectName:$("#EditProject_ProjectName").val()
 				,CustomerId:$("#EditProject_Customer").val()
@@ -393,6 +387,7 @@ function InitProjectDocumentGrid(dict,project){
 
 function InitProjectMarginGrid(dict,project){
 	tbzj_init ()
+    tbbzj_init ()
 	var data = generatedata(7);
     var source =
     {
@@ -433,32 +428,42 @@ function InitProjectMarginGrid(dict,project){
         columnsresize: true,
         editable: true,
         selectionmode: 'singlerow',
-        editmode: 'selectedrow',
+        editmode: 'selectedcell',
         renderToolbar: function(toolBar) {
         	//添加打印按钮、导出Excel按钮和其他按钮
             var me = this;
             var container = $("<div style='margin-left: auto; margin-right: auto; '></div>");
             var container = $("<div style='margin: 5px;'></div>");
-            var addNewButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>新增</span></div>");
+            var addNewButton1 = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>缴保证金</span></div>");
+            var addNewButton2 = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>退保证金</span></div>");
+       
             var refreshButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>刷新</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>删除</span></div>");
             var printButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
             var exportButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>导出</span></div>");
             var columnSettingButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>设置</span></div>");
             toolBar.append(container);
-            container.append(addNewButton);
+            container.append(addNewButton1);
+            container.append(addNewButton2);
             container.append(refreshButton);
             container.append(deleteButton);
             container.append(printButton);
             container.append(exportButton);
             container.append(columnSettingButton);
-            addNewButton.jqxButton({ template: "success" });
+            addNewButton1.jqxButton({ template: "success" });
+            addNewButton2.jqxButton({ template: "success" });
             refreshButton.jqxButton({ template: "primary" });
             printButton.jqxButton({ template: "info" });
             exportButton.jqxButton({ template: "warning" });
             deleteButton.jqxButton({ template: "danger" });
             columnSettingButton.jqxButton({ template: "inverse" });
-            addNewButton.click(function (event) {
+            addNewButton1.click(function (event) {
+            	tbbzj_popupwindow('add', '', function(){
+            		//refresh the grid when load completed
+            		$("#EditProject_MarginTable").jqxGrid({ source:dataAdapter });
+            	})
+            });
+            addNewButton2.click(function (event) {
             	
             	tbzj_popupwindow('add', '', function(){
             		//refresh the grid when load completed
@@ -506,21 +511,12 @@ function InitProjectMarginGrid(dict,project){
           {
               text: '交保证金日期', datafield: 'rq', columntype: 'datetimeinput', width: '10%', align: 'center', cellsalign: 'center', cellsformat: 'd',
           validation: function (cell, value) {
-                  if (value == "")
-                     return true;
-                  var year = value.getFullYear();
-                  if (year >= 2017) {
-                      return { result: false, message: "Ship Date should be before 1/1/2017" };
-                  }
-                  return true;
+                  
               }
           },
-          { text: '金额', datafield: 'je', align: 'right', width: '10%',align: 'center', cellsalign: 'center',  cellsformat: 'c2', columntype: 'numberinput',
+          { text: '金额', datafield: 'je',  width: '10%',align: 'center', cellsalign: 'center',  cellsformat: 'c2', columntype: 'numberinput',
               validation: function (cell, value) {
-                  if (value < 0 || value > 15) {
-                      return { result: false, message: "Price should be in the 0-15 interval" };
-                  }
-                  return true;
+                  
               },
               createeditor: function (row, cellvalue, editor) {
                   editor.jqxNumberInput({ digits: 3 });
@@ -530,21 +526,15 @@ function InitProjectMarginGrid(dict,project){
           {
               text: '退款日期', datafield: 'trq', columntype: 'datetimeinput', width: '10%', align: 'center', cellsalign: 'center', cellsformat: 'd',
           validation: function (cell, value) {
-                  if (value == "")
-                     return true;
-                  var year = value.getFullYear();
-                  if (year >= 2017) {
-                      return { result: false, message: "Ship Date should be before 1/1/2017" };
-                  }
-                  return true;
+                 
               }
           },
-          { text: '退还金额', datafield: 'tje', align: 'right', width: '10%',align: 'center', cellsalign: 'center',  cellsformat: 'c2', columntype: 'numberinput',
+          { text: '退还金额', datafield: 'tje',  width: '10%',align: 'center', cellsalign: 'center',  cellsformat: 'c2', columntype: 'numberinput',
               validation: function (cell, value) {
-                  if (value < 0 || value > 15) {
-                      return { result: false, message: "Price should be in the 0-15 interval" };
-                  }
-                  return true;
+                //   if (value < 0 || value > 15) {
+                //       return { result: false, message: "Price should be in the 0-15 interval" };
+                //   }
+                //   return true;
               },
               createeditor: function (row, cellvalue, editor) {
                   editor.jqxNumberInput({ digits: 3 });
@@ -626,21 +616,21 @@ function InitNewPackageWindow(dict,project){
 
 
 function InitProjectContactsGrid(dict,project){
-	var data = generatedata(7);
+	// var data = generatedata(7);
     var exampleTheme = theme;
     var source =
     {
-        localdata: data,
+        url: 'getContactsByProjectID?pid='+project.Id,
         datafields:
         [
-            { name: 'firstname', type: 'string' },
-            { name: 'lastname', type: 'string' },
-            { name: 'productname', type: 'string' },
-            { name: 'date', type: 'date' },
-            { name: 'quantity', type: 'number' },
-            { name: 'price', type: 'number' }
+            { name: 'dwmc', type: 'string' },
+            { name: 'lxr', type: 'string' },
+            { name: 'sj', type: 'string' },
+            { name: 'lxdz', type: 'string' },
+            { name: 'cz', type: 'number' },
+            { name: 'dzxx', type: 'string' }
         ],
-        datatype: "array"
+        datatype: "json"
     };
     var adapter = new $.jqx.dataAdapter(source);
     var buildFilterPanel = function (filterPanel, datafield) {
@@ -709,7 +699,7 @@ function InitProjectContactsGrid(dict,project){
     $("#EditProject_ContactsTable").jqxGrid(
     {
         width: '100%',
-        height:300,
+        height:200,
         source: adapter,
         filterable: true,
         pageable: true,
@@ -729,7 +719,7 @@ function InitProjectContactsGrid(dict,project){
         },
         columns: [
           {
-              text: '姓名', datafield: 'firstname',width: '17%',align: 'center',
+              text: '联系人', datafield: 'lxr',width: '17%',align: 'center',
               filtertype: "custom",
               cellsalign: 'center',
               createfilterpanel: function (datafield, filterPanel) {
@@ -737,7 +727,7 @@ function InitProjectContactsGrid(dict,project){
               }
           },
           {
-              text: '公司', datafield: 'lastname',align: 'center',
+              text: '公司名称', datafield: 'dwmc',align: 'center',
               filtertype: "custom",
               cellsalign: 'center',
               createfilterpanel: function (datafield, filterPanel) {
@@ -745,10 +735,18 @@ function InitProjectContactsGrid(dict,project){
               },
               width: '17%',
           },
-          { text: '类型', datafield: 'productname', filtertype: 'checkedlist', width: '17%',align: 'center', cellsalign: 'center' },
-          { text: '手机', datafield: 'date', filtertype: 'date', width: '16%', cellsalign: 'center',align: 'center',cellsformat: 'yyyy-MM-dd' },
-          { text: '座机', datafield: 'quantity', width: '16%', calign: 'center',cellsalign: 'center',align: 'center'},
-          { text: '邮件', datafield: 'price', width: '17%',align: 'center',cellsalign: 'center', cellsformat: 'c2' }
+          { text: '联系地址', datafield: 'lxdz', createfilterpanel: function (datafield, filterPanel) {
+                  buildFilterPanel(filterPanel, datafield );
+              }, width: '17%',align: 'center', cellsalign: 'center' },
+          { text: '手机', createfilterpanel: function (datafield, filterPanel) {
+                  buildFilterPanel(filterPanel, datafield );
+              },datafield: 'sj', width: '16%', cellsalign: 'center',align: 'center',cellsformat: 'yyyy-MM-dd' },
+          { text: '传真', createfilterpanel: function (datafield, filterPanel) {
+                  buildFilterPanel(filterPanel, datafield );
+              },datafield: 'cz', width: '16%', calign: 'center',cellsalign: 'center',align: 'center'},
+          { text: '电子邮件', createfilterpanel: function (datafield, filterPanel) {
+                  buildFilterPanel(filterPanel, datafield );
+              },datafield: 'dzxx', width: '17%',align: 'center',cellsalign: 'center', cellsformat: 'c2' }
         ]
     });
     
@@ -764,22 +762,19 @@ function InitProjectContactsGrid(dict,project){
 }
 
 function InitProjectFinanceGrid(dict,project){
-    var url = "../sampledata/products.xml";
+
     // prepare the data
     var source =
     {
-        datatype: "xml",
+        datatype: "json",
         datafields: [
-            { name: 'ProductName', type: 'string' },
-            { name: 'QuantityPerUnit', type: 'int' },
-            { name: 'UnitPrice', type: 'float' },
-            { name: 'UnitsInStock', type: 'float' },
-            { name: 'Discontinued', type: 'bool' }
+            { name: 'bssr', type: 'float' },
+            { name: 'zbfwf', type: 'float' },
+            { name: 'wtxy', type: 'float' },
+            { name: 'pqzjf', type: 'float' },
+            { name: 'xmfc', type: 'float' }
         ],
-        root: "Products",
-        record: "Product",
-        id: 'ProductID',
-        url: url
+        url: "getFinanceByProjectID?pid="+project.Id
     };
     var cellsrenderer = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
         if (value < 20) {
@@ -808,11 +803,11 @@ function InitProjectFinanceGrid(dict,project){
         editable: true,
         selectionmode: 'multiplecellsadvanced',
         columns: [
-          { text: '销售标书', columngroup: '收入', datafield: 'ProductName', cellsalign: 'center', align: 'center',width: '20%' },
-          { text: '中标服务费', columngroup: '收入', datafield: 'QuantityPerUnit', cellsalign: 'center', align: 'center', width: '20%' },
-          { text: '委托协议', columngroup: '收入', datafield: 'UnitPrice', align: 'center', cellsalign: 'center', cellsformat: 'c2', width: '20%' },
-          { text: '聘请专家费用', columngroup: '支出',datafield: 'UnitsInStock', cellsalign: 'center', align: 'center',cellsrenderer: cellsrenderer, width: '20%' },
-          { text: '项目分成费用', columngroup: '支出',datafield: 'Discontinued', cellsalign: 'center', align: 'center',width: '20%' }
+          { text: '销售标书', columngroup: '收入', datafield: 'bssr', cellsalign: 'center', align: 'center',width: '20%' },
+          { text: '中标服务费', columngroup: '收入', datafield: 'zbfwf', cellsalign: 'center', align: 'center', width: '20%' },
+          { text: '委托协议', columngroup: '收入', datafield: 'wtxy', align: 'center', cellsalign: 'center',  width: '20%' },
+          { text: '聘请专家费用', columngroup: '支出',datafield: 'pqzjf', cellsalign: 'center', align: 'center', width: '20%' },
+          { text: '项目分成费用', columngroup: '支出',datafield: 'xmfc', cellsalign: 'center', align: 'center',width: '20%' }
         ],
         columngroups: [
             { text: '收入', align: 'center', name: '收入' },
@@ -827,7 +822,7 @@ $(document).ready(function () {
 	$.get("/bidding/default/getDictionaries",function(result){
 		dict = result
 		
-		$("#navBarProcedure").jqxNavBar({
+		$("#navBar4").jqxNavBar({
             height: 30, selectedItem: 1
         });
 		

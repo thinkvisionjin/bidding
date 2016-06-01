@@ -1283,8 +1283,31 @@ WHEN 0 THEN 0
 ELSE 1 
 end as returned,b.yhzh
 from [dbo].[tbbzj] a left join [dbo].[tbzj] b
-on a.dwmc = b.dwmc and a.bsbh = b.bsbh1 """;
+on a.dwmc = b.dwmc and a.bsbh = b.bsbh """;
     return sqltojson(sql)
+
+def getContactsByProjectID():
+    uid = u''
+    pid = request.vars.pid
+    sql = u'select dwmc, lxr,lxdz,sj,dzxx,cz from gmbs where bsbh in (select PackageNumber from ProjectPackage where ProjectId ='+pid+u')';
+    return sqltojson(sql)
+
+def getFinanceByProjectID():
+    uid = u''
+    pid = request.vars.pid
+    sql1 = u'select sum(je) as bssr from gmbs where bsbh in (select PackageNumber from ProjectPackage where ProjectId ='+pid+u')';
+    sql2 = u'select sum(CASE ISNULL (WinningMoney,0 ) WHEN 0 THEN 0 ELSE WinningMoney*ChargeRate end ) as zbfwf from ProjectPackage where ProjectId ='+pid;
+    res1 =  sqltoarray(sql1)
+    res2 = sqltoarray(sql2)
+    res = []
+    finance={}
+    finance["bssr"] = res1[0]["bssr"]
+    finance["zbfwf"] = res2[0]["zbfwf"]
+    finance["wtxy"] = "10000"
+    finance["pqzjf"] = "10000"
+    finance["xmfc"] = "10000"
+    res.append(finance)
+    return json.dumps(finance)
 
 #主页
 def grtjb():
