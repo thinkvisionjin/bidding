@@ -69,7 +69,8 @@ var source =
     datafields:datafields_content,
     updaterow: function (rowid, rowdata, commit) {
         // synchronize with the server - send update command
-        // call commit with parameter true if the synchronization with the server is successful 
+        // call commit with parameter true if the synchronization with the
+		// server is successful
         // and with parameter false if the synchronization failed.
     $.post("/bidding/default/update?table=Project",rowdata,function(result){
     		 alert("操作成功！");
@@ -78,7 +79,8 @@ var source =
     },
     deleterow: function (rowid, commit) {
         // synchronize with the server - send delete command
-        // call commit with parameter true if the synchronization with the server is successful 
+        // call commit with parameter true if the synchronization with the
+		// server is successful
         // and with parameter false if the synchronization failed.
     	var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', rowid);
     	$.post("/bidding/default/delete?table=Project",dataRecord,function(result){
@@ -88,9 +90,12 @@ var source =
     },
     addrow: function (rowid, rowdata, position, commit) {
         // synchronize with the server - send insert command
-        // call commit with parameter true if the synchronization with the server was successful. 
+        // call commit with parameter true if the synchronization with the
+		// server was successful.
         // and with parameter false if the synchronization has failed.
-        // you can pass additional argument to the commit callback which represents the new ID if it is generated from a Database. Example: commit(true, idInDB) where "idInDB" is the row's ID in the Database.
+        // you can pass additional argument to the commit callback which
+		// represents the new ID if it is generated from a Database. Example:
+		// commit(true, idInDB) where "idInDB" is the row's ID in the Database.
         commit(true);
     },
 };
@@ -101,7 +106,19 @@ function InitProjectGrid(dict){
     
     var dataAdapter = new $.jqx.dataAdapter(source);
     var editrow = -1;
-    var columns_content  =[{"datafield":"Id","text":"序号",width: "80", cellsalign: 'center', align: 'center',hidden:true,},
+    var columns_content  =[{
+    text: '操作', editable: false, datafield: 'edit',width: "120", cellsalign: 'center', align: 'center',
+    cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
+    var a = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/xmglmx?id='+rowdata.Id + '">查看详情</a>';
+    var b = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="gmbs.html">购买标书</a>';
+    var c = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="tbbzj.html">缴保证金</a>';
+    var d = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="zb.html">中标管理</a>';
+    var e = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="tbzj.html">退保证金</a>';
+    var f = '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+a+'</div>';
+    return f;
+    }
+    },
+                           {"datafield":"Id","text":"序号",width: "80", cellsalign: 'center', align: 'center',hidden:true},
                            {"datafield":"ProjectCode","text":"项目编号", width: "185", cellsalign: 'center', align: 'center'},
                            {"datafield":"ProjectName","text":"项目名称", width: "190", cellsalign: 'center', align: 'center'},
                            {"datafield":"ProtocolCodeId","text":"协议编号", width: "190", cellsalign: 'center', align: 'center',hidden:true,
@@ -221,20 +238,8 @@ function InitProjectGrid(dict){
 	                          {"datafield":"MarginCount","text":"已交保证金数量", width: "120", cellsalign: 'center', align: 'center',hidden:true},
 	                          {"datafield":"ReturnMarginCount","text":"归还保证金数量", width: "120", cellsalign: 'center', align: 'center',hidden:true},
 	                          {"datafield":"EntrustMoney","text":"委托金额合计", width: "120", cellsalign: 'center', align: 'center',hidden:true},
-	                          {"datafield":"WinningMoney","text":"中标金额合计", width: "120", cellsalign: 'center', align: 'center',hidden:true},
-                           {
-                               text: '操作', editable: false, datafield: 'edit',width: "120", cellsalign: 'center', align: 'center',
-                               cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
-                               
-                               var a = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/xmglmx?id='+rowdata.Id + '">查看详情</a>';
-                               var b = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="gmbs.html">购买标书</a>';
-                               var c = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="tbbzj.html">缴保证金</a>';
-                               var d = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="zb.html">中标管理</a>';
-                               var e = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="tbzj.html">退保证金</a>';
-                               var f = '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+a+'</div>';
-                               return f;
-                               }
-                             }]            
+	                          {"datafield":"WinningMoney","text":"中标金额合计", width: "120", cellsalign: 'center', align: 'center',hidden:true}
+                           ]            
     var outerDataAdapter = new $.jqx.dataAdapter(source, { autoBind: true });
     projects_record = outerDataAdapter.records;
     $("#jqxgrid").jqxGrid(
@@ -251,7 +256,7 @@ function InitProjectGrid(dict){
         renderstatusbar: function (statusbar) {},
         showtoolbar: true,
         rendertoolbar: function (toolbar) {
-        	//添加打印按钮、导出Excel按钮和其他按钮
+        	// 添加打印按钮、导出Excel按钮和其他按钮
             var me = this;
             var container = $("<div style='margin-left: auto; margin-right: auto; '></div>");
             var container = $("<div style='margin: 5px;'></div>");
@@ -314,7 +319,7 @@ function InitProjectGrid(dict){
 }
 
 function InitSearchArea(dict){
-	BindProjectNameOnly("#ProjectName_SEARCH")   //input 
+	BindProjectNameOnly("#ProjectName_SEARCH")   // input
 	$("#ProjectName_SEARCH_Button").jqxButton({ template: "success",height: '19px'});
 	$("#ProjectName_SEARCH_Button").click(function (event) {
 		searchkey = "where "
@@ -338,37 +343,37 @@ function InitSearchArea(dict){
 }
 
 function InitNewProjectWindow(dict){	
-	//填写项目名称
+	// 填写项目名称
 	$("#NewProject_ProjectName").addClass('jqx-input')
 	$("#NewProject_ProjectName").width(200)
 	$("#NewProject_ProjectName").height(23)
-	//采购单位
+	// 采购单位
     BindCustomer("#NewProject_Customer",dict.Customer)
-	//项目类型
+	// 项目类型
 	BindProjectType("#NewProject_ProjectType",dict.ProjectType);
-	//采购类型
+	// 采购类型
 	BindPurchaseStyle("#NewProject_PurchaseStyle",dict.PurchaseStyle)
-	//管理方式
+	// 管理方式
 	BindManagementStyle("#NewProject_ManagementStyle",dict.ManagementStyle)
-	//	项目来源
+	// 项目来源
 	BindProjectSource("#NewProject_ProjectSource",dict.ProjectSource)
-	//项目资金来源
+	// 项目资金来源
    BindFundingSource("#NewProject_FundingSource",dict.FundingSource)
-    //项目负责人
+    // 项目负责人
    BindEmployee("#NewProject_Employee",dict.Employee)
-   //协助人
+   // 协助人
    BindEmployee("#NewProject_Assistant",dict.Employee)
-   //项目状态
+   // 项目状态
    BindProjectStatus("#NewProject_ProjectStatus",dict.ProjectStatus)
-   //协议编号
+   // 协议编号
    BindProtocolNumberWithID("#NewProject_ProtocolCode",dict.ProtocolCode)
    
    
-	//项目创建时间
+	// 项目创建时间
 	$("#NewProject_CreationDate").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
-	//初始化创建项目的loader
+	// 初始化创建项目的loader
 	$("#Loader_CreatingNewProject").jqxLoader({ width: 100, height: 60, imagePosition: 'top' });
-	//初始化整个Window
+	// 初始化整个Window
 	$("#popupWindow_NewProject").jqxWindow({ showCollapseButton: true,isModal: true,
     	width: 650, 
     	height:400,autoOpen: false, cancelButton: $("#NewProject_Cancel"), modalOpacity: 0.40 });    
@@ -378,7 +383,7 @@ function InitNewProjectWindow(dict){
     });
     $("#NewProject_Save").jqxButton({ theme: theme, template:"success"  });
     $("#NewProject_Save").click(function () {
-		//添加成功后弹出项目编号创建成功的界面，告知操作人员项目已添加了
+		// 添加成功后弹出项目编号创建成功的界面，告知操作人员项目已添加了
 		var row = {
 		 ProtocolCodeId:$("#NewProject_ProtocolCode").val()
 		,ProjectName:$("#NewProject_ProjectName").val()
@@ -411,15 +416,15 @@ function AdvancedSearchContent(action,dict){
 			<td align="left"><p>协助人</p></td>	<td align="left"><div id="Assistant_SEARCH" /></td></tr>'
 			searchTable.append(row1HTML);
 			searchTable.append(row2HTML);
-			BindCustomer("#BuyerId_SEARCH",dict.Customer)  //dropdownlist
-			BindProjectType("#ProjectTypeId_SEARCH",dict.ProjectType)//dropdownlist
-			BindProjectSource("#ProjectSourceId_SEARCH",dict.ProjectSource)//dropdownlist
-			BindFundingSource("#SourcesOfFundingId_SEARCH",dict.FundingSource)//dropdownlist
-			BindManagementStyle("#ManagementStyleId_SEARCH",dict.FundingSource)//dropdownlist
+			BindCustomer("#BuyerId_SEARCH",dict.Customer)  // dropdownlist
+			BindProjectType("#ProjectTypeId_SEARCH",dict.ProjectType)// dropdownlist
+			BindProjectSource("#ProjectSourceId_SEARCH",dict.ProjectSource)// dropdownlist
+			BindFundingSource("#SourcesOfFundingId_SEARCH",dict.FundingSource)// dropdownlist
+			BindManagementStyle("#ManagementStyleId_SEARCH",dict.FundingSource)// dropdownlist
 			BindPurchaseStyle("#PurchaseStyleId_SEARCH",dict.PurchaseStyle)
-			BindEmployee("#EmployeeId_SEARCH",dict.Employee,true)//dropdownlist
-			BindAssitant("#Assistant_SEARCH",dict.Employee,false)//dropdownlist
-			BindProjectStatus("#StateId_SEARCH",dict.ProjectStatus)//dropdownlist
+			BindEmployee("#EmployeeId_SEARCH",dict.Employee,true)// dropdownlist
+			BindAssitant("#Assistant_SEARCH",dict.Employee,false)// dropdownlist
+			BindProjectStatus("#StateId_SEARCH",dict.ProjectStatus)// dropdownlist
 	}else{
 		$("#row1Search").remove();
 		$("#row2Search").remove();

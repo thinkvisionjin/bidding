@@ -81,8 +81,8 @@ function InitProjectPackageGrid(dict,project){
 		                 {"name":"PackageNumber","type":"string"},
 		                 {"name":"PackageName","type":"string"},
 		                 {"name":"StateId","type":"string"},
-		                 {"name":"SigningDate","type":"date"},
-		                 {"name":"MakeOutDate","type":"date"},
+		                 {"name":"SigningDate","type":"datetime"},
+		                 {"name":"MakeOutDate","type":"datetime"},
 		                 {"name":"EntrustMoney","type":"string"},
 		                 {"name":"WinningMoney","type":"string"},
 		                 {"name":"WinningCompany","type":"string"},
@@ -124,7 +124,7 @@ function InitProjectPackageGrid(dict,project){
 		    }
 		});
 		var projectPackage_columns_content  = 
-			[{"datafield":"PackageNumber","text":"\u5305\u7f16\u53f7", cellsalign: 'center', align: 'center',width: '18%'},
+			[{"datafield":"PackageNumber","text":"\u5305\u7f16\u53f7", editable:false, cellsalign: 'center', align: 'center',width: '18%'},
 			 {"datafield":"PackageName","text":"\u5305\u540d\u79f0",  cellsalign: 'center', align: 'center',width: '17%'},
 			 {"datafield":"StateId","text":"\u5305\u72b6\u6001", cellsalign: 'center', align: 'center',columntype: 'dropdownlist',width: '12%',
 				 cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
@@ -156,44 +156,10 @@ function InitProjectPackageGrid(dict,project){
         				height: '27' });
                  },
                  // update the editor's value before saving it.
-                 cellvaluechanging: function (row, column, columntype, oldvalue, newvalue) {
-                     // return the old value, if the new value is empty.
-                	 pt = JSON.parse(dict.ProjectStatus)
-              		  for(i=0;i<pt.length;i++){
-              			  if(pt[i].Name==newvalue.toString()) {
-              				newvalue = pt[i].Id
-              			  }
-              			 if(pt[i].Name==oldvalue.toString()) {
-              				oldvalue = pt[i].Id
-              			  }
-              		  }
-                	  
-                     if (newvalue == "") {
-                    	 return oldvalue
-                     }
-                     else{
-                    	 return newvalue
-                     }
-                 }},
-			 {"datafield":"SigningDate","text":"\u7b7e\u7ea6\u65e5\u671f",  cellsalign: 'center', align: 'center',columntype: 'datetimeinput',cellsformat: 'd',width: '11%',
-                	 validation: function (cell, value) {
-                if (value == "")
-                     return true;
-                  var year = value.getFullYear();
-                  if (year >= 2017) {
-                      return { result: false, message: "签署日期不能大于2017" };
-                  }
-                  return true;
-              }},
-			 {"datafield":"MakeOutDate","text":"\u5f00\u7968\u65e5\u671f",  cellsalign: 'center', align: 'center',columntype: 'datetimeinput',cellsformat: 'd',width: '11%',validation: function (cell, value) {
-                 if (value == "")
-                     return true;
-                  var year = value.getFullYear();
-                  if (year >= 2017) {
-                      return { result: false, message: "签署日期不能大于2017" };
-                  }
-                  return true;
-              }},
+                 cellvaluechanging: function (row, column, columntype, oldvalue, newvalue) {}
+                 },
+			 {"datafield":"SigningDate","text":"\u7b7e\u7ea6\u65e5\u671f",  cellsalign: 'center', align: 'center',columntype: 'datetimeinput',cellsformat: 'yyyy-MM-dd',width: '11%'},
+			 {"datafield":"MakeOutDate","text":"\u5f00\u7968\u65e5\u671f",  cellsalign: 'center', align: 'center',columntype: 'datetimeinput',cellsformat: 'yyyy-MM-dd',width: '11%'},
 			 {"datafield":"EntrustMoney","text":"\u59d4\u6258\u91d1\u989d",  cellsalign: 'center', align: 'center',width: '8%'},
 			 {"datafield":"WinningMoney","text":"\u4e2d\u6807\u91d1\u989d",  cellsalign: 'center', align: 'center',width: '8%'},
 			 {"datafield":"WinningCompany","text":"\u4e2d\u6807\u5355\u4f4d",  cellsalign: 'center', align: 'center',width: '8%'},
@@ -203,13 +169,12 @@ function InitProjectPackageGrid(dict,project){
 		        {
 		            height: 265,
 		            width: "100%",
-		            selectionmode: 'singlerow',
 		            columnsresize: true,
 		            source: projectPackageurldataAdapter,
 		            pageable: true,
 		            editable: true,
 		            selectionmode: 'singlerow',
-		            editmode: 'selectedrow',
+		            editmode: 'selectedcell',
 		            autoRowHeight: false,
 		            showToolbar: true,
 		            ready: function()
@@ -228,6 +193,7 @@ function InitProjectPackageGrid(dict,project){
 		                var printButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
 		                var exportButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>导出</span></div>");
 		                var columnSettingButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>设置</span></div>");
+		                var updateButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>确认修改</span></div>");
 		                toolBar.append(container);
 		                container.append(addNewButton);
 		                container.append(refreshButton);
@@ -235,12 +201,14 @@ function InitProjectPackageGrid(dict,project){
 		                container.append(printButton);
 		                container.append(exportButton);
 		                container.append(columnSettingButton);
+		                container.append(updateButton);
 		                addNewButton.jqxButton({ template: "success" });
 		                refreshButton.jqxButton({ template: "primary" });
 		                printButton.jqxButton({ template: "info" });
 		                exportButton.jqxButton({ template: "warning" });
 		                deleteButton.jqxButton({ template: "danger" });
 		                columnSettingButton.jqxButton({ template: "inverse" });
+		                updateButton.jqxButton();
 		                addNewButton.click(function (event) {
 		                	$("#popupWindow_PackageADD").jqxWindow('show');
 		                });
@@ -248,7 +216,7 @@ function InitProjectPackageGrid(dict,project){
 		                    $("#EditProject_PackageTable").jqxGrid({ source:projectPackageurldataAdapter });
 		                });
 		                columnSettingButton.click(function (event) {
-		                	$("#popupWindow_PackageADD").jqxWindow('open');
+		                	
 		                });
 		                printButton.click(function (event) {
 		                    var gridContent = $("#EditProject_PackageTable").jqxGrid('exportdata', 'html');
@@ -276,7 +244,10 @@ function InitProjectPackageGrid(dict,project){
 		                    var id = $("#EditProject_PackageTable").jqxGrid('getrowid', selectedrowindex);
 		                    $("#EditProject_PackageTable").jqxGrid('deleterow', id);
 		                });
-		            
+		                updateButton.click(function(event){
+		                	//update all the data in the grid
+		                	alert("修改成功!")
+		                })
 		            },
 		            columns: projectPackage_columns_content
 		        });
@@ -360,7 +331,7 @@ function InitProjectDocumentGrid(dict,project){
                 $("#EditProject_DocumentTable").jqxGrid({ source:dataAdapter });
             });
             columnSettingButton.click(function (event) {
-            	$("#popupWindow_PackageADD").jqxWindow('open');
+            
             });
             printButton.click(function (event) {
                 var gridContent = $("#EditProject_DocumentTable").jqxGrid('exportdata', 'html');
@@ -392,17 +363,14 @@ function InitProjectDocumentGrid(dict,project){
         },
         columns: [
           { text: '客户名称', columntype: 'textbox', datafield: 'dwmc', width: '20%' , align: 'center', cellsalign: 'center',},
-          { text: '招标书编号', columntype: 'textbox', datafield: 'zzszwmc', width: '20%', align: 'center', cellsalign: 'center',},
-          { text: '包件名称', columntype: 'dropdownlist', datafield: 'bsbh', width:'20%' , align: 'center', cellsalign: 'center',},
+          { text: '招标书编号', columntype: 'textbox', datafield: 'bsbh', width: '20%', align: 'center', cellsalign: 'center',},
+          { text: '制造商中文名称', columntype: 'dropdownlist', datafield: 'zzszwmc', width:'20%' , align: 'center', cellsalign: 'center',},
           {
               text: '付款日期', datafield: 'rq', columntype: 'datetimeinput', width: '20%', align: 'center', cellsalign: 'center', cellsformat: 'd',
           validation: function (cell, value) {
                   if (value == "")
                      return true;
                   var year = value.getFullYear();
-                  if (year >= 2017) {
-                      return { result: false, message: "Ship Date should be before 1/1/2017" };
-                  }
                   return true;
               }
           },
@@ -521,7 +489,7 @@ function InitProjectMarginGrid(dict,project){
                 $("#EditProject_MarginTable").jqxGrid({ source:dataAdapter });
             });
             columnSettingButton.click(function (event) {
-            	$("#popupWindow_PackageADD").jqxWindow('open');
+            	
             });
             printButton.click(function (event) {
                 var gridContent = $("#EditProject_MarginTable").jqxGrid('exportdata', 'html');
@@ -635,8 +603,8 @@ function InitProjectMarginGrid(dict,project){
 function InitNewPackageWindow(dict,project){
 	$("#PackageNumber_ADD").jqxInput({width: '200px',height: "25px"});
 	$("#PackageName_ADD").jqxInput({width: '200px',height: "25px"});
-	$("#SigningDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
-	$("#MakeOutDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
+	$("#SigningDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd",  width: '200px', height: '25px' });
+	$("#MakeOutDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd", width: '200px', height: '25px' });
 	$("#EntrustMoney_ADD").jqxNumberInput({ width: '200px', height: '25px', spinButtons: true });
 	$("#WinningMoney_ADD").jqxNumberInput({ width: '200px', height: '25px', spinButtons: true });
 	$("#WinningCompany_ADD").jqxInput({width: '200px',height: "25px"});
@@ -652,13 +620,15 @@ function InitNewPackageWindow(dict,project){
     });
     $("#SavePackage_ADD").jqxButton({ theme: theme, template:"success"  });
     $("#SavePackage_ADD").click(function () {
+    	var  sd  = $("#SigningDate_ADD").val()
+    	var  md =  $("#MakeOutDate_ADD").val()
     	var row=
     	  {  ProjectId:project.Id
     		,PackageNumber:$("#PackageNumber_ADD").val()
     		,PackageName:$("#PackageName_ADD").val()
     		,StateId:$("#StateIdPackage_ADD").val()
-    		,SigningDate:$("#SigningDate_ADD").val()
-    		,MakeOutDate:$("#MakeOutDate_ADD").val()
+    		,SigningDate:sd
+    		,MakeOutDate:md
     		,EntrustMoney:$("#EntrustMoney_ADD").val()
     		,WinningMoney:$("#WinningMoney_ADD").val()
     		,WinningCompany:$("#WinningCompany_ADD").val()
