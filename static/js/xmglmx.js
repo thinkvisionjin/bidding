@@ -819,21 +819,17 @@ function InitProjectFinanceGrid(dict,project){
 
 $(document).ready(function () {
 	var project = JSON.parse($("#ProjectData").text())[0]
-	$.get("/bidding/default/getDictionaries",function(result){
-		dict = result
-		
-		$("#navBar4").jqxNavBar({
-            height: 30, selectedItem: 1
-        });
-		
-		InitEditProjectPage(dict,project);
-		InitProjectPackageGrid(dict,project);
-		InitProjectDocumentGrid(dict,project);
-		InitProjectMarginGrid(dict,project);
-	    InitNewPackageWindow(dict,project);
-	    InitProjectContactsGrid(dict,project);
-	    InitProjectFinanceGrid(dict,project);
-	},'json');
+	var dict = JSON.parse($("#Dictionaries").text())
+	$("#navBar4").jqxNavBar({
+        height: 30, selectedItem: 1
+    });
+	InitEditProjectPage(dict,project);
+	InitProjectPackageGrid(dict,project);
+	InitProjectDocumentGrid(dict,project);
+	InitProjectMarginGrid(dict,project);
+    InitNewPackageWindow(dict,project);
+    InitProjectContactsGrid(dict,project);
+    InitProjectFinanceGrid(dict,project);
 	
 	
 });

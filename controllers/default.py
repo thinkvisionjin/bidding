@@ -228,6 +228,35 @@ def getDictionaries():
     dictionaries["ProtocolCode"] = sqltojson(strSQL)
     return json.dumps(dictionaries,ensure_ascii=False)
 
+
+def getDictionariesArray():
+    dict=[]
+    dictionaries = {}
+    strSQL = u"select  Id,ProjectCode,ProjectName from [bidding].[dbo].[Project]"
+    dictionaries["ProjectName"] = sqltojson(strSQL)
+    strSQL = u"select  Id,UserName from [bidding].[dbo].[Customer]"
+    dictionaries["Customer"] = sqltojson(strSQL)
+    strSQL = u"select  Id,ProjectTypeId,ProjectTypeName from [bidding].[dbo].[ProjectType]"
+    dictionaries["ProjectType"] = sqltojson(strSQL)
+    strSQL = u"select  Id,PurchaseStyleId,PurchaseStyleName from [bidding].[dbo].[PurchaseStyle]"
+    dictionaries["PurchaseStyle"] = sqltojson(strSQL)
+    strSQL = u"select  Id,Name from [bidding].[dbo].[ProjectSource]"
+    dictionaries["ProjectSource"] = sqltojson(strSQL)
+    strSQL = u"select  Id,Name from [bidding].[dbo].[FundingSource]"
+    dictionaries["FundingSource"] = sqltojson(strSQL)
+    strSQL = u"select  Id,ManagementStyleId,ManagementStyleName from [bidding].[dbo].[ManagementStyle]"
+    dictionaries["ManagementStyle"] = sqltojson(strSQL)
+    strSQL = u"select  Id,Name from [bidding].[dbo].[ProjectStatus]"
+    dictionaries["ProjectStatus"] = sqltojson(strSQL)
+    strSQL = u"select  Id,chinesename as Name from [bidding].[dbo].[auth_user]"
+    dictionaries["Employee"] = sqltojson(strSQL,'gbk')
+    strSQL = u"select  TypeId,TypeName from [bidding].[dbo].[ProtocolCodeType]"
+    dictionaries["ProtocolCodeType"] = sqltojson(strSQL)
+    strSQL = u"select Id,ProtocolNumber from [bidding].[dbo].[ProtocolCode]"
+    dictionaries["ProtocolCode"] = sqltojson(strSQL)
+    dict.append(dictionaries)
+    return dict
+
 def mainframe():
     return dict();
 
@@ -271,7 +300,8 @@ def xmglmx():
     id = request.vars.id
     strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  Id = " +id;
     project=sqltojson(strSQL)
-    return dict(project=project)
+    dictionaries = getDictionaries()
+    return dict(project=project,dictionaries=dictionaries)
 
 def xmglmxv():
     id = request.vars.id
