@@ -18,6 +18,8 @@ function yhlsqr_setupadd() {
 	$('#tr_cwqrbz').hide();
 	$('#tr_username').hide();;
 	g_beforqrje = 0;
+	$('Save').hide();
+	$('#Cancel').val('关闭');	
 }
 function yhlsqr_setupdetail() {
 	$('#tr_rq').show();
@@ -38,8 +40,9 @@ function yhlsqr_setupdetail() {
 		$('#cwqrbz').val(data['cwqrbz']);
 		$('#username').val(data['username']);
 	}, 'json');
-	$('Save').hide();
-	$('#Cancel').val('关闭');
+	$('Save').show();
+	$('#Cancel').val('取消');
+
 
 }
 function yhlsqr_setupmodify() {
@@ -62,6 +65,8 @@ function yhlsqr_setupmodify() {
 		$('#username').val(data['username']);
 		g_beforqrje = data['qrje']
 	}, 'json');
+	$('Save').show();
+	$('#Cancel').val('取消');	
 }
 
 function yhlsqr_popupwindow(flag_state, id, callback, yhlsId) {
@@ -161,8 +166,9 @@ function deleteyhlsqr(id) {
 	var selectedrowindex = $("#yhls-grid").jqxGrid('getselectedrowindex');
 	g_row = $("#yhls-grid").jqxGrid('getrowdata', selectedrowindex);	
 	$.get('deleterow_yhlsqr?Id=' + id, function (result) {
-			alert(result);
+			
 			if (result == 'success') {
+			confirm('成功');
 			$("#yhlsqr-grid").jqxGrid('deleterow', rowid);
 			g_row['qrje'] -= qrje;
 			rowid = $("#yhls-grid").jqxGrid('getrowid', g_selectedrowindex);
@@ -170,6 +176,7 @@ function deleteyhlsqr(id) {
 		}
 		else
 		{
+			alert(result);
 			
 		}
 	});
@@ -208,6 +215,7 @@ function detailyhls(id) {
 
 
 function save(state) {
+	if ($('#Id').jqxValidator('validate')==false){return;}
 	var row = {};
 	qrje = $('#qrje').val();
 	if (state == 'add') {
@@ -295,13 +303,13 @@ function searchqryhls(id) {
 	$("#yhlsqr-grid").jqxGrid({ source: dataAdapter });
 }
 function inityhlsqr() {
-	$("#yhlsqrmx-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
+//	$("#yhlsqrmx-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
 	$("#yhlsqr-grid")
 		.jqxGrid(
 		{
 			enabletooltips: true,
 			columnsresize: true,
-			height: "80%",
+			height: "35%",
 			width: "98%",
 			columns: [{ text: '序号', datafield: 'Id', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '单位名称', datafield: 'dwmc', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
@@ -309,9 +317,9 @@ function inityhlsqr() {
 				{ text: '确认类型', datafield: 'qrlx', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '确认金额', datafield: 'qrje', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '银行流水Id', datafield: 'yhlsId', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '财务确认标志', datafield: 'cwqrbz', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '操作人', datafield: 'username', width: '10%', cellsalign: 'center', align: 'center', hidden: true },
+				{ text: '银行流水Id', datafield: 'yhlsId', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '财务确认标志', datafield: 'cwqrbz', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '操作人', datafield: 'username', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{
 					text: '操作',
 					width: '200',
@@ -375,24 +383,40 @@ function inityhlsqr() {
 	$.get('getyhlsqrpz', function (result) {
 		//需特殊处理
 		$('#wjm').jqxComboBox({ source: result['wjm']});
-		$('#dwmc').jqxInput({ source: result['dwmc'] });
+		$('#dwmc').jqxComboBox({ source: result['dwmc'] });
 		$('#bsbh').jqxDropDownList({source : result['bsbh']});
 		$('#qrlx').jqxDropDownList({ placeHolder: "", source: result['qrlx'], displayMember: "PackageNumber", valueMember: "PackageNumber" });
 	}, 'json');
-
+	$("#Id").jqxValidator({scroll: false,
+		rules: [
+		{ input: "#dwmc", message: "不可为空!", action: 'keyup, blur', rule: function(input){
+			var val = $("#dwmc").jqxComboBox('val');
+			if(val==""){return false;}	return true;
+		} },
+		{ input: "#qrlx", message: "不可为空!", action: 'keyup, blur', rule: function(input){
+			var val = $("#qrlx").jqxDropDownList('val');
+			if(val==""){return false;}	return true;
+		} },
+		{ input: "#bsbh", message: "不可为空!", action: 'keyup, blur', rule: function(input){
+			var val = $("#bsbh").jqxDropDownList('val');
+			if(val==""){return false;}	return true;
+		} }
+		], hintType: "tooltip"
+	}); 
 }
 $(document).ready(function () {
 
 	$("#yhls-expander").jqxExpander({
 		toggleMode: 'none',
-		showArrow: false
+		showArrow: false, 
+		height:'100%'
 	});
 	$("#yhls-grid")
 		.jqxGrid(
 		{
 			enabletooltips: true,
 			columnsresize: true,
-			height: "80%",
+			height: "50%",
 			width: "98%",
 			columns: [{ text: '序号', datafield: 'Id', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '交易时间', datafield: 'jysj', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },

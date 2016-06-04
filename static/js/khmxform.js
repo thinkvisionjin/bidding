@@ -96,6 +96,11 @@ $('#kh_username').val(data['username']);
 var gkhcallback;
 function kh_save()
 {
+	if ($('#kh_Id').jqxValidator('validate')==false)
+		{
+			$('#kh_Id').jqxValidator('updatePosition');
+			return;
+		}
 	if (state == 'add')
 		{
 		url = 'insertrow_kh';
@@ -194,19 +199,45 @@ $('#tr_kh_username').hide();
 	$("#kh_Save").click(function () {
 		kh_save(state);
 	});
- 	
-  	
+	$("#kh_Id").jqxValidator({scroll: false,
+		rules: [
+		{ input: "#kh_dwmc", message: "不可为空!", action: 'keyup, blur', rule: 'required' },
+		{ input: "#kh_khyh", message: "不可为空!", action: 'keyup, blur', rule: 'required' },
+		{ input: "#kh_yhzh", message: "不可为空!", action: 'keyup, blur', rule: 'required' },
+		{ input: "#kh_yhzh", message: "不是有效的银行账号!", action: 'keyup, blur', rule: function(input){
+			var val = $("#kh_yhzh").val();
+			if(val==""){return false;}
+			var reg = /[+|-|0-9]{2,30}$/;
+			if (reg.test(val)) {return true;}else{return false;}
+		} },	
+		{ input: "#kh_cz", message: "不是有效的传真号码!", action: 'keyup, blur', rule: function(input){
+			var val = $("#kh_cz").val();
+			if(val==""){return false;}
+			var reg = /[+|-|0-9]{2,30}$/;
+			if (reg.test(val)) {return true;}else{return false;}
+		} },
+		{ input: '#kh_dzxx', message: '不是有效的电子邮箱!', action: 'keyup', rule: 'email' }
+		], hintType: "tooltip"
+	}); 	
+
+        
+	
 }
 
 function kh_popupwindow(flag_state, id, callback, bsbh)
 {
+	y = document.body.scrollTop;
+	x = (document.body.scrollWidth -600)/2
+	$('#kh_popupWindow').jqxWindow({ position: { x: x, y: y }});	
 	gkhcallback = callback;
 	state = flag_state;
 	$('#kh_Id').val(id);
+	$('#kh_popupWindow').jqxWindow({ height:450});
 	if (state == 'add')
 	{
 		kh_title.innerHTML='新增';
 		kh_setupadd();
+		$('#kh_popupWindow').jqxWindow({ height:350});
 	}
 	if (state == 'modify')
 	{

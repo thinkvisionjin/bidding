@@ -6,10 +6,9 @@ function getkh(dwmc)
 		return;
 		}
 	$.get('getkh?dwmc='+dwmc, function(result){
-		if (result.length==1) {
-			var data = result[0];
-			$('#tbzj_khyh').val(data['khyh']);
-			$('#tbzj_yhzh').val(data['yhzh']);
+		if (result){
+			$('#tbzj_khyh').val(result['khyh']);
+			$('#tbzj_yhzh').val(result['yhzh']);
 		}
 		else
 		{
@@ -20,20 +19,46 @@ function getkh(dwmc)
 		
 	}, 'json');	
 }
-function tbzj_configpage()
+function tbzj_configpage(tbzjid)
 {
+	if (tbzjid == undefined)
+	{
+		url = 'gettbzjpz';
+	}
+	else
+	{
+		if (state=='add')
+		{
+			url = 'gettbzjpz?tbzjid='+tbzjid;
+		}
+		else
+		{
+			url = 'gettbzjpz';
+		}
+		$('#tbzj_dwmc').jqxInput({disabled:true});
+		$('#tbzj_bsbh').jqxDropDownList({disabled:true});
+	}
 	
-    $.get('gettbzjpz', function(result){
+	$.get(url, function(result){
 		//需特殊处理
-    	$('#tbzj_dwmc').jqxInput({source:result['dwmc']})
+    	$('#tbzj_dwmc').jqxComboBox({ placeHolder: "", source: result['dwmc']});
 $('#tbzj_bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh']});
 $('#tbzj_fkfs').jqxDropDownList({ placeHolder: "", source: result['fkfs']});
+		if (state == 'add' &&tbzjid!=undefined)
+		{
+			$('#tbzj_dwmc').val(result['tbzjid'][0]['dwmc']);
+			$('#tbzj_bsbh').val(result['tbzjid'][0]['bsbh']);
+			$('#tbzj_je').val(result['tbzjid'][0]['je']);
+			$('#tbzj_khyh').val(result['tbzjid'][0]['khyh']);
+			$('#tbzj_yhzh').val(result['tbzjid'][0]['yhzh']);
+		}
     }, 'json');	
-    $("#tbzj_dwmc").blur(function(){getkh($("#tbzj_dwmc").val())});  
+    $("#tbzj_dwmc input").blur(function(){getkh($("#tbzj_dwmc").val())});  
+
 }
 var olddwmc='';
 var state = 'add';
-function tbzj_setupadd()
+function tbzj_setupadd(tbzjId)
 {
 	$('#tbzj_Id').val('');
 $('#tbzj_dwmc').val('');
@@ -49,6 +74,8 @@ $('#tbzj_je').val('');;
 $('#tr_tbzj_rq').hide();
 $('#tr_tbzj_username').hide();
 $('#tr_tbzj_ly').hide();;
+	$('#tbzj_Save').show();
+	$('#tbzj_Cancel').val('取消');
 }
 function tbzj_setupdetail()
 {
@@ -100,11 +127,14 @@ $('#tbzj_yhzh').val(data['yhzh']);
 $('#tbzj_fkfs').val(data['fkfs']);
 $('#tbzj_je').val(data['je']);			
 	}, 'json');	
+	$('#tbzj_Save').show();
+	$('#tbzj_Cancel').val('取消');	
 }
 
 var gkhcallback;
 function tbzj_save()
 {
+	if ($('#tbzj_Id').jqxValidator('validate')==false){return;}
 	if (state == 'add')
 		{
 		url = 'insertrow_tbzj';
@@ -117,7 +147,7 @@ function tbzj_save()
 	dwmc:$('#tbzj_dwmc').val(),
 bsbh:$('#tbzj_bsbh').val(),
 username:$('#tbzj_username').val(),
-ly:$('#tbzj_ly').val(),
+ly:$('#tbzj_ly').val(''),
 khyh:$('#tbzj_khyh').val(),
 yhzh:$('#tbzj_yhzh').val(),
 fkfs:$('#tbzj_fkfs').val(),
@@ -157,15 +187,15 @@ function tbzj_init () {
 		\
 			<table align='center' >\
 			<tr id='tr_tbzj_Id' style='display:none'><td class='tbinputtitle'>序号:</td><td><input class='tbinput' type='text' id='tbzj_Id'/></td></tr>\
-<tr id='tr_tbzj_dwmc'><td class='tbinputtitle'>单位名称:</td><td><input class='tbinput' type='text' id='tbzj_dwmc'/></td></tr>\
-<tr id='tr_tbzj_rq'><td class='tbinputtitle'>日期:</td><td><input class='tbinput' type='text' id='tbzj_rq'/></td></tr>\
+<tr id='tr_tbzj_dwmc'><td class='tbinputtitle'>单位名称:</td><td><div class='tbinput' type='text' id='tbzj_dwmc'/></td></tr>\
 <tr id='tr_tbzj_bsbh'><td class='tbinputtitle'>标书编号:</td><td><div class='tbinput' type='text' id='tbzj_bsbh'/></td></tr>\
-<tr id='tr_tbzj_username'><td class='tbinputtitle'>操作人:</td><td><input class='tbinput' type='text' id='tbzj_username'/></td></tr>\
-<tr id='tr_tbzj_ly'><td class='tbinputtitle'>来源:</td><td><input class='tbinput' type='text' id='tbzj_ly'/></td></tr>\
 <tr id='tr_tbzj_khyh'><td class='tbinputtitle'>开户银行:</td><td><input class='tbinput' type='text' id='tbzj_khyh'/></td></tr>\
 <tr id='tr_tbzj_yhzh'><td class='tbinputtitle'>银行账号:</td><td><input class='tbinput' type='text' id='tbzj_yhzh'/></td></tr>\
 <tr id='tr_tbzj_fkfs'><td class='tbinputtitle'>付款方式:</td><td><div class='tbinput' type='text' id='tbzj_fkfs'/></td></tr>\
 <tr id='tr_tbzj_je'><td class='tbinputtitle'>金额:</td><td><input class='tbinput' type='text' id='tbzj_je'/></td></tr>\
+<tr id='tr_tbzj_rq'><td class='tbinputtitle'>日期:</td><td><input class='tbinput' type='text' id='tbzj_rq'/></td></tr>\
+<tr id='tr_tbzj_username'><td class='tbinputtitle'>操作人:</td><td><input class='tbinput' type='text' id='tbzj_username'/></td></tr>\
+<tr id='tr_tbzj_ly'><td class='tbinputtitle'>来源:</td><td><input class='tbinput' type='text' id='tbzj_ly'/></td></tr>\
 \
 \
                     <tr>\
@@ -183,7 +213,7 @@ function tbzj_init () {
     
 
     $('#tbzj_Id').jqxInput();
-$('#tbzj_dwmc').jqxInput();
+$('#tbzj_dwmc').jqxComboBox({ placeHolder: '',autoComplete:true});
 $('#tbzj_rq').jqxInput();
 $('#tbzj_bsbh').jqxDropDownList({ placeHolder: ''});
 $('#tbzj_username').jqxInput();
@@ -197,7 +227,7 @@ $('#tr_tbzj_rq').hide();
 $('#tr_tbzj_username').hide();
 $('#tr_tbzj_ly').hide();
 
-	tbzj_configpage();
+
     $("#tbzj_Save").jqxButton({template:'success'});
     $("#tbzj_Cancel").jqxButton({template:'warning'});    
 
@@ -205,11 +235,31 @@ $('#tr_tbzj_ly').hide();
 		tbzj_save(state);
 	});
  	
-  	
+	$("#tbzj_Id").jqxValidator({scroll: false,
+		rules: [
+		{ input: "#tbzj_khyh", message: "不可为空!", action: 'keyup, blur', rule: 'required'},
+		{ input: "#tbzj_yhzh", message: "不可为空!", action: 'keyup, blur', rule: 'required'},
+		{ input: "#tbzj_dwmc", message: "不可为空!", action: 'keyup, blur', rule: function(input){
+			var val = $("#tbzj_dwmc").jqxComboBox('val');
+			if(val==""){return false;}	return true;
+		} },
+		{ input: "#tbzj_fkfs", message: "不可为空!", action: 'keyup, blur', rule: function(input){
+			var val = $("#tbzj_fkfs").jqxDropDownList('val');
+			if(val==""){return false;}	return true;
+		} },
+		{ input: "#tbzj_bsbh", message: "不可为空!", action: 'keyup, blur', rule: function(input){
+			var val = $("#tbzj_bsbh").jqxDropDownList('val');
+			if(val==""){return false;}	return true;
+		} }
+		], hintType: "tooltip"
+	});    	
 }
 
-function tbzj_popupwindow(flag_state, id, callback, bsbh)
+function tbzj_popupwindow(flag_state, id, callback, tbzjid, bsbh)
 {
+	y = document.body.scrollTop;
+	x = (document.body.scrollWidth -600)/2
+	$('#tbzj_popupWindow').jqxWindow({ position: { x: x, y: y }});		
 	state = flag_state;
 	gkhcallback = callback;
 	$('#tbzj_Id').val(id);
@@ -218,18 +268,21 @@ function tbzj_popupwindow(flag_state, id, callback, bsbh)
 	{
 		tbzj_title.innerHTML='新增';
 		tbzj_setupadd();
+		$('#tbzj_popupWindow').jqxWindow({ height:300});
 	}
 	if (state == 'modify')
 	{
 		tbzj_title.innerHTML='修改';
 		tbzj_setupmodify();
+		$('#tbzj_popupWindow').jqxWindow({ height:430});
 	}
 	if (state == 'detail')
-		{
+	{
 			
-			tbzj_title.innerHTML='详情';
-			tbzj_setupdetail();
-		}
-	$('#tbzj_bsbh').val(bsbh);	
+		tbzj_title.innerHTML='详情';
+		tbzj_setupdetail();
+		$('#tbzj_popupWindow').jqxWindow({ height:430});
+	}
+	tbzj_configpage(tbzjid);
 	$('#tbzj_popupWindow').jqxWindow('open');
 }

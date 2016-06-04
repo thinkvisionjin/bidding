@@ -22,13 +22,22 @@ function getkh(dwmc)
 		
 	}, 'json');	
 }
-function tbbzj_configpage()
+function tbbzj_configpage(projectid)
 {
+	if (projectid == undefined)
+	{
+		url = 'gettbbzjpz';
+	}
+	else
+	{
+		url = 'gettbbzjpz?projectid='+projectid;
+	}
 	
-    $.get('gettbbzjpz', function(result){
+	$.get(url, function(result){
 		//需特殊处理
-    	$('#tbbzj_dwmc').jqxInput({source:result['dwmc']})
+    	$('#tbbzj_dwmc').jqxComboBox({ placeHolder: "", source: result['dwmc']});
 $('#tbbzj_bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh']});
+$('#tbbzj_bsbh').jqxDropDownList('selectIndex', 0);
 $('#tbbzj_bzjlx').jqxDropDownList({ placeHolder: "", source: result['bzjlx']});
     }, 'json');	
     $("#tbbzj_dwmc input").blur(function(){getkh($("#tbbzj_dwmc").val())});  
@@ -49,6 +58,8 @@ $('#tbbzj_ly').val('');;
 $('#tr_tbbzj_rq').hide();
 $('#tr_tbbzj_username').hide();
 $('#tr_tbbzj_ly').hide();;
+	$('#tbbzj_Save').show();
+	$('#tbbzj_Cancel').val('取消');
 }
 function tbbzj_setupdetail()
 {
@@ -96,11 +107,14 @@ $('#tbbzj_rq').val(data['rq']);
 $('#tbbzj_username').val(data['username']);
 $('#tbbzj_ly').val(data['ly']);			
 	}, 'json');	
+		$('#tbbzj_Save').show();
+	$('#tbbzj_Cancel').val('取消');
 }
 
 var gkhcallback;
 function tbbzj_save()
 {
+	if ($('#tbbzj_Id').jqxValidator('validate')==false){return;}
 	if (state == 'add')
 		{
 		url = 'insertrow_tbbzj';
@@ -115,7 +129,7 @@ bsbh:$('#tbbzj_bsbh').val(),
 bzjlx:$('#tbbzj_bzjlx').val(),
 je:$('#tbbzj_je').val(),
 username:$('#tbbzj_username').val(),
-ly:$('#tbbzj_ly').val(),
+ly:$('#tbbzj_ly').val('现场'),
 	//////////来源////需特殊处理//////
 	};
     $.ajax({
@@ -151,7 +165,7 @@ function tbbzj_init () {
 		\
 			<table align='center' >\
 			<tr id='tr_tbbzj_Id' style='display:none'><td class='tbinputtitle'>序号:</td><td><input class='tbinput' type='text' id='tbbzj_Id'/></td></tr>\
-<tr id='tr_tbbzj_dwmc'><td class='tbinputtitle'>单位名称:</td><td><input class='tbinput' type='text' id='tbbzj_dwmc'/></td></tr>\
+<tr id='tr_tbbzj_dwmc'><td class='tbinputtitle'>单位名称:</td><td><div class='tbinput' type='text' id='tbbzj_dwmc'/></td></tr>\
 <tr id='tr_tbbzj_bsbh'><td class='tbinputtitle'>标书编号:</td><td><div class='tbinput' type='text' id='tbbzj_bsbh'/></td></tr>\
 <tr id='tr_tbbzj_bzjlx'><td class='tbinputtitle'>保证金类型:</td><td><div class='tbinput' type='text' id='tbbzj_bzjlx'/></td></tr>\
 <tr id='tr_tbbzj_je'><td class='tbinputtitle'>金额:</td><td><input class='tbinput' type='text' id='tbbzj_je'/></td></tr>\
@@ -175,7 +189,7 @@ function tbbzj_init () {
     
 
     $('#tbbzj_Id').jqxInput();
-$('#tbbzj_dwmc').jqxInput();
+$('#tbbzj_dwmc').jqxComboBox({ placeHolder: '',autoComplete:true});
 $('#tbbzj_bsbh').jqxDropDownList({ placeHolder: ''});
 $('#tbbzj_bzjlx').jqxDropDownList({ placeHolder: ''});
 $('#tbbzj_je').jqxNumberInput({inputMode: 'simple'});
@@ -187,39 +201,59 @@ $('#tr_tbbzj_rq').hide();
 $('#tr_tbbzj_username').hide();
 $('#tr_tbbzj_ly').hide();
 
-	tbbzj_configpage();
     $("#tbbzj_Save").jqxButton({template:'success'});
     $("#tbbzj_Cancel").jqxButton({template:'warning'});    
 
 	$("#tbbzj_Save").click(function () {
 		tbbzj_save(state);
 	});
- 	
+	$("#tbbzj_Id").jqxValidator({scroll: false,
+		rules: [
+		{ input: "#tbbzj_dwmc", message: "不可为空!", action: 'keyup, blur', rule: function(input){
+			var val = $("#tbbzj_dwmc").jqxComboBox('val');
+			if(val==""){return false;}	return true;
+		} },
+		{ input: "#tbbzj_bzjlx", message: "不可为空!", action: 'keyup, blur', rule: function(input){
+			var val = $("#tbbzj_bzjlx").jqxDropDownList('val');
+			if(val==""){return false;}	return true;
+		} },
+		{ input: "#tbbzj_bsbh", message: "不可为空!", action: 'keyup, blur', rule: function(input){
+			var val = $("#tbbzj_bsbh").jqxDropDownList('val');
+			if(val==""){return false;}	return true;
+		} }
+		], hintType: "tooltip"
+	});  	
   	
 }
 
-function tbbzj_popupwindow(flag_state, id, callback, bsbh)
+function tbbzj_popupwindow(flag_state, id, callback, projectid, bsbh)
 {
+	y = document.body.scrollTop;
+	x = (document.body.scrollWidth -600)/2
+	$('#tbbzj_popupWindow').jqxWindow({ position: { x: x, y: y }});	
 	state = flag_state;
 	gkhcallback = callback;
+	tbbzj_configpage(projectid);
 	$('#tbbzj_Id').val(id);
 	
 	if (state == 'add')
 	{
 		tbbzj_title.innerHTML='新增';
 		tbbzj_setupadd();
+		$('#tbbzj_popupWindow').jqxWindow({ height:280});
 	}
 	if (state == 'modify')
 	{
 		tbbzj_title.innerHTML='修改';
 		tbbzj_setupmodify();
+		$('#tbbzj_popupWindow').jqxWindow({ height:380});
 	}
 	if (state == 'detail')
 		{
 			
 			tbbzj_title.innerHTML='详情';
 			tbbzj_setupdetail();
+			$('#tbbzj_popupWindow').jqxWindow({ height:380});
 		}
-	$('#tbbzj_bsbh').val(bsbh);	
 	$('#tbbzj_popupWindow').jqxWindow('open');
 }

@@ -14,6 +14,7 @@
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxlistbox.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdropdownlist.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdropdownbutton.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcombobox.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcolorpicker.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxeditor.js')}}"></script>
@@ -27,7 +28,9 @@
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"></script> 
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxlistbox.js')}}"></script>
 	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxnumberinput.js')}}"></script>
-    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.selection.js')}}"></script> 
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.selection.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxvalidator.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtooltip.js')}}"></script>     
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.columnsresize.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/tbzj.js')}}"></script>
 	<script type="text/javascript" src="{{=URL('static','js/tbzjmxform.js')}}"></script>
@@ -38,19 +41,19 @@
 <body>
 
     <div id="tbzj-expander">
-    <div></div>
+    <div>退保证金</div>
     <div >
     	<div>
     		<table align="center" >
 				<tr >
 					<td class='tbinputtitle'>单位名称:</td><td><input class='tbinput' type='text' id='dwmc'/></td>
+<td class='tbinputtitle'>标书编号:</td><td><input class='tbinput' type='text' id='bsbh'/></td>
+                <td >
+                    <td>
+                    <input id="search" style="float:right" type="button" value="查询" />
+                </td>
+				</tr>
 
-				</tr>
-				<tr id='tr_search'>
-				<td  colspan=4>
-					<input id="search" style="float:right" type="button" value="查询" />
-				</td>
-				</tr>
     		</table>
     	</div>
     	<div id='tbzj-grid' style='margin: 1%;'></div>

@@ -35,8 +35,15 @@ function deletelxr(id) {
     }
 
 	$.get('deleterow_lxr?Id=' + id, function (result) {
-		alert(result);
-		$("#lxr-grid").jqxGrid('deleterow', rowid);
+		if (result == 'success')
+		{
+			confirm('成功')
+			$("#lxr-grid").jqxGrid('deleterow', rowid);
+		}
+		else
+		{
+			alert(result)
+		}	
 	});
 }
 
@@ -77,7 +84,7 @@ function addselectfieldwindows() {
 	var listSource = [{ label: '序号', value: 'Id', checked: true }, ,
 		{ label: '纳税人识别号', value: 'nsrsbh', checked: true }, ,
 		{ label: '单位名称', value: 'dwmc', checked: true }, ,
-		{ label: '日期', value: 'rq', checked: true }, ,
+		{ label: '日期', value: 'rq', checked: false }, ,
 		{ label: '开户银行', value: 'khyh', checked: true }, ,
 		{ label: '银行账号', value: 'yhzh', checked: true }, ,
 		{ label: '联系地址', value: 'lxdz', checked: true }, ,
@@ -112,12 +119,17 @@ function deletekh(id) {
     }
 
 	$.get('deleterow_kh?Id=' + id, function (result) {
-		alert(result);
+		
 		if (result == 'success')
 		{
+			alert('成功')
 			$("#kh-grid").jqxGrid('deleterow', rowid);
 			$('#kh-grid').jqxGrid('selectrow', -1);
 			$('#lxr-grid').jqxGrid('clear');
+		}
+		else
+		{
+			alert(result)
 		}
 	});
 }
@@ -140,7 +152,6 @@ function addlxr()
 {
 		l_selectedindex = $('#kh-grid').jqxGrid('getselectedrowindex');
 		data = $('#kh-grid').jqxGrid('getrowdata', l_selectedindex);
-		alert(data['Id']);
 		lxr_popupwindow('add', '', searchlxr, data['Id']);
 		//window.location.replace('lxrmx');
 		//$("#popupWindow").jqxWindow('open');	
@@ -151,9 +162,9 @@ function initlxr() {
 		{
 			enabletooltips: true,
 			columnsresize: true,
-			height: "80%",
+			height: "40%",
 			width: "98%",
-			columns: [{ text: '序号', datafield: 'Id', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+			columns: [{ text: '序号', datafield: 'Id', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '联系人', datafield: 'lxr', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '手机', datafield: 'sj', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
@@ -168,32 +179,32 @@ function initlxr() {
 						value,
 						defaultvalue,
 						column, rowdata) {
-						var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printlxr(' + rowdata.Id + ')">打印</a>';
+//						var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printlxr(' + rowdata.Id + ')">打印</a>';
 
 						var b = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="modifylxr(' + rowdata.Id + ')">修改</a>';
 
 						var c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deletelxr(' + rowdata.Id + ')">删除</a>';
-						var d = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="detaillxr(' + rowdata.Id + ')">详细</a>';
+//						var d = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="detaillxr(' + rowdata.Id + ')">详细</a>';
 						var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 6px;">'
-							+ a + b + c + d + '</div>';
+							+ b + c + '</div>';
 						return d;
 					}
 				}],
 			showtoolbar: true,
 			rendertoolbar: function (toolbar) {
 				var me = this;
-				var container = $("<div style='margin: 5px;'></div>");
+				var container = $("<div style='margin: 7px;'><b>联系人:</b></div>");
 				toolbar.append(container);
-				container.append('<b>联系人:</b><input id="lxradd" type="button" value="新增" />');
+				/*container.append('<b>联系人:</b><input id="lxradd" type="button" value="新增" />');
 				$("#lxradd").jqxButton({
 					template: 'success'
-				});
+				});*/
 			}
 
 		});
-	$("#lxradd").click(function () {
+	/*$("#lxradd").click(function () {
 		addlxr();
-	});
+	});*/
 	lxr_init();
 
 }
@@ -202,19 +213,20 @@ $(document).ready(function () {
 
 	$("#kh-expander").jqxExpander({
 		toggleMode: 'none',
-		showArrow: false
+		showArrow: false,
+		height:'100%'
 	});
 	$("#kh-grid")
 		.jqxGrid(
 		{
 			enabletooltips: true,
 			columnsresize: true,
-			height: "80%",
+			height: "45%",
 			width: "98%",
-			columns: [{ text: '序号', datafield: 'Id', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+			columns: [{ text: '序号', datafield: 'Id', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '纳税人识别号', datafield: 'nsrsbh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '单位名称', datafield: 'dwmc', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: true },
 				{ text: '开户银行', datafield: 'khyh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '银行账号', datafield: 'yhzh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '联系地址', datafield: 'lxdz', width: '10%', cellsalign: 'center', align: 'center', hidden: false },

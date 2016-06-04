@@ -13,7 +13,8 @@ from _sqlite3 import Row
 import time
 
 T.force('zh-cn')
-
+CONST_MANAGER=2;
+auth.settings.actions_disabled=['register','request_reset_password']
 @auth.requires_login()
 def index():
     """
@@ -355,6 +356,7 @@ group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]  
       order by a.[Id] desc'''
     return  sqltojson(strSQL)
 
+@auth.requires_login()
 def gmbs():
     return dict();
 
@@ -494,7 +496,7 @@ def sqltojson(sql,decode=None):
             else:
                 dict_row[key] = unicode(row[key])
         dic_rows.append(dict_row)
-    return json.dumps(dic_rows) 
+    return json.dumps(dic_rows).replace(u'None', u'') 
 
 def getzbgg():
     return sqltojson(u'SELECT top 10 [id],[title],[addtime] FROM [zhaobiao].[dbo].[Zbgg] order by addtime desc')
@@ -655,36 +657,50 @@ def deleterow(table_name, id):
     db(db[table_name]._id == id).delete()
 
 
-def p_getbsbh(uid):
-    sql = u"""select PackageNumber from ProjectPackage""";   
+def p_getbsbh(projectid=None):
+    uid = auth.user_id
+    tj = u''
+    if auth.user_groups.has_key(CONST_MANAGER):
+        tj_uid = u'1=1'
+    else:
+        tj_uid = u'''( EmployeeId='''+unicode(uid)+u''' or Assistant='''+unicode(uid)+u''')'''
+    if projectid != None:
+        tj = u""" and b.ProjectId = """+unicode(projectid)
+    sql = u"""select b.PackageNumber FROM [Project] a, ProjectPackage b   
+    where """+ tj_uid+u""" and a.Id=b.ProjectId and b.stateid=1 """+tj;
+    print sql
     return sqltoarraynodict(sql);
 
 #购买标书代码
 #定制代码
 def getkh():
-    sql = u"""select * from kh where dwmc='"""+request.vars.dwmc+u"'";
+    dwmc = unicode(request.vars.dwmc, u'utf-8')
+    sql = u"""select * from kh where dwmc='"""+dwmc+u"'";
     
-    row = db(db[u'kh'].dwmc ==request.vars.dwmc).select().first()
+    row = db(db[u'kh'].dwmc == dwmc).select().first()
+    
     khId = row[u'id']
     result = {};
     sql = u"""select lxr from lxr where khId="""+unicode(khId);   
     result[u'lxr'] =  sqltoarraynodict(sql);    
     sql = u"""select sj from lxr where khId="""+unicode(khId);   
-    result[u'sj'] =  sqltoarraynodict(sql);        
+    result[u'sj'] =  sqltoarraynodict(sql);
+    result[u'khyh'] = row[u'khyh']
+    result[u'yhzh'] = row[u'yhzh']       
     return json.dumps(result)
 
 #购买标书配置信息需定制
 def getgmbspz():
-    uid = u'';
+    uid = auth.user_id;
     result = {};
     sql = u"""select dwmc from kh""";   
     result[u'dwmc'] = sqltoarraynodict(sql);
 
-    result[u'bsbh'] = p_getbsbh(uid);
+    result[u'bsbh'] = p_getbsbh(request.vars.projectid);
     return json.dumps(result)   
 
 #主页
-
+@auth.requires_login()
 def gmbs():
     return dict();
 #操作
@@ -698,12 +714,16 @@ def gmbsmx():
 #获取所有
 
 def getgmbs():
-    dwmc = request.vars.dwmc
-    bsbh = request.vars.bsbh
-    if dwmc==None:
+    
+    
+    if request.vars.dwmc==None:
         dwmc=u''
-    if bsbh==None:
+    else:
+        dwmc = unicode(request.vars.dwmc, u'utf-8')
+    if request.vars.bsbh==None:
         bsbh=u''
+    else:
+        bsbh = unicode(request.vars.bsbh, u'utf-8')
     where = u'where '
     where += u"dwmc like '%"+dwmc+u"%'"
     where += u"and bsbh like '%"+bsbh+u"%'"
@@ -721,16 +741,25 @@ def gmbs_print():
     row[u'zje'] = Num2MoneyFormat(row[u'je'])
     return dict(**row)
 
+
 def select_gmbs():
     try:
-        dwmc = request.vars.dwmc
-        bsbh = request.vars.bsbh
-        username = u'Test'
-        if dwmc==None:
+
+
+        username = auth.user.chinesename.decode('gbk')
+  
+        if request.vars.dwmc==None:
             dwmc=u''
-        if bsbh==None:
+        else:
+            dwmc = unicode(request.vars.dwmc, u'utf-8')
+        if request.vars.bsbh==None:
             bsbh=u''
-        where = u"where username='"+username+u"'"
+        else:
+            bsbh = unicode(request.vars.bsbh, u'utf-8')
+        if auth.user_groups.has_key(CONST_MANAGER):
+            where = u"where 1=1 "
+        else:
+            where = u"where username='"+username+u"'"
         where += u"and dwmc like '%"+dwmc+u"%'"
         where += u"and bsbh like '%"+bsbh+u"%'"
         order = u" order by rq desc"
@@ -814,7 +843,7 @@ def p_insertrow_gmbs(rowData):
 
 def insertrow_gmbs():
     try:
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
         rowData[u'username'] = username
         p_insertrow_gmbs(rowData)
@@ -852,7 +881,7 @@ def selectone_gmbs():
 
 #################################################3
 #主页
-
+@auth.requires_login()
 def kh():
     return dict();
 #操作
@@ -868,11 +897,14 @@ def khmx():
 
 def select_kh():
     try:
-        username = u'Test'
-        where = u"where username='"+username+u"'"
-        dwmc = request.vars.dwmc
-        if dwmc==None:
+        #username = auth.user.chinesename.decode('gbk')
+        #where = u"where username='"+username+u"'"
+        where = u'where 1=1 '
+        if request.vars.dwmc==None:
             dwmc=u''
+        else:
+            dwmc = unicode(request.vars.dwmc, u'utf-8')
+
         where += u"and dwmc like '%"+dwmc+u"%'"
         
         order = u" order by rq desc"
@@ -897,7 +929,7 @@ def updaterow_kh():
 def insertrow_kh():
     try:
         table_name = u'kh'
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
         rowData[u'username'] = username
         print u"insertrow kh"
@@ -951,19 +983,22 @@ def tbbzjmx():
 
 def select_tbbzj():
     try:
-        username = u'Test'
-        where = u"where username='"+username+u"'"
+        username = auth.user.chinesename.decode('gbk')
+        if auth.user_groups.has_key(CONST_MANAGER):
+            where = u"where 1=1 "
+        else:
+            where = u"where username='"+username+u"'"
         
-        dwmc = request.vars.dwmc
-        if dwmc==None:
+        if request.vars.dwmc==None:
             dwmc=u''
-        where += u"and dwmc like '%"+dwmc+u"%'"
-        
-    
-        bsbh = request.vars.bsbh
-        if bsbh==None:
+        else:
+            dwmc = unicode(request.vars.dwmc, u'utf-8')
+        where += u"and dwmc like '%"+dwmc+u"%' "    
+        if request.vars.bsbh==None:
             bsbh=u''
-        where += u"and bsbh like '%"+bsbh+u"%'"
+        else:
+            bsbh = unicode(request.vars.bsbh, u'utf-8')
+        where += u"and bsbh like '%"+bsbh+u"%' "
         
         order = u" order by rq desc"
         sql = u"""select * from tbbzj """ + where+order;
@@ -996,7 +1031,7 @@ def p_insertrow_tbbzj(rowData):
 def insertrow_tbbzj():
     try:
         
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
         rowData[u'username'] = username
         p_insertrow_tbbzj(rowData)
@@ -1006,6 +1041,7 @@ def insertrow_tbbzj():
         print e
         db.rollback()
         return u"fail"
+    
 def p_deleterow_tbbzj(id):
     table_name = u'tbbzj'
     deleterow(table_name, id)
@@ -1033,13 +1069,12 @@ def selectone_tbbzj():
 
 def gettbbzjpz():
     try:
-        uid = u''
         result = {};
         sql = u"""select dwmc from kh""";   
         result[u'dwmc'] = sqltoarraynodict(sql);
     
-        result[u'bsbh'] = p_getbsbh(uid)
-        result[u'bzjlx'] = [u'现金', u'保函']
+        result[u'bsbh'] = p_getbsbh(request.vars.projectid)
+        result[u'bzjlx'] = [u'现金', u'汇款', u'支票', u'其他']
         return json.dumps(result)  
     except:
         return u"fail"
@@ -1100,13 +1135,22 @@ def tbzjmx():
 #获取所有
 def select_tbzj():
     try:
-        username = u'Test'
-        where = u"where username='"+username+u"'"
+        username = auth.user.chinesename.decode('gbk')
+        if auth.user_groups.has_key(CONST_MANAGER):
+            where = u"where 1=1 "
+        else:
+            where = u"where username='"+username+u"'"
         
-        dwmc = request.vars.dwmc
-        if dwmc==None:
+        if request.vars.dwmc==None:
             dwmc=u''
-        where += u"and dwmc like '%"+dwmc+u"%'"
+        else:
+            dwmc = unicode(request.vars.dwmc, u'utf-8')
+        where += u"and dwmc like '%"+dwmc+u"%' "    
+        if request.vars.bsbh==None:
+            bsbh=u''
+        else:
+            bsbh = unicode(request.vars.bsbh, u'utf-8')
+        where += u"and bsbh like '%"+bsbh+u"%' "
         
         order = u" order by rq desc"
         sql = u"""select * from tbzj """ + where+order;
@@ -1131,8 +1175,9 @@ def updaterow_tbzj():
 def insertrow_tbzj():
     try:
         table_name = u'tbzj'
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
+        
         rowData[u'username'] = username
         print u"insertrow tbzj"
         print rowData
@@ -1169,13 +1214,21 @@ def selectone_tbzj():
 
 #购买标书配置信息需定制
 def gettbzjpz():
-    uid = u'';
+    uid = auth.user_id;
     result = {};
     sql = u"""select dwmc from kh""";   
     result[u'dwmc'] = sqltoarraynodict(sql);
 
-    result[u'bsbh'] = p_getbsbh(uid);
+    result[u'bsbh'] = p_getbsbh(request.vars.projectid)
     result[u'fkfs'] = [u'现金', u'汇款', u'支票', u'其他']
+    
+    tbbzjid = request.vars.tbbzjid
+    if tbbzjid==None:
+        bsbh=u''
+    else:
+        table_name = u'tbbzj'
+        sql = u"""select a.*, b.khyh, b.yhzh from tbbzj a, kh b where a.dwmc=b.dwmc and a.Id="""+tbbzjid;
+        result[u'tbbzjid'] = sqltoarray(sql);  
     return json.dumps(result) 
 
 
@@ -1195,7 +1248,7 @@ def zbmx():
 #获取所有
 def select_zb():
     try:
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         where = u"where username='"+username+u"'"
         
         bsbh = request.vars.bsbh
@@ -1204,7 +1257,7 @@ def select_zb():
         where += u"and bsbh like '%"+bsbh+u"%'"
         
     
-        zbdw1 = request.vars.zbdw1
+        zbdw1 = unicode(request.vars.zbdw1, u'utf-8')
         if zbdw1==None:
             zbdw1=u''
         where += u"and (zbdw1 like '%"+zbdw1+u"%'"
@@ -1233,7 +1286,7 @@ def updaterow_zb():
 def insertrow_zb():
     try:
         table_name = u'zb'
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
         rowData[u'username'] = username
         print u"insertrow zb"
@@ -1267,12 +1320,12 @@ def selectone_zb():
         return u"fail"
 
 def getzbpz():
-    uid = u'';
+    uid = auth.user_id;
     result = {};
     sql = u"""select dwmc from kh""";   
     result[u'dwmc'] = sqltoarraynodict(sql);
 
-    result[u'bsbh'] = p_getbsbh(uid);
+    result[u'bsbh'] = p_getbsbh(request.vars.projectid)
     return json.dumps(result) 
 
 def getttbzj_tbzj():
@@ -1292,7 +1345,7 @@ def grtjb():
 #获取所有
 def select_grtjb():
     try:
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
     #    where = u"where username='"+username+u"'"
         
     #    xm = request.vars.xm
@@ -1338,18 +1391,23 @@ def select_zzxmtjb():
         return sqltojson(sql);   
     except:
         return u"fail"
-    
+@auth.requires_login()    
 def yhlswj():
     return dict()
 
 def select_yhlswj():
     try:
-        username = u'Test'
-        where = u"where username='"+username+u"'"
+        username = auth.user.chinesename.decode('gbk')
+        if auth.user_groups.has_key(CONST_MANAGER):
+            where = u"where 1=1 "
+        else:
+            where = u"where username='"+username+u"'"
         
-        wjm = request.vars.wjm
-        if wjm==None:
+        
+        if request.vars.wjm==None:
             wjm=u''
+        else:
+            wjm = unicode(request.vars.wjm, u'utf-8')
         where += u"and wjm like '%"+wjm+u"%'"
         
         order = u" order by rq desc"
@@ -1362,7 +1420,7 @@ def select_yhlswj():
 def insertrow_yhlswj():
     try:
         table_name = u'yhlswj'
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
         rowData[u'username'] = username
         print u"insertrow yhlswj"
@@ -1396,16 +1454,16 @@ def selectone_yhlswj():
     table_name = u'yhlswj'
     sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
 
-
+import xlrd
 def fileUpload():
     try:
         f= request.vars.fileToUpload
         
         table_name = u'yhlswj'
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = {}
         rowData[u'username'] = username
-        rowData[u'wjm'] = unicode(f.filename)
+        rowData[u'wjm'] = unicode(f.filename, u'utf-8')
         print rowData
         id = db[table_name].insert(**rowData)    
         
@@ -1430,36 +1488,42 @@ def fileUpload():
         print f.filename
         db.commit()
         return u"success"
-    except:
+    except Exception as e:
+        print e
         db.rollback()
         return u"fail"
-    
+@auth.requires_login()    
 def yhls():
     return dict()
-
+@auth.requires_login()
 def yhlsqr():
     return dict()
 #获取所有
 #获取所有
 def select_yhls():
     try:
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         where = u"where "
         
-        dfmc = request.vars.dfmc
-        if dfmc==None:
+        
+        if request.vars.dfmc==None:
             dfmc=u''
+        else:
+            dfmc = unicode(request.vars.dfmc, u'utf-8')
         where += u" dfmc like '%"+dfmc+u"%'"
         
     
-        dfzh = request.vars.dfzh
-        if dfzh==None:
+        if request.vars.dfzh==None:
             dfzh=u''
+        else:
+            dfzh=unicode(request.vars.dfzh, u'utf-8')
         where += u"and dfzh like '%"+dfzh+u"%'"
 
-        wjm = request.vars.wjm
-        if wjm==None:
+        
+        if request.vars.wjm==None:
             wjm=u''
+        else:
+            wjm = unicode(request.vars.wjm, u'utf-8')
         where += u"and wjm like '%"+wjm+u"%'"        
         order = u" order by jysj desc"
         sql = u"""select * from yhls """ + where+order;
@@ -1471,12 +1535,12 @@ def select_yhls():
 def getyhlsqrpz():
     try:
         result = {};
-        uid = u'';
+        uid = auth.user_id;
         sql = u"""select dwmc from kh""";   
         result[u'dwmc'] = sqltoarraynodict(sql);    
         sql = u"""select distinct wjm from yhls""";   
         result[u'wjm'] = sqltoarraynodict(sql);          
-        result[u'bsbh'] = p_getbsbh(uid);
+        result[u'bsbh'] = p_getbsbh(request.vars.projectid);
         result[u'qrlx'] = [u'购买标书', u'投标保证金']
         return json.dumps(result)  
     except:
@@ -1484,7 +1548,7 @@ def getyhlsqrpz():
 
 def insertrow_yhlsqr():
     try:
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
         table_name = u'yhls'
         yhlsId = rowData[u'yhlsId']
@@ -1554,26 +1618,7 @@ def updaterow_yhlscwqr():
         yhlsrow[u'cwqrje'] = row[u'cwqrje']
         updaterow(table_name, yhlsId, yhlsrow)
 #########################
-        if rowData[u'qrlx'] == u'购买标书':
-            gmbsrow = {}
-            gmbsrow[u'lyId'] = id
-            gmbsrow[u'dwmc'] = rowData[u'dwmc']
-            gmbsrow[u'bsbh'] = rowData[u'bsbh']
-            gmbsrow[u'je'] = rowData[u'qrje']
-            gmbsrow[u'username'] = username
-            gmbsrow[u'ly'] = u'交易流水确认'
-            gmbsrow[u'lxr'] = u''
-            gmbsrow[u'sj'] = u''
-            p_insertrow_gmbs(gmbsrow)
-        if rowData[u'qrlx'] == u'投标保证金':
-            tbbzjrow = {}
-            tbbzjrow[u'lyId'] = id
-            tbbzjrow[u'dwmc'] = rowData[u'dwmc']
-            tbbzjrow[u'bsbh'] = rowData[u'bsbh']
-            tbbzjrow[u'ly'] = u'交易流水确认'
-            tbbzjrow[u'je'] = rowData[u'qrje']
-            tbbzjrow[u'username'] = username
-            p_insertrow_tbbzj(tbbzjrow)  
+
 #########################
         db.commit()   
         return u"success"
@@ -1610,7 +1655,7 @@ def updaterow_yhlscwqxqr():
 
 def updaterow_yhlsqr():
     try:
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         id = request.vars.Id
         rowData = request.post_vars
         table_name = u'yhlsqr'
@@ -1715,19 +1760,31 @@ def deleterow_yhlsqr():
 #获取所有
 def select_yhlsqr():
     try:
-        username = u'Test'
-        where = u"where username='"+username+u"'"
+        print u'select_yhlsqr'
+        username = auth.user.chinesename.decode('gbk')
+        if auth.user_groups.has_key(CONST_MANAGER):
+            where = u"where 1=1 "
+        else:
+            where = u"where username='"+username+u"'"        
         
-        yhlsId = request.vars.yhlsId
-        if yhlsId==None:
+
+
+        if request.vars.yhlsId==None:
             yhlsId=u''
         else:
-            where += u"and yhlsId = "+yhlsId
+            yhlsId = unicode(request.vars.yhlsId, u'utf-8')
+            where += u"and yhlsId ="+yhlsId + u" "       
+        
+        if request.vars.dwmc==None:
+            dwmc=u''
+        else:
+            dwmc = unicode(request.vars.dwmc, u'utf-8')
+            where += u"and dwmc like '%"+dwmc + u"%' "
 
-        wjm = request.vars.wjm
-        if wjm==None:
+        if request.vars.wjm==None:
             wjm=u''
         else:
+            wjm = unicode(request.vars.wjm, u'utf-8')
             where += u"and yhlsId in (select Id from yhls where wjm='"+wjm+u"')"        
         order = u" order by rq desc"
         sql = u"""select * from yhlsqr """ + where+order;
@@ -1746,7 +1803,7 @@ def selectone_yhlsqr():
     
 def select_lxr():
     try:
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         where = u"where username='"+username+u"'"
         khId = request.vars.khId   
         where += u"and khId = "+khId 
@@ -1772,7 +1829,7 @@ def updaterow_lxr():
 def insertrow_lxr():
     try:
         table_name = u'lxr'
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
         rowData[u'username'] = username
         print u"insertrow lxr"
@@ -1820,8 +1877,11 @@ def cwlsmx():
 #获取所有
 def select_cwls():
     try:
-        username = u'Test'
-        where = u"where username='"+username+u"'"
+        username = auth.user.chinesename.decode('gbk')
+        if auth.user_groups.has_key(CONST_MANAGER):
+            where = u"where 1=1 "
+        else:
+            where = u"where username='"+username+u"'"
         
         bsbh = request.vars.bsbh
         if bsbh==None:
@@ -1850,7 +1910,7 @@ def updaterow_cwls():
 def insertrow_cwls():
     try:
         table_name = u'cwls'
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
         rowData[u'username'] = username
         print u"insertrow cwls"
@@ -1886,9 +1946,9 @@ def selectone_cwls():
         return u"fail";    
 
 def getcwlspz():
-    uid = u'';
+    uid = auth.user_id;
     result = {};
-    result[u'bsbh'] = p_getbsbh(uid);
+    result[u'bsbh'] = p_getbsbh(request.vars.projectid);
     result[u'sz'] = [u'收入', u'支出']
     result[u'ywlx'] = [u'购买标书', u'投标保证金', u'退保证金', u'中标服务费', u'专家评审费', u'其他']
     return json.dumps(result)   
@@ -1909,7 +1969,7 @@ def pbcymx():
 #获取所有
 def select_pbcy():
     try:
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         where = u"where username='"+username+u"'"
         
         bsbh = request.vars.bsbh
@@ -1942,7 +2002,7 @@ def updaterow_pbcy():
 def insertrow_pbcy():
     try:
         table_name = u'pbcy'
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
         rowData[u'username'] = username
         print u"insertrow pbcy"
@@ -1980,12 +2040,12 @@ def selectone_pbcy():
         return u"fail";
 
 def getpbcypz():
-    uid = u'';
+    uid = auth.user_id;
     result = {};
     sql = u"""select * from zj""";   
     result[u'zj'] = sqltoarray(sql);
 
-    result[u'bsbh'] = p_getbsbh(uid);
+    result[u'bsbh'] = p_getbsbh(request.vars.projectid);
     return json.dumps(result)  
 
 
@@ -1993,7 +2053,7 @@ def getpbcypz():
 #获取所有
 def select_rcb():
     try:
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
 
         
         order = u" order by rq desc"
@@ -2006,7 +2066,7 @@ def select_rcb():
 def insertrow_rcb():
     try:
         table_name = u'rcb'
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
         row = {}
         row[u'rcbid'] = rowData[u'id']
@@ -2030,7 +2090,7 @@ def insertrow_rcb():
 def updaterow_rcb():
     try:
         table_name = u'rcb'
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
         row = {}
         id = rowData[u'id']
@@ -2058,7 +2118,7 @@ def updaterow_rcb():
 def deleterow_rcb():
     try:
         table_name = u'rcb'
-        username = u'Test'
+        username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
 
         id = unicode(rowData[u'id']);
@@ -2071,18 +2131,19 @@ def deleterow_rcb():
     
     
 #主页
+@auth.requires(auth.has_membership(group_id='2'))
 def auth_user():
     return dict();
 
 def select_auth_user():
     try:
-        username = request.vars.username    
+        username = unicode(request.vars.username, u'utf-8')    
         if username==None:
             username=u''
         where = u"and username like '%"+username+u"%'"
     
 
-        chinesename = request.vars.chinesename
+        chinesename = unicode(request.vars.chinesename, u'utf-8')
         if chinesename==None:
             chinesename=u''
         where += u"and chinesename like '%"+chinesename+u"%'"        
@@ -2107,6 +2168,7 @@ def testcypt():
     else:
         return u'fail'
     return unicode(str(CRYPT(salt=u'834ee4458f59522a')(u'public')[0]), u'utf-8')
+
 
 def insertrow_auth_user():
     try:
@@ -2214,3 +2276,121 @@ def updaterow_resetpassword_auth_user():
         print e
         db.rollback()
         return u'fail'
+    
+    
+#主页
+@auth.requires_login()
+def hysgl():
+    return dict();
+
+#获取所有
+def select_hysgl():
+    try:
+        
+        if request.vars.flag == u'1':
+            where = u"where 1=1 "
+            username = auth.user.chinesename.decode('gbk')
+            where += u"and username='"+username+u"'"
+ 
+            if request.vars.hys==None:
+                hys=u''
+            else:
+                hys = unicode(request.vars.hys, u'utf-8')
+            where += u"and hys like '%"+hys+u"%'"
+            order = u" order by rq desc"
+            sql = u"""select * from hysgl """ + where+order;
+        else:
+            if request.vars.hysrq != None:
+                hysrq = unicode(request.vars.hysrq, u'utf-8')
+                where = u"and (CONVERT(varchar(100), kssj, 23)= '"+hysrq +u"' or CONVERT(varchar(100), jssj, 23)= '"+hysrq+u"') "
+            order = u" order by b.Id, a.kssj "    
+            sql = u"""select a.* from hysgl a, hys b where a.hys=b.hys """ + where+order;  
+                
+        
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail";
+    
+    
+def gethysglpz():
+    try:
+        print u'gethysglpz'
+        result={}
+        sql = u"""select hys from hys""";   
+        result[u'hys'] = sqltoarraynodict(sql);
+        print result
+        return json.dumps(result)  
+    except Exception as e:
+        print e
+        return u'fail'   
+
+
+
+def updaterow_hysgl():
+    try:
+        table_name = u'hysgl'
+        id = request.vars.Id
+        rowData = request.post_vars
+        
+        
+        newkssj = rowData[u'kssj']
+        newjssj = rowData[u'jssj']
+        sql = u"""select count(*) c from hysgl 
+        where Id<>"""+id+u"""(('"""+newkssj+u"""'>=kssj and '"""+newkssj+u"""'<jssj) 
+        or ('"""+newjssj+u"""'<=jssj and '"""+newjssj+u"""'>kssj) 
+        or ('"""+newkssj+u"""'<=kssj and '"""+newjssj+u"""'>=jssj))"""
+        print sql 
+        rows = db.executesql(sql, as_dict=True)
+        if rows[0][u'c'] == 0:
+            updaterow(table_name, id, rowData)
+        else:
+            return u"fail:time conflict"
+        return u"success";
+    except:
+        return u"fail";
+
+def insertrow_hysgl():
+    try:
+        table_name = u'hysgl'
+        username = auth.user.chinesename.decode('gbk')
+        rowData = request.post_vars
+        rowData[u'username'] = username
+        
+        newkssj = rowData[u'kssj']
+        newjssj = rowData[u'jssj']
+        sql = u"""select count(*) c from hysgl 
+        where ('"""+newkssj+u"""'>=kssj and '"""+newkssj+u"""'<jssj) 
+        or ('"""+newjssj+u"""'<=jssj and '"""+newjssj+u"""'>kssj) 
+        or ('"""+newkssj+u"""'<=kssj and '"""+newjssj+u"""'>=jssj)"""
+        print sql 
+        rows = db.executesql(sql, as_dict=True)
+        if rows[0][u'c'] == 0:
+            print u"insertrow hysgl"
+            print rowData
+            insertrow(table_name, rowData)
+            return u"success";
+        else:
+            return u"fail:time conflict"
+    except:
+        return u"fail";
+
+def deleterow_hysgl():
+    try:
+        table_name = u'hysgl'
+        id = request.vars.Id
+        print table_name
+        print id
+        deleterow(table_name, id)
+        return u"success";
+    except:
+        return u"fail";
+    
+    
+def selectone_hysgl():
+    try:
+        table_name = u'hysgl'
+        sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+        return sqltojson(sql);
+    except:
+        return u"fail";    

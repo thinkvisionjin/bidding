@@ -7,7 +7,14 @@ function uploadsetup()
 			var args = event.args;
 			var fileName = args.file;
 			var serverResponce = args.response;
-			confirm(serverResponce);
+			if (serverResponce == 'success')
+			{
+				confirm('成功')
+			}
+			else
+			{
+				alert(serverResponce)
+			}
 			search()
 			//$("#jqxDropDownList").jqxDropDownList('insertAt', fileName,  0); 
 			// Your code here.
@@ -97,14 +104,15 @@ $(document).ready(function() {
 	
 					$("#yhlswj-expander").jqxExpander({
 						toggleMode : 'none',
-						showArrow : false
+						showArrow : false,
+						height: '100%'
 					});
 					$("#yhlswj-grid")
 							.jqxGrid(
 									{
 										enabletooltips: true,
 										columnsresize: true,
-										height : "80%",
+										height : "85%",
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:false },

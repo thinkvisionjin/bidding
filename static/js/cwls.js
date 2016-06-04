@@ -102,14 +102,15 @@ $(document).ready(function() {
 	
 					$("#cwls-expander").jqxExpander({
 						toggleMode : 'none',
-						showArrow : false
+						showArrow : false,
+						height:'100%'
 					});
 					$("#cwls-grid")
 							.jqxGrid(
 									{
 										enabletooltips: true,
 										columnsresize: true,
-										height : "80%",
+										height : "90%",
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '标书编号', datafield: 'bsbh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
