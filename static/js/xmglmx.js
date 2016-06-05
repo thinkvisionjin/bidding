@@ -96,8 +96,7 @@ function InitEditProjectPage(dict,project){
 	});
 }
 
-	    
-	  function InitProjectPackageGrid(dict,project){
+function InitProjectPackageGrid(dict,project){
 	    var url = "/bidding/default/SelectPackagesByProjectId?id="+project.Id
 		var source =
 		{
@@ -151,6 +150,71 @@ function InitEditProjectPage(dict,project){
 		        // data is loaded.
 		    }
 		});
+		var buildFilterPanel = function (filterPanel, datafield) {
+	        var textInput = $("<div style='margin:5px;'/>");
+	        textInput.jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
+	        var applyinput = $("<div class='filter' style='height: 25px; margin-left: 20px; margin-top: 7px;'></div>");
+	        var filterbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 2px;">设置</span>');
+	        applyinput.append(filterbutton);
+	        var filterclearbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 5px;">取消</span>');
+	        applyinput.append(filterclearbutton);
+	        filterPanel.append(textInput);
+	        filterPanel.append(applyinput);
+	        filterbutton.jqxButton({ template: 'sucess', height: 20 });
+	        filterclearbutton.jqxButton({ template: 'warnning', height: 20 });
+	        var dataSource =
+	        {
+	            localdata: adapter.records,
+	            datatype: "array",
+	            async: false
+	        }
+	        var dataadapter = new $.jqx.dataAdapter(dataSource,
+	        {
+	            autoBind: false,
+	            autoSort: true,
+	            autoSortField: datafield,
+	            async: false,
+	            uniqueDataFields: [datafield]
+	        });
+	        var column = $("#EditProject_PackageTable").jqxGrid('getcolumn', datafield);
+	        
+//	        textInput.jqxDatetimeInput({ theme: exampleTheme, placeHolder: "输入 " + column.text, popupZIndex: 9999999, displayMember: datafield, source: dataadapter, height: 23, width: 175 });
+//	        textInput.keyup(function (event) {
+//	            if (event.keyCode === 13) {
+//	                filterbutton.trigger('click');
+//	            }
+//	        });
+	        filterbutton.click(function () {
+	            var filtergroup = new $.jqx.filter();
+	            var filter_or_operator = 1;
+	            var filtervalue = textInput.val();
+	            var filtercondition = 'contains';
+	            var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);            
+	            filtergroup.addfilter(filter_or_operator, filter1);
+	            // add the filters.
+	            $("#EditProject_PackageTable").jqxGrid('addfilter', datafield, filtergroup);
+	            // apply the filters.
+	            $("#EditProject_PackageTable").jqxGrid('applyfilters');
+	            $("#EditProject_PackageTable").jqxGrid('closemenu');
+	        });
+	        filterbutton.keydown(function (event) {
+	            if (event.keyCode === 13) {
+	                filterbutton.trigger('click');
+	            }
+	        });
+	        filterclearbutton.click(function () {
+	            $("#EditProject_PackageTable").jqxGrid('removefilter', datafield);
+	            // apply the filters.
+	            $("#EditProject_PackageTable").jqxGrid('applyfilters');
+	            $("#EditProject_PackageTable").jqxGrid('closemenu');
+	        });
+	        filterclearbutton.keydown(function (event) {
+	            if (event.keyCode === 13) {
+	                filterclearbutton.trigger('click');
+	            }
+	            textInput.val("");
+	        });
+	    }
 		var projectPackage_columns_content  = 
 			[{"datafield":"PackageNumber","text":"包件编号", editable:false, cellsalign: 'center', align: 'center',width: '14%'},
 			 {"datafield":"PackageName","text":"包件名称",  cellsalign: 'center', align: 'center',width: '15%'},
@@ -171,7 +235,10 @@ function InitEditProjectPage(dict,project){
                  },
              {"datafield":"CreationDate","text":"创建时间",  cellsalign: 'center', align: 'center',columntype: 'datetimeinput',cellsformat: 'yyyy-MM-dd',width: '10%'},
              {"datafield":"PublicDate","text":"公告时间",  cellsalign: 'center', align: 'center',columntype: 'datetimeinput',cellsformat: 'yyyy-MM-dd',width: '6%',
-				 cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
+            	 filtertype: 'custom',createfilterpanel: function (datafield, filterPanel) {
+             	    buildFilterPanel(filterPanel, datafield);
+                 },
+            	 cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
 	          		 var label=value;
 	           		 if (label=="1900-01-01 00:00:00"||label=="None" ){
 	           			label = ""
@@ -220,6 +287,7 @@ function InitEditProjectPage(dict,project){
 		            height: 265,
 		            width: "100%",
 		            columnsresize: true,
+		            filterable: true,
 		            source: projectPackageurldataAdapter,
 		            selectionmode: 'singlerow',
 		            autoRowHeight: false,
@@ -401,6 +469,7 @@ function InitProjectDocumentGrid(dict,project){
         source: dataAdapter,
 //        editable: true,
         selectionmode: 'singlerow',
+
 //        editmode: 'selectedcell',
         columnsresize: true,
         showToolbar: true,
@@ -414,22 +483,24 @@ function InitProjectDocumentGrid(dict,project){
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>删除</span></div>");
             var printButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
             var exportButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>导出</span></div>");
-            var columnSettingButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>设置</span></div>");
+            var editButton = $("<div style='float: left; margin-left: 5px;' id ='documentEditButton'><span style='margin-left: 4px; position: relative; top: 0px;'>修改</span></div>");
             toolBar.append(container);
             container.append(addNewButton);
+            container.append(editButton);
             container.append(refreshButton);
             container.append(deleteButton);
             container.append(printButton);
             container.append(exportButton);
-            container.append(columnSettingButton);
+            
             addNewButton.jqxButton({ template: "success" });
-            refreshButton.jqxButton({ template: "primary" });
+            editButton.jqxButton({ template: "primary" });
+            editButton.jqxButton({ disabled: true });
+            refreshButton.jqxButton({ template: "inverse" });
             printButton.jqxButton({ template: "info" });
             exportButton.jqxButton({ template: "warning" });
             deleteButton.jqxButton({ template: "danger" });
-            columnSettingButton.jqxButton({ template: "inverse" });
+            
             addNewButton.click(function (event) {
-            	
             	gmbs_popupwindow("add", "", function(){
             		$("#EditProject_DocumentTable").jqxGrid({ source:dataAdapter });
             	}, project.Id);
@@ -437,8 +508,11 @@ function InitProjectDocumentGrid(dict,project){
             refreshButton.click(function (event) {
                 $("#EditProject_DocumentTable").jqxGrid({ source:dataAdapter });
             });
-            columnSettingButton.click(function (event) {
-            
+            editButton.click(function (event) {
+            	var gmbsid = $("#documentEditButton").val();
+            	gmbs_popupwindow("modify", gmbsid, function(){
+            		$("#EditProject_DocumentTable").jqxGrid({ source:dataAdapter });
+            	}, project.Id);
             });
             printButton.click(function (event) {
                 var gridContent = $("#EditProject_DocumentTable").jqxGrid('exportdata', 'html');
@@ -492,6 +566,24 @@ function InitProjectDocumentGrid(dict,project){
     var rowValues = "";
     $("#EditProject_DocumentTable").on('cellbeginedit', function (event) {});
     $("#EditProject_DocumentTable").on('cellendedit', function (event) {});
+    $('#EditProject_DocumentTable').on('rowclick', function (event) 
+			{
+			    var args = event.args;
+			    // row's bound index.
+			    var boundIndex = args.rowindex;
+			    // row's visible index.
+			    var visibleIndex = args.visibleindex;
+			    // right click.
+			    var rightclick = args.rightclick; 
+			    // original event.
+			    var ev = args.originalEvent; 
+			    var rowindex = event.args.rowindex;
+			    
+			    $("#documentEditButton").jqxButton({ disabled: false});
+			    var gmbs_data = $("#EditProject_DocumentTable").jqxGrid('getrowdata', rowindex);
+			    $("#documentEditButton").val(gmbs_data.Id)
+			    $("#EditProject_DocumentTable").jqxGrid('selectrow', rowindex);
+			}); 
 }
 
 function InitProjectMarginGrid(dict,project){
@@ -555,13 +647,13 @@ function InitProjectMarginGrid(dict,project){
             container.append(addNewButton1);
             container.append(addNewButton2);
             container.append(refreshButton);
-            container.append(deleteButton);
+            //container.append(deleteButton);
             container.append(printButton);
             container.append(exportButton);
-            container.append(columnSettingButton);
+//            container.append(columnSettingButton);
             addNewButton1.jqxButton({ template: "success" });
             addNewButton2.jqxButton({ template: "success" });
-            refreshButton.jqxButton({ template: "primary" });
+            refreshButton.jqxButton({ template: "inverse" });
             printButton.jqxButton({ template: "info" });
             exportButton.jqxButton({ template: "warning" });
             deleteButton.jqxButton({ template: "danger" });
@@ -684,15 +776,15 @@ function InitNewPackageWindow(dict,project){
 	$("#PackageNumber_ADD").jqxInput({width: '200px',height: "25px"});
 	$("#PackageName_ADD").jqxInput({width: '200px',height: "25px"});
 	$("#PublicDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true,width: '200px', height: '25px',allowNullDate: true});
-	$("#PublicDate_ADD").jqxDateTimeInput('val','')
+	$("#PublicDate_ADD").jqxDateTimeInput('val',null)
 	$("#OpenDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss",  showTimeButton: true,width: '200px', height: '25px' ,allowNullDate: true});
-	$("#OpenDate_ADD").jqxDateTimeInput('val','')
+	$("#OpenDate_ADD").jqxDateTimeInput('val',null)
 	$("#ReviewDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true,width: '200px', height: '25px' ,allowNullDate: true});
-	$("#ReviewDate_ADD").jqxDateTimeInput('val','')
+	$("#ReviewDate_ADD").jqxDateTimeInput('val',null)
 	$("#SigningDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss",  showTimeButton: true,width: '200px', height: '25px' ,allowNullDate: true});
-	$("#SigningDate_ADD").jqxDateTimeInput('val','')
+	$("#SigningDate_ADD").jqxDateTimeInput('val',null)
 	$("#MakeOutDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true,width: '200px', height: '25px' ,allowNullDate: true});
-	$("#MakeOutDate_ADD").jqxDateTimeInput('val','')
+	$("#MakeOutDate_ADD").jqxDateTimeInput('val',null)
 	$("#EntrustMoney_ADD").jqxNumberInput({ width: '200px', height: '25px', inputMode: 'simple'});
 	$("#WinningMoney_ADD").jqxNumberInput({ width: '200px', height: '25px',inputMode: 'simple'});
 	$("#WinningCompany_ADD").jqxInput({width: '200px',height: "25px"});
