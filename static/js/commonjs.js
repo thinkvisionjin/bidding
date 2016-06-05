@@ -669,7 +669,7 @@ function BindAssitant(documentObject, localdata, project) {
 }
 
 //绑定项目状态 //dropdownlist
-function BindProjectStatus(documentObject, localdata, project) {
+function BindProjectStatus(documentObject, localdata, project,defaultIndex) {
 	if (localdata == undefined) {
 		var source = {
 			datatype: "json",
@@ -709,8 +709,13 @@ function BindProjectStatus(documentObject, localdata, project) {
 			displayMember: "Name",
 			valueMember: "Id",
 			width: '200', height: '25',
-			selectedIndex: 0
 		});
+	
+	if(defaultIndex!=undefined){
+		$(documentObject).jqxDropDownList({selectedIndex: defaultIndex})
+	}
+	
+	
 	$(documentObject).on('select', function (event) {
 		var args = event.args;
 		var item = $(documentObject).jqxDropDownList('getItem', args.index);
@@ -722,3 +727,61 @@ function BindProjectStatus(documentObject, localdata, project) {
 	}
 }
 
+//绑定包件状态
+function BindPackageStatus(documentObject, localdata, projectpackage,defaultIndex) {
+	if (localdata == undefined) {
+		var source = {
+			datatype: "json",
+			datafields: [
+				{ name: 'Id' },
+				{ name: 'Name' }
+			],
+			url: "/bidding/default/select?table=ProjectStatus",
+			async: true
+		}
+	} else {
+		var source = {
+			datatype: "json",
+			datafields: [
+				{ name: 'Id' },
+				{ name: 'Name' }
+			],
+			localdata: localdata
+		}
+	}
+
+	var dataAdapter = new $.jqx.dataAdapter(source, {
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapter.records;
+            var length = records.length;
+
+			$(documentObject).on('select', function (event) {
+				var args = event.args;
+				var item = $(documentObject).jqxDropDownList('getItem', args.index);
+			});
+        }
+    });
+	$(documentObject).jqxDropDownList(
+		{
+			source: dataAdapter,
+			displayMember: "Name",
+			valueMember: "Id",
+			width: '200', height: '25',
+		});
+	
+	if(defaultIndex!=undefined){
+		$(documentObject).jqxDropDownList({selectedIndex: defaultIndex})
+	}
+	
+	
+	$(documentObject).on('select', function (event) {
+		var args = event.args;
+		var item = $(documentObject).jqxDropDownList('getItem', args.index);
+	});
+	if (projectpackage != undefined) {
+		var items = $(documentObject).jqxDropDownList('getItems');
+		var item = $(documentObject).jqxDropDownList('getItemByValue', projectpackage.StateId);
+		$(documentObject).jqxDropDownList('selectItem', item);
+	}
+}

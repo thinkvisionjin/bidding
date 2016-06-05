@@ -10,7 +10,7 @@ function addselectfieldwindows()
 	                   { label: '项目类型', value: 'ProjectTypeId', checked: true },
 	                   { label: '采购单位', value: 'CustomerId', checked: true },
 	                   { label: '负责人', value: 'EmployeeId', checked: true },
-	                   { label: '协助人', value: 'Assistant', checked: false },
+	                   { label: '协助人', value: 'Assistant', checked: true },
 	                   { label: '项目来源', value: 'ProjectSourceId', checked: false },
 	                   { label: '资金来源', value: 'FundingSourceId', checked: false },
 	                   { label: '管理方式', value: 'ManagementStyleId', checked: false },
@@ -109,7 +109,7 @@ function InitProjectGrid(dict){
     var dataAdapter = new $.jqx.dataAdapter(source);
     var editrow = -1;
     var columns_content  =[{
-    text: '操作', editable: false, datafield: 'edit',width: "120", cellsalign: 'center', align: 'center',
+    text: '操作', editable: false, datafield: 'edit',width: "90", cellsalign: 'center', align: 'center',
     cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
     var a = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="/bidding/default/xmglmx?id='+rowdata.Id + '">查看详情</a>';
     var b = '<a style="margin-left:5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="gmbs.html">购买标书</a>';
@@ -122,7 +122,7 @@ function InitProjectGrid(dict){
     },
                            {"datafield":"Id","text":"序号",width: "80", cellsalign: 'center', align: 'center',hidden:true},
                            {"datafield":"ProjectCode","text":"项目编号", width: "185", cellsalign: 'center', align: 'center'},
-                           {"datafield":"ProjectName","text":"项目名称", width: "190", cellsalign: 'center', align: 'center'},
+                           {"datafield":"ProjectName","text":"项目名称", width: "210", cellsalign: 'center', align: 'center'},
                            {"datafield":"ProtocolCodeId","text":"协议编号", width: "190", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                      		  var label="";
@@ -167,7 +167,7 @@ function InitProjectGrid(dict){
                           		  }
                      		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                                }},
-                           {"datafield":"Assistant","text":"协助人", width: "80", cellsalign: 'center', align: 'center',hidden:true,
+                           {"datafield":"Assistant","text":"协助人", width: "80", cellsalign: 'center', align: 'center',hidden:false,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		   var label="";
                         		   var pt = JSON.parse(dict.Employee)
@@ -234,13 +234,13 @@ function InitProjectGrid(dict){
                      		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                                }},
                               {"datafield":"CreationDate","text":"创建日期", width: "120", cellsalign: 'center', align: 'center',hidden:true},
-	                          {"datafield":"PackageCount","text":"包件数量", width: "120", cellsalign: 'center', align: 'center',hidden:false},
-	                          {"datafield":"DocumentBuyerCount","text":"已售标书数量", width: "120", cellsalign: 'center', align: 'center',hidden:false},
-	                          {"datafield":"BidderCount","text":"投标人数量", width: "120", cellsalign: 'center', align: 'center',hidden:true},
-	                          {"datafield":"MarginCount","text":"已交保证金数量", width: "120", cellsalign: 'center', align: 'center',hidden:true},
-	                          {"datafield":"ReturnMarginCount","text":"归还保证金数量", width: "120", cellsalign: 'center', align: 'center',hidden:true},
-	                          {"datafield":"EntrustMoney","text":"委托金额合计", width: "120", cellsalign: 'center', align: 'center',hidden:true},
-	                          {"datafield":"WinningMoney","text":"中标金额合计", width: "120", cellsalign: 'center', align: 'center',hidden:true}
+	                          {"datafield":"PackageCount","text":"包件数量", width: "90", cellsalign: 'center', align: 'center',hidden:false},
+	                          {"datafield":"DocumentBuyerCount","text":"已售标书数量", width: "90", cellsalign: 'center', align: 'center',hidden:false},
+	                          {"datafield":"BidderCount","text":"投标人数量", width: "100", cellsalign: 'center', align: 'center',hidden:true},
+	                          {"datafield":"MarginCount","text":"已交保证金数量", width: "100", cellsalign: 'center', align: 'center',hidden:true},
+	                          {"datafield":"ReturnMarginCount","text":"归还保证金数量", width: "100", cellsalign: 'center', align: 'center',hidden:true},
+	                          {"datafield":"EntrustMoney","text":"委托金额合计", width: "100", cellsalign: 'center', align: 'center',hidden:true},
+	                          {"datafield":"WinningMoney","text":"中标金额合计", width: "100", cellsalign: 'center', align: 'center',hidden:true}
                            ]            
     var outerDataAdapter = new $.jqx.dataAdapter(source, { autoBind: true });
     var  projects_record = outerDataAdapter.records;
@@ -324,8 +324,8 @@ function InitSearchArea(dict){
 	BindProjectNameOnly("#ProjectName_SEARCH")   // input
 	$("#ProjectName_SEARCH_Button").jqxButton({ template: "success",height: '19px'});
 	$("#ProjectName_SEARCH_Button").click(function (event) {
-		var searchkey = "where "
-		if($("#ProjectName").val()!='' && $("#ProjectName").val()!= undefined){
+		var searchkey = " "
+		if($("#ProjectName_SEARCH").val()!='' && $("#ProjectName_SEARCH").val()!= undefined){
 			searchkey += "[ProjectName] like '\%"+$("#ProjectName_SEARCH").val()+"\%'";
 		}else{
 			searchkey +=' [ProjectName] is not null '
@@ -357,7 +357,7 @@ function InitSearchArea(dict){
 		if($("#Assistant_SEARCH").val()!='' && $("#Assistant_SEARCH").val()!= undefined){
 			searchkey += " and [Assistant] = " +$("#Assistant_SEARCH").val();
 		}
-		source.url = "xmgl_ss?searchkey=" + searchkey;
+		source.url = "SelectProjectsSummary?searchkey=" + searchkey;
 		dataAdapter = new $.jqx.dataAdapter(source);
 		$("#jqxgrid").jqxGrid({ source: dataAdapter });
      });

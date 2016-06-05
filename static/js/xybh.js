@@ -74,8 +74,8 @@ function initProtocolCodeGrid(dict) {
 			"text": "\u7c7b\u578b\u7f16\u53f7",
 			cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
 				var label = "";
-				pt = JSON.parse(dict.ProtocolCodeType)
-				for (i = 0; i < pt.length; i++) {
+				var pt = JSON.parse(dict.ProtocolCodeType)
+				for (var i = 0; i < pt.length; i++) {
 					if (pt[i].TypeId == value.toString()) {
 						label = pt[i].TypeName
 					}
@@ -87,8 +87,8 @@ function initProtocolCodeGrid(dict) {
 			"text": "\u5458\u5de5\u7f16\u53f7",
 			cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		   var label="";
-                           		  pt = JSON.parse(dict.Employee)
-                           		  for(i=0;i<pt.length;i++){
+                        		   var pt = JSON.parse(dict.Employee)
+                           		  for(var i=0;i<pt.length;i++){
                            			  if(pt[i].Id==value.toString()) {
                            				  label = pt[i].Name
                            			  }
@@ -182,7 +182,7 @@ function initProtocolCodeGrid(dict) {
 		cancelButton: $("#Cancel"),
 		modalOpacity: 0.40
 	});
-	BindProtocolType('#ProtocalTypeId_ADD')
+	BindProtocolType('#ProtocalTypeId_ADD',dict.ProtocolCodeType)
 	$("#Cancel_ADD").jqxButton({
 		theme: theme,
 		template: "warning"
@@ -208,7 +208,7 @@ function initProtocolCodeGrid(dict) {
 	BindProtocolNumber('#ProtocolNumber_SEARCH')
 	$("#Protocol_SEARCH_Button").jqxButton({ template: "success", height: '17px' });
 	$("#Protocol_SEARCH_Button").click(function (event) {
-		searchkey = $("#ProtocolNumber_SEARCH").val();
+		var searchkey = $("#ProtocolNumber_SEARCH").val();
 		source.url = "xybh_ss?searchkey=" + searchkey;
 		dataAdapter = new $.jqx.dataAdapter(source);
 		$("#jqxgrid").jqxGrid({ source: dataAdapter });

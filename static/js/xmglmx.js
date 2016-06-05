@@ -163,7 +163,7 @@ function InitEditProjectPage(dict,project){
            				  label = pt[i].Name
            			  }
            		  }
-      		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
+      		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 5px;">'+ label+' </div>'
                  },
 				 createeditor: function (row, column, editor) {},
                  // update the editor's value before saving it.
@@ -356,7 +356,7 @@ function InitEditProjectPage(dict,project){
 					$("#WinningMoney_Manage").jqxNumberInput('val',projectPackage.WinningMoney);
 					$("#WinningCompany_Manage").jqxInput('val',projectPackage.WinningCompany);
 					$("#ChargeRate_Manage").jqxNumberInput('val',projectPackage.ChargeRate);
-
+					BindPackageStatus("#StateIdPackage_Manage",dict.ProjectStatus,projectPackage)
 				}); 
 }
 
@@ -699,7 +699,7 @@ function InitNewPackageWindow(dict,project){
 	$("#ChargeRate_ADD").jqxInput({width: '200px',height: "25px"});
 	$("#ChargeRate_ADD").jqxNumberInput({ width: '200px', height: '25px', digits: 3, symbolPosition: 'right', symbol: '%', spinButtons: true });
 	/*$('#NotePackage_ADD').jqxEditor({height: "200px", width: '492px'});*/
-	BindProjectStatus("#StateIdPackage_ADD",dict.ProjectStatus)
+	BindPackageStatus("#StateIdPackage_ADD",dict.ProjectStatus,undefined,0) //初始化:项目建档
 	$("#StateIdPackage_ADD").jqxDropDownList({disabled:true})
 	//initialize the popup add window and buttons.
     $("#popupWindow_PackageADD").jqxWindow({ width:300, maxHeight: 850,resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.40 });
@@ -753,7 +753,7 @@ function InitEditPackageWindow(dict,projectpackage){
 	$("#WinningCompany_Manage").jqxInput({width: '200px',height: "25px"});
 	$("#ChargeRate_Manage").jqxNumberInput({ width: '200px', height: '25px', digits: 3, symbolPosition: 'right', symbol: '%', spinButtons: true });
 	/*$('#NotePackage_Manage').jqxEditor({height: "200px", width: '492px'});*/
-	BindProjectStatus("#StateIdPackage_Manage",dict.ProjectStatus)
+	BindPackageStatus("#StateIdPackage_Manage",dict.ProjectStatus)
 	$("#StateIdPackage_Manage").jqxDropDownList({disabled:true})
 	$("#popupWindow_PackageManage").jqxWindow({ width:300, maxHeight: 850,resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.40 });
     $("#CancelPackage_Manage").jqxButton({ theme: theme });
@@ -834,7 +834,7 @@ function InitProjectContactsGrid(dict,project){
             uniqueDataFields: [datafield]
         });
         var column = $("#EditProject_ContactsTable").jqxGrid('getcolumn', datafield);
-        textInput.jqxInput({ theme: exampleTheme, placeHolder: "Enter " + column.text, popupZIndex: 9999999, displayMember: datafield, source: dataadapter, height: 23, width: 175 });
+        textInput.jqxInput({ theme: exampleTheme, placeHolder: "输入 " + column.text, popupZIndex: 9999999, displayMember: datafield, source: dataadapter, height: 23, width: 175 });
         textInput.keyup(function (event) {
             if (event.keyCode === 13) {
                 filterbutton.trigger('click');
@@ -877,7 +877,7 @@ function InitProjectContactsGrid(dict,project){
         height:200,
         source: adapter,
         filterable: true,
-        pageable: true,
+//        pageable: true,
         sortable: true,
         ready: function () {
         },
@@ -898,7 +898,7 @@ function InitProjectContactsGrid(dict,project){
               filtertype: "custom",
               cellsalign: 'center',
               createfilterpanel: function (datafield, filterPanel) {
-                  buildFilterPanel(filterPanel, datafield);
+            	    buildFilterPanel(filterPanel, datafield);
               }
           },
           {
@@ -906,21 +906,21 @@ function InitProjectContactsGrid(dict,project){
               filtertype: "custom",
               cellsalign: 'center',
               createfilterpanel: function (datafield, filterPanel) {
-                  buildFilterPanel(filterPanel, datafield );
+            	     buildFilterPanel(filterPanel, datafield );
               },
               width: '17%',
           },
           { text: '联系地址', datafield: 'lxdz', createfilterpanel: function (datafield, filterPanel) {
-                  buildFilterPanel(filterPanel, datafield );
+        	  //      buildFilterPanel(filterPanel, datafield );
               }, width: '17%',align: 'center', cellsalign: 'center' },
           { text: '手机', createfilterpanel: function (datafield, filterPanel) {
-                  buildFilterPanel(filterPanel, datafield );
+        	//                  buildFilterPanel(filterPanel, datafield );
               },datafield: 'sj', width: '16%', cellsalign: 'center',align: 'center',cellsformat: 'yyyy-MM-dd' },
           { text: '传真', createfilterpanel: function (datafield, filterPanel) {
-                  buildFilterPanel(filterPanel, datafield );
+        	//                buildFilterPanel(filterPanel, datafield );
               },datafield: 'cz', width: '16%', calign: 'center',cellsalign: 'center',align: 'center'},
           { text: '电子邮件', createfilterpanel: function (datafield, filterPanel) {
-                  buildFilterPanel(filterPanel, datafield );
+        	//               buildFilterPanel(filterPanel, datafield );
               },datafield: 'dzxx', width: '17%',align: 'center',cellsalign: 'center', cellsformat: 'c2' }
         ]
     });
@@ -968,15 +968,15 @@ function InitProjectFinanceGrid(dict,project){
     $("#EditProject_FinanceTable").jqxGrid(
     {
         width: '100%',
-        height:300,
+        height:200,
         source: dataAdapter,                
         pageable: false,
         autoheight: true,
-        sortable: true,
+//        sortable: true,
         altrows: true,
         enabletooltips: true,
         editable: false,
-        selectionmode: 'multiplecellsadvanced',
+        selectionmode: 'singlerow',
         columns: [
           { text: '销售标书', columngroup: '收入', datafield: 'bssr', cellsalign: 'center', align: 'center',width: '20%' },
           { text: '中标服务费', columngroup: '收入', datafield: 'zbfwf', cellsalign: 'center', align: 'center', width: '20%' },

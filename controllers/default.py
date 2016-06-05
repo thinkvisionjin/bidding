@@ -211,7 +211,12 @@ def select():
     table_name = request.vars.table
     print u'select data from:'  +table_name +'**************'
     dic_rows = []
-    for row in db().select(db[table_name].ALL,orderby=~db[table_name].id):
+    uid = auth.user_id
+    if auth.user_groups.has_key(CONST_MANAGER) or auth.user_groups.has_key(CONST_ADMIN) :
+        rows = db().select(db[table_name].ALL,orderby=~db[table_name].id)
+    else:
+        rows = db(db[table_name].EmployeeId==uid).select(db[table_name].ALL,orderby=~db[table_name].id)
+    for row in rows:
         dict_row = {}
         for key in row.keys():
             if (key!= u'update_record' and key!= u'delete_record'):
@@ -402,7 +407,19 @@ def GenerateProjectCode(project,id):
         ProjectCode+=u"QT"
     return ProjectCode+unicode(id);
 
+@auth.requires_login()
 def SelectProjectsSummary():
+    uid = auth.user_id
+    searchkey = request.vars.searchkey
+    tj=u''
+    if auth.user_groups.has_key(CONST_MANAGER) or auth.user_groups.has_key(CONST_ADMIN):
+        tj = u'where 1=1 '
+    else:
+        tj = u'where a.EmployeeId = ' + unicode(uid) + u' or Assistant = ' + unicode(uid)
+        
+    if searchkey != None:
+        tj += u" and "+ searchkey.decode(u'utf-8')
+        
     strSQL = u'''select  a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete],
       count(distinct b.Id) as PackageCount,
       count(distinct c.Id) as DocumentBuyerCount,
@@ -415,10 +432,11 @@ def SelectProjectsSummary():
       left join [dbo].[ProjectPackage] b on a.id= b.ProjectId 
       left join [dbo].[GMBS] c on b.PackageNumber = c.bsbh
       left join [dbo].[tbbzj] d on d.bsbh = c.bsbh
-      left join [dbo].[tbzj] e on e.bsbh = d.bsbh 
-group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete]
-      order by a.[Id] desc'''
+      left join [dbo].[tbzj] e on e.bsbh = d.bsbh  ''' + tj + u''' group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete] order by a.[Id] desc'''
+    
+    print strSQL
     return  sqltojson(strSQL)
+
 @auth.requires_login()
 def gmbs():
     return dict();
@@ -911,7 +929,7 @@ def p_insertrow_gmbs(rowData):
 
 def insertrow_gmbs():
     try:
-        username = auth.user.chinesename.decode('gbk')
+        username = auth.user.username
         rowData = request.post_vars
         rowData[u'username'] = username
         p_insertrow_gmbs(rowData)
@@ -1099,7 +1117,8 @@ def p_insertrow_tbbzj(rowData):
 def insertrow_tbbzj():
     try:
         
-        username = auth.user.chinesename.decode('gbk')
+#         username = auth.user.chinesename.decode('gbk')
+        username = auth.user.username
         rowData = request.post_vars
         rowData[u'username'] = username
         p_insertrow_tbbzj(rowData)
@@ -1243,7 +1262,8 @@ def updaterow_tbzj():
 def insertrow_tbzj():
     try:
         table_name = u'tbzj'
-        username = auth.user.chinesename.decode('gbk')
+#         username = auth.user.chinesename.decode('gbk')
+        username = auth.user.username
         rowData = request.post_vars
         
         rowData[u'username'] = username
