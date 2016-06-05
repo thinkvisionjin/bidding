@@ -56,7 +56,7 @@ function addselectfieldwindows()
 { label: '操作人', value: 'username', checked: false },,
 { label: '来源', value: 'ly', checked: false },];
 	$('#gmbs_zdlistbox').jqxListBox({ source: listSource, width:'100%', height:'100%', checkboxes: true });
-    $("#zdlistbox").on('checkChange', function (event) {
+    $("#gmbs_zdlistbox").on('checkChange', function (event) {
         $("#gmbs-grid").jqxGrid('beginupdate');
         if (event.args.checked) {
             $("#gmbs-grid").jqxGrid('showcolumn', event.args.value);
@@ -85,14 +85,25 @@ function deletegmbs(id)
     }
 
 	$.get('deleterow_gmbs?Id='+id, function(result){
-		alert(result);
-		$("#gmbs-grid").jqxGrid('deleterow', rowid);
+		if (result == 'success')
+		{
+			confirm('成功')
+			$("#gmbs-grid").jqxGrid('deleterow', rowid);
+		}
+		else
+		{
+			alert(result)
+		}	
 	});
 }
 
 function printgmbs(id)
 {
-	window.location.href='gmbs_print?Id='+id;
+//	window.location.href='gmbs_print?Id='+id;
+
+    var newWindow = window.open('gmbs_print?Id='+id, '');
+
+    newWindow.print();	
 //	window.location.replace ('gmbsmx?oper=modify&Id='+id);
 }
 
@@ -111,14 +122,15 @@ $(document).ready(function() {
 	
 					$("#gmbs-expander").jqxExpander({
 						toggleMode : 'none',
-						showArrow : false
+						showArrow : false,
+						height: '100%'
 					});
 					$("#gmbs-grid")
 							.jqxGrid(
 									{
 										enabletooltips: true,
 										columnsresize: true,
-										height : "80%",
+										height : "90%",
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '购标书单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
@@ -173,6 +185,10 @@ $(document).ready(function() {
 											$("#gmbsadd").jqxButton({
 												template : 'success'
 											});
+											/*container.append('<input id="gmbsexport" type="button" value="输出" />');
+											$("#gmbsexport").jqxButton({
+												template : 'primary'
+											});	*/										
 											container.append('<input id="selectfiled" style="float: right" type="button" value="设置" />');
 											$("#selectfiled").jqxButton({
 												template : 'info'
@@ -182,6 +198,11 @@ $(document).ready(function() {
 									});
 					//$("#gmbs-grid").('hidecolumn', 'id');
 					search();
+					/*$("#gmbsexport").click(function() {
+						$("#gmbs-grid").jqxGrid('exportdata', 'xls', 'jqxGrid');           
+						//window.location.replace('gmbsmx');
+						//$("#popupWindow").jqxWindow('open');
+					});*/
 					$("#gmbsadd").click(function() {
 						gmbs_popupwindow('add', '', search);
 						//window.location.replace('gmbsmx');
@@ -198,7 +219,7 @@ $(document).ready(function() {
 					});					
 
 					$('#dwmc').jqxInput();
-$('#bsbh').jqxInput();
+					$('#bsbh').jqxInput();
 					addselectfieldwindows();
 					configpopupwindow();
 

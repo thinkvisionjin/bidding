@@ -89,6 +89,7 @@ $('#lxr_username').val(data['username']);
 var gkhcallback;
 function lxr_save()
 {
+	if ($('#lxr_Id').jqxValidator('validate')==false){return;}
 	if (state == 'add')
 		{
 		url = 'insertrow_lxr';
@@ -176,7 +177,18 @@ $('#tr_lxr_username').hide();
 	$("#lxr_Save").click(function () {
 		lxr_save(state);
 	});
- 	
+	$("#lxr_Id").jqxValidator({scroll: false,
+		rules: [
+		{ input: "#lxr_lxr", message: "不可为空!", action: 'keyup, blur', rule: 'required'},
+		{ input: "#lxr_sj", message: "不可为空!", action: 'keyup, blur', rule: 'required'},
+		{ input: "#lxr_sj", message: "不是有效的电话号码!", action: 'keyup, blur', rule: function(input){
+			var val = $("#lxr_sj").val();
+			if(val==""){return false;}
+			var reg = /[+|-|0-9]{2,30}$/;
+			if (reg.test(val)) {return true;}else{return false;}
+		} }
+		], hintType: "tooltip"
+	});  	
   	
 }
 
@@ -185,15 +197,18 @@ function lxr_popupwindow(flag_state, id, callback, khId)
 	state = flag_state;
 	gkhcallback = callback;
 	$('#lxr_Id').val(id);
+	$('#lxr_popupWindow').jqxWindow({ height:330});
 	if (state == 'add')
 	{
 		lxr_title.innerHTML='新增';
 		lxr_setupadd();
+		$('#lxr_popupWindow').jqxWindow({ height:230});
 	}
 	if (state == 'modify')
 	{
 		lxr_title.innerHTML='修改';
 		lxr_setupmodify();
+
 	}
 	if (state == 'detail')
 		{

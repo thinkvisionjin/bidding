@@ -22,10 +22,18 @@ function getkh(dwmc)
 		
 	}, 'json');	
 }
-function cwls_configpage()
+function cwls_configpage(projectid)
 {
+	if (projectid == undefined)
+	{
+		url = 'getcwlspz';
+	}
+	else
+	{
+		url = 'getcwlspz?projectid='+projectid;
+	}
 	
-    $.get('getcwlspz', function(result){
+	$.get(url, function(result){
 		//需特殊处理
     	$('#cwls_bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh']});
 $('#cwls_sz').jqxDropDownList({ placeHolder: "", source: result['sz']});
@@ -187,7 +195,7 @@ $('#cwls_rq').jqxInput();
 $('#tr_cwls_username').hide();
 $('#tr_cwls_rq').hide();
 
-	cwls_configpage();
+	
     $("#cwls_Save").jqxButton({template:'success'});
     $("#cwls_Cancel").jqxButton({template:'warning'});    
 
@@ -198,12 +206,13 @@ $('#tr_cwls_rq').hide();
   	
 }
 
-function cwls_popupwindow(flag_state, id, callback, bsbh)
+function cwls_popupwindow(flag_state, id, callback, projectid, bsbh)
 {
 	state = flag_state;
 	gkhcallback = callback;
 	$('#cwls_Id').val(id);
 	$('#cwls_bsbh').val(bsbh);
+	cwls_configpage(projectid);
 	if (state == 'add')
 	{
 		cwls_title.innerHTML='新增';

@@ -38,7 +38,9 @@ function addselectfieldwindows()
     });	
 }
 
+
 var data_url = "/bidding/default/SelectProjectsSummary"
+
 var datafields_content = [
 	                          {"name":"Id","type":"string"},
 	                          {"name":"ProtocolCodeId","type":"string"},
@@ -124,19 +126,19 @@ function InitProjectGrid(dict){
                            {"datafield":"ProtocolCodeId","text":"协议编号", width: "190", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                      		  var label="";
-                    		  pt = JSON.parse(dict.ProtocolCode)
-                    		  for(i=0;i<pt.length;i++){
+                    		  var pt = JSON.parse(dict.ProtocolCode)
+                    		  for( var  i=0;i<pt.length;i++){
                     			  if(pt[i].Id==value.toString()) {
                     				  label = pt[i].ProtocolNumber
                     			  }
                     		  }
                		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
                            }},             
-                           {"datafield":"ProjectTypeId","text":"项目类型", width: "180", cellsalign: 'center', align: 'center',hidden:true,
+                           {"datafield":"ProjectTypeId","text":"项目类型", width: "180", cellsalign: 'center', align: 'center',hidden:false,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		  var label="";
-                        		  pt = JSON.parse(dict.ProjectType)
-                        		  for(i=0;i<pt.length;i++){
+                        		  var  pt = JSON.parse(dict.ProjectType)
+                        		  for(var i=0;i<pt.length;i++){
                         			  if(pt[i].ProjectTypeId==value.toString()) {
                         				  label = pt[i].ProjectTypeName
                         			  }
@@ -146,8 +148,8 @@ function InitProjectGrid(dict){
                            {"datafield":"CustomerId","text":"采购单位", width: "180", cellsalign: 'center', align: 'center',hidden:false,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		   var label="";
-                         		  pt = JSON.parse(dict.Customer)
-                         		  for(i=0;i<pt.length;i++){
+                        		   var pt = JSON.parse(dict.Customer)
+                         		  for(var i=0;i<pt.length;i++){
                          			  if(pt[i].Id==value.toString()) {
                          				  label = pt[i].UserName
                          			  }
@@ -157,8 +159,8 @@ function InitProjectGrid(dict){
                            {"datafield":"EmployeeId","text":"负责人", width: "80", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		   var label="";
-                          		  pt = JSON.parse(dict.Employee)
-                          		  for(i=0;i<pt.length;i++){
+                        		   var pt = JSON.parse(dict.Employee)
+                          		  for(var i=0;i<pt.length;i++){
                           			  if(pt[i].Id==value.toString()) {
                           				  label = pt[i].Name
                           			  }
@@ -168,8 +170,8 @@ function InitProjectGrid(dict){
                            {"datafield":"Assistant","text":"协助人", width: "80", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		   var label="";
-                           		  pt = JSON.parse(dict.Employee)
-                           		  for(i=0;i<pt.length;i++){
+                        		   var pt = JSON.parse(dict.Employee)
+                           		  for(var i=0;i<pt.length;i++){
                            			  if(pt[i].Id==value.toString()) {
                            				  label = pt[i].Name
                            			  }
@@ -179,8 +181,8 @@ function InitProjectGrid(dict){
                            {"datafield":"ProjectSourceId","text":"项目来源", width: "120", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		   var label="";
-                           		  pt = JSON.parse(dict.ProjectSource)
-                           		  for(i=0;i<pt.length;i++){
+                        		   var pt = JSON.parse(dict.ProjectSource)
+                           		  for(var i=0;i<pt.length;i++){
                            			  if(pt[i].Id==value.toString()) {
                            				  label = pt[i].Name
                            			  }
@@ -190,8 +192,8 @@ function InitProjectGrid(dict){
                            {"datafield":"FundingSourceId","text":"资金来源", width: "120", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		   var label="";
-                            		  pt = JSON.parse(dict.FundingSource)
-                            		  for(i=0;i<pt.length;i++){
+                        		   var pt = JSON.parse(dict.FundingSource)
+                            		  for(var i=0;i<pt.length;i++){
                             			  if(pt[i].Id==value.toString()) {
                             				  label = pt[i].Name
                             			  }
@@ -201,8 +203,8 @@ function InitProjectGrid(dict){
                            {"datafield":"ManagementStyleId","text":"管理方式", width: "120", cellsalign: 'center', align: 'center',hidden:true,
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		   var label="";
-                         		  pt = JSON.parse(dict.ManagementStyle)
-                         		  for(i=0;i<pt.length;i++){
+                        		   var pt = JSON.parse(dict.ManagementStyle)
+                         		  for(var i=0;i<pt.length;i++){
                          			  if(pt[i].ManagementStyleId==value.toString()) {
                          				  label = pt[i].ManagementStyleName
                          			  }
@@ -212,8 +214,8 @@ function InitProjectGrid(dict){
                            {"datafield":"PurchaseStyleId","text":"采购方式", width: "160", cellsalign: 'center', align: 'center',
                             	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                             		  var label="";
-                              		  pt = JSON.parse(dict.PurchaseStyle)
-                              		  for(i=0;i<pt.length;i++){
+                            		  var  pt = JSON.parse(dict.PurchaseStyle)
+                              		  for(var i=0;i<pt.length;i++){
                               			  if(pt[i].PurchaseStyleId==value.toString()) {
                               				  label = pt[i].PurchaseStyleName
                               			  }
@@ -223,8 +225,8 @@ function InitProjectGrid(dict){
                            {"datafield":"ProjectStatusId","text":"项目状态", width: "120", cellsalign: 'center', align: 'center',
                         	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		   var label="";
-                          		  pt = JSON.parse(dict.ProjectStatus)
-                          		  for(i=0;i<pt.length;i++){
+                        		   var  pt = JSON.parse(dict.ProjectStatus)
+                          		  for(var i=0;i<pt.length;i++){
                           			  if(pt[i].Id==value.toString()) {
                           				  label = pt[i].Name
                           			  }
@@ -241,7 +243,7 @@ function InitProjectGrid(dict){
 	                          {"datafield":"WinningMoney","text":"中标金额合计", width: "120", cellsalign: 'center', align: 'center',hidden:true}
                            ]            
     var outerDataAdapter = new $.jqx.dataAdapter(source, { autoBind: true });
-    projects_record = outerDataAdapter.records;
+    var  projects_record = outerDataAdapter.records;
     $("#jqxgrid").jqxGrid(
     {
         width: '100%',
@@ -322,8 +324,39 @@ function InitSearchArea(dict){
 	BindProjectNameOnly("#ProjectName_SEARCH")   // input
 	$("#ProjectName_SEARCH_Button").jqxButton({ template: "success",height: '19px'});
 	$("#ProjectName_SEARCH_Button").click(function (event) {
-		searchkey = "where "
-		searchkey += "[ProjectName] like '%"+$("#ProjectName_SEARCH").val();
+		var searchkey = "where "
+		if($("#ProjectName").val()!='' && $("#ProjectName").val()!= undefined){
+			searchkey += "[ProjectName] like '\%"+$("#ProjectName_SEARCH").val()+"\%'";
+		}else{
+			searchkey +=' [ProjectName] is not null '
+		}
+		if($("#BuyerId_SEARCH").val()!='' && $("#BuyerId_SEARCH").val()!= undefined){
+			searchkey += " and [CustomerId] = " +$("#BuyerId_SEARCH").val();
+		}
+		if($("#ProjectTypeId_SEARCH").val()!='' && $("#ProjectTypeId_SEARCH").val()!= undefined){
+			searchkey += " and [ProjectTypeId] = " +$("#ProjectTypeId_SEARCH").val();
+		}
+		if($("#PurchaseStyleId_SEARCH").val()!=''&& $("#PurchaseStyleId_SEARCH").val()!= undefined){
+			searchkey += " and [PurchaseStyleId] = " +$("#PurchaseStyleId_SEARCH").val();
+		}
+		if($("#ProjectSourceId_SEARCH").val()!=''&& $("#ProjectSourceId_SEARCH").val()!= undefined){
+			searchkey += " and [ProjectSourceId] = " +$("#ProjectSourceId_SEARCH").val();
+		}
+		if($("#SourcesOfFundingId_SEARCH").val()!=''&& $("#SourcesOfFundingId_SEARCH").val()!= undefined){
+			searchkey += " and [FundingSourceId] = " +$("#SourcesOfFundingId_SEARCH").val();
+		}
+		if($("#ManagementStyleId_SEARCH").val()!=''&& $("#ManagementStyleId_SEARCH").val()!= undefined){
+			searchkey += " and [ManagementStyleId] = "&& +$("#ManagementStyleId_SEARCH").val();
+		}
+		if($("#StateId_SEARCH").val()!='' && $("#StateId_SEARCH").val()!= undefined){
+			searchkey += " and [ProjectStatusId] = " +$("#StateId_SEARCH").val();
+		}
+		if($("#EmployeeId_SEARCH").val()!='' && $("#EmployeeId_SEARCH").val()!= undefined){
+			searchkey += " and [EmployeeId] = " +$("#EmployeeId_SEARCH").val();
+		}
+		if($("#Assistant_SEARCH").val()!='' && $("#Assistant_SEARCH").val()!= undefined){
+			searchkey += " and [Assistant] = " +$("#Assistant_SEARCH").val();
+		}
 		source.url = "xmgl_ss?searchkey=" + searchkey;
 		dataAdapter = new $.jqx.dataAdapter(source);
 		$("#jqxgrid").jqxGrid({ source: dataAdapter });
@@ -341,6 +374,7 @@ function InitSearchArea(dict){
      });
 	
 }
+
 
 function InitNewProjectWindow(dict){	
 	// 填写项目名称
@@ -364,13 +398,13 @@ function InitNewProjectWindow(dict){
    // 协助人
    BindEmployee("#NewProject_Assistant",dict.Employee)
    // 项目状态
-   BindProjectStatus("#NewProject_ProjectStatus",dict.ProjectStatus)
+//   BindProjectStatus("#NewProject_ProjectStatus",dict.ProjectStatus)
    // 协议编号
    BindProtocolNumberWithID("#NewProject_ProtocolCode",dict.ProtocolCode)
    
    
 	// 项目创建时间
-	$("#NewProject_CreationDate").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
+//	$("#NewProject_CreationDate").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
 	// 初始化创建项目的loader
 	$("#Loader_CreatingNewProject").jqxLoader({ width: 100, height: 60, imagePosition: 'top' });
 	// 初始化整个Window
@@ -384,12 +418,11 @@ function InitNewProjectWindow(dict){
     $("#NewProject_Save").jqxButton({ theme: theme, template:"success"  });
     $("#NewProject_Save").click(function () {
 		// 添加成功后弹出项目编号创建成功的界面，告知操作人员项目已添加了
-		var row = {
-		 ProtocolCodeId:$("#NewProject_ProtocolCode").val()
+		var row = {  ProtocolCodeId:$("#NewProject_ProtocolCode").val()
 		,ProjectName:$("#NewProject_ProjectName").val()
 		,CustomerId:$("#NewProject_Customer").val(),EmployeeId:$("#NewProject_Employee").val(),Assistant:$("#NewProject_Assistant").val(),ProjectSourceId:$("#NewProject_ProjectSource").val()
 		,FundingSourceId:$("#NewProject_FundingSource").val(),ProjectTypeId:$("#NewProject_ProjectType").val(),ManagementStyleId:$("#NewProject_ManagementStyle").val(),PurchaseStyleId:$("#NewProject_PurchaseStyle").val()
-		,ProjectStatusId:$("#NewProject_ProjectStatus").val(),CreationDate:$("#NewProject_CreationDate").val(),IsDelete:'0'
+		,ProjectStatusId:'1',IsDelete:'0'
 		}
 		var datarow = row;
 		$("#Loader_CreatingNewProject").jqxLoader('open');
@@ -405,11 +438,11 @@ function InitNewProjectWindow(dict){
 function AdvancedSearchContent(action,dict){
 	if(action=="show"){
 		var searchTable = $("#searchTable"); 
-		row1HTML = '<tr id="row1Search"><td align="left"><p>采购单位</p></td>	<td align="left"><div id="BuyerId_SEARCH" /></td>	\
+		var row1HTML = '<tr id="row1Search"><td align="left"><p>采购单位</p></td>	<td align="left"><div id="BuyerId_SEARCH" /></td>	\
 			<td align="left"><p>项目类型</p></td> <td align="left"><div id="ProjectTypeId_SEARCH" /></td>	\
 			<td align="left"><p>采购方式</p></td>	<td align="left"><div id="PurchaseStyleId_SEARCH" /></td>\
 			<td align="left"><p>项目来源</p></td>	<td align="left"><div id="ProjectSourceId_SEARCH" /></td></tr>'
-			row2HTML='<tr id="row2Search"><td align="left"><p>资金来源</p></td>	<td align="left"><div id="SourcesOfFundingId_SEARCH" /></td>\
+			var row2HTML='<tr id="row2Search"><td align="left"><p>资金来源</p></td>	<td align="left"><div id="SourcesOfFundingId_SEARCH" /></td>\
 			<td align="left"><p>管理方式</p></td>	<td align="left"><div id="ManagementStyleId_SEARCH" /></td>\
 			<td align="left"><p>项目状态</p></td>	<td align="left"><div id="StateId_SEARCH" /></td>\
 			<td align="left"><p>负责人</p></td>	<td align="left"><div id="EmployeeId_SEARCH" /></td>\
@@ -420,7 +453,7 @@ function AdvancedSearchContent(action,dict){
 			BindProjectType("#ProjectTypeId_SEARCH",dict.ProjectType)// dropdownlist
 			BindProjectSource("#ProjectSourceId_SEARCH",dict.ProjectSource)// dropdownlist
 			BindFundingSource("#SourcesOfFundingId_SEARCH",dict.FundingSource)// dropdownlist
-			BindManagementStyle("#ManagementStyleId_SEARCH",dict.FundingSource)// dropdownlist
+			BindManagementStyle("#ManagementStyleId_SEARCH",dict.ManagementStyle)// dropdownlist
 			BindPurchaseStyle("#PurchaseStyleId_SEARCH",dict.PurchaseStyle)
 			BindEmployee("#EmployeeId_SEARCH",dict.Employee,true)// dropdownlist
 			BindAssitant("#Assistant_SEARCH",dict.Employee,false)// dropdownlist
@@ -434,11 +467,9 @@ function AdvancedSearchContent(action,dict){
 
 
 $(document).ready(function () {
-	
-	$.get("/bidding/default/getDictionaries",function(dict){
-			InitSearchArea(dict);
-		    addselectfieldwindows();
-			InitProjectGrid(dict);
-			InitNewProjectWindow(dict);
-		},'json');
+	var dict = JSON.parse($("#Dictionaries").text())
+	InitSearchArea(dict);
+    addselectfieldwindows();
+	InitProjectGrid(dict);
+	InitNewProjectWindow(dict);
 });

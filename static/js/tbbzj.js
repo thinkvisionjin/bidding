@@ -71,8 +71,15 @@ function deletetbbzj(id)
     }
 
 	$.get('deleterow_tbbzj?Id='+id, function(result){
-		alert(result);
-		$("#tbbzj-grid").jqxGrid('deleterow', rowid);
+		if (result == 'success')
+		{
+			confirm('成功')
+			$("#tbbzj-grid").jqxGrid('deleterow', rowid);
+		}
+		else
+		{
+			alert(result)
+		}	
 	});
 }
 
@@ -97,14 +104,15 @@ $(document).ready(function() {
 	
 					$("#tbbzj-expander").jqxExpander({
 						toggleMode : 'none',
-						showArrow : false
+						showArrow : false,
+						height: '100%'
 					});
 					$("#tbbzj-grid")
 							.jqxGrid(
 									{
 										enabletooltips: true,
 										columnsresize: true,
-										height : "80%",
+										height : "90%",
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
@@ -152,6 +160,10 @@ $(document).ready(function() {
 											$("#tbbzjadd").jqxButton({
 												template : 'success'
 											});
+											/*container.append('<input id="tbbzjexport" type="button" value="输出" />');
+											$("#tbbzjexport").jqxButton({
+												template : 'primary'
+											});	*/											
 											container.append('<input id="selectfiled" style="float: right" type="button" value="设置" />');
 											$("#selectfiled").jqxButton({
 												template : 'info'
@@ -161,6 +173,11 @@ $(document).ready(function() {
 									});
 					//$("#tbbzj-grid").('hidecolumn', 'id');
 					search();
+					/*$("#tbbzjexport").click(function() {
+						$("#tbbzj-grid").jqxGrid('exportdata', 'xls', 'gmbs');
+						//window.location.replace('gmbsmx');
+						//$("#popupWindow").jqxWindow('open');
+					});	*/				
 					$("#tbbzjadd").click(function() {
 						tbbzj_popupwindow('add', '', search);
 						//window.location.replace('tbbzjmx');

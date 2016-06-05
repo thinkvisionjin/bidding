@@ -1,5 +1,5 @@
 
-function initProtocolCodeGrid() {
+function initProtocolCodeGrid(dict) {
 	var datafields_content = [
 		{
 			"name": "Id",
@@ -217,11 +217,6 @@ function initProtocolCodeGrid() {
 
 
 $(document).ready(function () {
-	
-	$.get("/bidding/default/getDictionaries",function(result){
-			dict = result
-			initProtocolCodeGrid(dict)
-	},'json');
-	
-	
+	var dict = JSON.parse($("#Dictionaries").text())
+	initProtocolCodeGrid(dict)
 });

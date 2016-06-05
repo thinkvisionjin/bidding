@@ -1,13 +1,13 @@
 
 function search()
 {
-	if ($("#dwmc").val()=='')
+	if ($("#dwmc").val()=='' && $("#bsbh").val()=='')
 		{
 		url = "select_tbzj";
 		}
 	else
 		{
-		url = "select_tbzj?dwmc="+$("#dwmc").val()
+		url = "select_tbzj?dwmc="+$("#dwmc").val()+"&bsbh="+$("#bsbh").val()
 		}
 		
 	var source = {					
@@ -75,8 +75,15 @@ function deletetbzj(id)
     }
 
 	$.get('deleterow_tbzj?Id='+id, function(result){
-		alert(result);
-		$("#tbzj-grid").jqxGrid('deleterow', rowid);
+		if (result == 'success')
+		{
+			confirm('成功')
+			$("#tbzj-grid").jqxGrid('deleterow', rowid);
+		}
+		else
+		{
+			alert(result)
+		}	
 	});
 }
 
@@ -101,14 +108,15 @@ $(document).ready(function() {
 	
 					$("#tbzj-expander").jqxExpander({
 						toggleMode : 'none',
-						showArrow : false
+						showArrow : false,
+						height: '100%'
 					});
 					$("#tbzj-grid")
 							.jqxGrid(
 									{
 										enabletooltips: true,
 										columnsresize: true,
-										height : "80%",
+										height : "85%",
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
@@ -130,8 +138,8 @@ $(document).ready(function() {
 															value,
 															defaultvalue,
 															column, rowdata) {
-														var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printtbzj('+rowdata.Id+')">打印</a>';
-
+														//var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printtbzj('+rowdata.Id+')">打印</a>';
+														var a = ''
 														var b = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="modifytbzj('+rowdata.Id+')">修改</a>';
 
 														var c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deletetbzj('+rowdata.Id+')">删除</a>';
@@ -150,6 +158,10 @@ $(document).ready(function() {
 											$("#tbzjadd").jqxButton({
 												template : 'success'
 											});
+											/*container.append('<input id="tbzjexport" type="button" value="输出" />');
+											$("#tbzjexport").jqxButton({
+												template : 'primary'
+											});	*/
 											container.append('<input id="selectfiled" style="float: right" type="button" value="设置" />');
 											$("#selectfiled").jqxButton({
 												template : 'info'
@@ -159,6 +171,11 @@ $(document).ready(function() {
 									});
 					//$("#tbzj-grid").('hidecolumn', 'id');
 					search();
+					/*$("#tbzjexport").click(function() {
+						$("#tbzj-grid").jqxGrid('exportdata', 'xls', 'gmbs');
+						//window.location.replace('gmbsmx');
+						//$("#popupWindow").jqxWindow('open');
+					});	*/
 					$("#tbzjadd").click(function() {
 						tbzj_popupwindow('add', '', search);
 						//window.location.replace('tbzjmx');
