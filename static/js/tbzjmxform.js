@@ -205,8 +205,7 @@ function tbzj_init () {
                 </table>\
 		</div>");
 	$("#tbzj_popupWindow").jqxWindow({
-		width: 600, height:295, resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#tbzj_Cancel"), modalOpacity: 0.4           
-		,position: { x: '40%', y: '50%' }
+		width: 600, height:600, resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#tbzj_Cancel"), modalOpacity: 0.4           
 	});	
 	$("#tbzjmx-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
 

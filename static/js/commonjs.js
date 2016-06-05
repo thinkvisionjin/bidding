@@ -240,8 +240,8 @@ function BindProjectType(documentObject, localdata, project) {
 			datatype: "json",
 			datafields: [
 				{ name: 'ProjectTypeName' },
-				{ name: 'ProjectTypeID' },
-				{ name: 'ProjectTypeCode' },
+				{ name: 'ProjectTypeId' },
+				{ name: 'Id' },
 			],
 			url: "/bidding/default/select?table=ProjectType",
 			async: true
@@ -251,8 +251,7 @@ function BindProjectType(documentObject, localdata, project) {
 			datatype: "json",
 			datafields: [
 				{ name: 'ProjectTypeName' },
-				{ name: 'ProjectTypeID' },
-				{ name: 'ProjectTypeCode' },
+				{ name: 'ProjectTypeId' },
 			],
 			localdata: localdata
 		}
@@ -273,7 +272,7 @@ function BindProjectType(documentObject, localdata, project) {
 		{
 			source: dataAdapter,
 			displayMember: "ProjectTypeName",
-			valueMember: "ProjectTypeID",
+			valueMember: "ProjectTypeId",
 			width: '200', height: '25'
 		});
 	if (project != undefined) {
@@ -403,7 +402,7 @@ function BindCustomer(documentObject, localdata, project) {
 				{ name: 'UserName' },
 			],
 			url: "/bidding/default/select?table=Customer",
-			async: true
+			async: false
 		}
 	} else {
 		var source = {
@@ -422,26 +421,27 @@ function BindCustomer(documentObject, localdata, project) {
             var length = records.length;
 
 			$(documentObject).on('select', function (event) {
-				var args = event.args;
-				var item = $(documentObject).jqxDropDownList('getItem', args.index);
+				
 			});
         }
     });
-	$(documentObject).jqxDropDownList(
+	$(documentObject).jqxComboBox(
 		{
+			searchMode: 'contains',
 			source: dataAdapter,
 			displayMember: "UserName",
 			valueMember: "Id",
 			width: '200', height: '25'
 		});
+	
 	$(documentObject).on('select', function (event) {
 		var args = event.args;
-		var item = $(documentObject).jqxDropDownList('getItem', args.index);
+		var item = $(documentObject).jqxComboBox('getItem', args.index);
 	});
 	if (project != undefined) {
-		var items = $(documentObject).jqxDropDownList('getItems');
-		var item = $(documentObject).jqxDropDownList('getItemByValue', project.CustomerId);
-		$(documentObject).jqxDropDownList('selectItem', item);
+		var items = $(documentObject).jqxComboBox('getItems');
+		var item = $(documentObject).jqxComboBox('getItemByValue', project.CustomerId);
+		$(documentObject).jqxComboBox('selectItem', item);
 	}
 }
 
@@ -708,7 +708,8 @@ function BindProjectStatus(documentObject, localdata, project) {
 			source: dataAdapter,
 			displayMember: "Name",
 			valueMember: "Id",
-			width: '200', height: '25'
+			width: '200', height: '25',
+			selectedIndex: 0
 		});
 	$(documentObject).on('select', function (event) {
 		var args = event.args;

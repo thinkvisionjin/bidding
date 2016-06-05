@@ -244,8 +244,7 @@ function gmbs_init () {
 		</table>\
 		</div>");
 	$("#gmbs_popupWindow").jqxWindow({
-		width: 600,  height:450, resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#gmbs_Cancel"), modalOpacity: 0.4           
-		,position: { x: '40%', y: '50%' }
+		width: 600,  resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#gmbs_Cancel"), modalOpacity: 0.4           
 	});	
 	$("#gmbsmx-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
 

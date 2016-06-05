@@ -14,6 +14,7 @@ import time
 
 T.force('zh-cn')
 CONST_MANAGER=2;
+CONST_ADMIN = 1;
 auth.settings.actions_disabled=['register','request_reset_password']
 @auth.requires_login()
 def index():
@@ -170,13 +171,40 @@ def update():
     table_name = request.vars.table
     print 'update data into:'  +table_name +'**************'
     row_data = request.post_vars
+    print row_data
+#     for key in row_data:
+#         print unicode(key)+u":"+unicode(row_data[key].decode('utf-8'))
+    
     id = row_data['Id']
-    for key in row_data:
-        if key!='Id' and key!='uid':
-            db(db[table_name]._id == id).update(**{key:request.post_vars[key]})
+    try:
+        for key in row_data:
+            if key!='Id' and key!='uid':
+                db(db[table_name]._id == id).update(**{key:unicode(row_data[key].decode('utf-8'))})
+    except Exception as e:
+        print e
     row = db(db[table_name]._id ==id).select().first()
     db.commit()
-    return dict(table=table_name)
+    dic_rows = []
+    dict_row = {}
+    try:
+        print "get the updated record"
+        for key in row.keys():
+            if (key!= u'update_record' and key!= u'delete_record'):
+                if key==u'id':
+                    dict_row[u'Id']  = row[key]
+                elif isinstance(row[key], bool):
+                    dict_row[key] = row[key]
+                elif isinstance(row[key], str):
+                    dict_row[key] = row[key].decode('utf-8')
+                elif isinstance(row[key], datetime):
+                    dict_row[key] = unicode(row[key])
+                else:
+                    dict_row[key] = unicode(row[key])
+           
+        dic_rows.append(dict_row)
+    except Exception as e:
+        print e
+    return json.dumps(dic_rows,ensure_ascii=False)
 
 @auth.requires_login()
 def select():
@@ -268,7 +296,8 @@ def upload():
     return dict();
 
 def xybh():
-    return dict();
+    dictionaries = getDictionaries()
+    return dict(dictionaries=dictionaries);
 def xybh_ss():
     searchkey = request.vars.searchkey
     strSQL = u"select *  from [bidding].[dbo].[ProtocolCode] where  ProtocolNumber like '%" +unicode(searchkey)+u"%' order by Id desc";
@@ -279,7 +308,8 @@ def xybh_ss():
 def xmbh():
     return dict();
 def xmgl():
-    return dict();
+    dictionaries = getDictionaries()
+    return dict(dictionaries=dictionaries);
 def xmgl_ss():
     searchkey = request.vars.searchkey
     strSQL = u'''select  a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete],
@@ -290,7 +320,7 @@ def xmgl_ss():
       count(b.Id) as ReturnMarginCount,
       sum(isnull(b.EntrustMoney,0)) as EntrustMoney,
       sum(isnull(b.WinningMoney,0)) as WinningMoney 
-      from [dbo].[Project] a left join [dbo].[ProjectPackage] b on a.id= b.ProjectId ''' + searchkey.decode(u'utf-8') +u"%'" + u'''group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete]
+      from [dbo].[Project] a left join [dbo].[ProjectPackage] b on a.id= b.ProjectId ''' + searchkey.decode(u'utf-8') + u''' group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete]
       order by a.[Id] desc ''' 
     print  strSQL
     protocols=sqltojson(strSQL)
@@ -374,18 +404,21 @@ def GenerateProjectCode(project,id):
 
 def SelectProjectsSummary():
     strSQL = u'''select  a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete],
-      count(b.Id) as PackageCount,
-      count(b.Id) as DocumentBuyerCount,
-      count(b.Id) as BidderCount,
-      count(b.Id) as MarginCount,
-      count(b.Id) as ReturnMarginCount,
+      count(distinct b.Id) as PackageCount,
+      count(distinct c.Id) as DocumentBuyerCount,
+      count(distinct d.Id) as BidderCount,
+      count(distinct d.Id) as MarginCount,
+      count(distinct e.Id) as ReturnMarginCount,
       sum(isnull(b.EntrustMoney,0)) as EntrustMoney,
       sum(isnull(b.WinningMoney,0)) as WinningMoney 
-      from [dbo].[Project] a left join [dbo].[ProjectPackage] b on a.id= b.ProjectId
+      from [dbo].[Project] a 
+      left join [dbo].[ProjectPackage] b on a.id= b.ProjectId 
+      left join [dbo].[GMBS] c on b.PackageNumber = c.bsbh
+      left join [dbo].[tbbzj] d on d.bsbh = c.bsbh
+      left join [dbo].[tbzj] e on e.bsbh = d.bsbh 
 group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete]
       order by a.[Id] desc'''
     return  sqltojson(strSQL)
-
 @auth.requires_login()
 def gmbs():
     return dict();
@@ -410,7 +443,6 @@ def CreateNewProject():
     initPackage[u"PackageNumber"] = unicode(row["ProjectCode"])+u'-01'
     initPackage[u"PackageName"] = row["ProjectName"].decode(u'utf-8')
     initPackage[u"StateId"] = row["ProjectStatusId"]
-    initPackage[u"CreationDate"] = ''
     initPackage[u"IsDelete"] = '0'
     CreateNewPackage(initPackage)
     dict_row = {}
@@ -690,7 +722,7 @@ def deleterow(table_name, id):
 def p_getbsbh(projectid=None):
     uid = auth.user_id
     tj = u''
-    if auth.user_groups.has_key(CONST_MANAGER):
+    if auth.user_groups.has_key(CONST_MANAGER) or auth.user_groups.has_key(CONST_ADMIN) :
         tj_uid = u'1=1'
     else:
         tj_uid = u'''( EmployeeId='''+unicode(uid)+u''' or Assistant='''+unicode(uid)+u''')'''
@@ -774,8 +806,6 @@ def gmbs_print():
 
 def select_gmbs():
     try:
-
-
         username = auth.user.chinesename.decode('gbk')
   
         if request.vars.dwmc==None:
@@ -798,6 +828,14 @@ def select_gmbs():
         return sqltojson(sql);
     except:
         return u"fail"    
+    
+def select_gmbsbyProjectId():
+    try:
+        projectid  = request.vars.id
+        strsql = u'select * from GMBS where bsbh in (select PackageNumber from ProjectPackage where ProjectId ='+ projectid+u') order by rq desc' 
+        return sqltojson(strsql);
+    except:
+        return u"fail"   
 
 def p_updaterow_gmbs(id, rowData):
     table_name = u'gmbs'
@@ -1358,7 +1396,8 @@ def getzbpz():
     result[u'bsbh'] = p_getbsbh(request.vars.projectid)
     return json.dumps(result) 
 
-def getttbzj_tbzj():
+def getttbzj_tbzjByProjectId():
+    projectid = request.vars.id
     uid = u''
     sql = u"""select a.*,b.rq as trq, ISNULL (b.je,0 ) as tje,b.fkfs,khyh,
 CASE ISNULL (b.je,0 )
@@ -1366,7 +1405,8 @@ WHEN 0 THEN 0
 ELSE 1 
 end as returned,b.yhzh
 from [dbo].[tbbzj] a left join [dbo].[tbzj] b
-on a.dwmc = b.dwmc and a.bsbh = b.bsbh """;
+on a.dwmc = b.dwmc and a.bsbh = b.bsbh
+where a.bsbh in (select PackageNumber from ProjectPackage where ProjectId = """ + projectid + u")";
     return sqltojson(sql)
 
 def getContactsByProjectID():
@@ -1507,7 +1547,7 @@ def selectone_yhlswj():
     table_name = u'yhlswj'
     sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
 
-import xlrd
+
 def fileUpload():
     try:
         f= request.vars.fileToUpload

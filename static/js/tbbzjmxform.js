@@ -181,8 +181,7 @@ function tbbzj_init () {
                 </table>\
 		</div>");
 	$("#tbbzj_popupWindow").jqxWindow({
-		width: 600, height:235, resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#tbbzj_Cancel"), modalOpacity: 0.4           
-		,position: { x: '40%', y: '50%' }
+		width: 600, height:600, resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#tbbzj_Cancel"), modalOpacity: 0.4           
 	});	
 	$("#tbbzjmx-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
 
