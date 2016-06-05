@@ -1,4 +1,4 @@
-﻿/*Rounded Corners*/
+/*Rounded Corners*/
 /*top-left rounded Corners*/
 .jqx-rc-tl-bootstrap {
     -moz-border-radius-topleft: 4px;
@@ -108,7 +108,7 @@
 
 .jqx-fill-state-hover-bootstrap, .jqx-fill-state-pressed-bootstrap {
     color: #333333;
-    background-color: #ebebeb;
+    background-color: #1faefc;
     border-color: #adadad;
 }
 

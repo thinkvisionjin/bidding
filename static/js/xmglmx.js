@@ -1,14 +1,13 @@
 
-function popup_gmbswindow() {
-	
-}
-
-
 function InitEditProjectPage(dict,project){
 	$("#jqxProjectBasicExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
 	$("#jqxProjectPackagesExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
 	$("#jqxProjectDocumentsExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
 	$("#jqxProjectMarginExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
+	$("#jqxProjectContactsExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
+	$("#jqxProjectFinanceExpander").jqxExpander({width: '99%', toggleMode: 'dblclick'});
+	
+	
 	
 	$("#EditProject_ProjectCode").addClass('jqx-input')
 	$("#EditProject_ProjectCode").width(200)
@@ -45,7 +44,6 @@ function InitEditProjectPage(dict,project){
 		var row = {Id:project.Id
 				,ProtocolCodeId:''
 				,ProjectCode:project.PojectCode
-				,ProjectCode:project.PojectCode
 				,ProjectName:$("#EditProject_ProjectName").val()
 				,CustomerId:$("#EditProject_Customer").val()
 				,EmployeeId:$("#EditProject_Employee").val()
@@ -81,8 +79,8 @@ function InitProjectPackageGrid(dict,project){
 		                 {"name":"PackageNumber","type":"string"},
 		                 {"name":"PackageName","type":"string"},
 		                 {"name":"StateId","type":"string"},
-		                 {"name":"SigningDate","type":"date"},
-		                 {"name":"MakeOutDate","type":"date"},
+		                 {"name":"SigningDate","type":"datetime"},
+		                 {"name":"MakeOutDate","type":"datetime"},
 		                 {"name":"EntrustMoney","type":"string"},
 		                 {"name":"WinningMoney","type":"string"},
 		                 {"name":"WinningCompany","type":"string"},
@@ -124,7 +122,7 @@ function InitProjectPackageGrid(dict,project){
 		    }
 		});
 		var projectPackage_columns_content  = 
-			[{"datafield":"PackageNumber","text":"\u5305\u7f16\u53f7", cellsalign: 'center', align: 'center',width: '18%'},
+			[{"datafield":"PackageNumber","text":"\u5305\u7f16\u53f7", editable:false, cellsalign: 'center', align: 'center',width: '18%'},
 			 {"datafield":"PackageName","text":"\u5305\u540d\u79f0",  cellsalign: 'center', align: 'center',width: '17%'},
 			 {"datafield":"StateId","text":"\u5305\u72b6\u6001", cellsalign: 'center', align: 'center',columntype: 'dropdownlist',width: '12%',
 				 cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
@@ -156,44 +154,10 @@ function InitProjectPackageGrid(dict,project){
         				height: '27' });
                  },
                  // update the editor's value before saving it.
-                 cellvaluechanging: function (row, column, columntype, oldvalue, newvalue) {
-                     // return the old value, if the new value is empty.
-                	 pt = JSON.parse(dict.ProjectStatus)
-              		  for(i=0;i<pt.length;i++){
-              			  if(pt[i].Name==newvalue.toString()) {
-              				newvalue = pt[i].Id
-              			  }
-              			 if(pt[i].Name==oldvalue.toString()) {
-              				oldvalue = pt[i].Id
-              			  }
-              		  }
-                	  
-                     if (newvalue == "") {
-                    	 return oldvalue
-                     }
-                     else{
-                    	 return newvalue
-                     }
-                 }},
-			 {"datafield":"SigningDate","text":"\u7b7e\u7ea6\u65e5\u671f",  cellsalign: 'center', align: 'center',columntype: 'datetimeinput',cellsformat: 'd',width: '11%',
-                	 validation: function (cell, value) {
-                if (value == "")
-                     return true;
-                  var year = value.getFullYear();
-                  if (year >= 2017) {
-                      return { result: false, message: "签署日期不能大于2017" };
-                  }
-                  return true;
-              }},
-			 {"datafield":"MakeOutDate","text":"\u5f00\u7968\u65e5\u671f",  cellsalign: 'center', align: 'center',columntype: 'datetimeinput',cellsformat: 'd',width: '11%',validation: function (cell, value) {
-                 if (value == "")
-                     return true;
-                  var year = value.getFullYear();
-                  if (year >= 2017) {
-                      return { result: false, message: "签署日期不能大于2017" };
-                  }
-                  return true;
-              }},
+                 cellvaluechanging: function (row, column, columntype, oldvalue, newvalue) {}
+                 },
+			 {"datafield":"SigningDate","text":"\u7b7e\u7ea6\u65e5\u671f",  cellsalign: 'center', align: 'center',columntype: 'datetimeinput',cellsformat: 'yyyy-MM-dd',width: '11%'},
+			 {"datafield":"MakeOutDate","text":"\u5f00\u7968\u65e5\u671f",  cellsalign: 'center', align: 'center',columntype: 'datetimeinput',cellsformat: 'yyyy-MM-dd',width: '11%'},
 			 {"datafield":"EntrustMoney","text":"\u59d4\u6258\u91d1\u989d",  cellsalign: 'center', align: 'center',width: '8%'},
 			 {"datafield":"WinningMoney","text":"\u4e2d\u6807\u91d1\u989d",  cellsalign: 'center', align: 'center',width: '8%'},
 			 {"datafield":"WinningCompany","text":"\u4e2d\u6807\u5355\u4f4d",  cellsalign: 'center', align: 'center',width: '8%'},
@@ -203,13 +167,12 @@ function InitProjectPackageGrid(dict,project){
 		        {
 		            height: 265,
 		            width: "100%",
-		            selectionmode: 'singlerow',
 		            columnsresize: true,
 		            source: projectPackageurldataAdapter,
 		            pageable: true,
 		            editable: true,
 		            selectionmode: 'singlerow',
-		            editmode: 'selectedrow',
+		            editmode: 'selectedcell',
 		            autoRowHeight: false,
 		            showToolbar: true,
 		            ready: function()
@@ -228,6 +191,7 @@ function InitProjectPackageGrid(dict,project){
 		                var printButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
 		                var exportButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>导出</span></div>");
 		                var columnSettingButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>设置</span></div>");
+		                var updateButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>确认修改</span></div>");
 		                toolBar.append(container);
 		                container.append(addNewButton);
 		                container.append(refreshButton);
@@ -235,12 +199,14 @@ function InitProjectPackageGrid(dict,project){
 		                container.append(printButton);
 		                container.append(exportButton);
 		                container.append(columnSettingButton);
+		                container.append(updateButton);
 		                addNewButton.jqxButton({ template: "success" });
 		                refreshButton.jqxButton({ template: "primary" });
 		                printButton.jqxButton({ template: "info" });
 		                exportButton.jqxButton({ template: "warning" });
 		                deleteButton.jqxButton({ template: "danger" });
 		                columnSettingButton.jqxButton({ template: "inverse" });
+		                updateButton.jqxButton();
 		                addNewButton.click(function (event) {
 		                	$("#popupWindow_PackageADD").jqxWindow('show');
 		                });
@@ -248,7 +214,7 @@ function InitProjectPackageGrid(dict,project){
 		                    $("#EditProject_PackageTable").jqxGrid({ source:projectPackageurldataAdapter });
 		                });
 		                columnSettingButton.click(function (event) {
-		                	$("#popupWindow_PackageADD").jqxWindow('open');
+		                	
 		                });
 		                printButton.click(function (event) {
 		                    var gridContent = $("#EditProject_PackageTable").jqxGrid('exportdata', 'html');
@@ -276,7 +242,10 @@ function InitProjectPackageGrid(dict,project){
 		                    var id = $("#EditProject_PackageTable").jqxGrid('getrowid', selectedrowindex);
 		                    $("#EditProject_PackageTable").jqxGrid('deleterow', id);
 		                });
-		            
+		                updateButton.click(function(event){
+		                	//update all the data in the grid
+		                	alert("修改成功!")
+		                })
 		            },
 		            columns: projectPackage_columns_content
 		        });
@@ -323,7 +292,7 @@ function InitProjectDocumentGrid(dict,project){
         source: dataAdapter,
         editable: true,
         selectionmode: 'singlerow',
-        editmode: 'selectedrow',
+        editmode: 'selectedcell',
         columnsresize: true,
         showToolbar: true,
         renderToolbar: function(toolBar) {
@@ -360,7 +329,7 @@ function InitProjectDocumentGrid(dict,project){
                 $("#EditProject_DocumentTable").jqxGrid({ source:dataAdapter });
             });
             columnSettingButton.click(function (event) {
-            	$("#popupWindow_PackageADD").jqxWindow('open');
+            
             });
             printButton.click(function (event) {
                 var gridContent = $("#EditProject_DocumentTable").jqxGrid('exportdata', 'html');
@@ -392,27 +361,18 @@ function InitProjectDocumentGrid(dict,project){
         },
         columns: [
           { text: '客户名称', columntype: 'textbox', datafield: 'dwmc', width: '20%' , align: 'center', cellsalign: 'center',},
-          { text: '招标书编号', columntype: 'textbox', datafield: 'zzszwmc', width: '20%', align: 'center', cellsalign: 'center',},
-          { text: '包件名称', columntype: 'dropdownlist', datafield: 'bsbh', width:'20%' , align: 'center', cellsalign: 'center',},
+          { text: '招标书编号', columntype: 'dropdownlist', datafield: 'bsbh', width: '20%', align: 'center', cellsalign: 'center',},
+          { text: '制造商中文名称', columntype: 'dropdownlist', datafield: 'zzszwmc', width:'20%' , align: 'center', cellsalign: 'center',},
           {
               text: '付款日期', datafield: 'rq', columntype: 'datetimeinput', width: '20%', align: 'center', cellsalign: 'center', cellsformat: 'd',
           validation: function (cell, value) {
                   if (value == "")
                      return true;
                   var year = value.getFullYear();
-                  if (year >= 2017) {
-                      return { result: false, message: "Ship Date should be before 1/1/2017" };
-                  }
                   return true;
               }
           },
           { text: '金额', datafield: 'je', width: '20%' ,align: 'center', cellsalign: 'center', cellsformat: 'c2', columntype: 'numberinput',
-              validation: function (cell, value) {
-                  if (value < 0 || value > 15) {
-                      return { result: false, message: "Price should be in the 0-15 interval" };
-                  }
-                  return true;
-              },
               createeditor: function (row, cellvalue, editor) {
                   editor.jqxNumberInput({ digits: 3 });
               }
@@ -421,30 +381,13 @@ function InitProjectDocumentGrid(dict,project){
     });
     // events
     var rowValues = "";
-    $("#EditProject_DocumentTable").on('cellbeginedit', function (event) {
-        var args = event.args;
-        if (args.datafield === "firstname") {
-            rowValues = "";
-        }
-        rowValues += args.value.toString() + "    ";
-        if (args.datafield === "price") {
-            $("#cellbegineditevent").text("Begin Row Edit: " + (1 + args.rowindex) + ", Data: " + rowValues);
-        }
-    });
-    $("#EditProject_DocumentTable").on('cellendedit', function (event) {
-        var args = event.args;
-        if (args.datafield === "firstname") {
-            rowValues = "";
-        }
-        rowValues += args.value.toString() + "    ";
-        if (args.datafield === "price") {
-            $("#cellbegineditevent").text("End Row Edit: " + (1 + args.rowindex) + ", Data: " + rowValues);
-        }
-    });
+    $("#EditProject_DocumentTable").on('cellbeginedit', function (event) {});
+    $("#EditProject_DocumentTable").on('cellendedit', function (event) {});
 }
 
 function InitProjectMarginGrid(dict,project){
 	tbzj_init ()
+    tbbzj_init ()
 	var data = generatedata(7);
     var source =
     {
@@ -485,32 +428,42 @@ function InitProjectMarginGrid(dict,project){
         columnsresize: true,
         editable: true,
         selectionmode: 'singlerow',
-        editmode: 'selectedrow',
+        editmode: 'selectedcell',
         renderToolbar: function(toolBar) {
         	//添加打印按钮、导出Excel按钮和其他按钮
             var me = this;
             var container = $("<div style='margin-left: auto; margin-right: auto; '></div>");
             var container = $("<div style='margin: 5px;'></div>");
-            var addNewButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>新增</span></div>");
+            var addNewButton1 = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>缴保证金</span></div>");
+            var addNewButton2 = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>退保证金</span></div>");
+       
             var refreshButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>刷新</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>删除</span></div>");
             var printButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
             var exportButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>导出</span></div>");
             var columnSettingButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>设置</span></div>");
             toolBar.append(container);
-            container.append(addNewButton);
+            container.append(addNewButton1);
+            container.append(addNewButton2);
             container.append(refreshButton);
             container.append(deleteButton);
             container.append(printButton);
             container.append(exportButton);
             container.append(columnSettingButton);
-            addNewButton.jqxButton({ template: "success" });
+            addNewButton1.jqxButton({ template: "success" });
+            addNewButton2.jqxButton({ template: "success" });
             refreshButton.jqxButton({ template: "primary" });
             printButton.jqxButton({ template: "info" });
             exportButton.jqxButton({ template: "warning" });
             deleteButton.jqxButton({ template: "danger" });
             columnSettingButton.jqxButton({ template: "inverse" });
-            addNewButton.click(function (event) {
+            addNewButton1.click(function (event) {
+            	tbbzj_popupwindow('add', '', function(){
+            		//refresh the grid when load completed
+            		$("#EditProject_MarginTable").jqxGrid({ source:dataAdapter });
+            	})
+            });
+            addNewButton2.click(function (event) {
             	
             	tbzj_popupwindow('add', '', function(){
             		//refresh the grid when load completed
@@ -521,7 +474,7 @@ function InitProjectMarginGrid(dict,project){
                 $("#EditProject_MarginTable").jqxGrid({ source:dataAdapter });
             });
             columnSettingButton.click(function (event) {
-            	$("#popupWindow_PackageADD").jqxWindow('open');
+            	
             });
             printButton.click(function (event) {
                 var gridContent = $("#EditProject_MarginTable").jqxGrid('exportdata', 'html');
@@ -558,21 +511,12 @@ function InitProjectMarginGrid(dict,project){
           {
               text: '交保证金日期', datafield: 'rq', columntype: 'datetimeinput', width: '10%', align: 'center', cellsalign: 'center', cellsformat: 'd',
           validation: function (cell, value) {
-                  if (value == "")
-                     return true;
-                  var year = value.getFullYear();
-                  if (year >= 2017) {
-                      return { result: false, message: "Ship Date should be before 1/1/2017" };
-                  }
-                  return true;
+                  
               }
           },
-          { text: '金额', datafield: 'je', align: 'right', width: '10%',align: 'center', cellsalign: 'center',  cellsformat: 'c2', columntype: 'numberinput',
+          { text: '金额', datafield: 'je',  width: '10%',align: 'center', cellsalign: 'center',  cellsformat: 'c2', columntype: 'numberinput',
               validation: function (cell, value) {
-                  if (value < 0 || value > 15) {
-                      return { result: false, message: "Price should be in the 0-15 interval" };
-                  }
-                  return true;
+                  
               },
               createeditor: function (row, cellvalue, editor) {
                   editor.jqxNumberInput({ digits: 3 });
@@ -582,21 +526,15 @@ function InitProjectMarginGrid(dict,project){
           {
               text: '退款日期', datafield: 'trq', columntype: 'datetimeinput', width: '10%', align: 'center', cellsalign: 'center', cellsformat: 'd',
           validation: function (cell, value) {
-                  if (value == "")
-                     return true;
-                  var year = value.getFullYear();
-                  if (year >= 2017) {
-                      return { result: false, message: "Ship Date should be before 1/1/2017" };
-                  }
-                  return true;
+                 
               }
           },
-          { text: '退还金额', datafield: 'tje', align: 'right', width: '10%',align: 'center', cellsalign: 'center',  cellsformat: 'c2', columntype: 'numberinput',
+          { text: '退还金额', datafield: 'tje',  width: '10%',align: 'center', cellsalign: 'center',  cellsformat: 'c2', columntype: 'numberinput',
               validation: function (cell, value) {
-                  if (value < 0 || value > 15) {
-                      return { result: false, message: "Price should be in the 0-15 interval" };
-                  }
-                  return true;
+                //   if (value < 0 || value > 15) {
+                //       return { result: false, message: "Price should be in the 0-15 interval" };
+                //   }
+                //   return true;
               },
               createeditor: function (row, cellvalue, editor) {
                   editor.jqxNumberInput({ digits: 3 });
@@ -635,8 +573,8 @@ function InitProjectMarginGrid(dict,project){
 function InitNewPackageWindow(dict,project){
 	$("#PackageNumber_ADD").jqxInput({width: '200px',height: "25px"});
 	$("#PackageName_ADD").jqxInput({width: '200px',height: "25px"});
-	$("#SigningDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
-	$("#MakeOutDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
+	$("#SigningDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd",  width: '200px', height: '25px' });
+	$("#MakeOutDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd", width: '200px', height: '25px' });
 	$("#EntrustMoney_ADD").jqxNumberInput({ width: '200px', height: '25px', spinButtons: true });
 	$("#WinningMoney_ADD").jqxNumberInput({ width: '200px', height: '25px', spinButtons: true });
 	$("#WinningCompany_ADD").jqxInput({width: '200px',height: "25px"});
@@ -652,13 +590,15 @@ function InitNewPackageWindow(dict,project){
     });
     $("#SavePackage_ADD").jqxButton({ theme: theme, template:"success"  });
     $("#SavePackage_ADD").click(function () {
+    	var  sd  = $("#SigningDate_ADD").val()
+    	var  md =  $("#MakeOutDate_ADD").val()
     	var row=
     	  {  ProjectId:project.Id
     		,PackageNumber:$("#PackageNumber_ADD").val()
     		,PackageName:$("#PackageName_ADD").val()
     		,StateId:$("#StateIdPackage_ADD").val()
-    		,SigningDate:$("#SigningDate_ADD").val()
-    		,MakeOutDate:$("#MakeOutDate_ADD").val()
+    		,SigningDate:sd
+    		,MakeOutDate:md
     		,EntrustMoney:$("#EntrustMoney_ADD").val()
     		,WinningMoney:$("#WinningMoney_ADD").val()
     		,WinningCompany:$("#WinningCompany_ADD").val()
@@ -674,16 +614,222 @@ function InitNewPackageWindow(dict,project){
 	});
 }
 
+
+function InitProjectContactsGrid(dict,project){
+	// var data = generatedata(7);
+    var exampleTheme = theme;
+    var source =
+    {
+        url: 'getContactsByProjectID?pid='+project.Id,
+        datafields:
+        [
+            { name: 'dwmc', type: 'string' },
+            { name: 'lxr', type: 'string' },
+            { name: 'sj', type: 'string' },
+            { name: 'lxdz', type: 'string' },
+            { name: 'cz', type: 'number' },
+            { name: 'dzxx', type: 'string' }
+        ],
+        datatype: "json"
+    };
+    var adapter = new $.jqx.dataAdapter(source);
+    var buildFilterPanel = function (filterPanel, datafield) {
+        var textInput = $("<input style='margin:5px;'/>");
+        var applyinput = $("<div class='filter' style='height: 25px; margin-left: 20px; margin-top: 7px;'></div>");
+        var filterbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 2px;">筛选</span>');
+        applyinput.append(filterbutton);
+        var filterclearbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 5px;">清除</span>');
+        applyinput.append(filterclearbutton);
+        filterPanel.append(textInput);
+        filterPanel.append(applyinput);
+        filterbutton.jqxButton({ theme: exampleTheme, height: 20 });
+        filterclearbutton.jqxButton({ theme: exampleTheme, height: 20 });
+        var dataSource =
+        {
+            localdata: adapter.records,
+            datatype: "array",
+            async: false
+        }
+        var dataadapter = new $.jqx.dataAdapter(dataSource,
+        {
+            autoBind: false,
+            autoSort: true,
+            autoSortField: datafield,
+            async: false,
+            uniqueDataFields: [datafield]
+        });
+        var column = $("#EditProject_ContactsTable").jqxGrid('getcolumn', datafield);
+        textInput.jqxInput({ theme: exampleTheme, placeHolder: "Enter " + column.text, popupZIndex: 9999999, displayMember: datafield, source: dataadapter, height: 23, width: 175 });
+        textInput.keyup(function (event) {
+            if (event.keyCode === 13) {
+                filterbutton.trigger('click');
+            }
+        });
+        filterbutton.click(function () {
+            var filtergroup = new $.jqx.filter();
+            var filter_or_operator = 1;
+            var filtervalue = textInput.val();
+            var filtercondition = 'contains';
+            var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);            
+            filtergroup.addfilter(filter_or_operator, filter1);
+            // add the filters.
+            $("#EditProject_ContactsTable").jqxGrid('addfilter', datafield, filtergroup);
+            // apply the filters.
+            $("#EditProject_ContactsTable").jqxGrid('applyfilters');
+            $("#EditProject_ContactsTable").jqxGrid('closemenu');
+        });
+        filterbutton.keydown(function (event) {
+            if (event.keyCode === 13) {
+                filterbutton.trigger('click');
+            }
+        });
+        filterclearbutton.click(function () {
+            $("#EditProject_ContactsTable").jqxGrid('removefilter', datafield);
+            // apply the filters.
+            $("#EditProject_ContactsTable").jqxGrid('applyfilters');
+            $("#EditProject_ContactsTable").jqxGrid('closemenu');
+        });
+        filterclearbutton.keydown(function (event) {
+            if (event.keyCode === 13) {
+                filterclearbutton.trigger('click');
+            }
+            textInput.val("");
+        });
+    }
+    $("#EditProject_ContactsTable").jqxGrid(
+    {
+        width: '100%',
+        height:200,
+        source: adapter,
+        filterable: true,
+        pageable: true,
+        sortable: true,
+        ready: function () {
+        },
+        autoshowfiltericon: true,
+        columnmenuopening: function (menu, datafield, height) {
+            var column = $("#EditProject_ContactsTable").jqxGrid('getcolumn', datafield);
+            if (column.filtertype === "custom") {
+                menu.height(155);
+                setTimeout(function () {
+                    menu.find('input').focus();
+                }, 25);
+            }
+            else menu.height(height);
+        },
+        columns: [
+          {
+              text: '联系人', datafield: 'lxr',width: '17%',align: 'center',
+              filtertype: "custom",
+              cellsalign: 'center',
+              createfilterpanel: function (datafield, filterPanel) {
+                  buildFilterPanel(filterPanel, datafield);
+              }
+          },
+          {
+              text: '公司名称', datafield: 'dwmc',align: 'center',
+              filtertype: "custom",
+              cellsalign: 'center',
+              createfilterpanel: function (datafield, filterPanel) {
+                  buildFilterPanel(filterPanel, datafield );
+              },
+              width: '17%',
+          },
+          { text: '联系地址', datafield: 'lxdz', createfilterpanel: function (datafield, filterPanel) {
+                  buildFilterPanel(filterPanel, datafield );
+              }, width: '17%',align: 'center', cellsalign: 'center' },
+          { text: '手机', createfilterpanel: function (datafield, filterPanel) {
+                  buildFilterPanel(filterPanel, datafield );
+              },datafield: 'sj', width: '16%', cellsalign: 'center',align: 'center',cellsformat: 'yyyy-MM-dd' },
+          { text: '传真', createfilterpanel: function (datafield, filterPanel) {
+                  buildFilterPanel(filterPanel, datafield );
+              },datafield: 'cz', width: '16%', calign: 'center',cellsalign: 'center',align: 'center'},
+          { text: '电子邮件', createfilterpanel: function (datafield, filterPanel) {
+                  buildFilterPanel(filterPanel, datafield );
+              },datafield: 'dzxx', width: '17%',align: 'center',cellsalign: 'center', cellsformat: 'c2' }
+        ]
+    });
+    
+    $("#EditProject_ContactsTable").on("filter", function (event) {
+        
+        var filterinfo = $("#EditProject_ContactsTable").jqxGrid('getfilterinformation');
+        var eventData = "Triggered 'filter' event";
+        for (i = 0; i < filterinfo.length; i++) {
+            var eventData = "Filter Column: " + filterinfo[i].filtercolumntext;
+            
+        }
+    });
+}
+
+function InitProjectFinanceGrid(dict,project){
+
+    // prepare the data
+    var source =
+    {
+        datatype: "json",
+        datafields: [
+            { name: 'bssr', type: 'float' },
+            { name: 'zbfwf', type: 'float' },
+            { name: 'wtxy', type: 'float' },
+            { name: 'pqzjf', type: 'float' },
+            { name: 'xmfc', type: 'float' }
+        ],
+        url: "getFinanceByProjectID?pid="+project.Id
+    };
+    var cellsrenderer = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
+        if (value < 20) {
+            return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + '; color: #ff0000;">' + value + '</span>';
+        }
+        else {
+            return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + '; color: #008000;">' + value + '</span>';
+        }
+    }
+    var dataAdapter = new $.jqx.dataAdapter(source, {
+        downloadComplete: function (data, status, xhr) { },
+        loadComplete: function (data) { },
+        loadError: function (xhr, status, error) { }
+    });
+    // initialize jqxGrid
+    $("#EditProject_FinanceTable").jqxGrid(
+    {
+        width: '100%',
+        height:300,
+        source: dataAdapter,                
+        pageable: true,
+        autoheight: true,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+        editable: true,
+        selectionmode: 'multiplecellsadvanced',
+        columns: [
+          { text: '销售标书', columngroup: '收入', datafield: 'bssr', cellsalign: 'center', align: 'center',width: '20%' },
+          { text: '中标服务费', columngroup: '收入', datafield: 'zbfwf', cellsalign: 'center', align: 'center', width: '20%' },
+          { text: '委托协议', columngroup: '收入', datafield: 'wtxy', align: 'center', cellsalign: 'center',  width: '20%' },
+          { text: '聘请专家费用', columngroup: '支出',datafield: 'pqzjf', cellsalign: 'center', align: 'center', width: '20%' },
+          { text: '项目分成费用', columngroup: '支出',datafield: 'xmfc', cellsalign: 'center', align: 'center',width: '20%' }
+        ],
+        columngroups: [
+            { text: '收入', align: 'center', name: '收入' },
+            { text: '支出', align: 'center', name: '支出' }
+        ]
+    });
+}
+
+
 $(document).ready(function () {
 	var project = JSON.parse($("#ProjectData").text())[0]
-	$.get("/bidding/default/getDictionaries",function(result){
-		dict = result
-		InitEditProjectPage(dict,project);
-		InitProjectPackageGrid(dict,project);
-		InitProjectDocumentGrid(dict,project);
-		InitProjectMarginGrid(dict,project);
-	    InitNewPackageWindow(dict,project);
-	},'json');
+	var dict = JSON.parse($("#Dictionaries").text())
+	$("#navBar4").jqxNavBar({
+        height: 30, selectedItem: 1
+    });
+	InitEditProjectPage(dict,project);
+	InitProjectPackageGrid(dict,project);
+	InitProjectDocumentGrid(dict,project);
+	InitProjectMarginGrid(dict,project);
+    InitNewPackageWindow(dict,project);
+    InitProjectContactsGrid(dict,project);
+    InitProjectFinanceGrid(dict,project);
 	
 	
 });
