@@ -929,7 +929,8 @@ def p_insertrow_gmbs(rowData):
 
 def insertrow_gmbs():
     try:
-        username = auth.user.username
+        username = auth.user.chinesename.decode('gbk')
+#         username = auth.user.username
         rowData = request.post_vars
         rowData[u'username'] = username
         p_insertrow_gmbs(rowData)
@@ -1117,8 +1118,8 @@ def p_insertrow_tbbzj(rowData):
 def insertrow_tbbzj():
     try:
         
-#         username = auth.user.chinesename.decode('gbk')
-        username = auth.user.username
+        username = auth.user.chinesename.decode('gbk')
+#         username = auth.user.username
         rowData = request.post_vars
         rowData[u'username'] = username
         p_insertrow_tbbzj(rowData)
@@ -1262,8 +1263,8 @@ def updaterow_tbzj():
 def insertrow_tbzj():
     try:
         table_name = u'tbzj'
-#         username = auth.user.chinesename.decode('gbk')
-        username = auth.user.username
+        username = auth.user.chinesename.decode('gbk')
+#         username = auth.user.username
         rowData = request.post_vars
         
         rowData[u'username'] = username
