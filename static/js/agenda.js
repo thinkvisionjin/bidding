@@ -118,8 +118,8 @@ $(document).ready(function () {
 
             $("#scheduler").jqxScheduler({
                 date: new $.jqx.date(),
-                width: '100%',
-                height: '85%',
+                width: '99%',
+                height: '99%',
                 source: adapter,
                 editDialogDateFormatString:"yyyy-MM-dd",
                 editDialogDateTimeFormatString:"yyyy-MM-dd HH:mm:ss",

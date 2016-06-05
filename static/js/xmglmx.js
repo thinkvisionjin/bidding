@@ -432,7 +432,7 @@ function InitProjectDocumentGrid(dict,project){
             	
             	gmbs_popupwindow("add", "", function(){
             		$("#EditProject_DocumentTable").jqxGrid({ source:dataAdapter });
-            	},project.Id);
+            	}, project.Id);
             });
             refreshButton.click(function (event) {
                 $("#EditProject_DocumentTable").jqxGrid({ source:dataAdapter });

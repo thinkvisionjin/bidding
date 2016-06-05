@@ -224,3 +224,10 @@ CREATE TABLE auth_cas(
     renew BIT NULL
 );
 success!
+timestamp: 2016-05-30T22:12:58.416000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-05-30T22:18:18.637000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-05-30T22:19:42.879000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+success!

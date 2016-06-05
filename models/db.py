@@ -16,6 +16,8 @@ str_db = u'mssql4://sa:1@localhost/BIDDING'
 db = DAL(str_db,migrate_enabled=False)
 dbu = DAL(str_db)
 auth = Auth(dbu)
+auth.settings.extra_fields['auth_user']= [
+  Field('chinesename')]
 auth.define_tables(username=True)
 crud = Crud(dbu)
 print db._uri
@@ -63,3 +65,4 @@ db.define_table('zj', Field('xm'),Field('gzdw'),Field('username'),Field('rq'))
 db.define_table('rcb', Field('description'),Field('applyuser'),Field('bsbh'),Field('subject'),Field('calendar'),Field('rcbstart'),Field('rcbend'),Field('rcbid'),Field('rq'))
 db.define_table('auth_user', Field('username'),Field('chinesename'),Field('password'))
 db.define_table('auth_membership', Field('user_id'), Field('group_id'))
+db.define_table('hysgl', Field('username'),Field('hyzt'),Field('hys'),Field('kssj'),Field('jssj'),Field('rq'))
