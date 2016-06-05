@@ -16,9 +16,8 @@ str_db = u'mssql4://sa:1@localhost/BIDDING'
 db = DAL(str_db,migrate_enabled=False)
 dbu = DAL(str_db)
 auth = Auth(dbu)
-auth.settings.extra_fields['auth_user']= [
-  Field('chinesename')]
 auth.define_tables(username=True)
+auth.settings.extra_fields['auth_user']= [Field('chinesename')]
 crud = Crud(dbu)
 print db._uri
 
@@ -34,9 +33,9 @@ db.define_table('Management',Field('Code'),Field('CreationDate'),Field('IsDelete
 db.define_table('ManagementStyle',Field('ManagementStyleCode'),Field('ManagementStyleId'),Field('ManagementStyleName'))
 db.define_table('FundingSource',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('OperationType',Field('OperationTypeCode'),Field('OperationTypeId'),Field('OperationTypeName'))
-db.define_table('Project',Field('Assistant'),Field('CustomerId'),Field('CreationDate',type='datetime'),Field('EmployeeId',default=auth.user_id),Field('IsDelete'),Field('ManagementStyleId'),Field('PurchaseStyleId'),Field('Note'),Field('ProjectCode'),Field('ProjectName'),Field('ProjectSourceId'),Field('ProjectTypeId'),Field('ProtocolCodeId'),Field('FundingSourceId'),Field('ProjectStatusId'))
+db.define_table('Project',Field('Assistant'),Field('CustomerId'),Field('CreationDate',type='datetime',default=request.now),Field('EmployeeId',default=auth.user_id),Field('IsDelete'),Field('ManagementStyleId'),Field('PurchaseStyleId'),Field('Note'),Field('ProjectCode'),Field('ProjectName'),Field('ProjectSourceId'),Field('ProjectTypeId'),Field('ProtocolCodeId'),Field('FundingSourceId'),Field('ProjectStatusId'))
 db.define_table('ProjectCode',Field('CreationTime'),Field('EmployeeId'),Field('IsDelete'),Field('Option1'),Field('Option2'),Field('Option3'),Field('ProjectNumber'),Field('ProjectTypeId'),Field('ProtocolId'))
-db.define_table('ProjectPackage',Field('ChargeRate'),Field('CreationDate',type='datetime'),Field('EntrustMoney'),Field('IsDelete'),Field('MakeOutDate'),Field('Note'),Field('PackageName'),Field('PackageNumber'),Field('ProjectId'),Field('SigningDate'),Field('StateId'),Field('WinningCompany'),Field('WinningMoney'))
+db.define_table('ProjectPackage',Field('ChargeRate'),Field('OpenDate'),Field('ReviewDate'),Field('PublicDate'),Field('CreationDate',type='datetime',default=request.now),Field('EntrustMoney'),Field('IsDelete'),Field('MakeOutDate'),Field('Note'),Field('PackageName'),Field('PackageNumber'),Field('ProjectId'),Field('SigningDate'),Field('StateId'),Field('WinningCompany'),Field('WinningMoney'))
 db.define_table('ProjectSource',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('ProjectStatus',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('ProjectType',Field('ProjectTypeCode'),Field('ProjectTypeID'),Field('ProjectTypeName'))

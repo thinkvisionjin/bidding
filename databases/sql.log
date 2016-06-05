@@ -241,3 +241,11 @@ timestamp: 2016-06-05T19:57:04.961000
 ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
 timestamp: 2016-06-05T19:57:05.929000
 ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-06-05T19:58:41.552000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-06-05T20:02:44.350000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-06-05T20:05:29.373000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-06-05T20:05:30.479000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
