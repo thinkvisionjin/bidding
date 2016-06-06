@@ -249,6 +249,25 @@ timestamp: 2016-06-05T20:05:29.373000
 ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
 timestamp: 2016-06-05T20:05:30.479000
 ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+<<<<<<< HEAD
 timestamp: 2016-06-06T19:06:19.641000
+=======
+timestamp: 2016-06-05T20:28:37.287000
+ALTER TABLE auth_user DROP COLUMN chinesename;
+success!
+timestamp: 2016-06-05T21:25:16.390000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-06-05T21:25:34.644000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-06-05T21:25:40.812000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-06-05T21:26:07.983000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-06-05T21:26:11.597000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-06-05T21:26:21.283000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-06-05T21:27:00.947000
+>>>>>>> branch 'master' of https://github.com/thinkvisionjin/bidding.git
 ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
 success!

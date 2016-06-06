@@ -141,12 +141,12 @@ function configpopupwindow()
 }
 function init_treegrid()
 {
-	        	$("#rcb-expander").jqxExpander({});
+	        	$("#rcb-expander").jqxExpander({height:'50%'});
 
             $("#hysgltree-grid").jqxTreeGrid(
             {
             	width: '98%',
-            	height: '400',
+            	height: '90%',
                 //source: dataAdapter,
                 columnsResize: true,
 
@@ -179,14 +179,14 @@ function init_treegrid()
         }
 $(document).ready(function() {
 	init_treegrid();
-        	$("#hysgl-expander").jqxExpander({});
+        	$("#hysgl-expander").jqxExpander({height:'50%'});
 
         	$("#hysgl-grid")
         	.jqxGrid(
         	{
         		enabletooltips: true,
         		columnsresize: true,
-        		height : "80%",
+        		height : "75%",
         		width : "98%",
         		columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
         		{ text: '申请人', datafield: 'username', width: '10%',cellsalign: 'center', align: 'center',hidden:false },

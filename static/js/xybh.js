@@ -102,7 +102,11 @@ function initProtocolCodeGrid(dict) {
 	$("#jqxgrid").jqxGrid(
 		{
 			width: '100%',
+<<<<<<< HEAD
 			height: "90%",
+=======
+			height: "100%",
+>>>>>>> branch 'master' of https://github.com/thinkvisionjin/bidding.git
 			columnsresize: true,
 			source: dataAdapter,
 			pageable: true,

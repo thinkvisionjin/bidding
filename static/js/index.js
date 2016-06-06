@@ -17,7 +17,7 @@ $(document).ready(function () {
 				 if ($('#jqxTabs').jqxTabs('getTitleAt', i) == frameid)
 				 {
 					 $('#jqxTabs').jqxTabs('select', i);
-					 $('#'+frameid)[0].contentWindow.location.reload(true);
+					 $('#'+frameid)[0].contentWindow.location=url;
 					 return ;
 				 }
 			}

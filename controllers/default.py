@@ -2251,15 +2251,19 @@ def auth_user():
 
 def select_auth_user():
     try:
-        username = unicode(request.vars.username, u'utf-8')    
-        if username==None:
+        
+        if request.vars.username==None:
             username=u''
+        else:
+            username = unicode(request.vars.username, u'utf-8')    
         where = u"and username like '%"+username+u"%'"
     
 
-        chinesename = unicode(request.vars.chinesename, u'utf-8')
-        if chinesename==None:
+
+        if request.vars.chinesename==None:
             chinesename=u''
+        else:
+            chinesename = unicode(request.vars.chinesename, u'utf-8')
         where += u"and chinesename like '%"+chinesename+u"%'"        
         sql = u"""select a.*, b.role as role from auth_user a, auth_group b, auth_membership c
          where a.id=c.user_id and c.group_id = b.id """ +where ;

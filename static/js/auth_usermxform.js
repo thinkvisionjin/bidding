@@ -41,6 +41,8 @@ $('#auth_user_chinesename').val('');
 $('#auth_user_role').jqxDropDownList('selectIndex',-1);
 $('#auth_user_rq').val('');;
 	$('#tr_auth_user_rq').hide();;
+		$('#auth_user_Save').show();
+	$('#auth_user_Cancel').val('取消');
 }
 function auth_user_setupdetail()
 {
@@ -70,6 +72,8 @@ $('#auth_user_chinesename').val(data['chinesename']);
 $('#auth_user_role').val(data['role']);
 $('#auth_user_rq').val(data['rq']);			
 	}, 'json');	
+		$('#auth_user_Save').show();
+	$('#auth_user_Cancel').val('取消');	
 }
 
 var gkhcallback;
@@ -137,7 +141,7 @@ function auth_user_init () {
                 </table>\
 		</div>");
 	$("#auth_user_popupWindow").jqxWindow({
-		width: 600, height:600, resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#auth_user_Cancel"), modalOpacity: 0.4           
+		width: 600, height:250, resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#auth_user_Cancel"), modalOpacity: 0.4           
 	});	
 	$("#auth_usermx-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
 
