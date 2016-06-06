@@ -509,10 +509,14 @@ function InitProjectDocumentGrid(dict,project){
                 $("#EditProject_DocumentTable").jqxGrid({ source:dataAdapter });
             });
             editButton.click(function (event) {
-            	var gmbsid = $("#documentEditButton").val();
-            	gmbs_popupwindow("modify", gmbsid, function(){
-            		$("#EditProject_DocumentTable").jqxGrid({ source:dataAdapter });
-            	}, project.Id);
+            	var disabled = editButton.jqxButton('disabled')
+            	if(disabled==false){
+            		var gmbsid = $("#documentEditButton").val();
+                	gmbs_popupwindow("modify", gmbsid, function(){
+                		$("#EditProject_DocumentTable").jqxGrid({ source:dataAdapter });
+                	}, project.Id);
+            	}
+            	
             });
             printButton.click(function (event) {
                 var gridContent = $("#EditProject_DocumentTable").jqxGrid('exportdata', 'html');
@@ -636,7 +640,7 @@ function InitProjectMarginGrid(dict,project){
             var container = $("<div style='margin-left: auto; margin-right: auto; '></div>");
             var container = $("<div style='margin: 5px;'></div>");
             var addNewButton1 = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>缴保证金</span></div>");
-            var addNewButton2 = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>退保证金</span></div>");
+            var addNewButton2 = $("<div style='float: left; margin-left: 5px;' id='tbzjButton'><span style='margin-left: 4px; position: relative; top: 0px;'>退保证金</span></div>");
        
             var refreshButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>刷新</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>删除</span></div>");
@@ -653,6 +657,7 @@ function InitProjectMarginGrid(dict,project){
 //            container.append(columnSettingButton);
             addNewButton1.jqxButton({ template: "success" });
             addNewButton2.jqxButton({ template: "success" });
+            addNewButton2.jqxButton({ disabled: true });
             refreshButton.jqxButton({ template: "inverse" });
             printButton.jqxButton({ template: "info" });
             exportButton.jqxButton({ template: "warning" });
@@ -664,12 +669,18 @@ function InitProjectMarginGrid(dict,project){
             		$("#EditProject_MarginTable").jqxGrid({ source:dataAdapter });
             	},project.Id)
             });
+            
             addNewButton2.click(function (event) {
             	
-            	tbzj_popupwindow('add', '', function(){
-            		//refresh the grid when load completed
-            		$("#EditProject_MarginTable").jqxGrid({ source:dataAdapter });
-            	})
+            	var disabled = addNewButton2.jqxButton('disabled')
+            	if(disabled==false){
+            		var tbbzjid = $("#tbzjButton").val();
+                	tbzj_popupwindow('add', '', function(){
+                		//refresh the grid when load completed
+                		$("#EditProject_MarginTable").jqxGrid({ source:dataAdapter });
+                	},tbbzjid)
+            	}
+
             });
             refreshButton.click(function (event) {
                 $("#EditProject_MarginTable").jqxGrid({ source:dataAdapter });
@@ -770,6 +781,24 @@ function InitProjectMarginGrid(dict,project){
             $("#cellbegineditevent").text("End Row Edit: " + (1 + args.rowindex) + ", Data: " + rowValues);
         }
     });
+    $('#EditProject_MarginTable').on('rowclick', function (event) 
+			{
+			    var args = event.args;
+			    // row's bound index.
+			    var boundIndex = args.rowindex;
+			    // row's visible index.
+			    var visibleIndex = args.visibleindex;
+			    // right click.
+			    var rightclick = args.rightclick; 
+			    // original event.
+			    var ev = args.originalEvent; 
+			    var rowindex = event.args.rowindex;
+			    
+			    $("#tbzjButton").jqxButton({ disabled: false});
+			    var tbbzj = $("#EditProject_MarginTable").jqxGrid('getrowdata', rowindex);
+			    $("#tbzjButton").val(tbbzj.Id)
+			    $("#EditProject_MarginTable").jqxGrid('selectrow', rowindex);
+			}); 
 }
 
 function InitNewPackageWindow(dict,project){

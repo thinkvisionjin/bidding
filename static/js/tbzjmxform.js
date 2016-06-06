@@ -44,13 +44,13 @@ function tbzj_configpage(tbbzjid)
     	$('#tbzj_dwmc').jqxComboBox({ placeHolder: "", source: result['dwmc']});
 $('#tbzj_bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh']});
 $('#tbzj_fkfs').jqxDropDownList({ placeHolder: "", source: result['fkfs']});
-		if (state == 'add' &&tbzjid!=undefined)
+		if (state == 'add' &&tbbzjid!=undefined)
 		{
-			$('#tbzj_dwmc').val(result['tbzjid'][0]['dwmc']);
-			$('#tbzj_bsbh').val(result['tbzjid'][0]['bsbh']);
-			$('#tbzj_je').val(result['tbzjid'][0]['je']);
-			$('#tbzj_khyh').val(result['tbzjid'][0]['khyh']);
-			$('#tbzj_yhzh').val(result['tbzjid'][0]['yhzh']);
+			$('#tbzj_dwmc').val(result['tbbzjid'][0]['dwmc']);
+			$('#tbzj_bsbh').val(result['tbbzjid'][0]['bsbh']);
+			$('#tbzj_je').val(result['tbbzjid'][0]['je']);
+			$('#tbzj_khyh').val(result['tbbzjid'][0]['khyh']);
+			$('#tbzj_yhzh').val(result['tbbzjid'][0]['yhzh']);
 		}
     }, 'json');	
     $("#tbzj_dwmc input").blur(function(){gettbzjkh($("#tbzj_dwmc").val())});  
