@@ -1439,17 +1439,29 @@ def getContactsByProjectID():
 def getFinanceByProjectID():
     uid = u''
     pid = request.vars.pid
-    sql1 = u'select sum(je) as bssr from gmbs where bsbh in (select PackageNumber from ProjectPackage where ProjectId ='+pid+u')';
-    sql2 = u'select sum(CASE ISNULL (WinningMoney,0 ) WHEN 0 THEN 0 ELSE WinningMoney*ChargeRate end ) as zbfwf from ProjectPackage where ProjectId ='+pid;
-    res1 =  sqltoarray(sql1)
-    res2 = sqltoarray(sql2)
-    res = []
+    sql = u'select sz,ywlx,sum(je) as je from cwls where bsbh in (select PackageNumber from ProjectPackage where ProjectId = '+pid+u') group by sz,ywlx'
+#     sql = u'select sz,ywlx,sum(je) as je from cwls  group by sz,ywlx '
+    res = sqltoarray(sql)
     finance={}
-    finance["bssr"] = res1[0]["bssr"]
-    finance["zbfwf"] = res2[0]["zbfwf"]
-    finance["wtxy"] = "10000"
-    finance["pqzjf"] = "10000"
-    finance["xmfc"] = "10000"
+    for row in res:
+        if row['ywlx'] == u'专家评审费':
+            finance["zc_pqzjf"] = unicode(row['je'])
+        elif row['ywlx']  == u'退保证金':
+            finance["zc_tbzj"] = unicode(row['je'])
+        elif row['ywlx']  == u'项目分成费':
+            finance["zc_xmfc"] = unicode(row['je'])
+        elif row['sz'] ==u'支出' and row['ywlx']  == u'其他':
+            finance["zc_qt"] = unicode(row['je'])
+        elif row['ywlx'] == u'购买标书':
+            finance["sr_bssr"] = unicode(row['je'])
+        elif row['sz'] ==u'收入' and row['ywlx']  == u'其他':
+            finance["sr_qt"] = unicode(row['je'])
+        elif row['ywlx'] == u'投标保证金':
+            finance["sr_tbbzj"] = unicode(row['je'])
+        elif row['ywlx']  == u'委托协议':
+            finance["sr_wtxy"] = unicode(row['je'])
+        elif row['ywlx']  == u'中标服务费':
+            finance["sr_zbfwf"] = unicode(row['je'])
     res.append(finance)
     return json.dumps(finance)
 

@@ -273,7 +273,7 @@ function InitProjectGrid(dict){
             container.append(refreshButton);
             container.append(deleteButton);
             container.append(printButton);
-            container.append(exportButton);
+//            container.append(exportButton);
             container.append(columnSettingButton);
             addNewButton.jqxButton({ template: "success" });
             refreshButton.jqxButton({ template: "primary" });
@@ -441,14 +441,18 @@ function AdvancedSearchContent(action,dict){
 		var row1HTML = '<tr id="row1Search"><td align="left"><p>采购单位</p></td>	<td align="left"><div id="BuyerId_SEARCH" /></td>	\
 			<td align="left"><p>项目类型</p></td> <td align="left"><div id="ProjectTypeId_SEARCH" /></td>	\
 			<td align="left"><p>采购方式</p></td>	<td align="left"><div id="PurchaseStyleId_SEARCH" /></td>\
-			<td align="left"><p>项目来源</p></td>	<td align="left"><div id="ProjectSourceId_SEARCH" /></td></tr>'
-			var row2HTML='<tr id="row2Search"><td align="left"><p>资金来源</p></td>	<td align="left"><div id="SourcesOfFundingId_SEARCH" /></td>\
+			</tr>'
+			var row2HTML='<tr id="row2Search"><td align="left"><p>项目来源</p></td>	<td align="left"><div id="ProjectSourceId_SEARCH" /></td> \
+			<td align="left"><p>资金来源</p></td>	<td align="left"><div id="SourcesOfFundingId_SEARCH" /></td>\
 			<td align="left"><p>管理方式</p></td>	<td align="left"><div id="ManagementStyleId_SEARCH" /></td>\
-			<td align="left"><p>项目状态</p></td>	<td align="left"><div id="StateId_SEARCH" /></td>\
-			<td align="left"><p>负责人</p></td>	<td align="left"><div id="EmployeeId_SEARCH" /></td>\
-			<td align="left"><p>协助人</p></td>	<td align="left"><div id="Assistant_SEARCH" /></td></tr>'
+			</tr>'
+			var row3HTML = '<tr id="row3Search"><td align="left"><p>项目状态</p></td>	<td align="left"><div id="StateId_SEARCH" /></td>\
+				<td align="left"><p>负责人</p></td>	<td align="left"><div id="EmployeeId_SEARCH" /></td>\
+				<td align="left"><p>协助人</p></td>	<td align="left"><div id="Assistant_SEARCH" /></td>\
+				</tr>'
 			searchTable.append(row1HTML);
 			searchTable.append(row2HTML);
+			searchTable.append(row3HTML);
 			BindCustomer("#BuyerId_SEARCH",dict.Customer)  // dropdownlist
 			BindProjectType("#ProjectTypeId_SEARCH",dict.ProjectType)// dropdownlist
 			BindProjectSource("#ProjectSourceId_SEARCH",dict.ProjectSource)// dropdownlist
@@ -461,6 +465,7 @@ function AdvancedSearchContent(action,dict){
 	}else{
 		$("#row1Search").remove();
 		$("#row2Search").remove();
+		$("#row3Search").remove();
 	}
 	
 }

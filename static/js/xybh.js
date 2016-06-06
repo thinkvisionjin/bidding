@@ -125,8 +125,8 @@ function initProtocolCodeGrid(dict) {
 				            container.append(refreshButton);
 				            container.append(deleteButton);
 				            container.append(printButton);
-				            container.append(exportButton);
-				            container.append(columnSettingButton);
+//				            container.append(exportButton);
+//				            container.append(columnSettingButton);
 				            addNewButton.jqxButton({ template: "success" });
 				            refreshButton.jqxButton({ template: "primary" });
 				            printButton.jqxButton({ template: "info" });

@@ -316,7 +316,7 @@ function InitProjectPackageGrid(dict,project){
 		                container.append(refreshButton);
 		                container.append(deleteButton);
 		                container.append(printButton);
-		                container.append(exportButton);
+//		                container.append(exportButton);
 		                
 		                //container.append(updateButton);
 		                addNewButton.jqxButton({ template: "success" });
@@ -490,7 +490,7 @@ function InitProjectDocumentGrid(dict,project){
             container.append(refreshButton);
             container.append(deleteButton);
             container.append(printButton);
-            container.append(exportButton);
+//            container.append(exportButton);
             
             addNewButton.jqxButton({ template: "success" });
             editButton.jqxButton({ template: "primary" });
@@ -649,7 +649,7 @@ function InitProjectMarginGrid(dict,project){
             container.append(refreshButton);
             //container.append(deleteButton);
             container.append(printButton);
-            container.append(exportButton);
+            //container.append(exportButton);
 //            container.append(columnSettingButton);
             addNewButton1.jqxButton({ template: "success" });
             addNewButton2.jqxButton({ template: "success" });
@@ -1035,11 +1035,11 @@ function InitProjectFinanceGrid(dict,project){
     {
         datatype: "json",
         datafields: [
-            { name: 'bssr', type: 'float' },
-            { name: 'zbfwf', type: 'float' },
-            { name: 'wtxy', type: 'float' },
-            { name: 'pqzjf', type: 'float' },
-            { name: 'xmfc', type: 'float' }
+            { name: 'sr_bssr', type: 'float' },
+            { name: 'sr_zbfwf', type: 'float' },
+            { name: 'sr_wtxy', type: 'float' },
+            { name: 'zc_pqzjf', type: 'float' },
+            { name: 'zc_xmfc', type: 'float' }
         ],
         url: "getFinanceByProjectID?pid="+project.Id
     };
@@ -1070,11 +1070,11 @@ function InitProjectFinanceGrid(dict,project){
         editable: false,
         selectionmode: 'singlerow',
         columns: [
-          { text: '销售标书', columngroup: '收入', datafield: 'bssr', cellsalign: 'center', align: 'center',width: '20%' },
-          { text: '中标服务费', columngroup: '收入', datafield: 'zbfwf', cellsalign: 'center', align: 'center', width: '20%' },
-          { text: '委托协议', columngroup: '收入', datafield: 'wtxy', align: 'center', cellsalign: 'center',  width: '20%' },
-          { text: '聘请专家费用', columngroup: '支出',datafield: 'pqzjf', cellsalign: 'center', align: 'center', width: '20%' },
-          { text: '项目分成费用', columngroup: '支出',datafield: 'xmfc', cellsalign: 'center', align: 'center',width: '20%' }
+          { text: '销售标书', columngroup: '收入', datafield: 'sr_bssr', cellsalign: 'center', align: 'center',width: '20%' },
+          { text: '中标服务费', columngroup: '收入', datafield: 'sr_zbfwf', cellsalign: 'center', align: 'center', width: '20%' },
+          { text: '委托协议', columngroup: '收入', datafield: 'sr_wtxy', align: 'center', cellsalign: 'center',  width: '20%' },
+          { text: '聘请专家费用', columngroup: '支出',datafield: 'zc_pqzjf', cellsalign: 'center', align: 'center', width: '20%' },
+          { text: '项目分成费用', columngroup: '支出',datafield: 'zc_xmfc', cellsalign: 'center', align: 'center',width: '20%' }
         ],
         columngroups: [
             { text: '收入', align: 'center', name: '收入' },
