@@ -1,5 +1,5 @@
 
-function getkh(dwmc)
+function gettbbzjkh(dwmc)
 {
 	if (dwmc == olddwmc)
 		{
@@ -40,7 +40,7 @@ $('#tbbzj_bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh']});
 $('#tbbzj_bsbh').jqxDropDownList('selectIndex', 0);
 $('#tbbzj_bzjlx').jqxDropDownList({ placeHolder: "", source: result['bzjlx']});
     }, 'json');	
-    $("#tbbzj_dwmc input").blur(function(){getkh($("#tbbzj_dwmc").val())});  
+    $("#tbbzj_dwmc input").blur(function(){gettbbzjkh($("#tbbzj_dwmc").val())});  
 }
 var olddwmc='';
 var state = 'add';

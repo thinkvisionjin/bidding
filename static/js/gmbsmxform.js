@@ -1,5 +1,5 @@
 
-function getkh(dwmc)
+function getgmbskh(dwmc)
 {
 	if (dwmc == olddwmc)
 	{
@@ -52,7 +52,7 @@ function gmbs_configpage(projectid)
 		$('#gmbs_bsbh').jqxDropDownList('selectIndex', 0);
 
 	}, 'json');	
-	$("#gmbs_dwmc input").blur(function(){getkh($("#gmbs_dwmc").val())});  
+	$("#gmbs_dwmc input").blur(function(){getgmbskh($("#gmbs_dwmc").val())});  
 }
 var olddwmc='';
 var state = 'add';

@@ -1,5 +1,5 @@
 
-function getkh(dwmc)
+function gettbzjkh(dwmc)
 {
 	if (dwmc == olddwmc)
 		{
@@ -53,7 +53,7 @@ $('#tbzj_fkfs').jqxDropDownList({ placeHolder: "", source: result['fkfs']});
 			$('#tbzj_yhzh').val(result['tbzjid'][0]['yhzh']);
 		}
     }, 'json');	
-    $("#tbzj_dwmc input").blur(function(){getkh($("#tbzj_dwmc").val())});  
+    $("#tbzj_dwmc input").blur(function(){gettbzjkh($("#tbzj_dwmc").val())});  
 
 }
 var olddwmc='';
