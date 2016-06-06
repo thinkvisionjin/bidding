@@ -16,8 +16,8 @@ str_db = u'mssql4://sa:1@localhost/BIDDING'
 db = DAL(str_db,migrate_enabled=False)
 dbu = DAL(str_db)
 auth = Auth(dbu)
-auth.define_tables(username=True)
 auth.settings.extra_fields['auth_user']= [Field('chinesename')]
+auth.define_tables(username=True)
 crud = Crud(dbu)
 print db._uri
 

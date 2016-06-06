@@ -156,7 +156,7 @@ function hysgl_init () {
                 </table>\
 		</div>");
 	$("#hysgl_popupWindow").jqxWindow({
-		width: 600, height:600, resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#hysgl_Cancel"), modalOpacity: 0.4           
+		width: 600, height:300, resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#hysgl_Cancel"), modalOpacity: 0.4           
 	});	
 	$("#hysglmx-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
 
@@ -231,6 +231,6 @@ function hysgl_popupwindow(flag_state, id, callback, bsbh)
 			hysgl_setupdetail();
 		}
 	$('#hysgl_bsbh').val(bsbh);
-	$('#hysgl_popupWindow').jqxWindow({ position: { x: x, y: y }});
+//	$('#hysgl_popupWindow').jqxWindow({ position: { x: x, y: y }});
 	$('#hysgl_popupWindow').jqxWindow('open');
 }

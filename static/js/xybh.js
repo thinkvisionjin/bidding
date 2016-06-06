@@ -102,7 +102,7 @@ function initProtocolCodeGrid(dict) {
 	$("#jqxgrid").jqxGrid(
 		{
 			width: '100%',
-			height: "670px",
+			height: "100%",
 			columnsresize: true,
 			source: dataAdapter,
 			pageable: true,

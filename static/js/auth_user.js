@@ -97,7 +97,8 @@ $(document).ready(function() {
 	
 					$("#auth_user-expander").jqxExpander({
 						toggleMode : 'none',
-						showArrow : false
+						showArrow : false, 
+						height : '100%'
 					});
 					$("#auth_user-grid")
 							.jqxGrid(
