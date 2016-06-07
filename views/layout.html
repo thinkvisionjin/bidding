@@ -48,7 +48,7 @@
     <!--[if lt IE 8]><p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
     <div class="w2p_flash alert alert-dismissable">{{=response.flash or ''}}</div>
     <!-- Navbar ======================================= -->
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style='background-color:#000889'>
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -102,8 +102,8 @@
     </div>
 
     {{block footer}} <!-- this is default footer -->      
-    <footer class="footer">
-      <div class="container-fluid">
+    <footer class="footer" style='background-color:#000889'>
+      <div class="container-fluid" >
         <div class="copyright pull-left">{{=T('Copyright')}} &#169; {{=request.now.year}}</div>
           <div id="poweredBy" class="pull-right">
             <!-- {{=T('Powered by')}}

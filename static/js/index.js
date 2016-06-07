@@ -2,7 +2,7 @@
 $(document).ready(function () {
 //            $('#mainSplitter').jqxSplitter({ width: '100%', height: window.innerHeight*0.95, panels: [{ size: 200 }] });
 			$('#mainSplitter').jqxSplitter({ width: '100%', height: '100%', panels: [{ size: 200 }] });
-			$("#jqxNavigationBar").jqxNavigationBar({height: "100%", width: "100%", expandMode: "singleFitHeight"});
+			$("#jqxNavigationBar").jqxNavigationBar({height: "95%", width: "100%", expandMode: "singleFitHeight"});
 			$('#jqxTabs').jqxTabs({height: '100%', showCloseButtons: true, scrollPosition: 'both' });
 //			$("#yh").jqxButton({ theme: theme });
 //			$("#yh1").jqxButton({ theme: theme });

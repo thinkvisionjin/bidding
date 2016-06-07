@@ -32,7 +32,7 @@
 
         <div id="mainSplitter">
             <div class="splitter-panel">
-            	<div style='text-align:center'>欢迎<b>{{=chinesename}}</b>使用 <a href='/bidding/default/user/logout?_next=/bidding/default/index'><b>退出</b></a></div>
+            	<div style='text-align:center'><font  size=2.5 color=#3333F5>欢迎<b>{{=chinesename}}</b>使用 <a href='/bidding/default/user/logout?_next=/bidding/default/index'><b>退出</b></a></font></div>
                 <div id='jqxNavigationBar'>
 					<div>项目管理</div>
 					<div>
@@ -65,10 +65,6 @@
 					</div>
 					<div class="NavBtnText">投标保证金</div>	
 					<div class="NavBtn">
-						<img class="NavBtnImg" src="../static/images/PCSuggest.png" onclick="addTabs('中标管理', 'zb.html')" alt="ImageButton">
-					</div>
-					<div class="NavBtnText">中标管理</div>
-					<div class="NavBtn">
 						<img class="NavBtnImg" src="../static/images/PCProjectStatus.png" onclick="addTabs('退保证金', 'tbzj.html')" alt="ImageButton">
 					</div>
 					<div class="NavBtnText">退保证金</div>	
@@ -84,22 +80,26 @@
 					<div>银行流水</div>
 					<div>
 					<div class="NavBtn">
-						<img class="NavBtnImg" src="../static/images/PCSuggest.png" onclick="addTabs('银行流水文件', 'yhlswj.html')" alt="ImageButton">
+						<img class="NavBtnImg" src="../static/images/PCSuggest.png" onclick="addTabs('银行流水文件', 'yhlswj')" alt="ImageButton">
 					</div>
 					<div class="NavBtnText">银行流水文件</div>
 					<div class="NavBtn">
-						<img class="NavBtnImg" src="../static/images/PCProjectStatus.png" onclick="addTabs('银行流水', 'yhls.html')" alt="ImageButton">
+						<img class="NavBtnImg" src="../static/images/PCProjectStatus.png" onclick="addTabs('银行流水', 'yhls')" alt="ImageButton">
 					</div>
-					<div class="NavBtnText">银行流水</div>						
+					<div class="NavBtnText">银行流水</div>		
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCFinance.png" onclick="addTabs('银行流水', 'yhlsqr')" alt="ImageButton">
+					</div>
+					<div class="NavBtnText">财务确认流水</div>										
 					</div>
 					<div>用户管理</div>
 					<div>
 					<div class="NavBtn">
-						<img class="NavBtnImg" src="../static/images/PCCustomer.png" onclick="addTabs('客户管理', 'kh.html')" alt="ImageButton">
+						<img class="NavBtnImg" src="../static/images/PCCustomer.png" onclick="addTabs('客户管理', 'kh')" alt="ImageButton">
 					</div>
 					<div class="NavBtnText">客户管理</div>																		
 					<div class="NavBtn">
-						<img class="NavBtnImg" src="../static/images/PCWebFinance.png" onclick="addTabs('员工管理', 'upload.html')" alt="ImageButton">
+						<img class="NavBtnImg" src="../static/images/PCWebFinance.png" onclick="addTabs('员工管理', 'auth_user')" alt="ImageButton">
 					</div>
 					<div class="NavBtnText">员工管理</div>
 					
@@ -134,7 +134,7 @@
 						<li hasclosebutton='false'>首页</li>
 					</ul>
 
-					<div id="kmye-jqxgrid">					<iframe id="首页" style="border:none;padding:0;margin:0;" frameborder=no border=0 height="100%" width="100%"src="agenda"></iframe>      </div>
+					<div id="kmye-jqxgrid">					<iframe id="首页" style="border:none;padding:0;margin:0;" frameborder=no border=0 height="100%" width="100%"src="hysgl"></iframe>      </div>
 
 				</div>				
 				
