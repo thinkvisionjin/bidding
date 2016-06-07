@@ -26,7 +26,7 @@ def index():
     return auth.wiki()
     """
     response.flash = T("Hello World")
-    return dict(message=T('Welcome to web2py!'))
+    return dict(chinesename=auth.user.chinesename.decode('gbk'))
 
 def Num2MoneyFormat( change_number ):
     """
@@ -638,7 +638,10 @@ def sqltoarray(sql):
         print row
         dict_row = {}
         for key in row.keys():
-            dict_row[key] = unicode(row[key])
+            if isinstance(row[key], str):
+                dict_row[key] = row[key].decode('gbk')
+            else:
+                dict_row[key] = unicode(row[key])
         dic_rows.append(dict_row)
     return dic_rows 
 
@@ -940,6 +943,7 @@ def insertrow_gmbs():
         print e
         db.rollback()
         return u"fail"
+
 def p_deleterow_gmbs(id):
     table_name = u'gmbs'
     print table_name
@@ -1580,7 +1584,7 @@ def selectone_yhlswj():
     table_name = u'yhlswj'
     sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
 
-
+import xlrd
 def fileUpload():
     try:
         f= request.vars.fileToUpload
