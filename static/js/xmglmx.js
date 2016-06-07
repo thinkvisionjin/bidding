@@ -218,6 +218,7 @@ function InitProjectPackageGrid(dict,project){
 		var projectPackage_columns_content  = 
 			[{"datafield":"PackageNumber","text":"包件编号", editable:false, cellsalign: 'center', align: 'center',width: '14%'},
 			 {"datafield":"PackageName","text":"包件名称",  cellsalign: 'center', align: 'center',width: '15%'},
+			 {"datafield":"EntrustMoney","text":"委托金额",  cellsalign: 'center', align: 'center',width: '6%'},
 			 {"datafield":"StateId","text":"包件状态", cellsalign: 'center', align: 'center',columntype: 'dropdownlist',width: '7%',
 				 cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
           		  var label="";
@@ -277,7 +278,7 @@ function InitProjectPackageGrid(dict,project){
 	           		 }
 	           		 	return '<div class="jqx-grid-cell-middle-align" style="margin: 5px;" >'+ label+' </div>'
 	                 }},
-			 {"datafield":"EntrustMoney","text":"委托金额",  cellsalign: 'center', align: 'center',width: '6%'},
+			 
 			 {"datafield":"WinningMoney","text":"中标金额",  cellsalign: 'center', align: 'center',width: '6%'},
 			 {"datafield":"WinningCompany","text":"中标单位",  cellsalign: 'center', align: 'center',width: '6%'},
 			 {"datafield":"ChargeRate","text":"服务费率",  cellsalign: 'center', align: 'center',width: '6%'}]
@@ -804,23 +805,25 @@ function InitProjectMarginGrid(dict,project){
 function InitNewPackageWindow(dict,project){
 	$("#PackageNumber_ADD").jqxInput({width: '200px',height: "25px"});
 	$("#PackageName_ADD").jqxInput({width: '200px',height: "25px"});
+	$("#EntrustMoney_ADD").jqxNumberInput({ width: '200px', height: '25px', inputMode: 'simple'});
+	BindPackageStatus("#StateIdPackage_ADD",dict.ProjectStatus,undefined,0) //初始化:项目建档
 	$("#PublicDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true,width: '200px', height: '25px',allowNullDate: true});
 	$("#PublicDate_ADD").jqxDateTimeInput('val',null)
 	$("#OpenDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss",  showTimeButton: true,width: '200px', height: '25px' ,allowNullDate: true});
 	$("#OpenDate_ADD").jqxDateTimeInput('val',null)
 	$("#ReviewDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true,width: '200px', height: '25px' ,allowNullDate: true});
 	$("#ReviewDate_ADD").jqxDateTimeInput('val',null)
-	$("#SigningDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss",  showTimeButton: true,width: '200px', height: '25px' ,allowNullDate: true});
-	$("#SigningDate_ADD").jqxDateTimeInput('val',null)
-	$("#MakeOutDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true,width: '200px', height: '25px' ,allowNullDate: true});
-	$("#MakeOutDate_ADD").jqxDateTimeInput('val',null)
-	$("#EntrustMoney_ADD").jqxNumberInput({ width: '200px', height: '25px', inputMode: 'simple'});
-	$("#WinningMoney_ADD").jqxNumberInput({ width: '200px', height: '25px',inputMode: 'simple'});
-	$("#WinningCompany_ADD").jqxInput({width: '200px',height: "25px"});
-	$("#ChargeRate_ADD").jqxInput({width: '200px',height: "25px"});
-	$("#ChargeRate_ADD").jqxNumberInput({ width: '200px', height: '25px', digits: 3, symbolPosition: 'right', symbol: '%', spinButtons: true });
+
+	// $("#SigningDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss",  showTimeButton: true,width: '200px', height: '25px' ,allowNullDate: true});
+	// $("#SigningDate_ADD").jqxDateTimeInput('val',null)
+	// $("#MakeOutDate_ADD").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true,width: '200px', height: '25px' ,allowNullDate: true});
+	// $("#MakeOutDate_ADD").jqxDateTimeInput('val',null)
+
+	// $("#WinningMoney_ADD").jqxNumberInput({ width: '200px', height: '25px',inputMode: 'simple'});
+	// $("#WinningCompany_ADD").jqxInput({width: '200px',height: "25px"});
+	// $("#ChargeRate_ADD").jqxInput({width: '200px',height: "25px"});
+	// $("#ChargeRate_ADD").jqxNumberInput({ width: '200px', height: '25px', digits: 3, symbolPosition: 'right', symbol: '%', spinButtons: true });
 	/*$('#NotePackage_ADD').jqxEditor({height: "200px", width: '492px'});*/
-	BindPackageStatus("#StateIdPackage_ADD",dict.ProjectStatus,undefined,0) //初始化:项目建档
 	$("#StateIdPackage_ADD").jqxDropDownList({disabled:true})
 	//initialize the popup add window and buttons.
     $("#popupWindow_PackageADD").jqxWindow({ width:300, maxHeight: 850,resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.40 });
@@ -838,13 +841,13 @@ function InitNewPackageWindow(dict,project){
     		,PublicDate:$("#PublicDate_ADD").val()
     		,OpenDate:$("#OpenDate_ADD").val()
     		,ReviewDate:$("#ReviewDate_ADD").val()
-    		,SigningDate:$("#SigningDate_ADD").val()
-    		,MakeOutDate:$("#MakeOutDate_ADD").val()
-    		,EntrustMoney:$("#EntrustMoney_ADD").val()
-    		,WinningMoney:$("#WinningMoney_ADD").val()
-    		,WinningCompany:$("#WinningCompany_ADD").val()
-    		,ChargeRate:$("#ChargeRate_ADD").val()
-    		,Note:$("#NotPackagee_ADD").val()
+    		// ,SigningDate:$("#SigningDate_ADD").val()
+    		// ,MakeOutDate:$("#MakeOutDate_ADD").val()
+    		// ,EntrustMoney:$("#EntrustMoney_ADD").val()
+    		// ,WinningMoney:$("#WinningMoney_ADD").val()
+    		// ,WinningCompany:$("#WinningCompany_ADD").val()
+    		// ,ChargeRate:$("#ChargeRate_ADD").val()
+    		// ,Note:$("#NotPackagee_ADD").val()
     		,IsDelete:0
     		}
 		$.post("/bidding/default/insert?table=ProjectPackage",row,function(result){
@@ -854,6 +857,10 @@ function InitNewPackageWindow(dict,project){
 	});
 }
 
+
+function showMoreRows(){
+	
+}
 
 function InitEditPackageWindow(dict,projectpackage){
 	
