@@ -175,7 +175,7 @@ function cwls_init () {
                 </table>\
 		</div>");
 	$("#cwls_popupWindow").jqxWindow({
-		width: 600, height:600, resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#cwls_Cancel"), modalOpacity: 0.4           
+		width: 600, height:360, resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#cwls_Cancel"), modalOpacity: 0.4           
 	});	
 	$("#cwlsmx-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
 

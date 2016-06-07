@@ -1,4 +1,4 @@
-<html>
+<html style='overflow:hidden'>
 <head>
 <meta charset="utf-8">
 <title>招标项目管理</title>
@@ -32,11 +32,12 @@
 
         <div id="mainSplitter">
             <div class="splitter-panel">
+            	<div style='text-align:center'>欢迎<b>{{=chinesename}}</b>使用 <a href='/bidding/default/user/logout?_next=/bidding/default/index'><b>退出</b></a></div>
                 <div id='jqxNavigationBar'>
 					<div>项目管理</div>
 					<div>
 						<div class="NavBtn">
-							<img class="NavBtnImg" src="../static/images/Main.png" onclick="addTabs('首页', 'agenda.html')" alt="ImageButton">
+							<img class="NavBtnImg" src="../static/images/Main.png" onclick="addTabs('首页', 'hysgl.html')" alt="ImageButton">
 						</div>
 						<div class="NavBtnText">欢迎使用</div>			
 					
@@ -133,7 +134,7 @@
 						<li hasclosebutton='false'>首页</li>
 					</ul>
 
-					<div id="kmye-jqxgrid">					<iframe id="welcome" style="border:none;padding:0;margin:0;" frameborder=no border=0 height="100%" width="100%"src="agenda"></iframe>      </div>
+					<div id="kmye-jqxgrid">					<iframe id="首页" style="border:none;padding:0;margin:0;" frameborder=no border=0 height="100%" width="100%"src="agenda"></iframe>      </div>
 
 				</div>				
 				
