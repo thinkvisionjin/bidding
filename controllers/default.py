@@ -240,7 +240,7 @@ def getDictionaries():
     dictionaries = {}
     strSQL = u"select  Id,ProjectCode,ProjectName from [bidding].[dbo].[Project]"
     dictionaries["ProjectName"] = sqltojson(strSQL)
-    strSQL = u"select  Id,UserName from [bidding].[dbo].[Customer]"
+    strSQL = u"select  Id,dwmc from [bidding].[dbo].[kh]"
     dictionaries["Customer"] = sqltojson(strSQL)
     strSQL = u"select  Id,ProjectTypeId,ProjectTypeName from [bidding].[dbo].[ProjectType]"
     dictionaries["ProjectType"] = sqltojson(strSQL)

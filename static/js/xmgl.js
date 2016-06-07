@@ -151,7 +151,7 @@ function InitProjectGrid(dict){
                         		   var pt = JSON.parse(dict.Customer)
                          		  for(var i=0;i<pt.length;i++){
                          			  if(pt[i].Id==value.toString()) {
-                         				  label = pt[i].UserName
+                         				  label = pt[i].dwmc
                          			  }
                          		  }
                     		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'

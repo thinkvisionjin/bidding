@@ -399,9 +399,9 @@ function BindCustomer(documentObject, localdata, project) {
 			datatype: "json",
 			datafields: [
 				{ name: 'Id' },
-				{ name: 'UserName' },
+				{ name: 'dwmc' },
 			],
-			url: "/bidding/default/select?table=Customer",
+			url: "/bidding/default/select?table=kh",
 			async: false
 		}
 	} else {
@@ -409,7 +409,7 @@ function BindCustomer(documentObject, localdata, project) {
 			datatype: "json",
 			datafields: [
 				{ name: 'Id' },
-				{ name: 'UserName' },
+				{ name: 'dwmc' },
 			],
 			localdata: localdata
 		}
@@ -429,14 +429,14 @@ function BindCustomer(documentObject, localdata, project) {
 		{
 			searchMode: 'contains',
 			source: dataAdapter,
-			displayMember: "UserName",
+			displayMember: "dwmc",
 			valueMember: "Id",
 			width: '200', height: '25'
 		});
 	
 	$(documentObject).on('select', function (event) {
-		var args = event.args;
-		var item = $(documentObject).jqxComboBox('getItem', args.index);
+		// var args = event.args;
+		// var item = $(documentObject).jqxComboBox('getItem', args.index);
 	});
 	if (project != undefined) {
 		var items = $(documentObject).jqxComboBox('getItems');

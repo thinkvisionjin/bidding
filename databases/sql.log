@@ -271,3 +271,10 @@ timestamp: 2016-06-05T21:27:00.947000
 >>>>>>> branch 'master' of https://github.com/thinkvisionjin/bidding.git
 ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
 success!
+timestamp: 2016-06-07T20:49:18.136000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-06-07T20:51:55.849000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+timestamp: 2016-06-07T20:52:37.595000
+ALTER TABLE auth_user ADD chinesename VARCHAR(512) NULL;
+success!
