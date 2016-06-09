@@ -1584,11 +1584,9 @@ def selectone_yhlswj():
     table_name = u'yhlswj'
     sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
 
-import xlrd
 def fileUpload():
     try:
         f= request.vars.fileToUpload
-        
         table_name = u'yhlswj'
         username = auth.user.chinesename.decode('gbk')
         rowData = {}

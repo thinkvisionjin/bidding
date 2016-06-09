@@ -719,6 +719,9 @@ function BindProjectStatus(documentObject, localdata, project,defaultIndex) {
 	$(documentObject).on('select', function (event) {
 		var args = event.args;
 		var item = $(documentObject).jqxDropDownList('getItem', args.index);
+		if($("#navBar4")!=undefined){
+			autosetStatusBar(item.value)
+		}
 	});
 	if (project != undefined) {
 		var items = $(documentObject).jqxDropDownList('getItems');
