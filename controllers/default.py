@@ -242,6 +242,8 @@ def getDictionaries():
     dictionaries["ProjectName"] = sqltojson(strSQL)
     strSQL = u"select  Id,dwmc from [bidding].[dbo].[kh]"
     dictionaries["Customer"] = sqltojson(strSQL)
+    strSQL = u"select  Id,khId,lxr,sj from [bidding].[dbo].[lxr]"
+    dictionaries["Contactor"] = sqltojson(strSQL)
     strSQL = u"select  Id,ProjectTypeId,ProjectTypeName from [bidding].[dbo].[ProjectType]"
     dictionaries["ProjectType"] = sqltojson(strSQL)
     strSQL = u"select  Id,PurchaseStyleId,PurchaseStyleName from [bidding].[dbo].[PurchaseStyle]"
@@ -460,8 +462,20 @@ def CreateNewProject():
     initPackage[u"ProjectId"] = id
     initPackage[u"PackageNumber"] = unicode(row["ProjectCode"])+u'-01'
     initPackage[u"PackageName"] = row["ProjectName"].decode(u'utf-8')
-    initPackage[u"StateId"] = row["ProjectStatusId"]
-    initPackage[u"IsDelete"] = '0'
+    initPackage[u"StateId"] = u'1'
+    initPackage[u"EntrustMoney"] = u'0'
+    initPackage[u"IsDelete"] = u'0'
+    initPackage[u"StateId"] = u'1'
+    initPackage[u"EntrustMoney"] = u'0'
+    initPackage[u"IsDelete"] = u'0'
+    initPackage[u"PublicDate"] = u''
+    initPackage[u"OpenDate"] = u''
+    initPackage[u"ReviewDate"] = u''
+    initPackage[u"WinningCompany"] = u''
+    initPackage[u"WinningMoney"] = u'0'
+    initPackage[u"MakeOutDate"] = u''
+    initPackage[u"SigningDate"] = u''
+    initPackage[u"ChargeRate"] = u'0'
     CreateNewPackage(initPackage)
     dict_row = {}
     for key in row.keys():
@@ -483,7 +497,7 @@ def CreateNewPackage(rowData):
     print u'CreateNewPackage'
     print rowData
     for key in rowData:
-        rowData[key] = rowData[key]
+        rowData[key] = unicode(rowData[key])
     id = db['ProjectPackage'].insert(**rowData)
     print id 
     db.commit()
@@ -501,11 +515,11 @@ def CreateNewPackage(rowData):
                 elif isinstance(row[key], bool):
                     dict_row[key] = row[key]
                 elif isinstance(row[key], str):
-                    dict_row[key] = row[key].decode('utf-8')
+                    dict_row[key] = row[key].decode(u'utf-8')
                 elif isinstance(row[key], datetime):
                     dict_row[key] = unicode(row[key])
                 else:
-                    dict_row[key] = row[key]
+                    dict_row[key] = unicode(row[key])
     result= json.dumps(dict_row,ensure_ascii=False)
     return result
 
@@ -1437,7 +1451,10 @@ where a.bsbh in (select PackageNumber from ProjectPackage where ProjectId = """ 
 def getContactsByProjectID():
     uid = u''
     pid = request.vars.pid
-    sql = u'select dwmc, lxr,lxdz,sj,dzxx,cz from gmbs where bsbh in (select PackageNumber from ProjectPackage where ProjectId ='+pid+u')';
+    sql = u'(select a.dwmc,b.lxr,a.lxdz,b.sj,a.dzxx,a.cz from [dbo].[kh] a,[dbo].[lxr] b where a.id = b.khId and \
+   b.Id in (select ContactorNameId from Project where Id='+pid+u')) \
+   union( select dwmc, lxr,lxdz,sj,dzxx,cz from gmbs where bsbh in (select PackageNumber from ProjectPackage where ProjectId='+pid+u'))'
+#     sql = u'select dwmc, lxr,lxdz,sj,dzxx,cz from gmbs where bsbh in (select PackageNumber from ProjectPackage where ProjectId ='+pid+u')';
     return sqltojson(sql)
 
 def getFinanceByProjectID():

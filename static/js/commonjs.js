@@ -788,3 +788,80 @@ function BindPackageStatus(documentObject, localdata, projectpackage,defaultInde
 		$(documentObject).jqxDropDownList('selectItem', item);
 	}
 }
+
+function BindContactor(documentObjectName, documentObjectTel,documentObjectCustomer,localdata){
+	
+	if (localdata == undefined) {
+		var source = {
+			datatype: "json",
+			datafields: [
+				{ name: 'Id' },
+				{ name: 'khId' },
+				{ name: 'lxr' },
+				{ name: 'sj' }
+			],
+			url: "/bidding/default/select?table=lxr",
+			async: true
+		}
+	} else {
+		var source = {
+			datatype: "json",
+			datafields: [
+				{ name: 'Id' },
+				{ name: 'khId' },
+				{ name: 'lxr' },
+				{ name: 'sj' }
+			],
+			localdata: localdata
+		}
+	}
+	var dataAdapterName = new $.jqx.dataAdapter(source, {
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapterName.records;
+            var length = records.length;
+			$(documentObjectName).on('select', function (event) {
+				var args = event.args;
+				var item = $(documentObjectName).jqxDropDownList('getItem', args.index);
+			});
+        }
+    });
+	var dataAdapterTel= new $.jqx.dataAdapter(source, {
+        loadComplete: function () {
+            // get data records.
+            var records = dataAdapterTel.records;
+            var length = records.length;
+			$(documentObjectTel).on('select', function (event) {
+				var args = event.args;
+				var item = $(documentObjectTel).jqxDropDownList('getItem', args.index);
+			});
+        }
+    });
+	
+	$(documentObjectName).jqxDropDownList(
+		{
+			source: dataAdapterName,
+			displayMember: "lxr",
+			valueMember: "Id",
+			width: '200', height: '25',
+		});
+	$(documentObjectTel).jqxDropDownList(
+			{
+				source: dataAdapterTel,
+				displayMember: "sj",
+				valueMember: "Id",
+				width: '200', height: '25',
+			});
+	$(documentObjectName).on('select', function (event) {
+		var args = event.args;
+		var item = $(documentObjectName).jqxDropDownList('getItem', args.index);
+		$(documentObjectTel).jqxDropDownList('selectIndex', args.index);
+	});
+	$(documentObjectTel).on('select', function (event) {
+		var args = event.args;
+		var item = $(documentObjectTel).jqxDropDownList('getItem', args.index);
+		$(documentObjectName).jqxDropDownList('selectIndex', args.index);
+	});
+}
+
+

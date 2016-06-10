@@ -383,6 +383,23 @@ function InitNewProjectWindow(dict){
 	$("#NewProject_ProjectName").height(23)
 	// 采购单位
     BindCustomer("#NewProject_Customer",dict.Customer)
+   //采购单位联系人
+    $("#NewProject_Customer").on('select', function (event) {
+    	var args = event.args;
+    	var item = $("#NewProject_Customer").jqxComboBox('getItem', args.index);
+    	var dict = JSON.parse($("#Dictionaries").text())
+		var args = event.args;
+    	var contactor  = JSON.parse(dict.Contactor)
+    	var selectedContractor=[]
+    	for (var i=0;i<contactor.length;i++){
+    		if(contactor[i]["khId"]==item.value){
+    			selectedContractor.push(contactor[i]);
+    		}
+    	}
+    	var selectedContractorStr = JSON.stringify(selectedContractor)
+		BindContactor("#NewProject_ContactName","#NewProject_ContactTel","#NewProject_Customer",selectedContractor)
+	});
+	BindContactor("#NewProject_ContactName","#NewProject_ContactTel","#NewProject_Customer",dict.Contactor)
 	// 项目类型
 	BindProjectType("#NewProject_ProjectType",dict.ProjectType);
 	// 采购类型
@@ -402,27 +419,29 @@ function InitNewProjectWindow(dict){
    // 协议编号
    BindProtocolNumberWithID("#NewProject_ProtocolCode",dict.ProtocolCode)
    
-   
 	// 项目创建时间
-//	$("#NewProject_CreationDate").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
+    //	$("#NewProject_CreationDate").jqxDateTimeInput({ formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px' });
 	// 初始化创建项目的loader
 	$("#Loader_CreatingNewProject").jqxLoader({ width: 100, height: 60, imagePosition: 'top' });
 	// 初始化整个Window
 	$("#popupWindow_NewProject").jqxWindow({ showCollapseButton: true,isModal: true,
     	width: 650, 
-    	height:400,autoOpen: false, cancelButton: $("#NewProject_Cancel"), modalOpacity: 0.40 });    
+    	height:350,autoOpen: false, cancelButton: $("#NewProject_Cancel"), modalOpacity: 0.40 });    
 	$("#NewProject_Cancel").jqxButton({ theme: theme });
     $("#NewProject_Cance").click(function () {
     	$("#popupWindow_NewProject").jqxWindow('hide');
     });
     $("#NewProject_Save").jqxButton({ theme: theme, template:"success"  });
     $("#NewProject_Save").click(function () {
+    	
+    	if ($('#NewProject_Validator').jqxValidator('validate')==false){return;}
+    	
 		// 添加成功后弹出项目编号创建成功的界面，告知操作人员项目已添加了
 		var row = {  ProtocolCodeId:$("#NewProject_ProtocolCode").val()
 		,ProjectName:$("#NewProject_ProjectName").val()
 		,CustomerId:$("#NewProject_Customer").val(),EmployeeId:$("#NewProject_Employee").val(),Assistant:$("#NewProject_Assistant").val(),ProjectSourceId:$("#NewProject_ProjectSource").val()
 		,FundingSourceId:$("#NewProject_FundingSource").val(),ProjectTypeId:$("#NewProject_ProjectType").val(),ManagementStyleId:$("#NewProject_ManagementStyle").val(),PurchaseStyleId:$("#NewProject_PurchaseStyle").val()
-		,ProjectStatusId:'1',IsDelete:'0'
+		,ProjectStatusId:'1',IsDelete:'0',ContactorNameId:$("#NewProject_ContactName").val()
 		}
 		var datarow = row;
 		$("#Loader_CreatingNewProject").jqxLoader('open');
@@ -433,6 +452,59 @@ function InitNewProjectWindow(dict){
 		
 		$("#popupWindow_NewProject").jqxWindow('hide');
 	});
+
+    $('#NewProject_Validator').jqxValidator({
+        rules: [
+               { input: '#NewProject_ProjectName', message: '项目名称不得为空!', action: 'keyup, blur', rule: function(input){
+       			var val = $("#NewProject_ProjectName").val();
+    			if(val==""){return false;}	return true;
+    		} },
+               { input: '#NewProject_Customer', message: '必须选择采购单位!', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_Customer").jqxComboBox('val');
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_ContactName', message: '必须选择采购单位联系人!', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_ContactName").jqxDropDownList('val');
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_ContactTel', message: '必须选择采购单位联系人方式', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_ContactTel").jqxDropDownList('val');
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_ProjectType', message: '必须选择项目类型!', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_ProjectType").jqxDropDownList('val');
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_PurchaseStyle', message: '必须选择项目采购类型!', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_PurchaseStyle").jqxDropDownList('val');
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_ManagementStyle', message: '必须选择项目管理方式!', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_ManagementStyle").jqxDropDownList('val');
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_ProjectSource', message: '必须选择项目来源', action: 'keyup, blur', rule:function(input){
+          			var val = $("#NewProject_ProjectSource").jqxDropDownList('val');
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_FundingSource', message: '必须选择项目资金来源', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_FundingSource").jqxDropDownList('val');
+        			if(val==""){return false;}	return true;
+        		}},
+               { input: '#NewProject_Employee', message: '必须选择项目负责人', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_Employee").jqxDropDownList('val');
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_Assistant', message: '必须选择项目协助人', action: 'valuechanged, blur', rule: function(input){
+          			var val = $("#NewProject_Assistant").jqxDropDownList('val');
+        			if(val==""){return false;}	return true;
+        		} },
+//               { input: '#NewProject_ProtocolCode', message: '必须选择项目协助人!', action: 'valuechanged, blur', rule: function(input){
+//          			var val = $("#NewProject_ProtocolCode").jqxDropDownList('val');
+//        			if(val==""){return false;}	return true;
+//        		} }
+               ]
+    });
 }
 
 function AdvancedSearchContent(action,dict){

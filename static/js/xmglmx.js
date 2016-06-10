@@ -786,6 +786,7 @@ function InitProjectMarginGrid(dict, project) {
 }
 
 function InitNewPackageWindow(dict, project) {
+	InitNewPackageWindowValidator();
 	$("#PackageNumber_ADD").jqxInput({ width: '200px', height: "25px" });
 	$("#PackageName_ADD").jqxInput({ width: '200px', height: "25px" });
 	$("#EntrustMoney_ADD").jqxInput({ width: '200px', height: '25px' });
@@ -815,7 +816,9 @@ function InitNewPackageWindow(dict, project) {
 		$("#popupWindow_PackageADD").jqxWindow('hide');
     });
     $("#SavePackage_ADD").jqxButton({ theme: theme, template: "success" });
+    
     $("#SavePackage_ADD").click(function () {
+    	if ($('#PackageADD_Validator').jqxValidator('validate')==false){return;}
 		var row =
 			{
 				ProjectId: project.Id
@@ -841,6 +844,57 @@ function InitNewPackageWindow(dict, project) {
 	});
 }
 
+function InitNewPackageWindowValidator(){
+	
+	$("#PackageADD_Validator").jqxValidator({
+        rules: [
+                { input: '#PackageName_ADD', message: '包件名称不得为空!', action: 'keyup, blur', rule: function(input){
+        			var val = $("#PackageName_ADD").val();
+     			if(val==""){return false;}	return true;
+     		} },
+                { input: '#EntrustMoney_ADD', message: '委托金额必须为数字!', action: 'keyup, blur', rule: function(input){
+        			var val = $("#EntrustMoney_ADD").jqxInput('val');
+        			if(val==""){return false;}
+        			var reg = /[+|-|0-9]{2,30}$/;
+        			if (reg.test(val)) {return true;}else{return false;}
+        		} },
+                { input: '#PublicDate_ADD', message: '公告日期必须在今天以后！', action: 'keyup, blur', rule: function (input, commit) {
+                    var date = $('#PublicDate_ADD').jqxDateTimeInput('value');
+                    if(date!=undefined){
+                    	var today = new Date();
+                    	 var result = date > today
+                    	 return result;
+                    }else{
+                    	return true;
+                    }
+                    // call commit with false, when you are doing server validation and you want to display a validation error on this field. 
+                } },
+                { input: '#OpenDate_ADD', message: '开标日期必须在公告日期以后！', action: 'keyup, blur', rule: function(input){
+                	 var date = $('#OpenDate_ADD').jqxDateTimeInput('value');
+                	 var public_date = $('#PublicDate_ADD').jqxDateTimeInput('value');
+                     if(date!=undefined&&public_date!=undefined){
+                    	 var result = date>public_date
+                     	 return result;
+                     }else{
+                     	return true;
+                     }
+         		} },
+                { input: '#ReviewDate_ADD', message: '评标日期必须在开标日期以后！', action: 'keyup, blur', rule: function(input){
+                	 var date = $('#ReviewDate_ADD').jqxDateTimeInput('value');
+                	 var open_date = $('#OpenDate_ADD').jqxDateTimeInput('value');
+                	 var public_date = $('#PublicDate_ADD').jqxDateTimeInput('value');
+                	 if(date!=undefined&&open_date!=undefined&&public_date!=undefined){
+                		 var result = date>open_date
+                     	 return result;
+                     }else{
+                     	return true;
+                     }
+         		} }
+                ]
+     });
+}
+
+
 
 function showMoreRows(projectpackage) {
 	if (projectpackage.StateId >= '4') {
@@ -863,6 +917,8 @@ function showMoreRows(projectpackage) {
 }
 
 function InitEditPackageWindow(dict, projectpackage) {
+	InitEditPackageWindowValidator();
+	
 	if (projectpackage != undefined) {
 		$("#packageID").text(projectpackage.Id);
 		$("#PackageNumber_Manage").jqxInput('val', projectpackage.PackageNumber);
@@ -924,6 +980,7 @@ function InitEditPackageWindow(dict, projectpackage) {
 		});
 		$("#SavePackage_Manage").jqxButton({ theme: theme, template: "success" });
 		$("#SavePackage_Manage").click(function () {
+			if ($('#PackageManage_Validator').jqxValidator('validate')==false){return;}
 			var row ={
 				Id: $("#packageID").text()
 				, PackageName: $("#PackageName_Manage").val()
@@ -947,6 +1004,56 @@ function InitEditPackageWindow(dict, projectpackage) {
 	
 	
 }
+
+function InitEditPackageWindowValidator(){
+	$("#PackageManage_Validator").jqxValidator({
+        rules: [
+                { input: '#PackageName_Manage', message: '包件名称不得为空!', action: 'keyup, blur', rule: function(input){
+        			var val = $("#PackageName_Manage").val();
+     			if(val==""){return false;}	return true;
+     		} },
+                { input: '#EntrustMoney_Manage', message: '委托金额必须为数字!', action: 'keyup, blur', rule: function(input){
+        			var val = $("#EntrustMoney_Manage").jqxInput('val');
+        			if(val==""){return false;}
+        			var reg = /[+|-|0-9]{2,30}$/;
+        			if (reg.test(val)) {return true;}else{return false;}
+        		} },
+                { input: '#PublicDate_Manage', message: '公告日期必须在今天以后！', action: 'keyup, blur', rule: function (input, commit) {
+                    var date = $('#PublicDate_Manage').jqxDateTimeInput('value');
+                    if(date!=undefined){
+                    	var today = new Date();
+                    	 var result = date > today
+                    	 return result;
+                    }else{
+                    	return true;
+                    }
+                    // call commit with false, when you are doing server validation and you want to display a validation error on this field. 
+                } },
+                { input: '#OpenDate_Manage', message: '开标日期必须在公告日期以后！', action: 'keyup, blur', rule: function(input){
+                	 var date = $('#OpenDate_Manage').jqxDateTimeInput('value');
+                	 var public_date = $('#PublicDate_Manage').jqxDateTimeInput('value');
+                     if(date!=undefined&&public_date!=undefined){
+                    	 var result = date>public_date
+                     	 return result;
+                     }else{
+                     	return true;
+                     }
+         		} },
+                { input: '#ReviewDate_Manage', message: '评标日期必须在开标日期以后！', action: 'keyup, blur', rule: function(input){
+                	 var date = $('#ReviewDate_Manage').jqxDateTimeInput('value');
+                	 var open_date = $('#OpenDate_Manage').jqxDateTimeInput('value');
+                	 var public_date = $('#PublicDate_Manage').jqxDateTimeInput('value');
+                	 if(date!=undefined&&open_date!=undefined&&public_date!=undefined){
+                		 var result = date>open_date
+                     	 return result;
+                     }else{
+                     	return true;
+                     }
+         		} }
+                ]
+     });
+}
+
 
 function InitPackageDateSetting() {
 	$('#mainSplitter').jqxSplitter({ width: '99%', height: '99%', panels: [{ size: 300 }] });
@@ -1187,7 +1294,7 @@ function autosetStatusBar(ProjectStatus){
 	$("#navBar4").jqxNavBar({
         	height: 30, selectedItem: index
    	});
-	$("#navBar4").jqxNavBar({disbaled:true})
+	$("#navBar4").jqxNavBar({disabled:true})
 	
 }
 $(document).ready(function () {

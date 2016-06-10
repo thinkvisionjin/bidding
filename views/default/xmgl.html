@@ -56,6 +56,9 @@
 <script
 	src="{{=URL('static','js/vendor/jqwidgets/jqxDropDownButton.js')}}"
 	type="text/javascript"></script>
+<script
+	src="{{=URL('static','js/vendor/jqwidgets/jqxValidator.js')}}"
+	type="text/javascript"></script>
 <script src="{{=URL('static','js/vendor/jqwidgets/jqxEditor.js')}}"
 	type="text/javascript"></script>
 <script src="{{=URL('static','js/vendor/jqwidgets/jqxDataTable.js')}}"
@@ -117,7 +120,7 @@ input:focus {
 		<div id="jqxgrid"></div>
 
 		<div id="popupWindow_NewProject">
-			<div>新建项目档案</div>
+			<div id="NewProject_Validator">新建项目档案</div>
 			<div style="overflow: hidden;">
 				<table width="100%" border='0'>
 					<tr>
@@ -125,6 +128,12 @@ input:focus {
 						<td align="left"><input id="NewProject_ProjectName" /></td>
 						<td align="left"><p>采购单位</p></td>
 						<td align="left"><div id="NewProject_Customer" /></td>
+					</tr>
+					<tr>
+						<td align="left"><p>项目联系人</p></td>
+						<td align="left"><div id="NewProject_ContactName" /></td>
+						<td align="left"><p>联系方式</p></td>
+						<td align="left"><div id="NewProject_ContactTel" /></td>
 					</tr>
 					<tr>
 						<td align="left"><p>项目类型</p></td>
