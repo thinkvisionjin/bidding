@@ -59,6 +59,10 @@ function modifyauth_user(id)
 
 function deleteauth_user(id)
 {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}	
     var selectedrowindex = $("#auth_user-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#auth_user-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {

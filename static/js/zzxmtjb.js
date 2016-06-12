@@ -121,14 +121,19 @@ $(document).ready(function() {
 											$("#zzxmtjbprint").jqxButton({
 												template : 'success'
 											});
-											container.append('<input id="selectfiled" style="float: right" type="button" value="输出" />');
-											$("#selectfiled").jqxButton({
+											container.append('<input id="exportfile" style="float: right" type="button" value="输出" />');
+											$("#exportfile").jqxButton({
 												template : 'info'
 											});											
 										}
 
 									});
 					search();
+					$("#exportfile").click(function() {
+		                var gridContent = $("#zzxmtjb-grid").jqxGrid('exportdata', 'xls');
+						window.open('data:application/vnd.ms-excel,' + encodeURIComponent(gridContent));		                
+
+					});						
 					$("#zzxmtjbprint").click(function() {
 		                var gridContent = $("#zzxmtjb-grid").jqxGrid('exportdata', 'html');
 		                var newWindow = window.open('', '', 'width=800, height=500'),

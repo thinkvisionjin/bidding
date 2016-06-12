@@ -27,6 +27,10 @@ function modifylxr(id) {
 }
 
 function deletelxr(id) {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}	
     var selectedrowindex = $("#lxr-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#lxr-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
@@ -111,6 +115,10 @@ function modifykh(id) {
 }
 
 function deletekh(id) {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}	
     var selectedrowindex = $("#kh-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#kh-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {

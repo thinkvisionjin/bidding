@@ -1491,41 +1491,64 @@ def grtjb():
     return dict();
 #获取所有
 def select_grtjb():
+    print u'select_grtjb'
     try:
         username = auth.user.chinesename.decode('gbk')
-    #    where = u"where username='"+username+u"'"
-        
-    #    xm = request.vars.xm
-    #    if xm==None:
-    #        xm=u''
-    #    where += u"and xm like '%"+xm+u"%'"
-        
-    
-    #    gngk = request.vars.gngk
-    #    if gngk==None:
-    #        gngk=u''
-    #    where += u"and gngk like '%"+gngk+u"%'"
-        
-    #    order = u" order by rq desc"
+
         ksrq = request.vars.ksrq
         jsrq = request.vars.jsrq
-        if ksrq <> None:
-            ksrq = ksrq[6:10]+u'-'+ksrq[3:5]+u'-'+ksrq[0:2]
-        if jsrq <> None:
-            jsrq = jsrq[6:10]+u'-'+jsrq[3:5]+u'-'+jsrq[0:2]
-    
-        sql = u"""select * from grtjb """ ;
+   
+        sql = u"""  select chinesename as xm,
+  国内公开招标 as gngk,
+  国内邀请招标 as gnyq,
+  询价采购 as xjcg,
+  竞争性谈判 as jzxtp,
+  竞争性磋商 as jzxcs,
+  单一来源采购 as dylycg, 
+  其他 as qt,
+  国际招标 as gjzb,
+国内公开招标+国内邀请招标+询价采购+竞争性谈判+竞争性磋商+单一来源采购+其他+国际招标 as zj
+    from (select c.chinesename, b.PurchaseStyleName, a.projectname  from project a, PurchaseStyle b, auth_user c 
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) and a.EmployeeId=c.id 
+   and [CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""') a 
+   pivot (count(projectname) for  PurchaseStyleName
+    in (国内公开招标,国内邀请招标,询价采购,竞争性谈判,竞争性磋商,单一来源采购,其他,国际招标))t""" ;
         print sql   
-        return sqltojson(sql);
-    except:
+        return sqltojson(sql, 'gbk');
+    except Exception as e:
+        print e
         return u"fail"    
 
 def select_grtjbfb():
     try:
-        sql = u"""select * from grtjbfb """ ;
+        username = auth.user.chinesename.decode('gbk')
+        ksrq = request.vars.ksrq
+        jsrq = request.vars.jsrq     
+        name = unicode(request.vars.username, u'utf-8')
+        row = db(db[u'auth_user'].chinesename ==name).select().first()   
+        id = unicode(row[u'id'])
+        sql = u"""select b.PurchaseStyleName　as xmlx, count(case EmployeeId　when """+id+u""" then EmployeeId end) as fz, 
+rtrim(convert(decimal(18,2),count(case EmployeeId　when """+id+u""" then EmployeeId end)*100.00/(select count(*) as c from project a, PurchaseStyle b
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
+   and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
+   and a.EmployeeId ="""+id+u""")))+'%' as fzbfb, 
+count(case assistant when """+id+u""" then assistant end) as xz,
+rtrim(convert(decimal(18,2),count(case assistant　when """+id+u""" then assistant end)*100.00/(select count(*) as c from project a, PurchaseStyle b
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
+   and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
+   and a.assistant ="""+id+u""")))+'%' as xzbfb,
+   0 as dj,
+   0 as zj
+  from project a, PurchaseStyle b
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
+   and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
+   and (a.EmployeeId ="""+id+u"""
+   or a.assistant ="""+id+u""")
+   group by b.PurchaseStyleName""" ;
         print sql   
         return sqltojson(sql);
-    except:
+    except Exception as e:
+        print e
         return u"fail"    
 
 def zzxmtjb():
@@ -1533,9 +1556,23 @@ def zzxmtjb():
  
 def select_zzxmtjb():
     try:
-        sql = u"""select * from grtjb """ ;
-        print sql   
-        return sqltojson(sql);   
+        sql = u"""  select chinesename as xm,
+  国内公开招标 as gngk,
+  国内邀请招标 as gnyq,
+  询价采购 as xjcg,
+  竞争性谈判 as jzxtp,
+  竞争性磋商 as jzxcs,
+  单一来源采购 as dylycg, 
+  其他 as qt,
+  国际招标 as gjzb,
+国内公开招标+国内邀请招标+询价采购+竞争性谈判+竞争性磋商+单一来源采购+其他+国际招标 as zj
+    from (select c.chinesename, b.PurchaseStyleName, a.projectname  from project a, PurchaseStyle b, auth_user c 
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) and a.EmployeeId=c.id 
+   and a.[ProjectStatusId]<>3 ) a 
+   pivot (count(projectname) for  PurchaseStyleName
+    in (国内公开招标,国内邀请招标,询价采购,竞争性谈判,竞争性磋商,单一来源采购,其他,国际招标))t""" ;
+        print sql    
+        return sqltojson(sql, 'gbk');   
     except:
         return u"fail"
 @auth.requires_login()    
@@ -2543,3 +2580,55 @@ def selectone_hysgl():
         return sqltojson(sql);
     except:
         return u"fail";    
+
+@auth.requires_login()
+def tjzb():
+    return dict();
+
+
+def select_tjzb():
+    print u'select_tjzb'
+    try:
+        ksrq = request.vars.ksrq
+        jsrq = request.vars.jsrq
+        result = {};
+        sql2 = u""" select PurchaseStyleName as cgfs,
+  非政府采购国内一般项目 as gnzb,
+  国际项目 as gjzb,
+  政府采购 as zfcg,
+  国内涉密 as sm,
+非政府采购国内一般项目+国际项目+政府采购+国内涉密 as zj　from 
+ ( select c.PurchaseStyleName,  b.ProjectTypeName, a.ProjectName from project a, projecttype b, PurchaseStyle c 
+  where a.projecttypeid=convert(int, b.projecttypeid) and a.PurchaseStyleId=convert(int, c.[PurchaseStyleId])
+  and [CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""') a 
+  pivot (count(projectname) for  ProjectTypeName
+    in (非政府采购国内一般项目,国际项目,政府采购,国内涉密))t""" ;
+        print sql2;
+        sql3=u"""SELECT b.name as xmly, count(*) as xmsl, 0 as dwfc, 0 as yfc, 0 as sy 
+  FROM project a,[ProjectSource] b where a.ProjectSourceId=b.id
+  and [CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""'
+  group by b.name""";
+
+        sql1 = u"""select PurchaseStyleName as cgfs,
+购买标书 as bssr,
+专家评审费 as xmcb, 
+0 as dwfc,
+0 as jxfc,
+0 as ml,
+0 as jl
+ from 
+(SELECT a.ywlx, a.je,  c.PurchaseStyleName
+  FROM [cwls] a, project b, [PurchaseStyle] c, ProjectPackage d where a.bsbh=d.PackageNumber and b.id=d.ProjectId
+  and b.PurchaseStyleId=convert(int, c.[PurchaseStyleId])
+  and b.[CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""') a 
+    pivot (sum(je) for  ywlx
+    in (购买标书,投标保证金,退保证金,中标服务费,专家评审费, 其他 ))t"""
+        print sql1
+        result['tjzb_grid1'] = sqltoarray(sql1);
+        result['tjzb_grid2'] = sqltoarray(sql2);
+        result['tjzb_grid3'] = sqltoarray(sql3);
+        return json.dumps(result) 
+    except Exception as e:
+        print e
+        return u"fail"    
+

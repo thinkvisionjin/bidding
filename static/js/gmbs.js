@@ -77,6 +77,10 @@ function modifygmbs(id)
 
 function deletegmbs(id)
 {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}
     var selectedrowindex = $("#gmbs-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#gmbs-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {

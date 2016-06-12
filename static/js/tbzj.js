@@ -67,6 +67,10 @@ function modifytbzj(id)
 
 function deletetbzj(id)
 {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}	
     var selectedrowindex = $("#tbzj-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#tbzj-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {

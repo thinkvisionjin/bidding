@@ -76,6 +76,10 @@ function modifyyhlswj(id)
 
 function deleteyhlswj(id)
 {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}	
     var selectedrowindex = $("#yhlswj-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#yhlswj-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
@@ -84,7 +88,14 @@ function deleteyhlswj(id)
     }
 
 	$.get('deleterow_yhlswj?Id='+id, function(result){
-		alert(result);
+		if (result=='success')
+		{
+			confirm('成功')
+		}
+		else
+		{
+			alert(result);
+		}
 	});
 }
 
