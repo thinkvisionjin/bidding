@@ -93,7 +93,9 @@ function deletetbzj(id)
 
 function printtbzj(id)
 {
-	window.location.href='tbzj_print?Id='+id;
+    var newWindow = window.open('tbzj_print?Id='+id, '');
+
+    newWindow.print();		
 //	window.location.replace ('tbzjmx?oper=modify&Id='+id);
 }
 
@@ -142,8 +144,8 @@ $(document).ready(function() {
 															value,
 															defaultvalue,
 															column, rowdata) {
-														//var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printtbzj('+rowdata.Id+')">打印</a>';
-														var a = ''
+														var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printtbzj('+rowdata.Id+')">打印</a>';
+														
 														var b = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="modifytbzj('+rowdata.Id+')">修改</a>';
 
 														var c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deletetbzj('+rowdata.Id+')">删除</a>';

@@ -136,7 +136,8 @@ $(document).ready(function() {
 															value,
 															defaultvalue,
 															column, rowdata) {
-														var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printtbbzj('+rowdata.Id+')">打印</a>';
+														//var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printtbbzj('+rowdata.Id+')">打印</a>';
+														var a = '';
 														if(rowdata['ly']=='交易流水确认')
 														{
 														b = '';

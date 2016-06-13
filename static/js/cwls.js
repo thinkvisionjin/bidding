@@ -131,7 +131,8 @@ $(document).ready(function() {
 															value,
 															defaultvalue,
 															column, rowdata) {
-														var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printcwls('+rowdata.Id+')">打印</a>';
+														//var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printcwls('+rowdata.Id+')">打印</a>';
+														var a = '';
 														var b = '';
 														var c = '';
 														if (rowdata['lyId']=='0')

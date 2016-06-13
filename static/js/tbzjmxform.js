@@ -41,9 +41,12 @@ function tbzj_configpage(tbbzjid)
 	
 	$.get(url, function(result){
 		//需特殊处理
+
     	$('#tbzj_dwmc').jqxComboBox({ placeHolder: "", source: result['dwmc']});
+
 $('#tbzj_bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh']});
 $('#tbzj_fkfs').jqxDropDownList({ placeHolder: "", source: result['fkfs']});
+
 		if (state == 'add' &&tbbzjid!=undefined)
 		{
 			$('#tbzj_dwmc').val(result['tbbzjid'][0]['dwmc']);
@@ -51,6 +54,14 @@ $('#tbzj_fkfs').jqxDropDownList({ placeHolder: "", source: result['fkfs']});
 			$('#tbzj_je').val(result['tbbzjid'][0]['je']);
 			$('#tbzj_khyh').val(result['tbbzjid'][0]['khyh']);
 			$('#tbzj_yhzh').val(result['tbbzjid'][0]['yhzh']);
+		}
+		if (state =='modify')
+		{
+			tbzj_setupmodify();
+		}
+		if (state == 'detail')
+		{
+			tbzj_setupdetail();
 		}
     }, 'json');	
     $("#tbzj_dwmc input").blur(function(){gettbzjkh($("#tbzj_dwmc").val())});  
@@ -263,26 +274,39 @@ function tbzj_popupwindow(flag_state, id, callback, tbbzjid, bsbh)
 	state = flag_state;
 	gkhcallback = callback;
 	$('#tbzj_Id').val(id);
-	
+
 	if (state == 'add')
 	{
 		tbzj_title.innerHTML='新增';
 		tbzj_setupadd();
+		tbzj_configpage(tbbzjid);
 		$('#tbzj_popupWindow').jqxWindow({ height:300});
+
 	}
 	if (state == 'modify')
 	{
 		tbzj_title.innerHTML='修改';
-		tbzj_setupmodify();
+		tbzj_configpage(tbbzjid);
+		//tbzj_setupmodify();
 		$('#tbzj_popupWindow').jqxWindow({ height:430});
 	}
 	if (state == 'detail')
 	{
 			
 		tbzj_title.innerHTML='详情';
-		tbzj_setupdetail();
+		tbzj_configpage(tbbzjid);
+		//tbzj_setupdetail();
 		$('#tbzj_popupWindow').jqxWindow({ height:430});
 	}
-	tbzj_configpage(tbbzjid);
+	if (tbbzjid == undefined)
+	{
+
+	}
+	else
+	{
+
+		$('#tbzj_dwmc').jqxInput({disabled:true});
+		$('#tbzj_bsbh').jqxDropDownList({disabled:true});
+	}	
 	$('#tbzj_popupWindow').jqxWindow('open');
 }
