@@ -184,7 +184,7 @@ function init_treegrid()
         }
 $(document).ready(function() {
 	init_treegrid();
-        	$("#hysgl-expander").jqxExpander({height:'50%'});
+        	$("#hysgl-expander").jqxExpander({height:'49%'});
 
         	$("#hysgl-grid")
         	.jqxGrid(
