@@ -2522,8 +2522,9 @@ def updaterow_hysgl():
         
         newkssj = rowData[u'kssj']
         newjssj = rowData[u'jssj']
+        hys = unicode(rowData[u'hys'], 'utf-8')
         sql = u"""select count(*) c from hysgl 
-        where Id<>"""+id+u"""(('"""+newkssj+u"""'>=kssj and '"""+newkssj+u"""'<jssj) 
+        where hys='"""+hys+u"""' and Id<>"""+id+u"""(('"""+newkssj+u"""'>=kssj and '"""+newkssj+u"""'<jssj) 
         or ('"""+newjssj+u"""'<=jssj and '"""+newjssj+u"""'>kssj) 
         or ('"""+newkssj+u"""'<=kssj and '"""+newjssj+u"""'>=jssj))"""
         print sql 
@@ -2545,10 +2546,11 @@ def insertrow_hysgl():
         
         newkssj = rowData[u'kssj']
         newjssj = rowData[u'jssj']
+        hys = unicode(rowData[u'hys'], 'utf-8')
         sql = u"""select count(*) c from hysgl 
-        where ('"""+newkssj+u"""'>=kssj and '"""+newkssj+u"""'<jssj) 
+        where  hys='"""+hys+u"""' and( ('"""+newkssj+u"""'>=kssj and '"""+newkssj+u"""'<jssj) 
         or ('"""+newjssj+u"""'<=jssj and '"""+newjssj+u"""'>kssj) 
-        or ('"""+newkssj+u"""'<=kssj and '"""+newjssj+u"""'>=jssj)"""
+        or ('"""+newkssj+u"""'<=kssj and '"""+newjssj+u"""'>=jssj))"""
         print sql 
         rows = db.executesql(sql, as_dict=True)
         if rows[0][u'c'] == 0:
