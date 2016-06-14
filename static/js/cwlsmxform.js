@@ -57,6 +57,8 @@ $('#cwls_rq').val('');;
 	$('#tr_cwls_lyId').hide();
 $('#tr_cwls_username').hide();
 $('#tr_cwls_rq').hide();;
+	$('#cwls_Save').show();
+	$('#cwls_Cancel').val('取消');
 }
 function cwls_setupdetail()
 {
@@ -102,6 +104,8 @@ $('#cwls_lyId').val(data['lyId']);
 $('#cwls_username').val(data['username']);
 $('#cwls_rq').val(data['rq']);			
 	}, 'json');	
+	$('#cwls_Save').show();
+	$('#cwls_Cancel').val('取消');	
 }
 
 var gkhcallback;
