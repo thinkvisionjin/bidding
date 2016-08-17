@@ -2763,6 +2763,7 @@ def select_tjzb():
         print e
         return u"fail"    
 
+<<<<<<< HEAD
 @auth.requires_login()
 def gdwj():
 
@@ -3002,3 +3003,5 @@ where a.WinningCompany=b.dwmc and a.PackageNumber='"""+request.vars.PackageNumbe
     row[u'rq'] = row[u'rq'][0:10]
     row[u'zje'] = Num2MoneyFormat(row[u'je'])
     return dict(**row)        
+=======
+>>>>>>> branch 'master' of https://github.com/thinkvisionjin/bidding.git

@@ -1,0 +1,612 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=ProgId content=Excel.Sheet>
+<meta name=Generator content="Microsoft Excel 14">
+<link rel=File-List href="test.files/filelist.xml">
+<style id="退保证金、开服务费模版_21667_Styles">
+<!--table
+	{mso-displayed-decimal-separator:"\.";
+	mso-displayed-thousand-separator:"\,";}
+.font521667
+	{color:windowtext;
+	font-size:9.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font621667
+	{color:black;
+	font-size:20.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:underline;
+	text-underline-style:single;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.font721667
+	{color:black;
+	font-size:20.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;}
+.xl6321667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:11.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:center;
+	vertical-align:middle;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl6421667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:14.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:center;
+	vertical-align:middle;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl6521667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:12.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:center;
+	vertical-align:middle;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl6621667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:12.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:left;
+	vertical-align:middle;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl6721667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:20.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:underline;
+	text-underline-style:single;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:center;
+	vertical-align:middle;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl6821667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:12.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:general;
+	vertical-align:middle;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl6921667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:12.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:left;
+	vertical-align:middle;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl7021667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:12.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:right;
+	vertical-align:middle;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl7121667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:14.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:center;
+	vertical-align:middle;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl7221667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:12.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:center;
+	vertical-align:middle;
+	border:1.0pt solid windowtext;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl7321667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:12.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:"\0022¥\0022\#\,\#\#0\.00\;\0022¥\0022\\-\#\,\#\#0\.00";
+	text-align:center;
+	vertical-align:middle;
+	border:1.0pt solid windowtext;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl7421667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:14.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:center;
+	vertical-align:middle;
+	border:1.0pt solid windowtext;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl7521667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:14.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:left;
+	vertical-align:middle;
+	border:1.0pt solid windowtext;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl7621667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:12.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:general;
+	vertical-align:middle;
+	border-top:none;
+	border-right:none;
+	border-bottom:1.0pt solid windowtext;
+	border-left:none;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl7721667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:12.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:left;
+	vertical-align:middle;
+	border-top:none;
+	border-right:none;
+	border-bottom:1.0pt solid windowtext;
+	border-left:none;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl7821667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:12.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:right;
+	vertical-align:middle;
+	border-top:none;
+	border-right:none;
+	border-bottom:1.0pt solid windowtext;
+	border-left:none;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+.xl7921667
+	{padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:14.0pt;
+	font-weight:700;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-number-format:General;
+	text-align:center;
+	vertical-align:middle;
+	border-top:none;
+	border-right:none;
+	border-bottom:1.0pt solid windowtext;
+	border-left:none;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	white-space:normal;}
+ruby
+	{ruby-align:left;}
+rt
+	{color:windowtext;
+	font-size:9.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:宋体;
+	mso-generic-font-family:auto;
+	mso-font-charset:134;
+	mso-char-type:none;}
+-->
+</style>
+</head>
+
+<body>
+<!--[if !excel]>　　<![endif]-->
+<!--下列信息由 Microsoft Excel 的发布为网页向导生成。-->
+<!--如果同一条目从 Excel 中重新发布，则所有位于 DIV 标记之间的信息均将被替换。-->
+<!----------------------------->
+<!--“从 EXCEL 发布网页”向导开始-->
+<!----------------------------->
+
+<div id="退保证金、开服务费模版_21667" align=center x:publishsource="Excel">
+
+<table border=0 cellpadding=0 cellspacing=0 width=668 class=xl6321667
+ style='border-collapse:collapse;table-layout:fixed;width:502pt'>
+ <col class=xl6321667 width=177 style='mso-width-source:userset;mso-width-alt:
+ 5664;width:133pt'>
+ <col class=xl6321667 width=206 style='mso-width-source:userset;mso-width-alt:
+ 6592;width:155pt'>
+ <col class=xl6321667 width=120 style='mso-width-source:userset;mso-width-alt:
+ 3840;width:90pt'>
+ <col class=xl6321667 width=165 style='mso-width-source:userset;mso-width-alt:
+ 5280;width:124pt'>
+ <tr class=xl6421667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td colspan=3 height=29 class=xl6721667 width=503 style='height:21.75pt;
+  width:378pt'><font class="font721667"><span style='mso-spacerun:yes'>        
+  </span></font><font class="font621667">购标书登记表</font></td>
+  <td class=xl6621667 width=165 style='width:124pt'>日期：{{=rq}}</td>
+ </tr>
+ <tr class=xl6521667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;width:133pt'>购标书单位名称</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{=dwmc}}</td>
+ </tr>
+ <tr class=xl6521667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>纳税人识别号</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{=nsrsbh}}</td>
+ </tr>
+ <tr class=xl6521667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>地址、电话</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{=lxdz}}
+  {{=dh}}</td>
+ </tr>
+ <tr class=xl6521667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>开户行、账号</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{=khyh}}
+  {{=yhzh}}</td>
+ </tr>
+ <tr class=xl6521667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>联系地址</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{=lxdz}}</td>
+ </tr>
+ <tr class=xl6521667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>制造商单位名称</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{=zzszwmc}}</td>
+ </tr>
+ <tr class=xl6421667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>联系人</td>
+  <td class=xl7221667 width=206 style='border-top:none;border-left:none;
+  width:155pt'>{{=lxr}}</td>
+  <td class=xl7221667 width=120 style='border-top:none;border-left:none;
+  width:90pt'>手 机</td>
+  <td class=xl7221667 width=165 style='border-top:none;border-left:none;
+  width:124pt'>{{=sj}}</td>
+ </tr>
+ <tr class=xl6421667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>电 话</td>
+  <td class=xl7221667 width=206 style='border-top:none;border-left:none;
+  width:155pt'>{{=dh}}</td>
+  <td class=xl7221667 width=120 style='border-top:none;border-left:none;
+  width:90pt'>传 真</td>
+  <td class=xl7321667 width=165 style='border-top:none;border-left:none;
+  width:124pt'>{{=dz}}</td>
+ </tr>
+ <tr class=xl6421667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>邮 箱</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{dzxx}}</td>
+ </tr>
+ <tr class=xl6421667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>标书编号</td>
+  <td class=xl7221667 width=206 style='border-top:none;border-left:none;
+  width:155pt'>{{=bsbh}}</td>
+  <td class=xl7221667 width=120 style='border-top:none;border-left:none;
+  width:90pt'>金额（小写）</td>
+  <td class=xl7321667 width=165 style='border-top:none;border-left:none;
+  width:124pt'>{{=je}}</td>
+ </tr>
+ <tr class=xl6421667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7421667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>金额（大写）</td>
+  <td colspan=3 class=xl7521667 width=491 style='border-left:none;width:369pt'>{{=zje}}</td>
+ </tr>
+ <tr class=xl6421667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl6821667 width=177 style='height:21.75pt;width:133pt'></td>
+  <td class=xl6921667 width=206 style='width:155pt'></td>
+  <td class=xl7021667 width=120 style='width:90pt'></td>
+  <td class=xl7121667 width=165 style='width:124pt'></td>
+ </tr>
+ <tr class=xl6421667 height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7621667 width=177 style='height:21.75pt;width:133pt'>　</td>
+  <td class=xl7721667 width=206 style='width:155pt'>　</td>
+  <td class=xl7821667 width=120 style='width:90pt'>　</td>
+  <td class=xl7921667 width=165 style='width:124pt'>　</td>
+ </tr>
+ <tr height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl6321667 width=177 style='height:21.75pt;width:133pt'></td>
+  <td class=xl6321667 width=206 style='width:155pt'></td>
+  <td class=xl6321667 width=120 style='width:90pt'></td>
+  <td class=xl6321667 width=165 style='width:124pt'></td>
+ </tr>
+ <tr height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td colspan=3 height=29 class=xl6721667 width=503 style='height:21.75pt;
+  width:378pt'><font class="font721667"><span style='mso-spacerun:yes'>        
+  </span></font><font class="font621667">购标书登记表</font></td>
+  <td class=xl6621667 width=165 style='width:124pt'>日期：{{=rq}}</td>
+ </tr>
+ <tr height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;width:133pt'>购标书单位名称</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{=dwmc}}</td>
+ </tr>
+ <tr height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>纳税人识别号</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{=nsrsbh}}</td>
+ </tr>
+ <tr height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>地址、电话</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{=lxdz}}
+  {{=dh}}</td>
+ </tr>
+ <tr height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>开户行、账号</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{=khyh}}
+  {{=yhzh}}</td>
+ </tr>
+ <tr height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>联系地址</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{=lxdz}}</td>
+ </tr>
+ <tr height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>制造商单位名称</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{=zzszwmc}}</td>
+ </tr>
+ <tr height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>联系人</td>
+  <td class=xl7221667 width=206 style='border-top:none;border-left:none;
+  width:155pt'>{{=lxr}}</td>
+  <td class=xl7221667 width=120 style='border-top:none;border-left:none;
+  width:90pt'>手 机</td>
+  <td class=xl7221667 width=165 style='border-top:none;border-left:none;
+  width:124pt'>{{=sj}}</td>
+ </tr>
+ <tr height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>电 话</td>
+  <td class=xl7221667 width=206 style='border-top:none;border-left:none;
+  width:155pt'>{{=dh}}</td>
+  <td class=xl7221667 width=120 style='border-top:none;border-left:none;
+  width:90pt'>传 真</td>
+  <td class=xl7321667 width=165 style='border-top:none;border-left:none;
+  width:124pt'>{{=dz}}</td>
+ </tr>
+ <tr height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>邮 箱</td>
+  <td colspan=3 class=xl7221667 width=491 style='border-left:none;width:369pt'>{{=dzxx}}</td>
+ </tr>
+ <tr height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7221667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>标书编号</td>
+  <td class=xl7221667 width=206 style='border-top:none;border-left:none;
+  width:155pt'>{{=bsbh}}</td>
+  <td class=xl7221667 width=120 style='border-top:none;border-left:none;
+  width:90pt'>金额（小写）</td>
+  <td class=xl7321667 width=165 style='border-top:none;border-left:none;
+  width:124pt'>{{=je}}</td>
+ </tr>
+ <tr height=29 style='mso-height-source:userset;height:21.75pt'>
+  <td height=29 class=xl7421667 width=177 style='height:21.75pt;border-top:
+  none;width:133pt'>金额（大写）</td>
+  <td colspan=3 class=xl7521667 width=491 style='border-left:none;width:369pt'>{{=zje}}</td>
+ </tr>
+ <![if supportMisalignedColumns]>
+ <tr height=0 style='display:none'>
+  <td width=177 style='width:133pt'></td>
+  <td width=206 style='width:155pt'></td>
+  <td width=120 style='width:90pt'></td>
+  <td width=165 style='width:124pt'></td>
+ </tr>
+ <![endif]>
+</table>
+
+</div>
+
+
+<!----------------------------->
+<!--“从 EXCEL 发布网页”向导结束-->
+<!----------------------------->
+</body>
+
+</html>
