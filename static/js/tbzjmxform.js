@@ -7,8 +7,9 @@ function gettbzjkh(dwmc)
 		}
 	$.get('getkh?dwmc='+dwmc, function(result){
 		if (result){
-			$('#tbzj_khyh').val(result['khyh']);
-			$('#tbzj_yhzh').val(result['yhzh']);
+			$('#tbzj_khyh').val(result['khxx'][0]['khyh']);
+			$('#tbzj_yhzh').val(result['khxx'][0]['yhzh']);
+
 		}
 		else
 		{
@@ -36,21 +37,32 @@ function tbzj_configpage(tbbzjid)
 			url = 'gettbzjpz';
 		}
 		$('#tbzj_dwmc').jqxInput({disabled:true});
-		$('#tbzj_bsbh').jqxDropDownList({disabled:true});
+		$('#tbzj_projectid').jqxDropDownList({disabled:true});
 	}
 	
 	$.get(url, function(result){
 		//需特殊处理
+
     	$('#tbzj_dwmc').jqxComboBox({ placeHolder: "", source: result['dwmc']});
-$('#tbzj_bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh']});
+
+$('#tbzj_projectid').jqxDropDownList({ placeHolder: "", source: result['projectid'], displayMember:'ProjectCode', valueMember:'Id'});
 $('#tbzj_fkfs').jqxDropDownList({ placeHolder: "", source: result['fkfs']});
+
 		if (state == 'add' &&tbbzjid!=undefined)
 		{
 			$('#tbzj_dwmc').val(result['tbbzjid'][0]['dwmc']);
-			$('#tbzj_bsbh').val(result['tbbzjid'][0]['bsbh']);
+			$('#tbzj_projectid').val(result['tbbzjid'][0]['projectid']);
 			$('#tbzj_je').val(result['tbbzjid'][0]['je']);
 			$('#tbzj_khyh').val(result['tbbzjid'][0]['khyh']);
 			$('#tbzj_yhzh').val(result['tbbzjid'][0]['yhzh']);
+		}
+		if (state =='modify')
+		{
+			tbzj_setupmodify();
+		}
+		if (state == 'detail')
+		{
+			tbzj_setupdetail();
 		}
     }, 'json');	
     $("#tbzj_dwmc input").blur(function(){gettbzjkh($("#tbzj_dwmc").val())});  
@@ -63,7 +75,7 @@ function tbzj_setupadd(tbzjId)
 	$('#tbzj_Id').val('');
 $('#tbzj_dwmc').val('');
 $('#tbzj_rq').val('');
-$('#tbzj_bsbh').jqxDropDownList('selectIndex',-1);
+$('#tbzj_projectid').jqxDropDownList('selectIndex',-1);
 $('#tbzj_username').val('');
 $('#tbzj_ly').val('');
 $('#tbzj_khyh').val('');
@@ -92,7 +104,7 @@ $('#tbzj_ly').jqxInput({disabled:true});
 		$('#tbzj_Id').val(data['Id']);
 $('#tbzj_dwmc').val(data['dwmc']);
 $('#tbzj_rq').val(data['rq']);
-$('#tbzj_bsbh').val(data['bsbh']);
+$('#tbzj_projectid').val(data['projectid']);
 $('#tbzj_username').val(data['username']);
 $('#tbzj_ly').val(data['ly']);
 $('#tbzj_khyh').val(data['khyh']);
@@ -119,7 +131,7 @@ $('#tbzj_ly').jqxInput({disabled:true});;
 		$('#tbzj_Id').val(data['Id']);
 $('#tbzj_dwmc').val(data['dwmc']);
 $('#tbzj_rq').val(data['rq']);
-$('#tbzj_bsbh').val(data['bsbh']);
+$('#tbzj_projectid').val(data['projectid']);
 $('#tbzj_username').val(data['username']);
 $('#tbzj_ly').val(data['ly']);
 $('#tbzj_khyh').val(data['khyh']);
@@ -145,7 +157,7 @@ function tbzj_save()
 		}
 	var row = {	
 	dwmc:$('#tbzj_dwmc').val(),
-bsbh:$('#tbzj_bsbh').val(),
+projectid:$('#tbzj_projectid').val(),
 username:$('#tbzj_username').val(),
 ly:$('#tbzj_ly').val(''),
 khyh:$('#tbzj_khyh').val(),
@@ -188,7 +200,7 @@ function tbzj_init () {
 			<table align='center' >\
 			<tr id='tr_tbzj_Id' style='display:none'><td class='tbinputtitle'>序号:</td><td><input class='tbinput' type='text' id='tbzj_Id'/></td></tr>\
 <tr id='tr_tbzj_dwmc'><td class='tbinputtitle'>单位名称:</td><td><div class='tbinput' type='text' id='tbzj_dwmc'/></td></tr>\
-<tr id='tr_tbzj_bsbh'><td class='tbinputtitle'>标书编号:</td><td><div class='tbinput' type='text' id='tbzj_bsbh'/></td></tr>\
+<tr id='tr_tbzj_projectid'><td class='tbinputtitle'>项目编号:</td><td><div class='tbinput' type='text' id='tbzj_projectid'/></td></tr>\
 <tr id='tr_tbzj_khyh'><td class='tbinputtitle'>开户银行:</td><td><input class='tbinput' type='text' id='tbzj_khyh'/></td></tr>\
 <tr id='tr_tbzj_yhzh'><td class='tbinputtitle'>银行账号:</td><td><input class='tbinput' type='text' id='tbzj_yhzh'/></td></tr>\
 <tr id='tr_tbzj_fkfs'><td class='tbinputtitle'>付款方式:</td><td><div class='tbinput' type='text' id='tbzj_fkfs'/></td></tr>\
@@ -215,7 +227,7 @@ function tbzj_init () {
     $('#tbzj_Id').jqxInput();
 $('#tbzj_dwmc').jqxComboBox({ placeHolder: '',autoComplete:true});
 $('#tbzj_rq').jqxInput();
-$('#tbzj_bsbh').jqxDropDownList({ placeHolder: ''});
+$('#tbzj_projectid').jqxDropDownList({ placeHolder: ''});
 $('#tbzj_username').jqxInput();
 $('#tbzj_ly').jqxInput();
 $('#tbzj_khyh').jqxInput();
@@ -247,15 +259,15 @@ $('#tr_tbzj_ly').hide();
 			var val = $("#tbzj_fkfs").jqxDropDownList('val');
 			if(val==""){return false;}	return true;
 		} },
-		{ input: "#tbzj_bsbh", message: "不可为空!", action: 'keyup, blur', rule: function(input){
-			var val = $("#tbzj_bsbh").jqxDropDownList('val');
+		{ input: "#tbzj_projectid", message: "不可为空!", action: 'keyup, blur', rule: function(input){
+			var val = $("#tbzj_projectid").jqxDropDownList('val');
 			if(val==""){return false;}	return true;
 		} }
 		], hintType: "tooltip"
 	});    	
 }
 
-function tbzj_popupwindow(flag_state, id, callback, tbbzjid, bsbh)
+function tbzj_popupwindow(flag_state, id, callback, tbbzjid, projectid)
 {
 	y = document.body.scrollTop;
 	x = (document.body.scrollWidth -600)/2
@@ -263,26 +275,39 @@ function tbzj_popupwindow(flag_state, id, callback, tbbzjid, bsbh)
 	state = flag_state;
 	gkhcallback = callback;
 	$('#tbzj_Id').val(id);
-	
+
 	if (state == 'add')
 	{
 		tbzj_title.innerHTML='新增';
 		tbzj_setupadd();
+		tbzj_configpage(tbbzjid);
 		$('#tbzj_popupWindow').jqxWindow({ height:300});
+
 	}
 	if (state == 'modify')
 	{
 		tbzj_title.innerHTML='修改';
-		tbzj_setupmodify();
+		tbzj_configpage(tbbzjid);
+		//tbzj_setupmodify();
 		$('#tbzj_popupWindow').jqxWindow({ height:430});
 	}
 	if (state == 'detail')
 	{
 			
 		tbzj_title.innerHTML='详情';
-		tbzj_setupdetail();
+		tbzj_configpage(tbbzjid);
+		//tbzj_setupdetail();
 		$('#tbzj_popupWindow').jqxWindow({ height:430});
 	}
-	tbzj_configpage(tbbzjid);
+	if (tbbzjid == undefined)
+	{
+
+	}
+	else
+	{
+
+//		$('#tbzj_dwmc').jqxInput({disabled:true});
+//		$('#tbzj_projectid').jqxDropDownList({disabled:true});
+	}	
 	$('#tbzj_popupWindow').jqxWindow('open');
 }

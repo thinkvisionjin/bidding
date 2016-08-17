@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title id="Description">Open the demo in new window and resize the web browser's window. The panel collapses automatically when the browser's window
+		width is less than its collapseBreakpoint which in the demo is set to 700px</title>
+	<link type="text/css" rel="Stylesheet" href="{{=URL('static','css/vendor/jqwidgets/styles/jqx.base.css')}}" />
+	<link type="text/css" rel="Stylesheet" href="{{=URL('static','css/site.css')}}" />
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jquery/jquery-1.11.1.min.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcore.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtree.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxbuttons.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxscrollbar.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxpanel.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxresponsivepanel.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/demos.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdata.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxfileupload.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.selection.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.columnsresize.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxexpander.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxlistbox.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxinput.js')}}"></script>
+
+	<style type="text/css">
+		#jqxResponsivePanel,
+		#content {
+			float: left;
+		}
+		
+		.jqx-rc-all {
+			border-radius: 0px;
+		}
+		
+		body,
+		html {
+			width: 100%;
+			height: 100%;
+			padding: 0;
+			margin: 0;
+			overflow: hidden;
+		}
+	</style>
+	<script type="text/javascript">
+	var tablename =''
+	var paramurl = '';
+	var state = 'add';
+	function save()
+	{
+	//	if ($('#pzgl_Id').jqxValidator('validate')==false){return;}
+		if (state == 'add')
+		{
+			url = 'insertrow_pzgl?tablename='+tablename;
+		}
+		else if (state == 'modify')
+		{
+			url = 'updaterow_pzgl?tablename='+tablename+'&Id='+$('#pzgl_Id').val();
+		}
+		var row = {	
+			pzid:$('#pzid').val(),
+			code:$('#code').val(),
+			text:$('#text').val()
+	};
+	$.ajax({
+		url:url,
+		type:'POST',
+		data:row,
+		success:function(response,status,xhr){
+
+			if (response == 'success')
+			{
+				alert('成功');
+				$('#pzgl_Id').val('');
+				$('#pzid').val('');
+				$('#code').val('');
+				$('#text').val('');
+				state = 'add';
+				search();
+			}
+			else
+			{
+				alert(response);
+
+			}
+
+		},
+		error:function(xhr,errorText,errorType){
+			alert("操作不成功");
+		},
+	})	
+	}
+		function deletepzgl(id)
+		{
+			if (confirm('是否删除')==false)
+			{
+				return ;
+			}
+			var selectedrowindex = $("#pzgl_grid").jqxGrid('getselectedrowindex');
+			var rowscount = $("#pzgl_grid").jqxGrid('getdatainformation').rowscount;
+			if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+				var rowid = $("#pzgl_grid").jqxGrid('getrowid', selectedrowindex);
+				
+			}
+
+			$.get('deleterow_pzgl?tablename='+tablename+'&Id='+id, function(result){
+				if (result == 'success')
+				{
+					confirm('成功')
+					$("#pzgl_grid").jqxGrid('deleterow', rowid);
+				}
+				else
+				{
+					alert(result)
+				}	
+			});			
+		}
+		function modifypzgl(index)
+		{
+			state = 'modify'
+			rowdata = $('#pzgl_grid').jqxGrid('getrowdata', index);
+			$('#pzgl_Id').val(rowdata.Id);
+			$('#pzid').val(rowdata.pzid);
+			$('#code').val(rowdata.code);
+			$('#text').val(rowdata.text);
+		}
+		function search()
+		{
+			url = 'select_pzgl'+paramurl
+			var source = {					
+				datatype : "json",
+				datafields : [{name : 'Id',type : 'string'	},
+				{name : 'pzid',type : 'string'	},
+				{name : 'code',type : 'string'	},
+				{name : 'text',type : 'string'	}],
+				id : 'Id',
+				url : url
+			};
+			var dataAdapter = new $.jqx.dataAdapter(source);
+			$("#pzgl_grid").jqxGrid({
+				source : dataAdapter
+			});				
+		}
+		function getpzglpz()
+		{
+				$.get('getpzglpz', function(result) {
+					$("#jqxMenu").jqxListBox({ source: result, displayMember: "tablename", valueMember: "pztable", width:'100%',height:'100%' });			
+					$('#jqxMenu').on('select', function (event) {
+							//var args = event.args;
+							//var item = $('#jqxWidget').jqxTree('getItem', args.element);
+							//loadKmmxData(item.id);
+							var args = event.args;
+
+		                    var item = $('#jqxMenu').jqxListBox('getItem', args.index);							
+							
+							
+							paramurl = '?tablename='+item.value;
+							pzgl_title.innerHTML = item.label;
+							tablename = item.value;
+							$('#pzgl_Id').val('');
+							$('#pzid').val('');
+							$('#code').val('');
+							$('#text').val('');
+							state = 'add';							
+							search()
+
+						});
+					$('#jqxMenu').jqxListBox({selectedIndex: 0 }); 
+
+				}, 'json');
+		}
+        $(document).ready(function () {
+            $('#jqxMenu').css('visibility', 'visible');
+            $('#content').jqxPanel();
+            $('#jqxResponsivePanel').jqxResponsivePanel({
+                width: '20%',
+                height: '100%',
+                collapseBreakpoint: 700,
+               // toggleButton: $('#toggleResponsivePanel'),
+                animationType: 'none',
+                autoClose: false
+            });
+					$("#pzgl_expander").jqxExpander({
+						toggleMode : 'none',
+						showArrow : false,
+						height: '100%'
+					});			
+			getpzglpz();
+            // $('#jqxResponsivePanel').on('open expand close collapse', function (event) {
+            //     if (event.args.element)
+            //         return;
+            //     var collapsed = $('#jqxResponsivePanel').jqxResponsivePanel('isCollapsed');
+            //     var opened = $('#jqxResponsivePanel').jqxResponsivePanel('isOpened');
+            //     if (collapsed && !opened) {
+            //         $('#content').jqxPanel({ width: '100%' });
+            //     }
+            //     else if (collapsed && opened) {
+            //         $('#content').jqxPanel({ width: '65%' });
+            //     }
+            //     else if (!collapsed) {
+            //         $('#content').jqxPanel({ width: '65%' });
+            //     }
+            // });
+            $('#content').jqxPanel({ width: '78%', height: '100%' });
+
+
+
+
+					$("#pzgl_grid").jqxGrid(
+									{
+										enabletooltips: true,
+										columnsresize: true,
+										height : "80%",
+										width : "98%",
+										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center' },
+{ text: '字典ID', datafield: 'pzid', width: '20%',cellsalign: 'center', align: 'center' },
+{ text: '字典编码', datafield: 'code', width: '20%',cellsalign: 'center', align: 'center' },
+{ text: '说明', datafield: 'text', width: '30%',cellsalign: 'center', align: 'center' },
+												{
+													text : '操作',
+													width: '20%',
+													editable : false,
+													datafield : 'delete',
+													cellsrenderer : function(
+															index, datafield,
+															value,
+															defaultvalue,
+															column, rowdata) {
+
+														var c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="modifypzgl('+index+')">修改</a>';
+														var d = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deletepzgl('+rowdata.Id+')">删除</a>';
+
+														var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 6px;">'
+																+ c + d + '</div>';
+														return d;
+													}
+												} ]
+
+									});
+					$("#save").jqxButton({template : 'success'});
+					$("#save").click(function() {
+						save();
+					});					
+					$("#pzid").jqxInput();	
+					$("#code").jqxInput();	
+					$("#text").jqxInput();	
+
+        });
+    </script>
+</head>
+
+<body>
+
+	<div id="jqxResponsivePanel">
+		<div id="jqxMenu" style="border: none; visibility: hidden;">
+		</div>
+	</div>
+	<div id="content">
+		<div id="pzgl_expander">
+			<div id='pzgl_title'>配置</div>
+			<div>
+				<div>
+					<table align="center">
+						<tr>
+							<td><input class='tbinput' type='text' id='pzgl_Id' hidden='true'/></td>							
+							<td class='tbinputtitle'>字典Id:</td>
+							<td><input class='tbinput' type='text' id='pzid' /></td>
+							<td class='tbinputtitle'>字典代码:</td>
+							<td><input class='tbinput' type='text' id='code' /></td>
+							<td class='tbinputtitle'>说明:</td>
+							<td><input class='tbinput' type='text' id='text' /></td>
+							<td>
+								<input id="save" style="float:right" type="button" value="保存" />
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div id='pzgl_grid' style='margin: 1%;'></div>
+			</div>
+		</div>
+</body>
+
+</html>

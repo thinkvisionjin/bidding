@@ -37,7 +37,8 @@ function configpage()
     	$('#bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh'], displayMember: "PackageNumber", valueMember: "PackageNumber"});
     	$('#bsbh').val($('#bsbh')[0].getAttribute('value'));
     }, 'json');	
-    $("#dwmc").blur(function(){getkh($("#dwmc").val())});  
+    $("#dwmc").blur(function(){getkh($("#dwmc").val())}); 
+	getkh($("#dwmc").val()) 
 }
 var olddwmc='';
 var state = 'add';

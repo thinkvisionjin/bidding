@@ -1,19 +1,19 @@
 
 function search()
 {
-	if ($("#bsbh").val()=='')
+	if ($("#projectid").val()=='')
 		{
 		url = "select_cwls";
 		}
 	else
 		{
-		url = "select_cwls?bsbh="+$("#bsbh").val()
+		url = "select_cwls?projectid="+$("#projectid").val()
 		}
 		
 	var source = {					
 		datatype : "json",
 		datafields : [{name : 'Id',type : 'string'	},
-{name : 'bsbh',type : 'string'	},
+{name : 'projectid',type : 'string'	},
 {name : 'sz',type : 'string'	},
 {name : 'zy',type : 'string'	},
 {name : 'je',type : 'string'	},
@@ -35,7 +35,7 @@ function addselectfieldwindows()
 	$(document.body).append('<div id="cwlszd_popupWindow" ><div>字段选择</div><div style="overflow: hidden;"><div  id="cwls_zdlistbox"></div></div></div>');
 	$("#cwlszd_popupWindow").jqxWindow({ isModal: true, autoOpen: false, height: 300, width: 200 , modalOpacity: 0.5});
 	 var listSource = [{ label: '序号', value: 'Id', checked: true },,
-{ label: '标书编号', value: 'bsbh', checked: true },,
+{ label: '项目编号', value: 'projectid', checked: true },,
 { label: '收支', value: 'sz', checked: true },,
 { label: '摘要', value: 'zy', checked: true },,
 { label: '金额', value: 'je', checked: true },,
@@ -59,23 +59,32 @@ function addselectfieldwindows()
 
 function modifycwls(id)
 {
-	cwls_popupwindow('modify', id, search);
-
+	cwls_popupwindow('modify', id, search)
 }
+
 
 function deletecwls(id)
 {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}	
     var selectedrowindex = $("#cwls-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#cwls-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
         var rowid = $("#cwls-grid").jqxGrid('getrowid', selectedrowindex);
         
     }
-
 	$.get('deleterow_cwls?Id='+id, function(result){
-		alert(result);
+		
+		
 		if (result == 'success') {
+			alert('成功')
 			$("#cwls-grid").jqxGrid('deleterow', rowid);
+		}
+		else
+		{
+			alert(result);
 		}
 		
 	});
@@ -113,7 +122,7 @@ $(document).ready(function() {
 										height : "90%",
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '标书编号', datafield: 'bsbh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '项目编号', datafield: 'projectid', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '收支', datafield: 'sz', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '摘要', datafield: 'zy', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '金额', datafield: 'je', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
@@ -131,7 +140,8 @@ $(document).ready(function() {
 															value,
 															defaultvalue,
 															column, rowdata) {
-														var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printcwls('+rowdata.Id+')">打印</a>';
+														//var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printcwls('+rowdata.Id+')">打印</a>';
+														var a = '';
 														var b = '';
 														var c = '';
 														if (rowdata['lyId']=='0')
@@ -183,7 +193,7 @@ $(document).ready(function() {
 						search();
 					});					
 
-					$('#bsbh').jqxInput();
+					$('#projectid').jqxInput();
 					addselectfieldwindows();
 					configpopupwindow();
 

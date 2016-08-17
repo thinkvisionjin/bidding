@@ -11,12 +11,15 @@ function getkh(dwmc)
 			$('#kh_lxdz').val(data['lxdz']);
 			$('#kh_dzxx').val(data['dzxx']);
 			$('#kh_cz').val(data['cz']);
+			$('#kh_dh').val(data['dh']);
 		}
 		else
 		{
 			$('#kh_lxdz').val('');
 			$('#kh_dzxx').val('');
 			$('#kh_cz').val('');
+			$('#kh_dh').val('');
+
 		}
 		olddwmc = dwmc;
 		
@@ -40,6 +43,7 @@ $('#kh_yhzh').val('');
 $('#kh_lxdz').val('');
 $('#kh_dzxx').val('');
 $('#kh_cz').val('');
+$('#kh_dh').val('');
 $('#kh_username').val('');;
 	$('#tr_kh_Id').hide();
 $('#tr_kh_rq').hide();
@@ -64,6 +68,7 @@ $('#kh_yhzh').val(data['yhzh']);
 $('#kh_lxdz').val(data['lxdz']);
 $('#kh_dzxx').val(data['dzxx']);
 $('#kh_cz').val(data['cz']);
+$('#kh_dh').val(data['dh']);
 $('#kh_username').val(data['username']);		
 	}, 'json');	
 	$('#kh_Save').hide();
@@ -89,6 +94,7 @@ $('#kh_yhzh').val(data['yhzh']);
 $('#kh_lxdz').val(data['lxdz']);
 $('#kh_dzxx').val(data['dzxx']);
 $('#kh_cz').val(data['cz']);
+$('#kh_dh').val(data['dh']);
 $('#kh_username').val(data['username']);			
 	}, 'json');	
 }
@@ -117,6 +123,7 @@ yhzh:$('#kh_yhzh').val(),
 lxdz:$('#kh_lxdz').val(),
 dzxx:$('#kh_dzxx').val(),
 cz:$('#kh_cz').val(),
+dh:$('#kh_dh').val(),
 username:$('#kh_username').val(),
 	//////////来源////需特殊处理//////
 	};
@@ -161,6 +168,7 @@ function kh_init () {
 <tr id='tr_kh_lxdz'><td class='tbinputtitle'>联系地址:</td><td><input class='tbinput' type='text' id='kh_lxdz'/></td></tr>\
 <tr id='tr_kh_dzxx'><td class='tbinputtitle'>电子信箱:</td><td><input class='tbinput' type='text' id='kh_dzxx'/></td></tr>\
 <tr id='tr_kh_cz'><td class='tbinputtitle'>传真:</td><td><input class='tbinput' type='text' id='kh_cz'/></td></tr>\
+<tr id='tr_kh_dh'><td class='tbinputtitle'>电话:</td><td><input class='tbinput' type='text' id='kh_dh'/></td></tr>\
 <tr id='tr_kh_username'><td class='tbinputtitle'>操作人:</td><td><input class='tbinput' type='text' id='kh_username'/></td></tr>\
 \
 \
@@ -187,6 +195,7 @@ $('#kh_yhzh').jqxInput();
 $('#kh_lxdz').jqxInput();
 $('#kh_dzxx').jqxInput();
 $('#kh_cz').jqxInput();
+$('#kh_dh').jqxInput();
 $('#kh_username').jqxInput();
 	$('#tr_kh_Id').hide();
 $('#tr_kh_rq').hide();
@@ -201,6 +210,7 @@ $('#tr_kh_username').hide();
 	});
 	$("#kh_Id").jqxValidator({scroll: false,
 		rules: [
+		{ input: "#kh_nsrsbh", message: "不可为空!", action: 'keyup, blur', rule: 'required' },
 		{ input: "#kh_dwmc", message: "不可为空!", action: 'keyup, blur', rule: 'required' },
 		{ input: "#kh_khyh", message: "不可为空!", action: 'keyup, blur', rule: 'required' },
 		{ input: "#kh_yhzh", message: "不可为空!", action: 'keyup, blur', rule: 'required' },
@@ -216,6 +226,12 @@ $('#tr_kh_username').hide();
 			var reg = /[+|-|0-9]{2,30}$/;
 			if (reg.test(val)) {return true;}else{return false;}
 		} },
+		{ input: "#kh_dh", message: "不是有效的电话号码!", action: 'keyup, blur', rule: function(input){
+			var val = $("#kh_dh").val();
+			if(val==""){return false;}
+			var reg = /[+|-|0-9]{2,30}$/;
+			if (reg.test(val)) {return true;}else{return false;}
+		} },		
 		{ input: '#kh_dzxx', message: '不是有效的电子邮箱!', action: 'keyup', rule: 'email' }
 		], hintType: "tooltip"
 	}); 	

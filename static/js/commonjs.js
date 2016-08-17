@@ -425,23 +425,29 @@ function BindCustomer(documentObject, localdata, project) {
 			});
         }
     });
-	$(documentObject).jqxComboBox(
+	/*$(documentObject).jqxComboBox(
 		{
 			searchMode: 'contains',
 			source: dataAdapter,
 			displayMember: "dwmc",
 			valueMember: "Id",
 			width: '200', height: '25'
-		});
-	
+		});*/
+	$(documentObject).jqxDropDownList(
+		{
+			source: dataAdapter,
+			displayMember: "dwmc",
+			valueMember: "Id",
+			width: '200', height: '25'
+		});	
 	$(documentObject).on('select', function (event) {
 		// var args = event.args;
 		// var item = $(documentObject).jqxComboBox('getItem', args.index);
 	});
 	if (project != undefined) {
-		var items = $(documentObject).jqxComboBox('getItems');
-		var item = $(documentObject).jqxComboBox('getItemByValue', project.CustomerId);
-		$(documentObject).jqxComboBox('selectItem', item);
+		var items = $(documentObject).jqxDropDownList('getItems');
+		var item = $(documentObject).jqxDropDownList('getItemByValue', project.CustomerId);
+		$(documentObject).jqxDropDownList('selectItem', item);
 	}
 }
 

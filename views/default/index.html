@@ -1,4 +1,4 @@
-<html style='overflow:hidden'>
+<!DOCTYPE html >
 <head>
 <meta charset="utf-8">
 <title>招标项目管理</title>
@@ -28,19 +28,20 @@
     <script type="text/javascript" src="{{=URL('static','js/auth_userresetpasswordform.js')}}"></script>
 <script type="text/javascript" src="{{=URL('static','js/index.js')}}"></script>
 </head>
-<body>
+<body style='overflow:hidden'>
 
         <div id="mainSplitter">
             <div class="splitter-panel">
             	<div style='text-align:center'><font  size=2.5 color=#3333F5>欢迎<b>{{=chinesename}}</b>使用 <a href='/bidding/default/user/logout?_next=/bidding/default/index'><b>退出</b></a></font></div>
                 <div id='jqxNavigationBar'>
+					
 					<div>项目管理</div>
 					<div>
 						<div class="NavBtn">
 							<img class="NavBtnImg" src="../static/images/Main.png" onclick="addTabs('首页', 'hysgl.html')" alt="ImageButton">
 						</div>
 						<div class="NavBtnText">欢迎使用</div>			
-					
+					{{if auth.user_groups.has_key(2) or auth.user_groups.has_key(1):}}
 					<div class="NavBtn">
 						<img class="NavBtnImg" src="../static/images/PCProtocolCode.png" onclick="addTabs('协议编号', 'xybh.html')" alt="ImageButton">
 					</div> 
@@ -70,13 +71,15 @@
 					<div class="NavBtnText">退保证金</div>	
 					
 					<div class="NavBtn">
-						<img class="NavBtnImg" src="../static/images/PCWebFinance.png" onclick="window.location.replace('cwls')" alt="ImageButton">
+						<img class="NavBtnImg" src="../static/images/PCWebFinance.png" onclick="addTabs('财务流水', 'cwls.html')" alt="ImageButton">
 					</div>
 					<div class="NavBtnText">财务流水</div>	
 					
 					
-					
+					{{pass}}
 					</div>
+					
+					{{if auth.user_groups.has_key(2)  or auth.user_groups.has_key(1):}}
 					<div>银行流水</div>
 					<div>
 					<div class="NavBtn">
@@ -92,41 +95,58 @@
 					</div>
 					<div class="NavBtnText">财务确认流水</div>										
 					</div>
+					{{pass}}
+					
 					<div>用户管理</div>
 					<div>
+					{{if auth.user_groups.has_key(2)  or auth.user_groups.has_key(1):}}
 					<div class="NavBtn">
 						<img class="NavBtnImg" src="../static/images/PCCustomer.png" onclick="addTabs('客户管理', 'kh')" alt="ImageButton">
 					</div>
-					<div class="NavBtnText">客户管理</div>																		
-					<div class="NavBtn">
-						<img class="NavBtnImg" src="../static/images/PCWebFinance.png" onclick="addTabs('员工管理', 'auth_user')" alt="ImageButton">
-					</div>
-					<div class="NavBtnText">员工管理</div>
-					
+					<div class="NavBtnText">客户管理</div>		
 					<div class="NavBtn">
 						<img class="NavBtnImg" src="../static/images/PCProjectStatus.png" onclick="authuser_password_popupwindow(1);" alt="ImageButton">
 					</div>
 					<div class="NavBtnText">修改密码</div>	
-					
+					{{pass}}					
+					{{if auth.user_groups.has_key(3):}}																
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCWebFinance.png" onclick="addTabs('员工管理', 'auth_user')" alt="ImageButton">
+					</div>
+					<div class="NavBtnText">员工管理</div>
+					{{pass}}
+
 					</div>
 					
+					{{if auth.user_groups.has_key(2) or auth.user_groups.has_key(1):}}
 					<div>报表管理</div>
 					<div>
 						<div class="NavBtn">
-							<img class="NavBtnImg" src="../static/images/PCWebFinance.png" onclick="addTabs('个人统计', 'grtjb.html')" alt="ImageButton">
+							<img class="NavBtnImg" src="../static/images/report1.png" onclick="addTabs('个人统计', 'grtjb.html')" alt="ImageButton">
 						</div>
 						<div class="NavBtnText">个人统计</div>
 						
 						<div class="NavBtn">
-						<img class="NavBtnImg" src="../static/images/PCWebFinance.png" onclick="addTabs('在做项目统计', 'zzxmtjb.html')" alt="ImageButton">
+						<img class="NavBtnImg" src="../static/images/report2.png" onclick="addTabs('在做项目统计', 'zzxmtjb.html')" alt="ImageButton">
 						</div>
 						<div class="NavBtnText">在做项目统计</div>
-					</div>
-					<div>系统设置</div>
-						<div id='aa' width="100%">
-						        
+
+						<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCWebProjectCode.png" onclick="addTabs('统计总表', 'tjzb.html')" alt="ImageButton">
 						</div>
-					</div>	
+						<div class="NavBtnText">统计总表</div>						
+					</div>
+					{{pass}}
+					{{if auth.user_groups.has_key(3):}}
+					<div>系统设置</div>
+					<div id='aa' width="100%">
+						<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/shezhi.png" onclick="addTabs('字典配置', 'pzgl.html')" alt="ImageButton">
+						</div>
+						<div class="NavBtnText">字典配置</div>	  
+					</div>
+					{{pass}}
+				</div>	
 			</div>
             <div class="splitter-panel">
 				<div id='jqxTabs' class = "right-tab">
@@ -134,7 +154,7 @@
 						<li hasclosebutton='false'>首页</li>
 					</ul>
 
-					<div id="kmye-jqxgrid">					<iframe id="首页" style="border:none;padding:0;margin:0;" frameborder=no border=0 height="100%" width="100%"src="hysgl"></iframe>      </div>
+					<div id="kmye-jqxgrid">					<iframe id="首页" style="border:none;padding:0;margin:0;" frameborder=no border=0 height="99%" width="100%"src="hysgl"></iframe>      </div>
 
 				</div>				
 				

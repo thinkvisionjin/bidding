@@ -1,7 +1,7 @@
 function uploadsetup()
 
 {
-	$('#yhlswj-upload').jqxFileUpload({width:300,   uploadUrl: 'fileUpload', fileInputName: 'fileToUpload',
+	$('#yhlswj-upload').jqxFileUpload({width:300,   uploadUrl: 'fileUpload?type=1', fileInputName: 'fileToUpload',
 		localization:{browseButton: '上传流水', uploadButton : '上传', cancelButton: '取消', uploadFileTooltip: '上传', cancelFileTooltip: '取消'}});
 		$('#yhlswj-upload').on('uploadEnd', function (event) {
 			var args = event.args;
@@ -76,6 +76,10 @@ function modifyyhlswj(id)
 
 function deleteyhlswj(id)
 {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}	
     var selectedrowindex = $("#yhlswj-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#yhlswj-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
@@ -84,7 +88,14 @@ function deleteyhlswj(id)
     }
 
 	$.get('deleterow_yhlswj?Id='+id, function(result){
-		alert(result);
+		if (result=='success')
+		{
+			confirm('成功')
+		}
+		else
+		{
+			alert(result);
+		}
 	});
 }
 

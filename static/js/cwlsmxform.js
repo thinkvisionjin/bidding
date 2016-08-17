@@ -35,8 +35,9 @@ function cwls_configpage(projectid)
 	
 	$.get(url, function(result){
 		//需特殊处理
-    	$('#cwls_bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh']});
+    	$('#cwls_projectid').jqxDropDownList({ placeHolder: "", source: result['projectid'], displayMember:'ProjectCode', valueMember:'Id'});
 $('#cwls_sz').jqxDropDownList({ placeHolder: "", source: result['sz']});
+$('#cwls_projectid').jqxDropDownList('selectIndex', 0);
 $('#cwls_ywlx').jqxDropDownList({ placeHolder: "", source: result['ywlx']});
     }, 'json');	
     $("#cwls_dwmc input").blur(function(){getkh($("#cwls_dwmc").val())});  
@@ -46,7 +47,7 @@ var state = 'add';
 function cwls_setupadd()
 {
 	$('#cwls_Id').val('');
-$('#cwls_bsbh').jqxDropDownList('selectIndex',-1);
+$('#cwls_projectid').jqxDropDownList('selectIndex',-1);
 $('#cwls_sz').jqxDropDownList('selectIndex',-1);
 $('#cwls_zy').val('');
 $('#cwls_je').val('');
@@ -57,6 +58,8 @@ $('#cwls_rq').val('');;
 	$('#tr_cwls_lyId').hide();
 $('#tr_cwls_username').hide();
 $('#tr_cwls_rq').hide();;
+	$('#cwls_Save').show();
+	$('#cwls_Cancel').val('取消');
 }
 function cwls_setupdetail()
 {
@@ -69,7 +72,7 @@ $('#cwls_rq').jqxInput({disabled:true});
 	$.get('selectone_cwls?Id='+$('#cwls_Id').val(), function(result){
 		var data = result[0];
 		$('#cwls_Id').val(data['Id']);
-$('#cwls_bsbh').val(data['bsbh']);
+$('#cwls_projectid').val(data['projectid']);
 $('#cwls_sz').val(data['sz']);
 $('#cwls_zy').val(data['zy']);
 $('#cwls_je').val(data['je']);
@@ -93,7 +96,7 @@ $('#cwls_rq').jqxInput({disabled:true});;
 	$.get('selectone_cwls?Id='+$('#cwls_Id').val(), function(result){
 		var data = result[0];
 		$('#cwls_Id').val(data['Id']);
-$('#cwls_bsbh').val(data['bsbh']);
+$('#cwls_projectid').val(data['projectid']);
 $('#cwls_sz').val(data['sz']);
 $('#cwls_zy').val(data['zy']);
 $('#cwls_je').val(data['je']);
@@ -102,6 +105,8 @@ $('#cwls_lyId').val(data['lyId']);
 $('#cwls_username').val(data['username']);
 $('#cwls_rq').val(data['rq']);			
 	}, 'json');	
+	$('#cwls_Save').show();
+	$('#cwls_Cancel').val('取消');	
 }
 
 var gkhcallback;
@@ -116,7 +121,7 @@ function cwls_save()
 		url = 'updaterow_cwls?Id='+$('#cwls_Id').val();
 		}
 	var row = {	
-	bsbh:$('#cwls_bsbh').val(),
+	projectid:$('#cwls_projectid').val(),
 sz:$('#cwls_sz').val(),
 zy:$('#cwls_zy').val(),
 je:$('#cwls_je').val(),
@@ -158,7 +163,7 @@ function cwls_init () {
 		\
 			<table align='center' >\
 			<tr id='tr_cwls_Id' style='display:none'><td class='tbinputtitle'>序号:</td><td><input class='tbinput' type='text' id='cwls_Id'/></td></tr>\
-<tr id='tr_cwls_bsbh'><td class='tbinputtitle'>标书编号:</td><td><div class='tbinput' type='text' id='cwls_bsbh'/></td></tr>\
+<tr id='tr_cwls_projectid'><td class='tbinputtitle'>项目编号:</td><td><div class='tbinput' type='text' id='cwls_projectid'/></td></tr>\
 <tr id='tr_cwls_sz'><td class='tbinputtitle'>收支:</td><td><div class='tbinput' type='text' id='cwls_sz'/></td></tr>\
 <tr id='tr_cwls_zy'><td class='tbinputtitle'>摘要:</td><td><input class='tbinput' type='text' id='cwls_zy'/></td></tr>\
 <tr id='tr_cwls_je'><td class='tbinputtitle'>金额:</td><td><input class='tbinput' type='text' id='cwls_je'/></td></tr>\
@@ -175,7 +180,7 @@ function cwls_init () {
                 </table>\
 		</div>");
 	$("#cwls_popupWindow").jqxWindow({
-		width: 600, height:360, resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#cwls_Cancel"), modalOpacity: 0.4           
+		width: 600, maxHeight:860, resizable: true,  isModal: true, autoOpen: false, cancelButton: $("#cwls_Cancel"), modalOpacity: 0.4           
 	});	
 	$("#cwlsmx-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
 
@@ -183,7 +188,7 @@ function cwls_init () {
     
 
     $('#cwls_Id').jqxInput();
-$('#cwls_bsbh').jqxDropDownList({ placeHolder: ''});
+$('#cwls_projectid').jqxDropDownList({ placeHolder: ''});
 $('#cwls_sz').jqxDropDownList({ placeHolder: ''});
 $('#cwls_zy').jqxInput();
 $('#cwls_je').jqxNumberInput({inputMode: 'simple'});
@@ -206,12 +211,15 @@ $('#tr_cwls_rq').hide();
   	
 }
 
-function cwls_popupwindow(flag_state, id, callback, projectid, bsbh)
+function cwls_popupwindow(flag_state, id, callback, projectid)
 {
+	y = document.body.scrollTop;
+	x = (document.body.scrollWidth -600)/2
+	$('#cwls_popupWindow').jqxWindow({ position: { x: x, y: y }});		
 	state = flag_state;
 	gkhcallback = callback;
 	$('#cwls_Id').val(id);
-	$('#cwls_bsbh').val(bsbh);
+	$('#cwls_projectid').val(projectid);
 	cwls_configpage(projectid);
 	if (state == 'add')
 	{

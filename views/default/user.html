@@ -5,21 +5,12 @@
 </h2>
 {{pass}}
 
-<style type="text/css">
-#auth_user_password,#auth_user_username {
-     position: relative;
-    overflow: hidden;
-    border: 1px solid #ccc;
-    height: 25px;
-    border-radius: 4px;   
-    background: #fff;
-}
-</style>
+
 <div style="position:absolute;padding-top:25%"><img  src="{{=URL('static','images/logo.png')}}"/></div>
-<div class="container" style="padding-left:60%;padding-top:6%;">
-    <div class="row"  >
-        <div class="col-lg-6" style="filter:alpha(opacity=50);opacity:0.2;background:#000;position:absolute;top:0px;width:300px;height:180px"></div>
-        <div id="web2py_user_form" class="col-lg-6"  style="font-family:微软雅黑;position:absolute;top:0px; color:white;padding-top: 20px;box-shadow: 10px 10px 5px #888888;border-radius:5px;width:300px; height:180px;" >
+<div class="container" ">
+    <div class="row" style="margin-left:70%" >
+        <div class="col-lg-6" style="filter:alpha(opacity=20);opacity:0.2;background:#000;position:absolute;top:0px;width:400px;height:200px"></div>
+        <div id="web2py_user_form" class="col-lg-6" style="margin-top:10%;width:400px">
         {{
         if request.args(0)=='login':
             if not 'register' in auth.settings.actions_disabled:

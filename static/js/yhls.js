@@ -156,6 +156,10 @@ function modifyyhlsqr(id) {
 }
 
 function deleteyhlsqr(id) {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}	
     var selectedrowindex = $("#yhlsqr-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#yhlsqr-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
@@ -187,6 +191,10 @@ function modifyyhls(id) {
 }
 
 function deleteyhls(id) {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}	
     var selectedrowindex = $("#yhls-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#yhls-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {

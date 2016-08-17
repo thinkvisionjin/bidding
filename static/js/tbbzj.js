@@ -1,20 +1,20 @@
 
 function search()
 {
-	if ($("#dwmc").val()=='' && $("#bsbh").val()=='')
+	if ($("#dwmc").val()=='' && $("#projectid").val()=='')
 		{
 		url = "select_tbbzj";
 		}
 	else
 		{
-		url = "select_tbbzj?dwmc="+$("#dwmc").val()+"&bsbh="+$("#bsbh").val()
+		url = "select_tbbzj?dwmc="+$("#dwmc").val()+"&projectid="+$("#projectid").val()
 		}
 		
 	var source = {					
 		datatype : "json",
 		datafields : [{name : 'Id',type : 'string'	},
 {name : 'dwmc',type : 'string'	},
-{name : 'bsbh',type : 'string'	},
+{name : 'projectid',type : 'string'	},
 {name : 'bzjlx',type : 'string'	},
 {name : 'je',type : 'string'	},
 {name : 'rq',type : 'date'	},
@@ -35,7 +35,7 @@ function addselectfieldwindows()
 	$("#tbbzjzd_popupWindow").jqxWindow({ isModal: true, autoOpen: false, height: 300, width: 200 , modalOpacity: 0.5});
 	 var listSource = [{ label: '序号', value: 'Id', checked: true },,
 { label: '单位名称', value: 'dwmc', checked: true },,
-{ label: '标书编号', value: 'bsbh', checked: true },,
+{ label: '项目编号', value: 'projectid', checked: true },,
 { label: '保证金类型', value: 'bzjlx', checked: true },,
 { label: '金额', value: 'je', checked: true },,
 { label: '日期', value: 'rq', checked: true },,
@@ -63,6 +63,10 @@ function modifytbbzj(id)
 
 function deletetbbzj(id)
 {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}	
     var selectedrowindex = $("#tbbzj-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#tbbzj-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
@@ -116,7 +120,7 @@ $(document).ready(function() {
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '标书编号', datafield: 'bsbh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '项目编号', datafield: 'projectid', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '保证金类型', datafield: 'bzjlx', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '金额', datafield: 'je', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
@@ -132,7 +136,8 @@ $(document).ready(function() {
 															value,
 															defaultvalue,
 															column, rowdata) {
-														var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printtbbzj('+rowdata.Id+')">打印</a>';
+														//var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printtbbzj('+rowdata.Id+')">打印</a>';
+														var a = '';
 														if(rowdata['ly']=='交易流水确认')
 														{
 														b = '';
@@ -194,7 +199,7 @@ $(document).ready(function() {
 					});					
 
 					$('#dwmc').jqxInput();
-$('#bsbh').jqxInput();
+$('#projectid').jqxInput();
 					addselectfieldwindows();
 					configpopupwindow();
 

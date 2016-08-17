@@ -1,13 +1,13 @@
 
 function search()
 {
-	if ($("#dwmc").val()=='' && $("#bsbh").val()=='')
+	if ($("#dwmc").val()=='' && $("#projectid").val()=='')
 		{
 		url = "select_tbzj";
 		}
 	else
 		{
-		url = "select_tbzj?dwmc="+$("#dwmc").val()+"&bsbh="+$("#bsbh").val()
+		url = "select_tbzj?dwmc="+$("#dwmc").val()+"&projectid="+$("#projectid").val()
 		}
 		
 	var source = {					
@@ -15,7 +15,7 @@ function search()
 		datafields : [{name : 'Id',type : 'string'	},
 {name : 'dwmc',type : 'string'	},
 {name : 'rq',type : 'date'	},
-{name : 'bsbh',type : 'string'	},
+{name : 'projectid',type : 'string'	},
 {name : 'username',type : 'string'	},
 {name : 'ly',type : 'string'	},
 {name : 'khyh',type : 'string'	},
@@ -38,7 +38,7 @@ function addselectfieldwindows()
 	 var listSource = [{ label: '序号', value: 'Id', checked: true },,
 { label: '单位名称', value: 'dwmc', checked: true },,
 { label: '日期', value: 'rq', checked: true },,
-{ label: '标书编号', value: 'bsbh', checked: true },,
+{ label: '项目编号', value: 'projectid', checked: true },,
 { label: '操作人', value: 'username', checked: false },,
 { label: '来源', value: 'ly', checked: false },,
 { label: '开户银行', value: 'khyh', checked: true },,
@@ -67,6 +67,10 @@ function modifytbzj(id)
 
 function deletetbzj(id)
 {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}	
     var selectedrowindex = $("#tbzj-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#tbzj-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
@@ -89,7 +93,9 @@ function deletetbzj(id)
 
 function printtbzj(id)
 {
-	window.location.href='tbzj_print?Id='+id;
+    var newWindow = window.open('tbzj_print?Id='+id, '');
+
+    newWindow.print();		
 //	window.location.replace ('tbzjmx?oper=modify&Id='+id);
 }
 
@@ -121,7 +127,7 @@ $(document).ready(function() {
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '标书编号', datafield: 'bsbh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '项目编号', datafield: 'projectid', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '操作人', datafield: 'username', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '来源', datafield: 'ly', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '开户银行', datafield: 'khyh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
@@ -138,8 +144,8 @@ $(document).ready(function() {
 															value,
 															defaultvalue,
 															column, rowdata) {
-														//var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printtbzj('+rowdata.Id+')">打印</a>';
-														var a = ''
+														var a = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="printtbzj('+rowdata.Id+')">打印</a>';
+														
 														var b = '<a style="margin-right: 5px;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="modifytbzj('+rowdata.Id+')">修改</a>';
 
 														var c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deletetbzj('+rowdata.Id+')">删除</a>';

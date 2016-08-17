@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title id="Description">Open the demo in new window and resize the web browser's window. The panel collapses automatically when the browser's window width is less than its collapseBreakpoint which in the demo is set to 700px</title>
+    <link type="text/css" rel="Stylesheet" href="{{=URL('static','css/vendor/jqwidgets/styles/jqx.base.css')}}" />
+	<link type="text/css" rel="Stylesheet" href="{{=URL('static','css/site.css')}}" />
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jquery/jquery-1.11.1.min.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcore.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtree.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxbuttons.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxscrollbar.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxpanel.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxresponsivepanel.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/demos.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxdata.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.js')}}"></script>
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxfileupload.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.selection.js')}}"></script> 
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.columnsresize.js')}}"></script>	
+	<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxexpander.js')}}"></script>
+    <style type="text/css">
+        #jqxResponsivePanel, #content {
+            float: left;
+        }
+        .jqx-rc-all {
+            border-radius: 0px;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script type="text/javascript">
+	var projectid ={{=projectid}};
+	var paramurl = '';
+	var gViewFlag ={{=viewflag}};
+		function deletegdwj(id)
+		{
+			if (confirm('是否删除')==false)
+			{
+				return ;
+			}
+			var selectedrowindex = $("#gdwj_grid").jqxGrid('getselectedrowindex');
+			var rowscount = $("#gdwj_grid").jqxGrid('getdatainformation').rowscount;
+			if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+				var rowid = $("#gdwj_grid").jqxGrid('getrowid', selectedrowindex);
+				
+			}
+
+			$.get('deleterow_gdwj?Id='+id, function(result){
+				if (result == 'success')
+				{
+					confirm('成功')
+					$("#gdwj_grid").jqxGrid('deleterow', rowid);
+				}
+				else
+				{
+					alert(result)
+				}	
+			});			
+		}
+		function search()
+		{
+			url = 'select_gdwj'+paramurl
+			var source = {					
+				datatype : "json",
+				datafields : [{name : 'Id',type : 'string'	},
+				{name : 'wjm',type : 'string'	},
+				{name : 'username',type : 'string'	},
+				{name : 'rq',type : 'date'	},
+				{name : 'type',type : 'string'	}],
+				id : 'Id',
+				url : url
+			};
+			var dataAdapter = new $.jqx.dataAdapter(source);
+			$("#gdwj_grid").jqxGrid({
+				source : dataAdapter
+			});				
+		}
+		function getwjglpz()
+		{
+				$.get('getwjglpz', function(result) {
+					var source =
+					{
+						datatype: "json",
+						datafields: [
+							{ name: 'text' },
+							{ name: 'pzid' },
+							{ name: 'parentid' }
+							
+						],
+						id: 'id',
+						localdata:result
+						};				
+					    var dataAdapter = new $.jqx.dataAdapter(source);
+						dataAdapter.dataBind();
+						var records = dataAdapter.getRecordsHierarchy('pzid', 'parentid', 'items', [{ name: 'text', map: 'label'}, { name: 'pzid', map: 'id'}]);
+						$('#jqxMenu').jqxTree({ source: records, height: '100%', width: '100%'});	
+						$('#jqxMenu').jqxTree('expandAll');
+						$('#jqxMenu').on('select', function (event) {
+							//var args = event.args;
+							//var item = $('#jqxWidget').jqxTree('getItem', args.element);
+							//loadKmmxData(item.id);
+							var args = event.args;
+							var item = $('#jqxMenu').jqxTree('getItem', args.element);
+							
+							if (item.id!=1)
+							{
+								$('#gdwjupload').show();
+							}
+							else
+							{
+								$('#gdwjupload').hide();
+							}
+							if (gViewFlag == 1)
+							{		
+								$('#gdwjupload').hide();
+							}					
+							paramurl = '?projectid='+projectid+'&type='+item.id;
+							//alert(paramurl)
+							$('#gdwjupload').jqxFileUpload({ uploadUrl: 'gdwjupload'+paramurl });
+							search()
+
+						});
+
+				}, 'json');
+		}
+        $(document).ready(function () {
+            $('#jqxMenu').css('visibility', 'visible');
+            $('#content').jqxPanel();
+            $('#jqxResponsivePanel').jqxResponsivePanel({
+                width: '20%',
+                height: '100%',
+                collapseBreakpoint: 700,
+               // toggleButton: $('#toggleResponsivePanel'),
+                animationType: 'none',
+                autoClose: false
+            });
+					$("#gdwj_expander").jqxExpander({
+						toggleMode : 'none',
+						showArrow : false,
+						height: '100%'
+					});			
+			getwjglpz();
+            // $('#jqxResponsivePanel').on('open expand close collapse', function (event) {
+            //     if (event.args.element)
+            //         return;
+            //     var collapsed = $('#jqxResponsivePanel').jqxResponsivePanel('isCollapsed');
+            //     var opened = $('#jqxResponsivePanel').jqxResponsivePanel('isOpened');
+            //     if (collapsed && !opened) {
+            //         $('#content').jqxPanel({ width: '100%' });
+            //     }
+            //     else if (collapsed && opened) {
+            //         $('#content').jqxPanel({ width: '65%' });
+            //     }
+            //     else if (!collapsed) {
+            //         $('#content').jqxPanel({ width: '65%' });
+            //     }
+            // });
+            $('#content').jqxPanel({ width: '78%', height: '100%' });
+
+			$('#gdwjupload').jqxFileUpload({browseTemplate:'success', width:300,   uploadUrl: 'fileUpload?type=1', fileInputName: 'fileToUpload',
+				localization:{browseButton: '上传文件', uploadButton : '上传', cancelButton: '取消', uploadFileTooltip: '上传', cancelFileTooltip: '取消'}});
+				$('#gdwjupload').on('uploadEnd', function (event) {
+					var args = event.args;
+					var fileName = args.file;
+					var serverResponce = args.response;
+					if (serverResponce == 'success')
+					{
+						confirm('成功');
+						search();
+					}
+					else
+					{
+						alert(serverResponce)
+					}
+					
+					//$("#jqxDropDownList").jqxDropDownList('insertAt', fileName,  0); 
+					// Your code here.
+				});	
+
+
+					$("#gdwj_grid").jqxGrid(
+									{
+										enabletooltips: true,
+										columnsresize: true,
+										height : "80%",
+										width : "98%",
+										columns : [{ text: '序号', datafield: 'Id', width: '5%',cellsalign: 'center', align: 'center' },
+{ text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '15%',cellsalign: 'center', align: 'center' },
+{ text: '文件名', datafield: 'wjm', width: '40%',cellsalign: 'center', align: 'center' },
+{ text: '类型', datafield: 'type', width: '10%',cellsalign: 'center', align: 'center' },
+{ text: '操作人', datafield: 'username', width: '10%',cellsalign: 'center', align: 'center' },
+												{
+													text : '操作',
+													width: '20%',
+													editable : false,
+													datafield : 'delete',
+													cellsrenderer : function(
+															index, datafield,
+															value,
+															defaultvalue,
+															column, rowdata) {
+
+														var c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" href="downloadgdwj?gdwjid='+rowdata.Id+'">下载</a>';
+														if (gViewFlag == 1)
+														{
+															var d=''
+														}
+														else
+														{
+															var d = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deletegdwj('+rowdata.Id+')">删除</a>';
+														}
+														var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 6px;">'
+																+ c + d + '</div>';
+														return d;
+													}
+												} ]
+
+									});
+			$('#gdwjupload').hide();
+			paramurl = '?projectid='+projectid+'&type=1';
+			search();
+
+        });
+    </script>
+</head>
+<body>
+
+        <div id="jqxResponsivePanel">
+            <div id="jqxMenu" style="border: none; visibility: hidden;">
+            </div>
+        </div>
+        <div id="content">
+    <div id="gdwj_expander">
+    <div>项目名称:【{{=projectname}}】</div>
+    <div>			
+    	<div>
+				<table align="center" >
+					<tr >
+						<td><div id="gdwjupload" ></div></td>
+					</tr>
+				</table>
+			</div>
+			<div id='gdwj_grid' style='margin: 1%;'></div>
+	</div>
+        </div>
+</body>
+</html>

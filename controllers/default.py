@@ -11,7 +11,7 @@ from datetime import datetime
 from decimal import *
 from _sqlite3 import Row
 import time
-
+import xlrd
 T.force('zh-cn')
 CONST_MANAGER=2;
 CONST_ADMIN = 1;
@@ -339,7 +339,16 @@ def xmglmx():
     strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  Id = " +id;
     project=sqltojson(strSQL)
     dictionaries = getDictionaries()
-    return dict(project=project,dictionaries=dictionaries)
+    viewflag = 1
+
+    if auth.user_groups.has_key(CONST_MANAGER):
+        viewflag = 0
+    else:
+        sql = u'select * from Project where Id = '+id
+        res = sqltoarray(sql)        
+        if res[0]['EmployeeId'] == auth.user.id or res[0]['Assistant'] == auth.user.id:
+            viewflag = 0    
+    return dict(project=project,dictionaries=dictionaries, viewflag=viewflag)
 
 def xmglmxv():
     id = request.vars.id
@@ -417,12 +426,14 @@ def SelectProjectsSummary():
     if auth.user_groups.has_key(CONST_MANAGER) or auth.user_groups.has_key(CONST_ADMIN):
         tj = u'where 1=1 '
     else:
-        tj = u'where a.EmployeeId = ' + unicode(uid) + u' or Assistant = ' + unicode(uid)
+        #显示所有项目
+        tj = u'where 1=1 '
+        #tj = u'where a.EmployeeId = ' + unicode(uid) + u' or Assistant = ' + unicode(uid)
         
     if searchkey != None:
         tj += u" and "+ searchkey.decode(u'utf-8')
         
-    strSQL = u'''select  a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete],
+    strSQL = u'''select  a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[ContactorNameId], a.[IsDelete],
       count(distinct b.Id) as PackageCount,
       count(distinct c.Id) as DocumentBuyerCount,
       count(distinct d.Id) as BidderCount,
@@ -433,8 +444,8 @@ def SelectProjectsSummary():
       from [dbo].[Project] a 
       left join [dbo].[ProjectPackage] b on a.id= b.ProjectId 
       left join [dbo].[GMBS] c on b.PackageNumber = c.bsbh
-      left join [dbo].[tbbzj] d on d.bsbh = c.bsbh
-      left join [dbo].[tbzj] e on e.bsbh = d.bsbh  ''' + tj + u''' group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete] order by a.[Id] desc'''
+      left join [dbo].[tbbzj] d on d.projectid = a.Id
+      left join [dbo].[tbzj] e on e.projectid = d.projectid  ''' + tj + u''' group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[ContactorNameId], a.[IsDelete] order by a.[Id] desc'''
     
     print strSQL
     return  sqltojson(strSQL)
@@ -443,19 +454,10 @@ def SelectProjectsSummary():
 def gmbs():
     return dict();
 
-def CreateNewProject():
-    print u'CreateNewPackage'
-    rowData = request.post_vars
-    print rowData
-    for key in rowData:
-        rowData[key] = rowData[key].decode(u'utf-8')
-    id = db[u'Project'].insert(**rowData)
-    print id 
-    db.commit()
+def p_CreateNewProject(rowData, id):
     updateProjectStr = u"update [bidding].[dbo].[Project]  set ProjectCode = '"+GenerateProjectCode(rowData,id)+u"' where id ="+unicode(id)
-    print updateProjectStr
+    print "--->", updateProjectStr
     db.executesql(updateProjectStr)
-    db.commit()
     row = db(db[u'Project']._id ==id).select().first()
     print row
     initPackage = {}
@@ -469,6 +471,7 @@ def CreateNewProject():
     initPackage[u"EntrustMoney"] = u'0'
     initPackage[u"IsDelete"] = u'0'
     initPackage[u"PublicDate"] = u''
+    initPackage[u"SecondPublicDate"] = u''
     initPackage[u"OpenDate"] = u''
     initPackage[u"ReviewDate"] = u''
     initPackage[u"WinningCompany"] = u''
@@ -493,6 +496,42 @@ def CreateNewProject():
     result= json.dumps(dict_row,ensure_ascii=False)
     return result
 
+def ReGetProjectCode():
+    print u'ReGetPorjectCode'
+    try:
+        id = request.vars.id
+        rowData = request.post_vars
+        print rowData
+        for key in rowData:
+            rowData[key] = rowData[key].decode(u'utf-8')
+        db(db[u'Project']._id == id).update(**rowData)
+        print id 
+        result = p_CreateNewProject(rowData, id)
+        db.commit()
+        return result
+    except:
+        db.rollback()
+        return u'fail'
+
+def CreateNewProject():
+    print u'CreateNewProject'
+    try:
+        rowData = request.post_vars
+        print rowData
+        for key in rowData:
+            rowData[key] = rowData[key].decode(u'utf-8')
+        id = db[u'Project'].insert(**rowData)
+        print id 
+        result = p_CreateNewProject(rowData, id)
+        db.commit()
+        return result
+    except:
+        db.rollback()
+        result = {}
+        result['result'] = 'fail'
+        return json.dumps(result)
+
+
 def CreateNewPackage(rowData):
     print u'CreateNewPackage'
     print rowData
@@ -500,7 +539,7 @@ def CreateNewPackage(rowData):
         rowData[key] = unicode(rowData[key])
     id = db['ProjectPackage'].insert(**rowData)
     print id 
-    db.commit()
+
 #     updateProjectStr = u"update [bidding].[dbo].[Project]  set ProjectCode = '"+GenerateProjectCode(rowData,id)+u"' where id ="+unicode(id)
 #     print updateProjectStr
 #     db.executesql(updateProjectStr)
@@ -576,14 +615,14 @@ def sqltojson(sql,decode=None):
     dic_rows=[]
     rows = db.executesql(sql, as_dict=True)
     for row in rows:
-        print row
+        #print row
         dict_row = {}
         for key in row.keys():
             if decode!=None :
                 if isinstance(row[key],int):
                     dict_row[key] = row[key]
                 elif isinstance(row[key], str):
-                    print row[key]
+                    #print row[key]
                     dict_row[key] = row[key].decode(u'gbk')
                 else:
                     dict_row[key] = row[key]#.decode(decode);
@@ -595,36 +634,6 @@ def sqltojson(sql,decode=None):
 def getzbgg():
     return sqltojson(u'SELECT top 10 [id],[title],[addtime] FROM [zhaobiao].[dbo].[Zbgg] order by addtime desc')
 
-def zbgg():
-    content = """<p style="text-indent:21pt;margin:0cm 0cm 0pt;mso-char-indent-count:2.0;" class="MsoNormal"><span style="font-size:small;"><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">兰州军区医疗设备网上招标采购兰州评标中心受军区卫生部委托，就以下项目组织公开招标采购，欢迎国内合格的供应商前来投标。</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">1. </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">项目名称：</span><span lang="EN-US"><a href="http://www.sohunj.com/member/caigou/moban_view.aspx?id=4851"><span style="font-family:宋体;color:windowtext;text-decoration:none;mso-hansi-font-family:Calibri;text-underline:none;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;" lang="EN-US"><span lang="EN-US">临床诊断听力计</span></span><span style="color:windowtext;text-decoration:none;text-underline:none;"><span style="font-family:Calibri;">+</span></span><span style="font-family:宋体;color:windowtext;text-decoration:none;mso-hansi-font-family:Calibri;text-underline:none;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;" lang="EN-US"><span lang="EN-US">中耳分析仪</span></span></a></span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">2. </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">项目编号：</span><span lang="EN-US"><span style="font-family:Calibri;">2012-LQC-5-22-3-1 </span></span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">3. </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">项目内容：本项目采购</span><span lang="EN-US"><a href="http://www.sohunj.com/member/caigou/moban_view.aspx?id=4851"><span style="font-family:宋体;color:windowtext;text-decoration:none;mso-hansi-font-family:Calibri;text-underline:none;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;" lang="EN-US"><span lang="EN-US">临床诊断听力计<span lang="EN-US">、<span lang="EN-US">中耳分析仪</span></span></span></span></a></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">各</span><span lang="EN-US"><span style="font-family:Calibri;">1</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">台</span><span lang="EN-US"><span style="font-family:Calibri;">,</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">设备的具体要求见“<span style="mso-bidi-font-weight:bold;">设备招标需求参数列表</span>”</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">4. </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">采购人：宝鸡三医院</span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">5. </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">开标时间：</span><span lang="EN-US"><span style="font-family:Calibri;">2012</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">年</span><span lang="EN-US"><span style="font-family:Calibri;">5</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">月</span><span lang="EN-US"><span style="font-family:Calibri;">22</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">日</span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">6. </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">本次项目不接受联合体投标。</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">7. </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">招标采购文件的获取</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="text-indent:21pt;margin:0cm 0cm 0pt;mso-char-indent-count:2.0;" class="MsoNormal"><span style="font-size:small;"><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">本项目招标采购文件包括“招标采购公告”、“投标人须知”、“<span style="mso-bidi-font-weight:bold;">设备招标需求参数列表</span>”，其中“招标采购公告”、“投标人须知”不需登记注册即可任意浏览，而“<span style="mso-bidi-font-weight:bold;">设备招标需求参数列表</span>”需在登记注册后方可浏览，登记注册由南京久赢网络科技有限公司负责受理。</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">8. </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">投标文件的递交</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">8.1 </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">投标函的递交截止时间为</span><span lang="EN-US"><span style="font-family:Calibri;">2012</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">年</span><span lang="EN-US"><span style="font-family:Calibri;">5</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">月</span><span lang="EN-US"><span style="font-family:Calibri;">18</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">日上午</span><span lang="EN-US"><span style="font-family:Calibri;">11:30</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">，超过截止时间递交的投标函将不予受理，同时请供应商在递交投标函之前详阅所有招标采购文件。</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">8.2 </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">资质文件的递交截至时间为</span><span lang="EN-US"><span style="font-family:Calibri;">2012</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">年</span><span lang="EN-US"><span style="font-family:Calibri;">5</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">月</span><span lang="EN-US"><span style="font-family:Calibri;">18</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">日下午</span><span lang="EN-US"><span style="font-family:Calibri;">18:00</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">，超过截止时间递交的资质文件将不予受理，资质文件的内容及要求详见“投标人须知”。</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">9. </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">网络视频会议要求</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">9.1 </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">项目采购会议在久赢网兰州评标室举行，请报名的供应商于</span><span lang="EN-US"><span style="font-family:Calibri;">2012</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">年</span><span lang="EN-US"><span style="font-family:Calibri;">5</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">月</span><span lang="EN-US"><span style="font-family:Calibri;">18</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">日下午</span><span lang="EN-US"><span style="font-family:Calibri;">14</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">：</span><span lang="EN-US"><span style="font-family:Calibri;">30</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">—</span><span lang="EN-US"><span style="font-family:Calibri;">17</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">：</span><span lang="EN-US"><span style="font-family:Calibri;">00</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">与南京久赢网络科技有限公司进行视频测试。</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">9.2 </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">投标人在视频测试前，请准备好连接互联网计算机、麦克风、音响（耳机）等设备，在久赢网兰州评标室的“投标人视频自测”会议中完成自行测试，自测要求画面、语音通畅，其他技术问题请与南京久赢网络科技有限公司联系。</span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">9.3 </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">投标人应在本公司营业场所或办公地点参加网络视频会议，并保证该地点在招标采购会议中不受干扰，如不能在本公司营业场所或办公地点参加，则应由法人代表以书面形式向评标中心递交情况说明，否则将被取消投标资格。</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">9.4 </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">投标人应保证参加会议的代表双手以上的身体能够出现在视频会议画面中，同时在画面中还应有公司标志铭牌、营业执照等。</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">9.5 </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">未进行视频测试，或在视频测试中画面、语音不通畅的投标人将被取消投标资格。</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">10. </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">问题咨询</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">10.1 </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">供应商关于久赢网操作、产品注册、资料上传等技术问题的疑问，请与南京久赢网络科技有限公司联系。</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">10.2 </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">供应商关于对投标流程、资质文件、设备需求参数等的疑问，应在认真阅读招标采购文件后仍然无法解决的情况下，再与评标中心联系。</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span lang="EN-US"><span style="font-family:Calibri;">11. </span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">兰州评标中心联系方式</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">电话：</span><span lang="EN-US"><span style="font-family:Calibri;">0931-8976111</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">；</span><span lang="EN-US"><span style="font-family:Calibri;"> 0931-2332278 </span></span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">传真：</span><span lang="EN-US"><span style="font-family:Calibri;">0931-8976111 </span></span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">电子邮箱：</span><span lang="EN-US"><span style="font-family:Calibri;">LZPBZX@163.COM</span></span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">地址：兰州市七里河区吴家园</span><span lang="EN-US"><span style="font-family:Calibri;">22</span></span><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">号</span><span style="font-family:Calibri;"> </span></span></p>
-<p style="margin:0cm 0cm 0pt;" class="MsoNormal"><span style="font-size:small;"><span style="font-family:宋体;mso-hansi-font-family:Calibri;mso-ascii-font-family:Calibri;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:宋体;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;">邮编：</span><span lang="EN-US"><span style="font-family:Calibri;">730050</span></span></span></p>""" 
-#    content = cgi.escape(content) 
-    return dict(content=content);
     
 def rawsqltojson(sql):
     dic_rows=[]
@@ -633,7 +642,7 @@ def rawsqltojson(sql):
         print row
         dict_row = {}
         for key in row.keys():
-            dict_row[key] = unicode(row[key])
+            dict_row[key] = unicode(row[key]).replace('None', '')
         dic_rows.append(dict_row)
     return dic_rows 
 
@@ -764,7 +773,7 @@ def p_getbsbh(projectid=None):
     if projectid != None:
         tj = u""" and b.ProjectId = """+unicode(projectid)
     sql = u"""select b.PackageNumber FROM [Project] a, ProjectPackage b   
-    where """+ tj_uid+u""" and a.Id=b.ProjectId and b.stateid=1 """+tj;
+    where """+ tj_uid+u""" and a.Id=b.ProjectId and b.stateid=2 """+tj;
     print sql
     return sqltoarraynodict(sql);
 
@@ -778,13 +787,16 @@ def getkh():
     
     khId = row[u'id']
     result = {};
-    sql = u"""select lxr from lxr where khId="""+unicode(khId);   
-    result[u'lxr'] =  sqltoarraynodict(sql);    
-    sql = u"""select sj from lxr where khId="""+unicode(khId);   
-    result[u'sj'] =  sqltoarraynodict(sql);
-    result[u'khyh'] = row[u'khyh']
-    result[u'yhzh'] = row[u'yhzh']       
-    return json.dumps(result)
+#    sql = u"""select lxr from lxr where khId="""+unicode(khId);   
+#    result[u'lxr'] =  sqltoarraynodict(sql);    
+#    sql = u"""select sj from lxr where khId="""+unicode(khId);   
+#    result[u'sj'] =  sqltoarraynodict(sql);
+#    result[u'khyh'] = row[u'khyh']
+#    result[u'yhzh'] = row[u'yhzh']   
+    result[u'khxx'] = sqltoarray(sql)    
+    sql = u'select lxr, sj, dz lxrdz, dh lxrdh from lxr where khId='+unicode(khId);
+    result['lxr'] = sqltoarray(sql)
+    return json.dumps(result).replace(u'None', u'') 
 
 #购买标书配置信息需定制
 def getgmbspz():
@@ -830,10 +842,11 @@ def getgmbs():
 
 def gmbs_print():
     table_name = u'gmbs'
-    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
-    rows = rawsqltojson(sql);    
+    sql = u"""select * from gmbs where Id="""+request.vars.Id;
+    rows = rawsqltojson(sql);   
+    print "----------------"
     row = rows[0]
-    print row
+
     row[u'rq'] = row[u'rq'][0:10]
     row[u'zje'] = Num2MoneyFormat(row[u'je'])
     return dict(**row)
@@ -875,6 +888,8 @@ def select_gmbsbyProjectId():
 def p_updaterow_gmbs(id, rowData):
     table_name = u'gmbs'
     updaterow(table_name, id, rowData)
+    row = db(db[u'ProjectPackage'].PackageNumber ==rowData['bsbh']).select().first()
+    rowData[u'projectid'] = row[u'ProjectId']    
     p_updatecwls(u'购买标书', id,  rowData)   
     p_addkh(rowData) 
 
@@ -895,23 +910,38 @@ def updaterow_gmbs():
 def p_addkh(rowData):
     table_name = u'kh'
     row = db(db[table_name].dwmc ==rowData[u'dwmc']).select().first()
+    
+    khrow = {}
+    khrow[u'username'] = rowData[u'username']
+    khrow[u'nsrsbh'] = rowData[u'nsrsbh']
+    khrow[u'dwmc'] = rowData[u'dwmc']
+    khrow[u'lxdz'] = rowData[u'lxdz']
+    khrow[u'khyh'] = rowData[u'khyh']
+    khrow[u'yhzh'] = rowData[u'yhzh']    
+    khrow[u'dzxx'] = rowData[u'dzxx']   
+    khrow[u'dh'] = rowData[u'dh']           
+    khrow[u'cz'] = rowData[u'cz']
     if row==None:
-        khrow = {}
-        khrow[u'username'] = rowData[u'username']
-        khrow[u'dwmc'] = rowData[u'dwmc']
         id = db[table_name].insert(**khrow)
     else:
         id = row[u'id']
+        db((db[table_name]._id == id)).update(**khrow)
         
     table_name = u'lxr'
-    row = db((db.lxr.lxr == rowData[u'lxr'])&(db.lxr.sj==rowData[u'sj'])).select().first()
-    if row==None:
+    if rowData[u'lxr'] != '':
+        row = db(db.lxr.lxr == rowData[u'lxr']).select().first()
         khrow = {}
         khrow[u'lxr'] = rowData[u'lxr']
         khrow[u'sj'] = rowData[u'sj']
+        khrow[u'dz'] = rowData[u'lxrdz']
+        khrow[u'dh'] = rowData[u'lxrdh']
         khrow[u'username'] = rowData[u'username']
-        khrow[u'khId'] = unicode(id)
-        insertrow(table_name, khrow)    
+        khrow[u'khId'] = unicode(id)        
+        if row==None:
+            insertrow(table_name, khrow)    
+        else:
+            id = row[u'id']
+            db((db[table_name]._id == id)).update(**khrow)
 
 def p_insertcwls(ywlx, id, sz, rowData):
     table_name = u'cwls'
@@ -919,7 +949,7 @@ def p_insertcwls(ywlx, id, sz, rowData):
     row[u'ywlx'] = ywlx
     row[u'lyId'] = id
     row[u'sz'] = sz
-    row[u'bsbh'] = rowData[u'bsbh']
+    row[u'projectid'] = rowData[u'projectid']
     row[u'je'] = rowData[u'je']
     row[u'username'] = rowData[u'username']
     insertrow(table_name, row)
@@ -927,7 +957,7 @@ def p_insertcwls(ywlx, id, sz, rowData):
 def p_updatecwls(ywlx, id, rowData):
     table_name = u'cwls'
     row = {}
-    row[u'bsbh'] = rowData[u'bsbh']
+    row[u'projectid'] = rowData[u'projectid']
     row[u'je'] = rowData[u'je']
     row[u'username'] = rowData[u'username']
     db((db[table_name].lyId == id)&(db[table_name].ywlx==ywlx)).update(**row)
@@ -942,6 +972,8 @@ def p_insertrow_gmbs(rowData):
     print rowData
     id = insertrow(table_name, rowData)
     p_addkh(rowData)
+    row = db(db[u'ProjectPackage'].PackageNumber ==rowData['bsbh']).select().first()
+    rowData[u'projectid'] = row[u'ProjectId']
     p_insertcwls(u'购买标书', id, u'收入',  rowData)
 
 def insertrow_gmbs():
@@ -1092,25 +1124,26 @@ def select_tbbzj():
         if auth.user_groups.has_key(CONST_MANAGER):
             where = u"where 1=1 "
         else:
-            where = u"where username='"+username+u"'"
-        
+            where = u"where a.username='"+username+u"'"
+        where = where + u" and a.projectid=b.Id "
         if request.vars.dwmc==None:
             dwmc=u''
         else:
             dwmc = unicode(request.vars.dwmc, u'utf-8')
-        where += u"and dwmc like '%"+dwmc+u"%' "    
-        if request.vars.bsbh==None:
-            bsbh=u''
+        where += u"and a.dwmc like '%"+dwmc+u"%' "    
+        if request.vars.projectid==None:
+            projectid=u''
         else:
-            bsbh = unicode(request.vars.bsbh, u'utf-8')
-        where += u"and bsbh like '%"+bsbh+u"%' "
+            projectid = unicode(request.vars.projectid, u'utf-8')
+        where += u"and b.ProjectCode like '%"+projectid+u"%' "
         
         order = u" order by rq desc"
-        sql = u"""select * from tbbzj """ + where+order;
+        sql = u"""select a.Id, a.dwmc, a.bzjlx, a.je, a.rq, a.username, a.ly, a.lyId, b.ProjectCode as projectid from tbbzj a, Project b """ + where+order;
         print sql   
         return sqltojson(sql);
     except:
         return u"fail"
+
 def p_updaterow_tbbzj(id, rowData):
     table_name = u'tbbzj'
     updaterow(table_name, id, rowData)
@@ -1172,6 +1205,19 @@ def selectone_tbbzj():
     except:
         return u"fail"
 
+def p_getprojectcode(projectid=None):
+    uid = auth.user_id
+    tj = u''
+    if auth.user_groups.has_key(CONST_MANAGER) or auth.user_groups.has_key(CONST_ADMIN) :
+        tj_uid = u'1=1'
+    else:
+        tj_uid = u'''( EmployeeId='''+unicode(uid)+u''' or Assistant='''+unicode(uid)+u''')'''
+    if projectid != None:
+        tj = u""" and Id = """+unicode(projectid)
+    sql = u"""select Id, ProjectCode FROM [Project]  
+    where """+ tj_uid+tj;
+    print sql
+    return sqltoarray(sql);
 
 def gettbbzjpz():
     try:
@@ -1179,7 +1225,7 @@ def gettbbzjpz():
         sql = u"""select dwmc from kh""";   
         result[u'dwmc'] = sqltoarraynodict(sql);
     
-        result[u'bsbh'] = p_getbsbh(request.vars.projectid)
+        result[u'projectid'] = p_getprojectcode(request.vars.projectid)
         result[u'bzjlx'] = [u'现金', u'汇款', u'支票', u'其他']
         return json.dumps(result)  
     except:
@@ -1187,10 +1233,10 @@ def gettbbzjpz():
 
 def tbzj_print():
     table_name = u'tbzj'
-    sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+    sql = u"""select a.*, b.ProjectCode projectcode from tbzj a, Project b  where a.projectid=b.Id and a.Id="""+request.vars.Id;
     rows = rawsqltojson(sql);    
     row = rows[0]
-    row[u'bm'] = u'业务一部'
+    row[u'bm'] = u''
     row[u'rq'] = row[u'rq'][0:10]
     row[u'hjje'] = Num2MoneyFormat(row[u'je'])
     
@@ -1246,20 +1292,20 @@ def select_tbzj():
             where = u"where 1=1 "
         else:
             where = u"where username='"+username+u"'"
-        
+        where = where + u' and a.projectid = b.Id '
         if request.vars.dwmc==None:
             dwmc=u''
         else:
             dwmc = unicode(request.vars.dwmc, u'utf-8')
         where += u"and dwmc like '%"+dwmc+u"%' "    
-        if request.vars.bsbh==None:
-            bsbh=u''
+        if request.vars.projectid==None:
+            projectid=u''
         else:
-            bsbh = unicode(request.vars.bsbh, u'utf-8')
-        where += u"and bsbh like '%"+bsbh+u"%' "
+            projectid = unicode(request.vars.projectid, u'utf-8')
+        where += u"and projectid like '%"+projectid+u"%' "
         
         order = u" order by rq desc"
-        sql = u"""select * from tbzj """ + where+order;
+        sql = u"""select a.Id, a.dwmc, a.khyh, a.yhzh, a.rq, a.username, a.fkfs, a.je, b.ProjectCode as projectid from tbzj a, Project b """ + where+order;
         print sql   
         return sqltojson(sql);
     except:
@@ -1326,7 +1372,7 @@ def gettbzjpz():
     sql = u"""select dwmc from kh""";   
     result[u'dwmc'] = sqltoarraynodict(sql);
 
-    result[u'bsbh'] = p_getbsbh(request.vars.projectid)
+    result[u'projectid'] = p_getprojectcode(request.vars.projectid)
     result[u'fkfs'] = [u'现金', u'汇款', u'支票', u'其他']
     
     tbbzjid = request.vars.tbbzjid
@@ -1336,7 +1382,7 @@ def gettbzjpz():
         table_name = u'tbbzj'
         sql = u"""select a.*, b.khyh, b.yhzh from tbbzj a, kh b where a.dwmc=b.dwmc and a.Id="""+tbbzjid;
         result[u'tbbzjid'] = sqltoarray(sql);  
-    return json.dumps(result) 
+    return json.dumps(result).replace(u'None', u'') 
 
 
 
@@ -1438,14 +1484,15 @@ def getzbpz():
 def getttbzj_tbzjByProjectId():
     projectid = request.vars.id
     uid = u''
-    sql = u"""select a.*,b.rq as trq, ISNULL (b.je,0 ) as tje,b.fkfs,khyh,
+    sql = u"""select b.Id, a.dwmc, c.ProjectCode projectid, a.bzjlx, a.je, a.rq, a.username, a.ly, a.lyId ,b.rq as trq, ISNULL (b.je,0 ) as tje,b.fkfs,khyh,
 CASE ISNULL (b.je,0 )
 WHEN 0 THEN 0
 ELSE 1 
 end as returned,b.yhzh
 from [dbo].[tbbzj] a left join [dbo].[tbzj] b
-on a.dwmc = b.dwmc and a.bsbh = b.bsbh
-where a.bsbh in (select PackageNumber from ProjectPackage where ProjectId = """ + projectid + u")";
+on a.dwmc = b.dwmc and a.projectid = b.projectid
+left join [dbo].[Project] c on a.projectid=c.Id
+where a.projectid  = """ + projectid ;
     return sqltojson(sql)
 
 def getContactsByProjectID():
@@ -1460,7 +1507,7 @@ def getContactsByProjectID():
 def getFinanceByProjectID():
     uid = u''
     pid = request.vars.pid
-    sql = u'select sz,ywlx,sum(je) as je from cwls where bsbh in (select PackageNumber from ProjectPackage where ProjectId = '+pid+u') group by sz,ywlx'
+    sql = u'select sz,ywlx,sum(je) as je from cwls where projectid = '+pid+u' group by sz,ywlx'
 #     sql = u'select sz,ywlx,sum(je) as je from cwls  group by sz,ywlx '
     res = sqltoarray(sql)
     finance={}
@@ -1469,7 +1516,7 @@ def getFinanceByProjectID():
             finance["zc_pqzjf"] = unicode(row['je'])
         elif row['ywlx']  == u'退保证金':
             finance["zc_tbzj"] = unicode(row['je'])
-        elif row['ywlx']  == u'项目分成费':
+        elif row['ywlx']  == u'项目分成':
             finance["zc_xmfc"] = unicode(row['je'])
         elif row['sz'] ==u'支出' and row['ywlx']  == u'其他':
             finance["zc_qt"] = unicode(row['je'])
@@ -1484,6 +1531,10 @@ def getFinanceByProjectID():
         elif row['ywlx']  == u'中标服务费':
             finance["sr_zbfwf"] = unicode(row['je'])
     res.append(finance)
+    sql = u'select sum(ChargeRate) as je from ProjectPackage where projectid = '+pid
+#     sql = u'select sz,ywlx,sum(je) as je from cwls  group by sz,ywlx '
+    res = sqltoarray(sql)   
+    finance["sr_zbfwf"] = res[0]['je'] 
     return json.dumps(finance)
 
 #主页
@@ -1491,41 +1542,64 @@ def grtjb():
     return dict();
 #获取所有
 def select_grtjb():
+    print u'select_grtjb'
     try:
         username = auth.user.chinesename.decode('gbk')
-    #    where = u"where username='"+username+u"'"
-        
-    #    xm = request.vars.xm
-    #    if xm==None:
-    #        xm=u''
-    #    where += u"and xm like '%"+xm+u"%'"
-        
-    
-    #    gngk = request.vars.gngk
-    #    if gngk==None:
-    #        gngk=u''
-    #    where += u"and gngk like '%"+gngk+u"%'"
-        
-    #    order = u" order by rq desc"
+
         ksrq = request.vars.ksrq
         jsrq = request.vars.jsrq
-        if ksrq <> None:
-            ksrq = ksrq[6:10]+u'-'+ksrq[3:5]+u'-'+ksrq[0:2]
-        if jsrq <> None:
-            jsrq = jsrq[6:10]+u'-'+jsrq[3:5]+u'-'+jsrq[0:2]
-    
-        sql = u"""select * from grtjb """ ;
+   
+        sql = u"""  select chinesename as xm,
+  国内公开招标 as gngk,
+  国内邀请招标 as gnyq,
+  询价采购 as xjcg,
+  竞争性谈判 as jzxtp,
+  竞争性磋商 as jzxcs,
+  单一来源采购 as dylycg, 
+  其他 as qt,
+  国际招标 as gjzb,
+国内公开招标+国内邀请招标+询价采购+竞争性谈判+竞争性磋商+单一来源采购+其他+国际招标 as zj
+    from (select c.chinesename, b.PurchaseStyleName, a.projectname  from project a, PurchaseStyle b, auth_user c 
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) and a.EmployeeId=c.id 
+   and [CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""') a 
+   pivot (count(projectname) for  PurchaseStyleName
+    in (国内公开招标,国内邀请招标,询价采购,竞争性谈判,竞争性磋商,单一来源采购,其他,国际招标))t""" ;
         print sql   
-        return sqltojson(sql);
-    except:
+        return sqltojson(sql, 'gbk');
+    except Exception as e:
+        print e
         return u"fail"    
 
 def select_grtjbfb():
     try:
-        sql = u"""select * from grtjbfb """ ;
+        username = auth.user.chinesename.decode('gbk')
+        ksrq = request.vars.ksrq
+        jsrq = request.vars.jsrq     
+        name = unicode(request.vars.username, u'utf-8')
+        row = db(db[u'auth_user'].chinesename ==name).select().first()   
+        id = unicode(row[u'id'])
+        sql = u"""select b.PurchaseStyleName　as xmlx, count(case EmployeeId　when """+id+u""" then EmployeeId end) as fz, 
+rtrim(convert(decimal(18,2),count(case EmployeeId　when """+id+u""" then EmployeeId end)*100.00/(select count(*) as c from project a, PurchaseStyle b
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
+   and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
+   and a.EmployeeId ="""+id+u""")))+'%' as fzbfb, 
+count(case assistant when """+id+u""" then assistant end) as xz,
+rtrim(convert(decimal(18,2),count(case assistant　when """+id+u""" then assistant end)*100.00/(select count(*) as c from project a, PurchaseStyle b
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
+   and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
+   and a.assistant ="""+id+u""")))+'%' as xzbfb,
+   0 as dj,
+   0 as zj
+  from project a, PurchaseStyle b
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
+   and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
+   and (a.EmployeeId ="""+id+u"""
+   or a.assistant ="""+id+u""")
+   group by b.PurchaseStyleName""" ;
         print sql   
         return sqltojson(sql);
-    except:
+    except Exception as e:
+        print e
         return u"fail"    
 
 def zzxmtjb():
@@ -1533,9 +1607,23 @@ def zzxmtjb():
  
 def select_zzxmtjb():
     try:
-        sql = u"""select * from grtjb """ ;
-        print sql   
-        return sqltojson(sql);   
+        sql = u"""  select chinesename as xm,
+  国内公开招标 as gngk,
+  国内邀请招标 as gnyq,
+  询价采购 as xjcg,
+  竞争性谈判 as jzxtp,
+  竞争性磋商 as jzxcs,
+  单一来源采购 as dylycg, 
+  其他 as qt,
+  国际招标 as gjzb,
+国内公开招标+国内邀请招标+询价采购+竞争性谈判+竞争性磋商+单一来源采购+其他+国际招标 as zj
+    from (select c.chinesename, b.PurchaseStyleName, a.projectname  from project a, PurchaseStyle b, auth_user c 
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) and a.EmployeeId=c.id 
+   and a.[ProjectStatusId]<>3 ) a 
+   pivot (count(projectname) for  PurchaseStyleName
+    in (国内公开招标,国内邀请招标,询价采购,竞争性谈判,竞争性磋商,单一来源采购,其他,国际招标))t""" ;
+        print sql    
+        return sqltojson(sql, 'gbk');   
     except:
         return u"fail"
 @auth.requires_login()    
@@ -1949,7 +2037,7 @@ def selectone_yhlsqr():
 def select_lxr():
     try:
         username = auth.user.chinesename.decode('gbk')
-        where = u"where username='"+username+u"'"
+        where = u"where 1=1 "
         khId = request.vars.khId   
         where += u"and khId = "+khId 
         order = u" order by rq desc"
@@ -2027,14 +2115,14 @@ def select_cwls():
             where = u"where 1=1 "
         else:
             where = u"where username='"+username+u"'"
-        
-        bsbh = request.vars.bsbh
-        if bsbh==None:
-            bsbh=u''
-        where += u"and bsbh like '%"+bsbh+u"%'"
+        where = where+u' and a.projectid=b.Id '
+        projectid = request.vars.projectid
+        if projectid==None:
+            projectid=u''
+        where += u"and projectid like '%"+projectid+u"%'"
     
-        order = u" order by rq desc"
-        sql = u"""select * from cwls """ + where+order;
+        order = u" order by a.rq desc"
+        sql = u"""select a.Id, a.sz, a.zy, a.je, a.ywlx, a.lyId, a.username, a.rq, b.ProjectCode projectid from cwls a, Project b """ + where+order;
         print sql   
         return sqltojson(sql);
     except:
@@ -2093,13 +2181,91 @@ def selectone_cwls():
 def getcwlspz():
     uid = auth.user_id;
     result = {};
-    result[u'bsbh'] = p_getbsbh(request.vars.projectid);
+    result[u'projectid'] = p_getprojectcode(request.vars.projectid);
     result[u'sz'] = [u'收入', u'支出']
-    result[u'ywlx'] = [u'购买标书', u'投标保证金', u'退保证金', u'中标服务费', u'专家评审费', u'其他']
+    result[u'ywlx'] = [u'购买标书', u'投标保证金', u'退保证金', u'中标服务费', u'专家评审费', u'项目分成', u'其他']
     return json.dumps(result)   
 
 
 
+
+#获取所有
+def select_xmzc():
+    try:
+        username = auth.user.chinesename.decode('gbk')
+        if auth.user_groups.has_key(CONST_MANAGER):
+            where = u"where 1=1 "
+        else:
+            where = u"where username='"+username+u"'"
+        where = where+u" and a.projectid=b.Id and a.ywlx in ('专家评审费', '项目分成')"
+        projectid = request.vars.projectid
+        if projectid==None:
+            projectid=u''
+        where += u"and projectid like '%"+projectid+u"%'"
+    
+        order = u" order by a.rq desc"
+        sql = u"""select a.Id, a.sz, a.zy, a.je, a.ywlx, a.lyId, a.username, a.rq, b.ProjectCode projectid from cwls a, Project b """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail";
+
+def updaterow_xmzc():
+    try:
+        table_name = u'cwls'
+        id = request.vars.Id
+        rowData = request.post_vars
+        updaterow(table_name, id, rowData)
+        db.commit()
+        return u"success";
+    except:
+        db.rollback()
+        return u"fail";
+
+def insertrow_xmzc():
+    try:
+        table_name = u'cwls'
+        username = auth.user.chinesename.decode('gbk')
+        rowData = request.post_vars
+        rowData[u'username'] = username
+        print u"insertrow cwls"
+        print rowData
+        insertrow(table_name, rowData)
+        db.commit()
+        return u"success";
+    except Exception as e:
+        print e 
+        db.rollback()
+        return u"fail";
+
+def deleterow_xmzc():
+    try:
+        table_name = u'cwls'
+        id = request.vars.Id
+        print table_name
+        print id
+        deleterow(table_name, id)
+        db.commit()
+        return u"success";
+    except:
+        db.rollback()
+        return u"fail";
+   
+def selectone_xmzc():
+    try:
+        table_name = u'cwls'
+        sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
+        return sqltojson(sql);
+    except:
+        return u"fail"; 
+
+def getxmzcpz():
+    uid = auth.user_id;
+    result = {};
+    result[u'projectid'] = p_getprojectcode(request.vars.projectid);
+    result[u'sz'] = [u'收入', u'支出']
+    result[u'ywlx'] = [u'专家评审费', u'项目分成']
+    return json.dumps(result)   
 ############
 def pbcy():
     return dict();
@@ -2276,7 +2442,7 @@ def deleterow_rcb():
     
     
 #主页
-@auth.requires(auth.has_membership(group_id='2'))
+@auth.requires(auth.has_membership(group_id='3'))
 def auth_user():
     return dict();
 
@@ -2485,8 +2651,9 @@ def updaterow_hysgl():
         
         newkssj = rowData[u'kssj']
         newjssj = rowData[u'jssj']
+        hys = unicode(rowData[u'hys'], 'utf-8')
         sql = u"""select count(*) c from hysgl 
-        where Id<>"""+id+u"""(('"""+newkssj+u"""'>=kssj and '"""+newkssj+u"""'<jssj) 
+        where hys='"""+hys+u"""' and Id<>"""+id+u"""(('"""+newkssj+u"""'>=kssj and '"""+newkssj+u"""'<jssj) 
         or ('"""+newjssj+u"""'<=jssj and '"""+newjssj+u"""'>kssj) 
         or ('"""+newkssj+u"""'<=kssj and '"""+newjssj+u"""'>=jssj))"""
         print sql 
@@ -2508,10 +2675,11 @@ def insertrow_hysgl():
         
         newkssj = rowData[u'kssj']
         newjssj = rowData[u'jssj']
+        hys = unicode(rowData[u'hys'], 'utf-8')
         sql = u"""select count(*) c from hysgl 
-        where ('"""+newkssj+u"""'>=kssj and '"""+newkssj+u"""'<jssj) 
+        where  hys='"""+hys+u"""' and( ('"""+newkssj+u"""'>=kssj and '"""+newkssj+u"""'<jssj) 
         or ('"""+newjssj+u"""'<=jssj and '"""+newjssj+u"""'>kssj) 
-        or ('"""+newkssj+u"""'<=kssj and '"""+newjssj+u"""'>=jssj)"""
+        or ('"""+newkssj+u"""'<=kssj and '"""+newjssj+u"""'>=jssj))"""
         print sql 
         rows = db.executesql(sql, as_dict=True)
         if rows[0][u'c'] == 0:
@@ -2543,3 +2711,294 @@ def selectone_hysgl():
         return sqltojson(sql);
     except:
         return u"fail";    
+
+@auth.requires_login()
+def tjzb():
+    return dict();
+
+
+def select_tjzb():
+    print u'select_tjzb'
+    try:
+        ksrq = request.vars.ksrq
+        jsrq = request.vars.jsrq
+        result = {};
+        sql2 = u""" select PurchaseStyleName as cgfs,
+  非政府采购国内一般项目 as gnzb,
+  国际项目 as gjzb,
+  政府采购 as zfcg,
+  国内涉密 as sm,
+非政府采购国内一般项目+国际项目+政府采购+国内涉密 as zj　from 
+ ( select c.PurchaseStyleName,  b.ProjectTypeName, a.ProjectName from project a, projecttype b, PurchaseStyle c 
+  where a.projecttypeid=convert(int, b.projecttypeid) and a.PurchaseStyleId=convert(int, c.[PurchaseStyleId])
+  and [CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""') a 
+  pivot (count(projectname) for  ProjectTypeName
+    in (非政府采购国内一般项目,国际项目,政府采购,国内涉密))t""" ;
+        print sql2;
+        sql3=u"""SELECT b.name as xmly, count(*) as xmsl, 0 as dwfc, 0 as yfc, 0 as sy 
+  FROM project a,[ProjectSource] b where a.ProjectSourceId=b.id
+  and [CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""'
+  group by b.name""";
+
+        sql1 = u"""select PurchaseStyleName as cgfs,
+购买标书 as bssr,
+专家评审费 as xmcb, 
+0 as dwfc,
+0 as jxfc,
+0 as ml,
+0 as jl
+ from 
+(SELECT a.ywlx, a.je,  c.PurchaseStyleName
+  FROM [cwls] a, project b, [PurchaseStyle] c, ProjectPackage d where a.bsbh=d.PackageNumber and b.id=d.ProjectId
+  and b.PurchaseStyleId=convert(int, c.[PurchaseStyleId])
+  and b.[CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""') a 
+    pivot (sum(je) for  ywlx
+    in (购买标书,投标保证金,退保证金,中标服务费,专家评审费, 其他 ))t"""
+        print sql1
+        result['tjzb_grid1'] = sqltoarray(sql1);
+        result['tjzb_grid2'] = sqltoarray(sql2);
+        result['tjzb_grid3'] = sqltoarray(sql3);
+        return json.dumps(result) 
+    except Exception as e:
+        print e
+        return u"fail"    
+
+@auth.requires_login()
+def gdwj():
+
+    row={}
+    row['viewflag'] = 1
+
+    if auth.user_groups.has_key(CONST_MANAGER):
+        row['viewflag'] = 0
+    else:
+        sql = u'select * from Project where Id = '+request.vars.projectid
+        print sql 
+        res = sqltoarray(sql)        
+        if res[0]['EmployeeId'] == auth.user.id or res[0]['Assistant'] == auth.user.id:
+            row['viewflag'] = 0
+    row['projectid'] = request.vars.projectid
+    row['projectname'] = request.vars.projectname
+    print row
+    return dict(**row);
+
+
+def getwjglpz():
+    try:
+        result = {};
+        sql = u"""select * from pzgdwj""";   
+        return sqltojson(sql);
+    except:
+        return u"fail"    
+
+#获取所有
+def select_gdwj():
+	try:
+		projectid = request.vars.projectid
+		lx = request.vars.type
+		username = u'Test'
+		if lx == '1':
+			where = " and projectid="+projectid 
+		else:
+			where = u"and type="+lx+u" and projectid="+projectid 
+		#print projectid, lx
+		order = u" order by rq desc"
+		sql = u"""select a.Id,a.rq,a.wjm,a.username,b.text as type from gdwj a, pzgdwj b where a.type=b.pzid """ +where+ order;
+		#print sql   
+		return sqltojson(sql);
+	except:
+		return u"fail";
+
+import io,os,sys,uuid
+def gdwjupload():
+    try:
+        f= request.vars.fileToUpload
+        path = unicode(os.path.abspath('.'))
+        filename = unicode(uuid.uuid1())
+        dest_file = open(filename, u'wb')
+        
+        dest_file.write(f.value)
+        dest_file.close();
+        username = auth.user.chinesename.decode('gbk')
+        filepath = path+'\\'+filename
+        sql = "INSERT INTO gdwj(wjm, username,[type],projectid, wj)\
+        SELECT '%s','%s',%s,%s,\
+        * FROM OPENROWSET(BULK N'%s', SINGLE_BLOB)\
+        as wj" % (unicode(f.filename, u'utf-8'), username, request.vars.type, request.vars.projectid, filepath)
+        print sql
+        db.executesql(sql)
+        os.remove(filepath)
+        db.commit()
+        return 'success'
+    except Exception as e:
+        print e
+        db.rollback()
+        os.remove(filepath)
+        return 'fail'
+    # try:
+    #     f= request.vars.fileToUpload
+    #     table_name = u'gdwj'
+    #     username = auth.user.chinesename.decode('gbk')
+    #     rowData = {}
+    #     rowData[u'username'] = username
+    #     rowData[u'projectid'] = request.vars.projectid
+    #     rowData[u'type'] = request.vars.type
+    #     rowData[u'wjm'] = unicode(f.filename, u'utf-8')
+
+    #     print rowData
+    #     id = db[table_name].insert( **rowData)         
+    #     return u'success'
+    # except Exception as e:
+    #     print e 
+    #     return u'fail'       
+
+import io
+def downloadgdwj():
+	try:
+		row = db(db[u'gdwj']._id ==request.vars.gdwjid).select().first()
+		response.headers["Content-Disposition"] = "attachment; filename=%s" % row[u'wjm']
+        
+        #output = io.StringIO()
+        #output.write(row['wj'])
+		b = io.BytesIO(row['wj'])
+		#return response.stream(open('d:/dw.txt'))
+		return response.stream(b)      
+		#response.write(row[u'wj'], escape=False)
+		#return HTTP(200, stream, **response.headers)
+	except Exception as e:
+		print e
+		return 'fail'
+	# if not request.args:
+	# 	raise HTTP(404)
+	# name = request.args[-1]
+	# field = db["files"]["file"]
+	# try:
+	# 	(filename, file) = field.retrieve(name)
+	# except IOError:
+	# 	raise HTTP(404)
+	# response.headers["Content-Type"] = c.contenttype(name)
+	# response.headers["Content-Disposition"] = u"attachment; filename=%s" % row[u'wjm']
+	# stream = response.stream(file, chunk_size=64*1024, request=request)
+	# raise HTTP(200, stream, **response.headers)
+
+
+def p_deleterow_gdwj(id):
+    table_name = u'gdwj'
+    print table_name
+    deleterow(table_name, id)
+        
+def deleterow_gdwj():
+    try:
+        
+        id = request.vars.Id
+        p_deleterow_gdwj(id)
+        db.commit()
+        return u"success"
+    except Exception as e:
+        print e
+        db.rollback()
+        return u"fail" 
+
+def pzgl():
+    return dict();
+
+def getpzglpz():
+    try:
+        sql = u"""select * from pzgl""";   
+        return sqltojson(sql);
+    except:
+        return u"fail"      
+
+def select_pzgl():
+    try:
+        tablename = request.vars.tablename
+        if tablename=='OperationType':
+            sql = 'select Id, [OperationTypeId] as pzid, [OperationTypeCode] as code, [OperationTypeName] as text from [OperationType]'
+        if tablename == 'ProtocolCodeType':
+            sql = 'select [Id],[TypeId] as pzid  ,[TypeCode] as code ,[TypeName] as text from ProtocolCodeType'
+        if tablename == 'ProjectType':
+            sql = 'select [Id],[ProjectTypeId] as pzid  ,[ProjectTypeCode] as code ,[ProjectTypeName] as text from ProjectType'            
+        if tablename == 'PurchaseStyle':
+            sql = 'select [Id],[PurchaseStyleId] as pzid  ,[PurchaseStyleCode] as code ,[PurchaseStyleName] as text from PurchaseStyle'            
+        if tablename == 'pzgdwj':
+            sql = 'select [Id],pzid  ,\'\' as code , text from pzgdwj'            
+        print sql
+        return sqltojson(sql);
+    except Exception as e:
+        print e
+        return 'fail'
+
+def convert_pzgldata(tablename, rowData):
+    row = {}
+    if tablename=='OperationType':
+        row['OperationTypeId'] = rowData['pzid']
+        row['OperationTypeCode'] = rowData['code']
+        row['OperationTypeName'] = rowData['text']
+    if tablename == 'ProtocolCodeType':
+        row['TypeId'] = rowData['pzid']
+        row['TypeCode'] = rowData['code']
+        row['TypeName'] = rowData['text']            
+    if tablename == 'ProjectType':
+        row['ProjectTypeId'] = rowData['pzid']
+        row['ProjectTypeCode'] = rowData['code']
+        row['ProjectTypeName'] = rowData['text']               
+    if tablename == 'PurchaseStyle':
+        row['PurchaseStyleId'] = rowData['pzid']
+        row['PurchaseStyleCode'] = rowData['code']
+        row['PurchaseStyleName'] = rowData['text']                
+    if tablename == 'pzgdwj':
+        row['pzid'] = rowData['pzid']
+        row['text'] = rowData['text']    
+    return row
+
+def insertrow_pzgl():
+    try:
+        rowData = request.post_vars
+        tablename = request.vars.tablename
+        row = convert_pzgldata(tablename, rowData)
+        insertrow(tablename, row) 
+        db.commit()
+        return 'success'
+    except Exception as e:
+        print e
+        db.rollback()
+        return 'fail'            
+
+def updaterow_pzgl():
+    try:
+        rowData = request.post_vars
+        tablename = request.vars.tablename
+        id = request.vars.Id
+        row = convert_pzgldata(tablename, rowData)
+        updaterow(tablename, id, row) 
+        db.commit()
+        return 'success'
+    except Exception as e:
+        print e
+        db.rollback()
+        return 'fail'   
+
+def deleterow_pzgl():
+    try:
+        id = request.vars.Id
+        tablename = request.vars.tablename
+        deleterow(tablename, id)
+        db.commit()
+        return u"success"
+    except Exception as e:
+        print e
+        db.rollback()
+        return u"fail"  
+
+
+def zbfwf_print():
+    sql = u"""select PackageNumber as pn, b.dwmc, a.SigningDate as rq,  b.nsrsbh, b.lxdz, b.dh, a.WinningMoney as je, b.khyh, b.yhzh   from ProjectPackage a, kh b
+where a.WinningCompany=b.dwmc and a.PackageNumber='"""+request.vars.PackageNumber+u"'";
+    print sql
+    rows = rawsqltojson(sql);   
+    
+    row = rows[0]
+
+    row[u'rq'] = row[u'rq'][0:10]
+    row[u'zje'] = Num2MoneyFormat(row[u'je'])
+    return dict(**row)        

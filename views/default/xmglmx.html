@@ -70,7 +70,12 @@
 	type="text/javascript"></script>
 <script src="{{=URL('static','js/vendor/jqwidgets/jqxValidator.js')}}"
 	type="text/javascript"></script>	
-	
+
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxscrollbar.js')}}"
+	type="text/javascript"></script>	
+<script src="{{=URL('static','js/vendor/jqwidgets/jqxtextarea.js')}}"
+	type="text/javascript"></script>	
+		
 <script type="text/javascript"
 	src="{{=URL('static','js/vendor/jqwidgets/jqxgrid.columnsresize.js')}}"></script>
 	<script type="text/javascript"
@@ -88,14 +93,17 @@
 	src="{{=URL('static','js/tbzjmxform.js')}}"></script>
 <script type="text/javascript"
 	src="{{=URL('static','js/tbbzjmxform.js')}}"></script>
-	
+<script type="text/javascript"
+	src="{{=URL('static','js/xmzcmxform.js')}}"></script>	
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/globalization/globalize.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/globalization/globalize.culture.zh-CN.js')}}"></script>
 	
 
 
 <style type="text/css">
-input:focus {
+/*input:focus {
 	background-color: #FF6;
-}
+}*/
 </style>
 <script type="text/javascript">
 	
@@ -110,6 +118,8 @@ input:focus {
 			<div style="display: none" id="ProjectData">{{=project}}</div>
 			<div style="display: none" id="Dictionaries">{{=dictionaries}}
 			</div>
+			<div style="display: none" id="viewflag">{{=viewflag}}
+			</div>			
 		</div>
 
 		<div style="overflow: hidden;">
@@ -241,6 +251,13 @@ input:focus {
 		</div>
 	</div>
 
+	<div id='jqxProjectExpanse' class="g111">
+		<div>项目支出查询</div>
+		<div style="overflow: hidden;">
+			<div id="EditProject_ExpanseTable"></div>
+		</div>
+	</div>
+
 	<div id='jqxProjectFinanceExpander' class="g111">
 		<div>收入支出查询</div>
 		<div style="overflow: hidden;">
@@ -251,14 +268,13 @@ input:focus {
 	<div id="popupWindow_PackageADD">
 		<div id="PackageADD_Validator">新增项目包件</div>
 		<div style="overflow: hidden;">
-			<table width="100%">
+			<table width="100%" >
 				<tr>
 					<td align="left">
 						<p>包编号</p>
 					</td>
 					<td align="left"><input id="PackageNumber_ADD" /></td>
-				</tr>
-				<tr>
+
 					<td align="left">
 						<p>包状态</p>
 					</td>
@@ -271,8 +287,7 @@ input:focus {
 						<p>包名称</p>
 					</td>
 					<td align="left"><input id="PackageName_ADD" /></td>
-				</tr>
-				<tr>
+
 					<td align="left">
 						<p>委托金额</p>
 					</td>
@@ -283,19 +298,29 @@ input:focus {
 						<p>公告日期</p>
 					</td>
 					<td align="left"><input id="PublicDate_ADD" /></td>
-				</tr>
+
+					<td align="left">
+						<p>第二轮公告日期</p>
+					</td>
+					<td align="left"><input id="SecondPublicDate_ADD" /></td>
+				</tr> 
 				<tr>
 					<td align="left">
 						<p>开标日期</p>
 					</td>
 					<td align="left"><input id="OpenDate_ADD" /></td>
-				</tr> 
-				<tr>
+
 					<td align="left">
 						<p>评标日期</p>
 					</td>
 					<td align="left"><input id="ReviewDate_ADD" /></td>
 				</tr> 
+				<tr>
+					<td align="left">
+						<p>备注</p>
+					</td>
+					<td colspan=3 align="left"><textarea  id="comment_ADD" ></textarea></td>
+				</tr>				
 <!-- 				<tr>
 					<td align="left">
 						<p>签约日期</p>
@@ -335,6 +360,7 @@ input:focus {
 					<td align="left" COLSPAN=3><input id="NotePackage_ADD" /></td>
 				</tr> -->
 				<tr>
+												<td ></td>
 					<td align="center" style="padding-top: 10px;">
 					<td align="right"><input style="margin-right: 5px;"
 						type="button" id="SavePackage_ADD" value="保存" /><input
@@ -355,8 +381,7 @@ input:focus {
 					<p>包编号</p>
 				</td>
 				<td align="left"><input id="PackageNumber_Manage" /></td>
-			</tr>
-			<tr>
+
 				<td align="left">
 					<p>包名称</p>
 				</td>
@@ -367,8 +392,7 @@ input:focus {
 								<p>委托金额</p>
 							</td>
 							<td align="left"><input id="EntrustMoney_Manage" /></td>
-						</tr>
-			<tr>
+
 				<td align="left">
 					<p>包状态</p>
 				</td>
@@ -382,25 +406,35 @@ input:focus {
 								<p>公告时间</p>
 							</td>
 							<td align="left"><input id="PublicDate_Manage" /></td>
+							<td align="left">
+								<p>第二轮公告日期</p>
+							</td>
+							<td align="left"><input id="SecondPublicDate_Manage" /></td>
 						</tr>
 						<tr>
 							<td align="left">
 								<p>开标时间</p>
 							</td>
 							<td align="left"><input id="OpenDate_Manage" /></td>
-						</tr>
-						<tr>
 							<td align="left">
 								<p>评标时间</p>
 							</td>
 							<td align="left"><input id="ReviewDate_Manage" /></td>
 						</tr>
-					<tr id = 'tr_WinningCompany' style="display: none"><td align="left"><p>中标单位</p></td><td align="left"><input id="WinningCompany_Manage"/></td><tr>
-					<tr id = 'tr_WinningMoney' style="display: none"><td align="left"><p>中标金额</p></td><td align="left"><input id="WinningMoney_Manage"/></td></tr>
-					<tr id = 'tr_SigningDate'  style="display: none"><td align="left"><p>签约时间</p></td><td align="left"><input id="SigningDate_Manage"/></td></tr>
-					<tr id = 'tr_MakeOutDate' style="display: none"><td align="left"><p>开票时间</p></td><td align="left"><input id="MakeOutDate_Manage"/></td></tr>
-					<tr id = 'tr_ChargeRate' style="display: none"><td align="left"><p>服务费率</p></td><td align="left"><input id="ChargeRate_Manage"/></td></tr>
+					<tr><td colspan=4><hr/></td></tr>
+					<tr id = 'tr_WinningCompany' style="display: none"><td align="left"><p>中标单位</p></td><td align="left"><input id="WinningCompany_Manage"/></td>
+					<td align="left"><p>中标金额</p></td><td align="left"><input id="WinningMoney_Manage"/></td></tr>
+					<tr id = 'tr_SigningDate'  style="display: none"><td align="left"><p>签约时间</p></td><td align="left"><input id="SigningDate_Manage"/></td>
+					<td align="left"><p>开票时间</p></td><td align="left"><input id="MakeOutDate_Manage"/></td></tr>
+					<tr id = 'tr_ChargeRate' style="display: none"><td align="left"><p>服务费</p></td><td align="left"><input id="ChargeRate_Manage"/></td></tr>
+					<tr>
+						<td align="left">
+							<p>备注</p>
+						</td>
+						<td colspan=3 align="left"><textarea  id="comment_Manage" ></textarea></td>
+					</tr>							
 						<tr>
+							<td></td>
 							<td align="center" style="padding-top: 10px;">
 							<td align="right"><input style="margin-right: 5px;"
 								type="button" id="SavePackage_Manage" value="保存" /><input

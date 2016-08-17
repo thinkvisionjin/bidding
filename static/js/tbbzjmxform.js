@@ -8,9 +8,9 @@ function gettbbzjkh(dwmc)
 	$.get('getkh?dwmc='+dwmc, function(result){
 		if (result.length==1) {
 			var data = result[0];
-			$('#tbbzj_lxdz').val(data['lxdz']);
-			$('#tbbzj_dzxx').val(data['dzxx']);
-			$('#tbbzj_cz').val(data['cz']);
+			$('#tbbzj_lxdz').val(data['khxx'][0]['lxdz']);
+			$('#tbbzj_dzxx').val(data['khxx'][0]['dzxx']);
+			$('#tbbzj_cz').val(data['khxx'][0]['cz']);
 		}
 		else
 		{
@@ -36,8 +36,8 @@ function tbbzj_configpage(projectid)
 	$.get(url, function(result){
 		//需特殊处理
     	$('#tbbzj_dwmc').jqxComboBox({ placeHolder: "", source: result['dwmc']});
-$('#tbbzj_bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh']});
-$('#tbbzj_bsbh').jqxDropDownList('selectIndex', 0);
+$('#tbbzj_projectid').jqxDropDownList({ placeHolder: "", source: result['projectid'], displayMember:'ProjectCode', valueMember:'Id'});
+$('#tbbzj_projectid').jqxDropDownList('selectIndex', 0);
 $('#tbbzj_bzjlx').jqxDropDownList({ placeHolder: "", source: result['bzjlx']});
     }, 'json');	
     $("#tbbzj_dwmc input").blur(function(){gettbbzjkh($("#tbbzj_dwmc").val())});  
@@ -48,7 +48,7 @@ function tbbzj_setupadd()
 {
 	$('#tbbzj_Id').val('');
 $('#tbbzj_dwmc').val('');
-$('#tbbzj_bsbh').jqxDropDownList('selectIndex',-1);
+$('#tbbzj_projectid').jqxDropDownList('selectIndex',-1);
 $('#tbbzj_bzjlx').jqxDropDownList('selectIndex',-1);
 $('#tbbzj_je').val('');
 $('#tbbzj_rq').val('');
@@ -75,7 +75,7 @@ $('#tbbzj_ly').jqxInput({disabled:true});
 		var data = result[0];
 		$('#tbbzj_Id').val(data['Id']);
 $('#tbbzj_dwmc').val(data['dwmc']);
-$('#tbbzj_bsbh').val(data['bsbh']);
+$('#tbbzj_projectid').val(data['projectid']);
 $('#tbbzj_bzjlx').val(data['bzjlx']);
 $('#tbbzj_je').val(data['je']);
 $('#tbbzj_rq').val(data['rq']);
@@ -100,7 +100,7 @@ $('#tbbzj_ly').jqxInput({disabled:true});;
 		var data = result[0];
 		$('#tbbzj_Id').val(data['Id']);
 $('#tbbzj_dwmc').val(data['dwmc']);
-$('#tbbzj_bsbh').val(data['bsbh']);
+$('#tbbzj_projectid').val(data['projectid']);
 $('#tbbzj_bzjlx').val(data['bzjlx']);
 $('#tbbzj_je').val(data['je']);
 $('#tbbzj_rq').val(data['rq']);
@@ -125,7 +125,7 @@ function tbbzj_save()
 		}
 	var row = {	
 	dwmc:$('#tbbzj_dwmc').val(),
-bsbh:$('#tbbzj_bsbh').val(),
+projectid:$('#tbbzj_projectid').val(),
 bzjlx:$('#tbbzj_bzjlx').val(),
 je:$('#tbbzj_je').val(),
 username:$('#tbbzj_username').val(),
@@ -166,7 +166,7 @@ function tbbzj_init () {
 			<table align='center' >\
 			<tr id='tr_tbbzj_Id' style='display:none'><td class='tbinputtitle'>序号:</td><td><input class='tbinput' type='text' id='tbbzj_Id'/></td></tr>\
 <tr id='tr_tbbzj_dwmc'><td class='tbinputtitle'>单位名称:</td><td><div class='tbinput' type='text' id='tbbzj_dwmc'/></td></tr>\
-<tr id='tr_tbbzj_bsbh'><td class='tbinputtitle'>标书编号:</td><td><div class='tbinput' type='text' id='tbbzj_bsbh'/></td></tr>\
+<tr id='tr_tbbzj_projectid'><td class='tbinputtitle'>项目编号:</td><td><div class='tbinput' type='text' id='tbbzj_projectid'/></td></tr>\
 <tr id='tr_tbbzj_bzjlx'><td class='tbinputtitle'>保证金类型:</td><td><div class='tbinput' type='text' id='tbbzj_bzjlx'/></td></tr>\
 <tr id='tr_tbbzj_je'><td class='tbinputtitle'>金额:</td><td><input class='tbinput' type='text' id='tbbzj_je'/></td></tr>\
 <tr id='tr_tbbzj_rq'><td class='tbinputtitle'>日期:</td><td><input class='tbinput' type='text' id='tbbzj_rq'/></td></tr>\
@@ -190,7 +190,7 @@ function tbbzj_init () {
 
     $('#tbbzj_Id').jqxInput();
 $('#tbbzj_dwmc').jqxComboBox({ placeHolder: '',autoComplete:true});
-$('#tbbzj_bsbh').jqxDropDownList({ placeHolder: ''});
+$('#tbbzj_projectid').jqxDropDownList({ placeHolder: ''});
 $('#tbbzj_bzjlx').jqxDropDownList({ placeHolder: ''});
 $('#tbbzj_je').jqxNumberInput({inputMode: 'simple'});
 $('#tbbzj_rq').jqxInput();
@@ -217,8 +217,8 @@ $('#tr_tbbzj_ly').hide();
 			var val = $("#tbbzj_bzjlx").jqxDropDownList('val');
 			if(val==""){return false;}	return true;
 		} },
-		{ input: "#tbbzj_bsbh", message: "不可为空!", action: 'keyup, blur', rule: function(input){
-			var val = $("#tbbzj_bsbh").jqxDropDownList('val');
+		{ input: "#tbbzj_projectid", message: "不可为空!", action: 'keyup, blur', rule: function(input){
+			var val = $("#tbbzj_projectid").jqxDropDownList('val');
 			if(val==""){return false;}	return true;
 		} }
 		], hintType: "tooltip"
@@ -226,7 +226,7 @@ $('#tr_tbbzj_ly').hide();
   	
 }
 
-function tbbzj_popupwindow(flag_state, id, callback, projectid, bsbh)
+function tbbzj_popupwindow(flag_state, id, callback, projectid)
 {
 	y = document.body.scrollTop;
 	x = (document.body.scrollWidth -600)/2

@@ -101,11 +101,11 @@ function initProtocolCodeGrid(dict) {
 		}]
 	$("#jqxgrid").jqxGrid(
 		{
-			width: '100%',
+			width: '99%',
 			height: "90%",
 			columnsresize: true,
 			source: dataAdapter,
-			pageable: true,
+			//pageable: true,
 			autoheight: true,
 			columns: columns_content,
 			showtoolbar: true,

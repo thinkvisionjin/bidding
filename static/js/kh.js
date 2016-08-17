@@ -10,6 +10,8 @@ function l_searchlxr(id){
 		datafields: [{ name: 'Id', type: 'string' },
 			{ name: 'lxr', type: 'string' },
 			{ name: 'sj', type: 'string' },
+			{ name: 'dz', type: 'string' },
+			{ name: 'dh', type: 'string' },			
 			{ name: 'rq', type: 'date' },
 			{ name: 'username', type: 'string' }],
 		id: 'Id',
@@ -27,6 +29,10 @@ function modifylxr(id) {
 }
 
 function deletelxr(id) {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}	
     var selectedrowindex = $("#lxr-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#lxr-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
@@ -66,6 +72,7 @@ function search() {
 			{ name: 'lxdz', type: 'string' },
 			{ name: 'dzxx', type: 'string' },
 			{ name: 'cz', type: 'string' },
+			{ name: 'dh', type: 'string' },
 			{ name: 'username', type: 'string' }],
 		id: 'Id',
 		url: url
@@ -89,7 +96,8 @@ function addselectfieldwindows() {
 		{ label: '银行账号', value: 'yhzh', checked: true }, ,
 		{ label: '联系地址', value: 'lxdz', checked: true }, ,
 		{ label: '电子信箱', value: 'dzxx', checked: true }, ,
-		{ label: '传真', value: 'cz', checked: true }, ,
+		{ label: '传真', value: 'cz', checked: false }, ,
+		{ label: '电话', value: 'dh', checked: true }, ,
 		{ label: '操作人', value: 'username', checked: false },];
 	$('#kh_zdlistbox').jqxListBox({ source: listSource, width: '100%', height: '100%', checkboxes: true });
     $("#kh_zdlistbox").on('checkChange', function (event) {
@@ -111,6 +119,10 @@ function modifykh(id) {
 }
 
 function deletekh(id) {
+	if (confirm('是否删除')==false)
+	{
+		return ;
+	}	
     var selectedrowindex = $("#kh-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#kh-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
@@ -167,6 +179,8 @@ function initlxr() {
 			columns: [{ text: '序号', datafield: 'Id', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '联系人', datafield: 'lxr', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '手机', datafield: 'sj', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '地址', datafield: 'dz', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '电话', datafield: 'dh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },				
 				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '操作人', datafield: 'username', width: '10%', cellsalign: 'center', align: 'center', hidden: true },
 				{
@@ -231,7 +245,8 @@ $(document).ready(function () {
 				{ text: '银行账号', datafield: 'yhzh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '联系地址', datafield: 'lxdz', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '电子信箱', datafield: 'dzxx', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '传真', datafield: 'cz', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '传真', datafield: 'cz', width: '10%', cellsalign: 'center', align: 'center', hidden: true },
+				{ text: '电话', datafield: 'dh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '操作人', datafield: 'username', width: '10%', cellsalign: 'center', align: 'center', hidden: true },
 				{
 					text: '操作',

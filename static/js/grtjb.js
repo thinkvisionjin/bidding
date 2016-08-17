@@ -34,7 +34,7 @@ function search()
 
 function searchfb(username)
 {
-	url = "select_grtjbfb?username="+username;
+	url = "select_grtjbfb?username="+username+"&ksrq="+$("#ksrq").val()+"&jsrq="+$("#jsrq").val();
 		
 	var source = {					
 		datatype : "json",
@@ -61,7 +61,7 @@ function initgrtjbfb()
 				altrows: true,
 				enabletooltips: true,
 				columnsresize: true,
-				height : "200",
+				height : "35%",
 				width : "98%",
 				columns : [{ text: '项目类型', pinned: true, datafield: 'xmlx', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '数量（负责）', datafield: 'fz', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
@@ -71,6 +71,7 @@ function initgrtjbfb()
 { text: '单价', datafield: 'dj', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '总价', datafield: 'zj', width: '10%',cellsalign: 'center', align: 'center',hidden:false }],
 				showtoolbar : true,
+				toolbarheight: 25,
 				rendertoolbar : function(toolbar) {
 					var me = this;
 					var container = $("<div style='margin: 5px;'></div>");
@@ -84,7 +85,8 @@ $(document).ready(function() {
 	
 					$("#grtjb-expander").jqxExpander({
 						toggleMode : 'none',
-						showArrow : false
+						showArrow : false, 
+						height: '100%'
 					});
 					$("#grtjb-grid")
 							.jqxGrid(
@@ -92,18 +94,21 @@ $(document).ready(function() {
 										altrows: true,
 										enabletooltips: true,
 										columnsresize: true,
-										height : "300",
+										height : "50%",
 										width : "98%",
-										columns : [{ text: '姓名', pinned: true, datafield: 'xm', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '国内公开', datafield: 'gngk', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '国内邀请', datafield: 'gnyq', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '单一来源采购', datafield: 'dylycg', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '竞争性谈判', datafield: 'jzxtp', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '询价采购', datafield: 'xjcg', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '竞争性磋商', datafield: 'jzxcs', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '其他', datafield: 'qt', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '国际招标', datafield: 'gjzb', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '总计', datafield: 'zj', width: '10%',cellsalign: 'center', align: 'center',hidden:false } ],
+										showstatusbar: true,
+										statusbarheight: 20,
+										showaggregates: true,
+										columns : [{ text: '姓名',aggregatesrenderer: function (aggregates) {return '合计';}, pinned: true, datafield: 'xm', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '国内公开', aggregates: ['sum'],aggregatesrenderer: function (aggregates) {return aggregates['sum'];}, datafield: 'gngk', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '国内邀请', aggregates: ['sum'],aggregatesrenderer: function (aggregates) {return aggregates['sum'];}, datafield: 'gnyq', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '单一来源采购', aggregates: ['sum'],aggregatesrenderer: function (aggregates) {return aggregates['sum'];}, datafield: 'dylycg', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '竞争性谈判', aggregates: ['sum'],aggregatesrenderer: function (aggregates) {return aggregates['sum'];}, datafield: 'jzxtp', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '询价采购', aggregates: ['sum'],aggregatesrenderer: function (aggregates) {return aggregates['sum'];}, datafield: 'xjcg', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '竞争性磋商', aggregates: ['sum'],aggregatesrenderer: function (aggregates) {return aggregates['sum'];}, datafield: 'jzxcs', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '其他', aggregates: ['sum'],aggregatesrenderer: function (aggregates) {return aggregates['sum'];}, datafield: 'qt', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '国际招标', aggregates: ['sum'],aggregatesrenderer: function (aggregates) {return aggregates['sum'];}, datafield: 'gjzb', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '总计', aggregates: ['sum'],aggregatesrenderer: function (aggregates) {return aggregates['sum'];}, datafield: 'zj', width: '10%',cellsalign: 'center', align: 'center',hidden:false } ],
 										showtoolbar : true,
 										rendertoolbar : function(toolbar) {
 											var me = this;
@@ -113,14 +118,14 @@ $(document).ready(function() {
 											$("#grtjbprint").jqxButton({
 												template : 'success'
 											});
-											container.append('<input id="selectfiled" style="float: right" type="button" value="输出" />');
-											$("#selectfiled").jqxButton({
+											container.append('<input id="exportfile" style="float: right" type="button" value="输出" />');
+											$("#exportfile").jqxButton({
 												template : 'info'
 											});											
 										}
 
 									});
-					search();
+					
 					$("#grtjbprint").click(function() {
 		                var gridContent = $("#grtjb-grid").jqxGrid('exportdata', 'html');
 		                var newWindow = window.open('', '', 'width=800, height=500'),
@@ -138,7 +143,11 @@ $(document).ready(function() {
 		                newWindow.print();
 
 					});
-			
+					$("#exportfile").click(function() {
+		                var gridContent = $("#grtjb-grid").jqxGrid('exportdata', 'xls');
+						window.open('data:application/vnd.ms-excel,' + encodeURIComponent(gridContent));		                
+
+					});			
 					$("#search").jqxButton({
 						template : 'primary'
 					});	
@@ -157,8 +166,14 @@ $(document).ready(function() {
 						searchfb(rowData['xm']);						
 					});
 
-					$('#ksrq').jqxDateTimeInput({formatString: "yyyy-MM-dd",culture:'zh-CN', height: '25px'});
-					$('#jsrq').jqxDateTimeInput({formatString: "yyyy-MM-dd",culture:'zh-CN', height: '25px'});
-					
+					$('#ksrq').jqxDateTimeInput({formatString: "yyyy-MM-dd",culture:'zh-CN', height: '25px',culture:'zh-CN'});
+					$('#jsrq').jqxDateTimeInput({formatString: "yyyy-MM-dd",culture:'zh-CN', height: '25px',culture:'zh-CN'});
+					var now = new Date();
+					var year = now.getFullYear();
+					var ksrq = year+"-01-01";
+					var jsrq = year+"-12-31";
+					$('#ksrq').val(ksrq);
+					$('#jsrq').val(jsrq);
+					search();
 					initgrtjbfb();
 				});

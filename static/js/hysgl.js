@@ -101,6 +101,11 @@ function searchtree()
 
         function deletehysgl(id)
         {
+            if (confirm('是否删除')==false)
+  {
+               return ;
+  }    
+
         	var selectedrowindex = $("#hysgl-grid").jqxGrid('getselectedrowindex');
         	var rowscount = $("#hysgl-grid").jqxGrid('getdatainformation').rowscount;
         	if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
@@ -179,7 +184,7 @@ function init_treegrid()
         }
 $(document).ready(function() {
 	init_treegrid();
-        	$("#hysgl-expander").jqxExpander({height:'50%'});
+        	$("#hysgl-expander").jqxExpander({height:'49%'});
 
         	$("#hysgl-grid")
         	.jqxGrid(
