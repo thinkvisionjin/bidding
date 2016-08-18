@@ -179,6 +179,7 @@ def update():
     try:
         for key in row_data:
             if key!='Id' and key!='uid':
+                print key, row_data[key]
                 db(db[table_name]._id == id).update(**{key:unicode(row_data[key].decode('utf-8'))})
     except Exception as e:
         print e
@@ -2763,7 +2764,7 @@ def select_tjzb():
         print e
         return u"fail"    
 
-<<<<<<< HEAD
+
 @auth.requires_login()
 def gdwj():
 
@@ -3003,5 +3004,4 @@ where a.WinningCompany=b.dwmc and a.PackageNumber='"""+request.vars.PackageNumbe
     row[u'rq'] = row[u'rq'][0:10]
     row[u'zje'] = Num2MoneyFormat(row[u'je'])
     return dict(**row)        
-=======
->>>>>>> branch 'master' of https://github.com/thinkvisionjin/bidding.git
+

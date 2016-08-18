@@ -88,11 +88,8 @@ function deletegmbs(id)
 	if (confirm('是否删除')==false)
 	{
 		return ;
-<<<<<<< HEAD
 	}	
-=======
-	}
->>>>>>> branch 'master' of https://github.com/thinkvisionjin/bidding.git
+
     var selectedrowindex = $("#gmbs-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#gmbs-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {

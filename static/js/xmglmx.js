@@ -1141,6 +1141,7 @@ function InitEditPackageWindow(dict, projectpackage) {
 				var source = $("#EditProject_PackageTable").jqxGrid("source")
 				$("#EditProject_PackageTable").jqxGrid({ source: source });
 				$("#popupWindow_PackageManage").jqxWindow('hide');}, 'json');
+				$("#EditProject_FinanceTable").jqxGrid({source: gFinancedataAdapter});
 		});
 	}
 	

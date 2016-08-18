@@ -45,11 +45,8 @@ function tbzj_configpage(tbbzjid)
 
     	$('#tbzj_dwmc').jqxComboBox({ placeHolder: "", source: result['dwmc']});
 
-<<<<<<< HEAD
 $('#tbzj_projectid').jqxDropDownList({ placeHolder: "", source: result['projectid'], displayMember:'ProjectCode', valueMember:'Id'});
-=======
-$('#tbzj_bsbh').jqxDropDownList({ placeHolder: "", source: result['bsbh']});
->>>>>>> branch 'master' of https://github.com/thinkvisionjin/bidding.git
+
 $('#tbzj_fkfs').jqxDropDownList({ placeHolder: "", source: result['fkfs']});
 
 		if (state == 'add' &&tbbzjid!=undefined)
@@ -310,13 +307,10 @@ function tbzj_popupwindow(flag_state, id, callback, tbbzjid, projectid)
 	else
 	{
 
-<<<<<<< HEAD
+
 //		$('#tbzj_dwmc').jqxInput({disabled:true});
 //		$('#tbzj_projectid').jqxDropDownList({disabled:true});
-=======
-		$('#tbzj_dwmc').jqxInput({disabled:true});
-		$('#tbzj_bsbh').jqxDropDownList({disabled:true});
->>>>>>> branch 'master' of https://github.com/thinkvisionjin/bidding.git
+
 	}	
 	$('#tbzj_popupWindow').jqxWindow('open');
 }
