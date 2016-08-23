@@ -20,6 +20,28 @@ function gettbzjkh(dwmc)
 		
 	}, 'json');	
 }
+function tbzj_configpage1(projectid)
+{
+	if (projectid == undefined)
+	{
+		url = 'gettbzjpz';
+	}
+	else
+	{
+		url = 'gettbzjpz?projectid='+projectid;
+	}
+	
+	$.get(url, function(result){
+		//需特殊处理
+    	$('#tbzj_dwmc').jqxComboBox({ placeHolder: "", source: result['dwmc'], searchMode: 'contains'});
+
+		$('#tbzj_projectid').jqxDropDownList({ placeHolder: "", source: result['projectid'], displayMember:'ProjectCode', valueMember:'Id'});
+		$('#tbzj_projectid').jqxDropDownList('selectIndex', 0);
+		$('#tbzj_fkfs').jqxDropDownList({ placeHolder: "", source: result['fkfs']});
+    }, 'json');	
+    $("#tbzj_dwmc input").blur(function(){gettbzjkh($("#tbzj_dwmc").val())});  
+}
+
 function tbzj_configpage(tbbzjid)
 {
 	if (tbbzjid == undefined)
@@ -36,7 +58,7 @@ function tbzj_configpage(tbbzjid)
 		{
 			url = 'gettbzjpz';
 		}
-		$('#tbzj_dwmc').jqxInput({disabled:true});
+		$('#tbzj_dwmc').jqxComboBox({disabled:true});
 		$('#tbzj_projectid').jqxDropDownList({disabled:true});
 	}
 	
@@ -312,5 +334,37 @@ function tbzj_popupwindow(flag_state, id, callback, tbbzjid, projectid)
 //		$('#tbzj_projectid').jqxDropDownList({disabled:true});
 
 	}	
+	$('#tbzj_popupWindow').jqxWindow('open');
+}
+
+function tbzj_popupwindow1(flag_state, id, callback, projectid)
+{
+	y = document.body.scrollTop;
+	x = (document.body.scrollWidth -600)/2
+	$('#tbzj_popupWindow').jqxWindow({ position: { x: x, y: y }});	
+	state = flag_state;
+	gkhcallback = callback;
+	tbzj_configpage1(projectid);
+	$('#tbzj_Id').val(id);
+	
+	if (state == 'add')
+	{
+		tbzj_title.innerHTML='新增';
+		tbzj_setupadd();
+		$('#tbzj_popupWindow').jqxWindow({ height:300});
+	}
+	if (state == 'modify')
+	{
+		tbzj_title.innerHTML='修改';
+		tbzj_setupmodify();
+		$('#tbzj_popupWindow').jqxWindow({ height:430});
+	}
+	if (state == 'detail')
+		{
+			
+			tbzj_title.innerHTML='详情';
+			tbzj_setupdetail();
+			$('#tbzj_popupWindow').jqxWindow({ height:430});
+		}
 	$('#tbzj_popupWindow').jqxWindow('open');
 }

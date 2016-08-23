@@ -1145,6 +1145,29 @@ def select_tbbzj():
     except:
         return u"fail"
 
+
+def select_tbbzjbyProjectId():
+    try:
+        username = auth.user.chinesename.decode('gbk')
+
+        where = u"where 1=1 "
+
+        where = where + u" and a.projectid=b.Id "
+
+  
+        if request.vars.projectid==None:
+            projectid=u''
+        else:
+            projectid = unicode(request.vars.projectid, u'utf-8')
+        where += u"and a.projectid ="+projectid
+        
+        order = u" order by rq desc"
+        sql = u"""select a.Id, a.dwmc, a.bzjlx, a.je, a.rq, a.username, a.ly, a.lyId, b.ProjectCode as projectid from tbbzj a, Project b """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail"
+
 def p_updaterow_tbbzj(id, rowData):
     table_name = u'tbbzj'
     updaterow(table_name, id, rowData)
@@ -1303,7 +1326,7 @@ def select_tbzj():
             projectid=u''
         else:
             projectid = unicode(request.vars.projectid, u'utf-8')
-        where += u"and projectid like '%"+projectid+u"%' "
+        where += u"and b.ProjectCode like '%"+projectid+u"%' "
         
         order = u" order by rq desc"
         sql = u"""select a.Id, a.dwmc, a.khyh, a.yhzh, a.rq, a.username, a.fkfs, a.je, b.ProjectCode as projectid from tbzj a, Project b """ + where+order;
@@ -1311,7 +1334,27 @@ def select_tbzj():
         return sqltojson(sql);
     except:
         return u"fail"
-    
+
+def select_tbzjbyProjectId():
+    try:
+        username = auth.user.chinesename.decode('gbk')
+        where = u"where 1=1 "
+
+        where = where + u' and a.projectid = b.Id '
+   
+        if request.vars.projectid==None:
+            projectid=u''
+        else:
+            projectid = unicode(request.vars.projectid, u'utf-8')
+        where += u"and a.projectid ="+projectid
+        
+        order = u" order by rq desc"
+        sql = u"""select a.Id, a.dwmc, a.khyh, a.yhzh, a.rq, a.username, a.fkfs, a.je, b.ProjectCode as projectid from tbzj a, Project b """ + where+order;
+        print sql   
+        return sqltojson(sql);
+    except:
+        return u"fail"
+
 def updaterow_tbzj():
     try:
         table_name = u'tbzj'
@@ -1485,7 +1528,7 @@ def getzbpz():
 def getttbzj_tbzjByProjectId():
     projectid = request.vars.id
     uid = u''
-    sql = u"""select b.Id, a.dwmc, c.ProjectCode projectid, a.bzjlx, a.je, a.rq, a.username, a.ly, a.lyId ,b.rq as trq, ISNULL (b.je,0 ) as tje,b.fkfs,khyh,
+    sql = u"""select a.Id, a.dwmc, c.ProjectCode projectid, a.bzjlx, a.je, a.rq, a.username, a.ly, a.lyId ,b.rq as trq, ISNULL (b.je,0 ) as tje,b.fkfs,khyh,
 CASE ISNULL (b.je,0 )
 WHEN 0 THEN 0
 ELSE 1 
