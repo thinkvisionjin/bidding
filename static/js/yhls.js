@@ -390,8 +390,8 @@ function inityhlsqr() {
 
 	$.get('getyhlsqrpz', function (result) {
 		//需特殊处理
-		$('#wjm').jqxComboBox({ source: result['wjm']});
-		$('#dwmc').jqxComboBox({ source: result['dwmc'] });
+		$('#wjm').jqxComboBox({ source: result['wjm'], searchMode: 'contains'});
+		$('#dwmc').jqxComboBox({ source: result['dwmc'] , searchMode: 'contains'});
 		$('#bsbh').jqxDropDownList({source : result['bsbh']});
 		$('#qrlx').jqxDropDownList({ placeHolder: "", source: result['qrlx'], displayMember: "PackageNumber", valueMember: "PackageNumber" });
 	}, 'json');
@@ -480,7 +480,7 @@ $(document).ready(function () {
 	$("#search").click(function () {
 		search();
 	});
-	$('#wjm').jqxComboBox({ placeHolder: "", autoComplete:true});
+	$('#wjm').jqxComboBox({ placeHolder: "", autoComplete:true, searchMode: 'contains'});
 	$('#dfmc').jqxInput();
 	$('#dfzh').jqxInput();
 	addselectfieldwindows();

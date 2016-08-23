@@ -43,7 +43,7 @@ function tbzj_configpage(tbbzjid)
 	$.get(url, function(result){
 		//需特殊处理
 
-    	$('#tbzj_dwmc').jqxComboBox({ placeHolder: "", source: result['dwmc']});
+    	$('#tbzj_dwmc').jqxComboBox({ placeHolder: "", source: result['dwmc'], searchMode: 'contains'});
 
 $('#tbzj_projectid').jqxDropDownList({ placeHolder: "", source: result['projectid'], displayMember:'ProjectCode', valueMember:'Id'});
 
@@ -226,7 +226,7 @@ function tbzj_init () {
     
 
     $('#tbzj_Id').jqxInput();
-$('#tbzj_dwmc').jqxComboBox({ placeHolder: '',autoComplete:true});
+$('#tbzj_dwmc').jqxComboBox({ placeHolder: '',autoComplete:true, searchMode: 'contains'});
 $('#tbzj_rq').jqxInput();
 $('#tbzj_projectid').jqxDropDownList({ placeHolder: ''});
 $('#tbzj_username').jqxInput();

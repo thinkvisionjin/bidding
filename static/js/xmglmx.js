@@ -22,7 +22,7 @@ function InitEditProjectPage(dict, project) {
 	$("#EditProject_ProjectName").jqxInput({ disabled: true });
 	//采购单位
     BindCustomer("#EditProject_Customer", dict.Customer, project)
-    $("#EditProject_Customer").jqxComboBox({ disabled: true });
+    $("#EditProject_Customer").jqxComboBox({ disabled: true, searchMode: 'contains' });
 	//项目类型
 	BindProjectType("#EditProject_ProjectType", dict.ProjectType, project);
 	//采购类型
@@ -68,7 +68,7 @@ function InitEditProjectPage(dict, project) {
 			project = JSON.parse(result)[0];
 			//采购单位
 			BindCustomer("#EditProject_Customer", dict.Customer, project)
-			$("#EditProject_Customer").jqxComboBox({ disabled: true });
+			$("#EditProject_Customer").jqxComboBox({ disabled: true, searchMode: 'contains' });
 			//项目类型
 			BindProjectType("#EditProject_ProjectType", dict.ProjectType, project);
 			//采购类型
@@ -88,7 +88,7 @@ function InitEditProjectPage(dict, project) {
 	$("#EditProject_Cancel").jqxButton({ template: 'warning' });
 	$("#EditProject_Cancel").click(function () {
 		BindCustomer("#EditProject_Customer", dict.Customer, project)
-		$("#EditProject_Customer").jqxComboBox({ disabled: true });
+		$("#EditProject_Customer").jqxComboBox({ disabled: true , searchMode: 'contains'});
 		//项目类型
 		BindProjectType("#EditProject_ProjectType", dict.ProjectType, project);
 		//采购类型

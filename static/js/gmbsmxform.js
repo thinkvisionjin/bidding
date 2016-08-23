@@ -15,7 +15,7 @@ function getgmbskh(dwmc)
 			{
 				tlxr.push(glxrxx[i]['lxr'])
 			}
-			$('#gmbs_lxr').jqxComboBox({ placeHolder: '', source: tlxr});
+			$('#gmbs_lxr').jqxComboBox({ placeHolder: '', source: tlxr, searchMode: 'contains'});
 //			$('#gmbs_lxr input').val(lxr);
 //			$('#gmbs_sj input').val(sj);
 			$('#gmbs_nsrsbh').val(result['khxx'][0]['nsrsbh']);
@@ -48,7 +48,7 @@ function gmbs_configpage(projectid)
 	
 	$.get(url, function(result){
 		//需特殊处理
-		$('#gmbs_dwmc').jqxComboBox({ placeHolder: '', source: result['dwmc']});
+		$('#gmbs_dwmc').jqxComboBox({ placeHolder: '', source: result['dwmc'], searchMode: 'contains'});
 		$('#gmbs_bsbh').jqxDropDownList({ placeHolder: '', source: result['bsbh']});
 		$('#gmbs_bsbh').jqxDropDownList('selectIndex', 0);
 
@@ -264,14 +264,14 @@ function gmbs_init () {
     
 
     $('#gmbs_Id').jqxInput();
-$('#gmbs_dwmc').jqxComboBox({ placeHolder: ''});
+$('#gmbs_dwmc').jqxComboBox({ placeHolder: '', searchMode: 'contains'});
 $('#gmbs_nsrsbh').jqxInput();
 $('#gmbs_lxdz').jqxInput();
 $('#gmbs_dh').jqxInput();
 $('#gmbs_khyh').jqxInput();
 $('#gmbs_yhzh').jqxInput();
 $('#gmbs_zzsdwmc').jqxInput();
-$('#gmbs_lxr').jqxComboBox({ placeHolder: ''});
+$('#gmbs_lxr').jqxComboBox({ placeHolder: '', searchMode: 'contains'});
 $('#gmbs_sj').jqxInput();
 $('#gmbs_lxrdh').jqxInput();
 $('#gmbs_lxrdz').jqxInput();

@@ -125,10 +125,10 @@ function detailyhlsqr(id)
 }
 function configpopupwindow()
 {
-	$('#wjm').jqxComboBox({ placeHolder: "", autoComplete:true});
+	$('#wjm').jqxComboBox({ placeHolder: "", autoComplete:true, searchMode: 'contains'});
 	$.get('getyhlsqrpz', function (result) {
 		//需特殊处理
-		$('#wjm').jqxComboBox({ source: result['wjm']});
+		$('#wjm').jqxComboBox({ source: result['wjm'], searchMode: 'contains'});
 		
 		
 	}, 'json');	
