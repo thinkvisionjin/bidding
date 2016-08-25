@@ -54,9 +54,9 @@ function search()
                       },
                   valueAxis:
                   {
-                      unitInterval: 10,
+                      //unitInterval: 10,
                       minValue: 0,
-                      maxValue: 80,
+                      //maxValue: 80,
                       title: { text: '数量' },
                       labels: { horizontalAlignment: 'right' },
                       tickMarks: { color: '#BCBCBC' }

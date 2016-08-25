@@ -125,38 +125,47 @@ def call():
 ##################通用的表处理接口#############################
 
 def insert():
-    table_name = request.vars.table
-    print 'inserting data into:'  +table_name +'**************'
-    rowData = request.post_vars
-    print rowData
-    for key in rowData:
-        rowData[key] = rowData[key].decode('utf-8')
-    id = db[table_name].insert(**rowData)
-    print id 
-    db.commit()
-    row = db(db[table_name]._id ==id).select().first()
-    print row
-    dict_row = {}
-    for key in row.keys():
-        if (key!= u'update_record' and key!= u'delete_record'):
-            try:
-                if key==u'id':
-                    dict_row[u'Id']  = row[key]
-                elif isinstance(row[key], bool):
-                    dict_row[key] = row[key]
-                elif isinstance(row[key], str):
-                    dict_row[key] = row[key].decode('utf-8')
-                elif isinstance(row[key], datetime):
-                    dict_row[key] = unicode(row[key])
-                elif isinstance(row[key], Decimal):
-                    dict_row[key] = unicode(row[key])
-                else:
-                    dict_row[key] = row[key]
-            except:
-                print sys.exc_info()
-    print id 
-    result= json.dumps(dict_row,ensure_ascii=False)
-    return result
+    try:
+        table_name = request.vars.table
+        print 'inserting data into:'  +table_name +'**************'
+        rowData = request.post_vars
+        print rowData
+        for key in rowData:
+            rowData[key] = rowData[key].decode('utf-8')
+        id = db[table_name].insert(**rowData)
+        print id 
+        
+        row = db(db[table_name]._id ==id).select().first()
+        print row
+        dict_row = {}
+        for key in row.keys():
+            if (key!= u'update_record' and key!= u'delete_record'):
+                try:
+                    if key==u'id':
+                        dict_row[u'Id']  = row[key]
+                    elif isinstance(row[key], bool):
+                        dict_row[key] = row[key]
+                    elif isinstance(row[key], str):
+                        dict_row[key] = row[key].decode('utf-8')
+                    elif isinstance(row[key], datetime):
+                        dict_row[key] = unicode(row[key])
+                    elif isinstance(row[key], Decimal):
+                        dict_row[key] = unicode(row[key])
+                    else:
+                        dict_row[key] = row[key]
+                except:
+                    print sys.exc_info()
+        print id 
+        result= json.dumps(dict_row,ensure_ascii=False)
+        db.commit()
+        return result
+    except Exception as e:
+        print e
+        db.rollback()
+        result = {}
+        result['result'] = u'fail'
+        return json.dumps(result)
+
 
 def delete():
     table_name = request.vars.table
@@ -168,26 +177,25 @@ def delete():
     return dict(table=table_name)
 
 def update():
-    table_name = request.vars.table
-    print 'update data into:'  +table_name +'**************'
-    row_data = request.post_vars
-    print row_data
+    try:
+        table_name = request.vars.table
+        print 'update data into:'  +table_name +'**************'
+        row_data = request.post_vars
+        print row_data
 #     for key in row_data:
 #         print unicode(key)+u":"+unicode(row_data[key].decode('utf-8'))
     
-    id = row_data['Id']
-    try:
+        id = row_data['Id']
         for key in row_data:
             if key!='Id' and key!='uid':
                 print key, row_data[key]
                 db(db[table_name]._id == id).update(**{key:unicode(row_data[key].decode('utf-8'))})
-    except Exception as e:
-        print e
-    row = db(db[table_name]._id ==id).select().first()
-    db.commit()
-    dic_rows = []
-    dict_row = {}
-    try:
+
+        row = db(db[table_name]._id ==id).select().first()
+
+        dic_rows = []
+        dict_row = {}
+
         print "get the updated record"
         for key in row.keys():
             if (key!= u'update_record' and key!= u'delete_record'):
@@ -201,11 +209,15 @@ def update():
                     dict_row[key] = unicode(row[key])
                 else:
                     dict_row[key] = unicode(row[key])
-           
         dic_rows.append(dict_row)
+        db.commit()
+        return json.dumps(dic_rows,ensure_ascii=False)
     except Exception as e:
         print e
-    return json.dumps(dic_rows,ensure_ascii=False)
+        db.rollback()
+        result={}
+        result['result'] = u'fail'
+        return json.dumps(result)
 
 @auth.requires_login()
 def select():
@@ -1621,17 +1633,27 @@ def select_grtjbfb():
         jsrq = request.vars.jsrq     
         name = unicode(request.vars.username, u'utf-8')
         row = db(db[u'auth_user'].chinesename ==name).select().first()   
+        print name
         id = unicode(row[u'id'])
+        
         sql = u"""select b.PurchaseStyleName　as xmlx, count(case EmployeeId　when """+id+u""" then EmployeeId end) as fz, 
+case when (select count(*) as c from project a, PurchaseStyle b
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
+   and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
+   and a.EmployeeId ="""+id+u""")=0 then '0' else
 rtrim(convert(decimal(18,2),count(case EmployeeId　when """+id+u""" then EmployeeId end)*100.00/(select count(*) as c from project a, PurchaseStyle b
    where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
    and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
-   and a.EmployeeId ="""+id+u""")))+'%' as fzbfb, 
+   and a.EmployeeId ="""+id+u"""))) end +'%'  as fzbfb, 
 count(case assistant when """+id+u""" then assistant end) as xz,
+case when (select count(*) as c from project a, PurchaseStyle b
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
+   and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
+   and a.assistant ="""+id+u""")=0 then '0' else
 rtrim(convert(decimal(18,2),count(case assistant　when """+id+u""" then assistant end)*100.00/(select count(*) as c from project a, PurchaseStyle b
    where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
    and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
-   and a.assistant ="""+id+u""")))+'%' as xzbfb,
+   and a.assistant ="""+id+u"""))) end+'%' as xzbfb,
    0 as dj,
    0 as zj
   from project a, PurchaseStyle b
@@ -2793,7 +2815,7 @@ def select_tjzb():
 0 as jl
  from 
 (SELECT a.ywlx, a.je,  c.PurchaseStyleName
-  FROM [cwls] a, project b, [PurchaseStyle] c, ProjectPackage d where a.bsbh=d.PackageNumber and b.id=d.ProjectId
+  FROM [cwls] a, project b, [PurchaseStyle] c  where a.projectid=b.id
   and b.PurchaseStyleId=convert(int, c.[PurchaseStyleId])
   and b.[CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""') a 
     pivot (sum(je) for  ywlx
@@ -2802,7 +2824,7 @@ def select_tjzb():
         result['tjzb_grid1'] = sqltoarray(sql1);
         result['tjzb_grid2'] = sqltoarray(sql2);
         result['tjzb_grid3'] = sqltoarray(sql3);
-        return json.dumps(result) 
+        return json.dumps(result).replace(u'None', u'') 
     except Exception as e:
         print e
         return u"fail"    
@@ -3047,4 +3069,28 @@ where a.WinningCompany=b.dwmc and a.PackageNumber='"""+request.vars.PackageNumbe
     row[u'rq'] = row[u'rq'][0:10]
     row[u'zje'] = Num2MoneyFormat(row[u'je'])
     return dict(**row)        
+
+def getProjectView():
+    projectid = request.vars.id
+    sql = u"""
+select a.dwmc, b.zje as gmbsje, c.zje as tbbzjje, d.zje as tbzjje from 
+(SELECT dwmc
+  FROM [BIDDING].[dbo].[gmbs]
+  where bsbh in (select PackageNumber from BIDDING.dbo.ProjectPackage where projectid = """+projectid+u""")
+union
+select distinct dwmc from bidding.dbo.tbbzj where projectid = """+projectid+u"""
+union
+select distinct dwmc from bidding.dbo.tbzj where projectid = """+projectid+u""")a
+left join (select dwmc, sum(je) zje from gmbs where bsbh in (select PackageNumber from BIDDING.dbo.ProjectPackage where projectid = 1)
+group by dwmc)b
+on a.dwmc =b.dwmc
+left join (select dwmc, sum(je) zje from bidding.dbo.tbbzj where projectid = """+projectid+u"""
+group by dwmc)c
+on a.dwmc =c.dwmc
+left join (select dwmc, sum(je) zje from bidding.dbo.tbzj where projectid = """+projectid+u"""
+group by dwmc)d
+on a.dwmc =d.dwmc
+    
+"""
+    return sqltojson(sql)
 

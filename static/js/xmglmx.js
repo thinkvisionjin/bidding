@@ -3,12 +3,15 @@ var gFinancedataAdapter;
 var gtbbzjdataAdapter;
 var gtbzjdataAdapter;
 var gProjectMargindataAdapter;
+var gContactAdapter;
+var gProjectViewdataAdapter;
 var gViewFlag = 1;
 function InitEditProjectPage(dict, project) {
 	$("#jqxProjectBasicExpander").jqxExpander({ width: '99%', toggleMode: 'dblclick' });
 	$("#jqxProjectPackagesExpander").jqxExpander({ width: '99%', toggleMode: 'dblclick' });
 	$("#jqxProjectDocumentsExpander").jqxExpander({ width: '99%', toggleMode: 'dblclick' });
 	//$("#jqxProjectMarginExpander").jqxExpander({ width: '99%', toggleMode: 'dblclick' });
+	$("#jqxProjectViewExpander").jqxExpander({ width: '99%', toggleMode: 'dblclick' });
 	$("#jqxProjectContactsExpander").jqxExpander({ width: '99%', toggleMode: 'dblclick' });
 	$("#jqxProjectExpanse").jqxExpander({ width: '99%', toggleMode: 'dblclick' });
 	$("#jqxProjectFinanceExpander").jqxExpander({ width: '99%', toggleMode: 'dblclick' });
@@ -470,7 +473,7 @@ function InitProjectPackageGrid(dict, project) {
 			})
 		},
 		columns: projectPackage_columns_content	});
-	$('#EditProject_PackageTable').jqxGrid('autoresizecolumns');
+	//$('#EditProject_PackageTable').jqxGrid('autoresizecolumns');
 	$('#EditProject_PackageTable').on('rowclick', function (event) {
 		var args = event.args;
 		// row's bound index.
@@ -507,9 +510,7 @@ function InitProjectDocumentGrid(dict, project) {
 				{ name: 'Id', type: 'string' },
 				{ name: 'dwmc', type: 'string' },
 				{ name: 'rq', type: 'string' },
-				{ name: 'zzszwmc', type: 'string' },
-				{ name: 'zzsywmc', type: 'string' },
-				{ name: 'zzsgb', type: 'string' },
+				{ name: 'zzsdwmc', type: 'string' },
 				{ name: 'lxdz', type: 'string' },
 				{ name: 'lxr', type: 'string' },
 				{ name: 'sj', type: 'string' },
@@ -544,6 +545,7 @@ function InitProjectDocumentGrid(dict, project) {
 				var refreshButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>刷新</span></div>");
 				var deleteButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>删除</span></div>");
 				var printButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
+				var printgmbsButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印购买标书登记表</span></div>");
 				var exportButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>导出</span></div>");
 				var editButton = $("<div style='float: left; margin-left: 5px;' id ='documentEditButton'><span style='margin-left: 4px; position: relative; top: 0px;'>修改</span></div>");
 				if (gViewFlag != 1)
@@ -553,20 +555,40 @@ function InitProjectDocumentGrid(dict, project) {
 				container.append(refreshButton);
 				container.append(deleteButton);
 				container.append(printButton);
-				//            container.append(exportButton);
+				
+				container.append(printgmbsButton);
 
 				addNewButton.jqxButton({ template: "success" });
+				printgmbsButton.jqxButton({ template: "success" });
 				editButton.jqxButton({ template: "primary" });
 				editButton.jqxButton({ disabled: true });
 				refreshButton.jqxButton({ template: "inverse" });
 				printButton.jqxButton({ template: "info" });
 				exportButton.jqxButton({ template: "warning" });
 				deleteButton.jqxButton({ template: "danger" });
+				printgmbsButton.click(function (event) {
+					var selectedrowindex = $("#EditProject_DocumentTable").jqxGrid('getselectedrowindex');
+					if (selectedrowindex == -1)
+					{
+						return;
+					}
+		
 
+					var rowscount = $("#EditProject_DocumentTable").jqxGrid('getdatainformation').rowscount;
+					if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+						var rowid = $("#EditProject_DocumentTable").jqxGrid('getrowid', selectedrowindex);
+					
+					}
+					data = $('#EditProject_DocumentTable').jqxGrid('getrowdata', selectedrowindex);					
+					var newWindow = window.open('gmbs_print?Id='+data['Id'], '');
+					newWindow.print();	
+				});
 				addNewButton.click(function (event) {
 					gmbs_popupwindow("add", "", function () {
 						$("#EditProject_DocumentTable").jqxGrid({ source: dataAdapter });
 						$("#EditProject_FinanceTable").jqxGrid({source: gFinancedataAdapter})
+						$("#EditProject_ContactsTable").jqxGrid({source: gContactAdapter})
+						$("#EditProject_ViewTable").jqxGrid({source: gProjectViewdataAdapter});
 					}, project.Id);
 				});
 				refreshButton.click(function (event) {
@@ -579,6 +601,8 @@ function InitProjectDocumentGrid(dict, project) {
 						gmbs_popupwindow("modify", gmbsid, function () {
 							$("#EditProject_DocumentTable").jqxGrid({ source: dataAdapter });
 							$("#EditProject_FinanceTable").jqxGrid({source: gFinancedataAdapter})
+							$("#EditProject_ContactsTable").jqxGrid({source: gContactAdapter})
+							$("#EditProject_ViewTable").jqxGrid({source: gProjectViewdataAdapter});
 						}, project.Id);
 					}
 
@@ -626,6 +650,8 @@ function InitProjectDocumentGrid(dict, project) {
 							alert('成功')
 							$("#EditProject_DocumentTable").jqxGrid('deleterow', rowid);
 							$("#EditProject_FinanceTable").jqxGrid({source: gFinancedataAdapter})
+							$("#EditProject_ContactsTable").jqxGrid({source: gContactAdapter})
+							$("#EditProject_ViewTable").jqxGrid({source: gProjectViewdataAdapter});
 						}
 						else
 						{
@@ -640,7 +666,7 @@ function InitProjectDocumentGrid(dict, project) {
 			columns: [
 				{ text: '招标书编号', columntype: 'dropdownlist', datafield: 'bsbh', width: '14%', align: 'center', cellsalign: 'center', },
 				{ text: '客户名称', columntype: 'textbox', datafield: 'dwmc', width: '23%', align: 'center', cellsalign: 'center', },
-				{ text: '制造商中文名称', columntype: 'dropdownlist', datafield: 'zzszwmc', width: '21%', align: 'center', cellsalign: 'center', },
+				{ text: '制造商单位名称', columntype: 'dropdownlist', datafield: 'zzsdwmc', width: '21%', align: 'center', cellsalign: 'center', },
 				{
 					text: '付款日期', datafield: 'rq', columntype: 'datetimeinput', width: '22%', align: 'center', cellsalign: 'center', cellsformat: 'yyyy-MM-dd',
 					validation: function (cell, value) {
@@ -978,12 +1004,12 @@ function InitNewPackageWindowValidator(){
         			var val = $("#PackageName_ADD").val();
      			if(val==""){return false;}	return true;
      		} },
-                { input: '#EntrustMoney_ADD', message: '委托金额必须为数字!', action: 'keyup, blur', rule: function(input){
+/*                { input: '#EntrustMoney_ADD', message: '委托金额必须为数字!', action: 'keyup, blur', rule: function(input){
         			var val = $("#EntrustMoney_ADD").jqxInput('val');
         			if(val==""){return false;}
         			var reg = /[+|-|0-9]{2,30}$/;
         			if (reg.test(val)) {return true;}else{return false;}
-        		} },
+        		} },*/
                 { input: '#PublicDate_ADD', message: '公告日期必须在今天以后！', action: 'keyup, blur', rule: function (input, commit) {
                     var date = $('#PublicDate_ADD').jqxDateTimeInput('value');
                     if(date!=undefined){
@@ -1159,13 +1185,13 @@ function InitEditPackageWindowValidator(){
                 { input: '#PackageName_Manage', message: '包件名称不得为空!', action: 'keyup, blur', rule: function(input){
         			var val = $("#PackageName_Manage").val();
      			if(val==""){return false;}	return true;
-     		} },
+     		} },/*
                 { input: '#EntrustMoney_Manage', message: '委托金额必须为数字!', action: 'keyup, blur', rule: function(input){
         			var val = $("#EntrustMoney_Manage").jqxInput('val');
         			if(val==""){return false;}
         			var reg = /[+|-|0-9]{2,30}$/;
         			if (reg.test(val)) {return true;}else{return false;}
-        		} },
+        		} },*/
       /*          { input: '#PublicDate_Manage', message: '公告日期必须在今天以后！', action: 'keyup, blur', rule: function (input, commit) {
                     var date = $('#PublicDate_Manage').jqxDateTimeInput('value');
                     if(date!=undefined){
@@ -1238,6 +1264,7 @@ function InitProjectContactsGrid(dict, project) {
 			datatype: "json"
 		};
     var adapter = new $.jqx.dataAdapter(source);
+	gContactAdapter = new $.jqx.dataAdapter(source);
     var buildFilterPanel = function (filterPanel, datafield) {
         var textInput = $("<input style='margin:5px;'/>");
         var applyinput = $("<div class='filter' style='height: 25px; margin-left: 20px; margin-top: 7px;'></div>");
@@ -1745,6 +1772,7 @@ function InittbbzjGrid(dict, project) {
 						//refresh the grid when load completed
 						//$("#EdittbbzjTable").jqxGrid({ source: dataAdapter });
 						$("#EdittbzjTable").jqxGrid({ source: gtbzjdataAdapter });
+						$("#EditProject_ViewTable").jqxGrid({source: gProjectViewdataAdapter});
 					}, tbbzjid)			
 				});				
 				addNewButton.click(function (event) {
@@ -1752,6 +1780,7 @@ function InittbbzjGrid(dict, project) {
 						//refresh the grid when load completed
 						$("#EdittbbzjTable").jqxGrid({ source: dataAdapter });
 						$("#EditProject_FinanceTable").jqxGrid({source: gFinancedataAdapter})
+						$("#EditProject_ViewTable").jqxGrid({source: gProjectViewdataAdapter});
 					}, project.Id)
 				});
 
@@ -1769,6 +1798,7 @@ function InittbbzjGrid(dict, project) {
 							//refresh the grid when load completed
 							$("#EdittbbzjTable").jqxGrid({ source: dataAdapter });
 							$("#EditProject_FinanceTable").jqxGrid({source: gFinancedataAdapter})
+							$("#EditProject_ViewTable").jqxGrid({source: gProjectViewdataAdapter});
 						}, project.Id)
 					}
 
@@ -1820,6 +1850,7 @@ function InittbbzjGrid(dict, project) {
 							alert('成功')
 							$("#EdittbbzjTable").jqxGrid('deleterow', rowid);
 							$("#EditProject_FinanceTable").jqxGrid({source: gFinancedataAdapter})
+							$("#EditProject_ViewTable").jqxGrid({source: gProjectViewdataAdapter});
 						}
 						else
 						{
@@ -1890,7 +1921,7 @@ function InittbzjGrid(dict, project) {
 			]
 		};
     var dataAdapter = new $.jqx.dataAdapter(source);
-	var gtbzjdataAdapter = new $.jqx.dataAdapter(source);
+	gtbzjdataAdapter = new $.jqx.dataAdapter(source);
     // initialize jqxGrid
     $("#EdittbzjTable").jqxGrid(
 		{
@@ -1953,6 +1984,7 @@ function InittbzjGrid(dict, project) {
 						//refresh the grid when load completed
 						$("#EdittbzjTable").jqxGrid({ source: dataAdapter });
 						$("#EditProject_FinanceTable").jqxGrid({source: gFinancedataAdapter})
+						$("#EditProject_ViewTable").jqxGrid({source: gProjectViewdataAdapter});
 					}, project.Id)
 				});
 
@@ -1965,6 +1997,7 @@ function InittbzjGrid(dict, project) {
 							//refresh the grid when load completed
 							$("#EdittbzjTable").jqxGrid({ source: dataAdapter });
 							$("#EditProject_FinanceTable").jqxGrid({source: gFinancedataAdapter})
+							$("#EditProject_ViewTable").jqxGrid({source: gProjectViewdataAdapter});
 						}, project.Id)
 					}
 
@@ -2015,7 +2048,8 @@ function InittbzjGrid(dict, project) {
 						if (result == 'success') {
 							alert('成功')
 							$("#EdittbzjTable").jqxGrid('deleterow', rowid);
-							$("#EditProject_FinanceTable").jqxGrid({source: gFinancedataAdapter})
+							$("#EditProject_FinanceTable").jqxGrid({source: gFinancedataAdapter});
+							$("#EditProject_ViewTable").jqxGrid({source: gProjectViewdataAdapter});
 						}
 						else
 						{
@@ -2060,6 +2094,100 @@ function InittbzjGrid(dict, project) {
 	});
 }
 
+
+
+function InitProjectViewGrid(dict, project) {
+
+    var source =
+		{
+			url: "getProjectView?id=" + project.Id,
+			datatype: "json",
+			datafields:
+			[{ name: 'dwmc', type: 'string' },
+				{ name: 'gmbsje', type: 'string' },
+				{ name: 'tbbzjje', type: 'string' },
+				{ name: 'tbzjje', type: 'string' }
+			]
+		};
+
+	gProjectViewdataAdapter = new $.jqx.dataAdapter(source);
+    // initialize jqxGrid
+    $("#EditProject_ViewTable").jqxGrid(
+		{
+			height: 265,
+			width: "100%",
+			pageable: false,
+			showToolbar: false,
+			source: gProjectViewdataAdapter,
+			columnsresize: true,
+			editable: false,
+
+/*			renderToolbar: function (toolBar) {
+				//添加打印按钮、导出Excel按钮和其他按钮
+				var me = this;
+				var container = $("<div style='margin-left: auto; margin-right: auto; '></div>");
+				var container = $("<div style='margin: 5px;'></div>");
+
+				var refreshButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>刷新</span></div>");
+				var printButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
+				var exportButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>导出</span></div>");
+				var columnSettingButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>设置</span></div>");
+				if (gViewFlag != 1)
+				{toolBar.append(container);}
+				container.append(refreshButton);
+				container.append(printButton);
+				container.append(columnSettingButton);
+
+				refreshButton.jqxButton({ template: "inverse" });
+				printButton.jqxButton({ template: "info" });
+				exportButton.jqxButton({ template: "warning" });
+
+				columnSettingButton.jqxButton({ template: "inverse" });
+
+				refreshButton.click(function (event) {
+					$("#EditProject_MarginTable").jqxGrid({ source: dataAdapter });
+				});
+
+				printButton.click(function (event) {
+					var gridContent = $("#EditProject_MarginTable").jqxGrid('exportdata', 'html');
+					var newWindow = window.open('', '', 'width=800, height=500'),
+						document = newWindow.document.open(),
+						pageContent =
+							'<!DOCTYPE html>\n' +
+							'<html>\n' +
+							'<head>\n' +
+							'<meta charset="utf-8" />\n' +
+							'<title>打印原始单据</title>\n' +
+							'</head>\n' +
+							'<body>\n' + gridContent + '\n</body>\n</html>';
+					document.write(pageContent);
+					document.close();
+					newWindow.print();
+				});
+				exportButton.click(function (event) {
+					$("#EditProject_MarginTable").jqxGrid('exportdata', 'xls', 'jqxGrid');
+				});
+				// delete selected row.
+				deleteButton.click(function (event) {
+					var selectedrowindex = $("#EditProject_MarginTable").jqxGrid('getselectedrowindex');
+					var rowscount = $("#EditProject_MarginTable").jqxGrid('getdatainformation').rowscount;
+					var id = $("#EditProject_MarginTable").jqxGrid('getrowid', selectedrowindex);
+					$("#EditProject_MarginTable").jqxGrid('deleterow', id);
+				});
+
+			},*/
+			columns: [
+{ text: '单位名称', datafield: 'dwmc', width: '30%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '购买标书金额', datafield: 'gmbsje', width: '20%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '缴纳保证金金额', datafield: 'tbbzjje', width: '20%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '退保证金金额', datafield: 'tbzjje', width: '20%',cellsalign: 'center', align: 'center',hidden:false }
+			]
+		});
+    // events
+
+}
+
+
 $(document).ready(function () {
 	var project = JSON.parse($("#ProjectData").text())[0]
 	var dict = JSON.parse($("#Dictionaries").text())
@@ -2067,15 +2195,15 @@ $(document).ready(function () {
 	autosetStatusBar(project.ProjectStatusId)
 	InitEditProjectPage(dict, project);
 	InitProjectPackageGrid(dict, project);
-	InitProjectDocumentGrid(dict, project);
-	//InitProjectMarginGrid(dict, project);
-    InitNewPackageWindow(dict, project);
-    InitEditPackageWindow(dict);
-    InitProjectContactsGrid(dict, project);
-	InitProjectExpansenGrid(dict, project);
-    InitProjectFinanceGrid(dict, project);
-	InittbbzjGrid(dict, project);
-	InittbzjGrid(dict, project);
+	 InitProjectDocumentGrid(dict, project);
+	 InitProjectViewGrid(dict, project);
+     InitNewPackageWindow(dict, project);
+     InitEditPackageWindow(dict);
+     InitProjectContactsGrid(dict, project);
+	 InitProjectExpansenGrid(dict, project);
+     InitProjectFinanceGrid(dict, project);
+	 InittbbzjGrid(dict, project);
+	 InittbzjGrid(dict, project);
 
 
 });
