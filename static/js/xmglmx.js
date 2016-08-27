@@ -1863,11 +1863,11 @@ function InittbbzjGrid(dict, project) {
 			},
 			columns: [
 				{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '项目编号', datafield: 'projectid', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '单位名称', datafield: 'dwmc', width: '25%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '项目编号', datafield: 'projectid', width: '25%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '保证金类型', datafield: 'bzjlx', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '金额', datafield: 'je', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '20%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '操作人', datafield: 'username', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '来源', datafield: 'ly', width: '10%',cellsalign: 'center', align: 'center',hidden:true }
 			]
@@ -2061,14 +2061,14 @@ function InittbzjGrid(dict, project) {
 
 			},
 			columns: [
-				{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+				{ text: '序号', datafield: 'Id', width: '5%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '单位名称', datafield: 'dwmc', width: '20%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '项目编号', datafield: 'projectid', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '项目编号', datafield: 'projectid', width: '15%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '操作人', datafield: 'username', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '来源', datafield: 'ly', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
-{ text: '开户银行', datafield: 'khyh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '银行账号', datafield: 'yhzh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '开户银行', datafield: 'khyh', width: '15%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '银行账号', datafield: 'yhzh', width: '15%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '付款方式', datafield: 'fkfs', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '金额', datafield: 'je', width: '10%',cellsalign: 'center', align: 'center',hidden:false }
 			]

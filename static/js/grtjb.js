@@ -12,7 +12,8 @@ function search()
 		
 	var source = {					
 		datatype : "json",
-		datafields : [{name : 'xm',type : 'string'	},
+		datafields : [{name : 'id',type : 'string'	},
+			{name : 'xm',type : 'string'	},
 {name : 'gngk',type : 'string'	},
 {name : 'gnyq',type : 'string'	},
 {name : 'dylycg',type : 'string'	},
@@ -22,7 +23,7 @@ function search()
 {name : 'qt',type : 'string'	},
 {name : 'gjzb',type : 'string'	},
 {name : 'zj',type : 'string'	}],
-		id : 'Id',
+		id : 'id',
 		url : url
 	};
 	var dataAdapter = new $.jqx.dataAdapter(source);
@@ -32,9 +33,9 @@ function search()
 }
 
 
-function searchfb(username)
+function searchfb(id)
 {
-	url = "select_grtjbfb?username="+username+"&ksrq="+$("#ksrq").val()+"&jsrq="+$("#jsrq").val();
+	url = "select_grtjbfb?id="+id+"&ksrq="+$("#ksrq").val()+"&jsrq="+$("#jsrq").val();
 		
 	var source = {					
 		datatype : "json",
@@ -163,7 +164,7 @@ $(document).ready(function() {
 					    	return;
 					    }
 					    var rowData = args.row;
-						searchfb(rowData['xm']);						
+						searchfb(rowData['id']);						
 					});
 
 					$('#ksrq').jqxDateTimeInput({formatString: "yyyy-MM-dd",culture:'zh-CN', height: '25px',culture:'zh-CN'});

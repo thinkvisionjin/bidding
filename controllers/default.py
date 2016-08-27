@@ -1605,7 +1605,7 @@ def select_grtjb():
         ksrq = request.vars.ksrq
         jsrq = request.vars.jsrq
    
-        sql = u"""  select chinesename as xm,
+        sql = u"""  select id, chinesename as xm,
   国内公开招标 as gngk,
   国内邀请招标 as gnyq,
   询价采购 as xjcg,
@@ -1615,7 +1615,7 @@ def select_grtjb():
   其他 as qt,
   国际招标 as gjzb,
 国内公开招标+国内邀请招标+询价采购+竞争性谈判+竞争性磋商+单一来源采购+其他+国际招标 as zj
-    from (select c.chinesename, b.PurchaseStyleName, a.projectname  from project a, PurchaseStyle b, auth_user c 
+    from (select c.id, c.chinesename, b.PurchaseStyleName, a.projectname  from project a, PurchaseStyle b, auth_user c 
    where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) and a.EmployeeId=c.id 
    and [CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""') a 
    pivot (count(projectname) for  PurchaseStyleName
@@ -1631,10 +1631,7 @@ def select_grtjbfb():
         username = auth.user.chinesename.decode('gbk')
         ksrq = request.vars.ksrq
         jsrq = request.vars.jsrq     
-        name = unicode(request.vars.username, u'utf-8')
-        row = db(db[u'auth_user'].chinesename ==name).select().first()   
-        print name
-        id = unicode(row[u'id'])
+        id = unicode(request.vars.id, u'utf-8')
         
         sql = u"""select b.PurchaseStyleName　as xmlx, count(case EmployeeId　when """+id+u""" then EmployeeId end) as fz, 
 case when (select count(*) as c from project a, PurchaseStyle b
