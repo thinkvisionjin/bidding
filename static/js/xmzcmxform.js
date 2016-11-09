@@ -190,9 +190,24 @@ function xmzc_init () {
     $('#xmzc_Id').jqxInput();
 $('#xmzc_projectid').jqxDropDownList({ placeHolder: ''});
 $('#xmzc_sz').jqxDropDownList({ placeHolder: ''});
+	$('#xmzc_sz').on('select', function (event)
+	{
+		if ($('#xmzc_sz').val() == '支出')
+		{
+
+			$("#xmzc_ywlx").jqxDropDownList({ disabled: false }); 
+		}
+		else
+		{
+			$("#xmzc_ywlx").jqxDropDownList({ disabled: true }); 
+		}
+
+	}                        
+	); 
+
 $('#xmzc_zy').jqxInput();
 $('#xmzc_je').jqxNumberInput({inputMode: 'simple'});
-$('#xmzc_ywlx').jqxDropDownList({ placeHolder: ''});
+$('#xmzc_ywlx').jqxDropDownList({ placeHolder: '', disabled:true});
 $('#xmzc_lyId').jqxInput();
 $('#xmzc_username').jqxInput();
 $('#xmzc_rq').jqxInput();

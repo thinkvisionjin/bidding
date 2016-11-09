@@ -16,6 +16,7 @@ function search()
 		datatype : "json",
 		datafields : [{name : 'id',type : 'string'	},
 {name : 'username',type : 'string'	},
+{name : 'code',type : 'string'	},
 {name : 'chinesename',type : 'string'	},
 {name : 'role',type : 'string'	},
 {name : 'rq',type : 'date'	}],
@@ -32,11 +33,12 @@ function addselectfieldwindows()
 {
 	$(document.body).append('<div id="auth_userzd_popupWindow" ><div>字段选择</div><div style="overflow: hidden;"><div  id="auth_user_zdlistbox"></div></div></div>');
 	$("#auth_userzd_popupWindow").jqxWindow({ isModal: true, autoOpen: false, height: 300, width: 200 , modalOpacity: 0.5});
-	 var listSource = [{ label: '序号', value: 'id', checked: true },,
-{ label: '用户名', value: 'username', checked: true },,
-{ label: '姓名', value: 'chinesename', checked: true },,
-{ label: '角色', value: 'role', checked: true },,
-{ label: '日期', value: 'rq', checked: false },];
+	 var listSource = [{ label: '序号', value: 'id', checked: true },
+{ label: '用户名', value: 'username', checked: true },
+{ label: '用户编号', value: 'code', checked: true },
+{ label: '姓名', value: 'chinesename', checked: true },
+{ label: '角色', value: 'role', checked: true },
+{ label: '日期', value: 'rq', checked: false }];
 	$('#auth_user_zdlistbox').jqxListBox({ source: listSource, width:'100%', height:'100%', checkboxes: true });
     $("#auth_user_zdlistbox").on('checkChange', function (event) {
         $("#auth_user-grid").jqxGrid('beginupdate');
@@ -112,9 +114,10 @@ $(document).ready(function() {
 										height : "80%",
 										width : "98%",
 										columns : [{ text: '序号', datafield: 'id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '用户名', datafield: 'username', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '姓名', datafield: 'chinesename', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '角色', datafield: 'role', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '用户名', datafield: 'username', width: '15%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '用户编号', datafield: 'code', width: '15%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '姓名', datafield: 'chinesename', width: '15%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '角色', datafield: 'role', width: '15%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 												{
 													text : '操作',

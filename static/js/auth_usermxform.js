@@ -37,6 +37,7 @@ function auth_user_setupadd()
 {
 	$('#auth_user_Id').val('');
 $('#auth_user_username').val('');
+$('#auth_user_code').val('');
 $('#auth_user_chinesename').val('');
 $('#auth_user_role').jqxDropDownList('selectIndex',-1);
 $('#auth_user_rq').val('');;
@@ -52,6 +53,7 @@ $('#auth_user_rq').jqxInput({disabled:true});
 		var data = result[0];
 		$('#auth_user_Id').val(data['Id']);
 $('#auth_user_username').val(data['username']);
+$('#auth_user_code').val(data['code']);
 $('#auth_user_chinesename').val(data['chinesename']);
 $('#auth_user_role').val(data['role']);
 $('#auth_user_rq').val(data['rq']);		
@@ -68,6 +70,7 @@ $('#auth_user_rq').jqxInput({disabled:true});;
 		var data = result[0];
 		$('#auth_user_Id').val(data['Id']);
 $('#auth_user_username').val(data['username']);
+$('#auth_user_code').val(data['code']);
 $('#auth_user_chinesename').val(data['chinesename']);
 $('#auth_user_role').val(data['role']);
 $('#auth_user_rq').val(data['rq']);			
@@ -89,6 +92,7 @@ function auth_user_save()
 		}
 	var row = {	
 	username:$('#auth_user_username').val(),
+	code:$('#auth_user_code').val(),
 chinesename:$('#auth_user_chinesename').val(),
 role:$('#auth_user_role').val(),
 	//////////来源////需特殊处理//////
@@ -129,6 +133,7 @@ function auth_user_init () {
 			<table align='center' >\
 			<tr id='tr_auth_user_Id' style='display:none'><td class='tbinputtitle'>序号:</td><td><input class='tbinput' type='text' id='auth_user_Id'/></td></tr>\
 <tr id='tr_auth_user_username'><td class='tbinputtitle'>用户名:</td><td><input class='tbinput' type='text' id='auth_user_username'/></td></tr>\
+<tr id='tr_auth_user_code'><td class='tbinputtitle'>用户编号:</td><td><input class='tbinput' type='text' id='auth_user_code'/></td></tr>\
 <tr id='tr_auth_user_chinesename'><td class='tbinputtitle'>姓名:</td><td><input class='tbinput' type='text' id='auth_user_chinesename'/></td></tr>\
 <tr id='tr_auth_user_role'><td class='tbinputtitle'>角色:</td><td><div class='tbinput' type='text' id='auth_user_role'/></td></tr>\
 <tr id='tr_auth_user_rq'><td class='tbinputtitle'>日期:</td><td><input class='tbinput' type='text' id='auth_user_rq'/></td></tr>\
@@ -150,6 +155,7 @@ function auth_user_init () {
 
     $('#auth_user_Id').jqxInput();
 $('#auth_user_username').jqxInput();
+$('#auth_user_code').jqxInput();
 $('#auth_user_chinesename').jqxInput();
 $('#auth_user_role').jqxDropDownList({ placeHolder: ''});
 $('#auth_user_rq').jqxInput();
@@ -188,6 +194,6 @@ function auth_user_popupwindow(flag_state, id, callback, bsbh)
 			auth_user_title.innerHTML='详情';
 			auth_user_setupdetail();
 		}
-	$('#auth_user_bsbh').val(bsbh);
+	//$('#auth_user_bsbh').val(bsbh);
 	$('#auth_user_popupWindow').jqxWindow('open');
 }

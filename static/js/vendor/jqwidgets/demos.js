@@ -7,7 +7,7 @@ function getDemoTheme() {
         return theme;
     }
 
-    var theme = "bootstrap";
+    var theme = "office";
    
 
     var url = "/bidding/static/css/vendor/jqwidgets/styles/jqx." + theme + '.css';

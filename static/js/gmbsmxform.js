@@ -48,7 +48,7 @@ function gmbs_configpage(projectid)
 	
 	$.get(url, function(result){
 		//需特殊处理
-		$('#gmbs_dwmc').jqxComboBox({ placeHolder: '', source: result['dwmc'], searchMode: 'contains'});
+		$('#gmbs_dwmc').jqxComboBox({ placeHolder: '', source: result['dwmc'], searchMode: 'contains', autoComplete:true});
 		$('#gmbs_bsbh').jqxDropDownList({ placeHolder: '', source: result['bsbh']});
 		$('#gmbs_bsbh').jqxDropDownList('selectIndex', 0);
 
@@ -264,14 +264,14 @@ function gmbs_init () {
     
 
     $('#gmbs_Id').jqxInput();
-$('#gmbs_dwmc').jqxComboBox({ placeHolder: '', searchMode: 'contains'});
+$('#gmbs_dwmc').jqxComboBox({ placeHolder: '', searchMode: 'contains', autoComplete:true});
 $('#gmbs_nsrsbh').jqxInput();
 $('#gmbs_lxdz').jqxInput();
 $('#gmbs_dh').jqxInput();
 $('#gmbs_khyh').jqxInput();
 $('#gmbs_yhzh').jqxInput();
 $('#gmbs_zzsdwmc').jqxInput();
-$('#gmbs_lxr').jqxComboBox({ placeHolder: '', searchMode: 'contains'});
+$('#gmbs_lxr').jqxComboBox({ placeHolder: '', searchMode: 'contains', autoComplete:true});
 $('#gmbs_sj').jqxInput();
 $('#gmbs_lxrdh').jqxInput();
 $('#gmbs_lxrdz').jqxInput();
@@ -342,7 +342,60 @@ $('#tr_gmbs_ly').hide();
   	
 }
 
+
 function gmbs_popupwindow(flag_state, id, search, projectid, bsbh)
+{
+	if (projectid == undefined)
+	{
+		url = 'getgmbspz';
+	}
+	else
+	{
+		url = 'getgmbspz?projectid='+projectid;
+	}
+	
+	$.get(url, function(result){
+		//需特殊处理
+		$('#gmbs_dwmc').jqxComboBox({ placeHolder: '', source: result['dwmc'], searchMode: 'contains', autoComplete:true});
+		$('#gmbs_dwmc input').blur(function(){getgmbskh($('#gmbs_dwmc').val())});  	
+		$('#gmbs_bsbh').jqxDropDownList({ placeHolder: '', source: result['bsbh']});
+		$('#gmbs_bsbh').jqxDropDownList('selectIndex', 0);
+
+		olddwmc = '';
+		y = document.body.scrollTop;
+		x = (document.body.scrollWidth -600)/2
+		$('#gmbs_popupWindow').jqxWindow({ position: { x: x, y: y }});
+		state = flag_state;
+		$('#gmbs_Id').val(id);
+		ggmbscallback = search;
+		if (state == 'add')
+		{
+			$('#gmbs_popupWindow').jqxWindow({ height:580});
+			gmbs_title.innerHTML='新增';
+			gmbs_setupadd();
+		}
+		if (state == 'modify')
+		{
+			$('#gmbs_popupWindow').jqxWindow({ height:800});
+			gmbs_title.innerHTML='修改';
+			gmbs_setupmodify();
+		}
+		if (state == 'detail')
+		{
+			$('#gmbs_popupWindow').jqxWindow({ height:800});
+
+			gmbs_title.innerHTML='详情';
+			gmbs_setupdetail();
+		}
+	//	$('#gmbs_bsbh').val(bsbh);	
+
+		$('#gmbs_popupWindow').jqxWindow('open');
+
+	}, 'json');	
+	
+}
+
+function gmbs_popupwindow1(flag_state, id, search, projectid, bsbh)
 {
 	olddwmc = '';
 	y = document.body.scrollTop;

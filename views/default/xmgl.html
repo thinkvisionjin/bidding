@@ -121,6 +121,7 @@
 						<td align="left"><input id="NewProject_ProjectName" /></td>
 						<td align="left"><p>采购单位</p></td>
 						<td align="left"><div id="NewProject_Customer" /></td>
+					<!--	<td><input type="button" id="NewCustomer_Create" value="新增" /></td>			-->			
 					</tr>
 					<tr>
 						<td align="left"><p>项目联系人</p></td>
@@ -135,8 +136,8 @@
 						<td align="left"><div id="NewProject_PurchaseStyle" /></td>
 					</tr>
 					<tr>
-						<td align="left"><p>项目来源</p></td>
-						<td align="left"><div id="NewProject_ProjectSource" /></td>
+						<td align="left"><p>项目性质</p></td>
+						<td align="left"><div id="NewProject_ProjectProperty" /></td>
 						<td align="left"><p>资金来源</p></td>
 						<td align="left"><div id="NewProject_FundingSource" /></td>
 					</tr>
@@ -153,8 +154,9 @@
 						<td align="left"><input id="NewProject_CreationDate" /></td>
 					</tr> -->
 					<tr>
-						<td align="left"><p>管理方式</p></td>
-						<td align="left"><div id="NewProject_ManagementStyle" /></td>
+
+						<td align="left"><p>项目来源</p></td>
+						<td align="left"><div id="NewProject_ProjectSource" /></td>						
 						<td align="left"><p>协议编号</p></td>
 						<td align="left"><div id="NewProject_ProtocolCode" /></td>
 					</tr>
@@ -167,6 +169,37 @@
 				</table>
 			</div>
 		</div>
+
+
+		<div id="popupWindow_NewCustomer">
+			<div id="NewCustomer_Validator">新建客户</div>
+			<div style="overflow: hidden;">
+				<table width="100%" border='0'>
+					<tr>
+						<td align="left"><p>采购单位</p></td>
+						<td align="left"><input id="NewCustomer_Customer" /></td>
+					</tr>
+					<tr>
+						<td align="left"><p>项目联系人</p></td>
+						<td align="left"><input id="NewCustomer_ContactName" /></td>
+
+					</tr>
+					<tr>
+						<td align="left"><p>联系方式</p></td>
+						<td align="left"><input id="NewCustomer_ContactTel" /></td>
+					</tr>
+
+
+					<tr>
+						<td></td>
+						<td  ><input type="button" id="NewCustomer_Save" value="保存" />
+							<input style="margin-left: 10px;" type="button"
+							id="NewCustomer_Cancel" value="取消" /></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
 
 		<!--  点击新建项目档案的确认按钮之后显示一个等待窗口，待新建成功之后：显示项目编号-->
 		<div id="Loader_CreatingNewProject"></div>

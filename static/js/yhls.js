@@ -3,11 +3,14 @@ var g_rowid;
 var g_row; var olddwmc = '';
 var state = 'add';
 var g_beforqrje;
+var gprojectid;
+var gbsbh;
 function yhlsqr_setupadd() {
 	$('#Id').val('');
 	$('#dwmc').val('');
-	$('#bsbh').jqxDropDownList('selectIndex', -1);
-	$('#qrlx').jqxDropDownList('selectIndex', -1);
+//	$('#bsbh').jqxDropDownList('selectIndex', -1);
+//	$('#bsbh').jqxDropDownList({ disabled:true });
+//	$('#qrlx').jqxDropDownList('selectIndex', -1);
 	
 	$('#rq').val('');
 	$('#qrje').val('');
@@ -310,6 +313,8 @@ function searchqryhls(id) {
 	var dataAdapter = new $.jqx.dataAdapter(source);
 	$("#yhlsqr-grid").jqxGrid({ source: dataAdapter });
 }
+
+
 function inityhlsqr() {
 //	$("#yhlsqrmx-expander").jqxExpander({ toggleMode: 'none',  showArrow: false });
 	$("#yhlsqr-grid")
@@ -321,11 +326,21 @@ function inityhlsqr() {
 			width: "98%",
 			columns: [{ text: '序号', datafield: 'Id', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '单位名称', datafield: 'dwmc', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '标书编号', datafield: 'bsbh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '标书编号/项目编号', datafield: 'bsbh', width: '10%', cellsalign: 'center', align: 'center', hidden: false ,
+			                        	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
+                        		   var label=value;
+
+                          		  for(var i=0;i<gprojectid.length;i++){
+                          			  if(gprojectid[i].Id==value) {
+                          				  label = gprojectid[i].ProjectCode;
+                          			  }
+                          		  }
+                     		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
+                               }},
 				{ text: '确认类型', datafield: 'qrlx', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '确认金额', datafield: 'qrje', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '银行流水Id', datafield: 'yhlsId', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '银行流水序号', datafield: 'yhlsId', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '财务确认标志', datafield: 'cwqrbz', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '操作人', datafield: 'username', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{
@@ -344,7 +359,7 @@ function inityhlsqr() {
 
 						var c = '<a style="margin-right: 5px;;padding-top:3px;height:15px;text-decoration:none;" class="MdyBtn" onclick="deleteyhlsqr(' + rowdata.Id + ')">删除</a>';
 						var d = '<div class="jqx-grid-cell-middle-align" style="margin-top: 6px;">'
-							+ b + c + '</div>';
+							+  c + '</div>';
 						return d;
 						}
 						return '';
@@ -372,8 +387,25 @@ function inityhlsqr() {
     $('#yhlsId').jqxInput();
     $('#cwqrbz').jqxInput();
     $('#qrlx').jqxDropDownList({ placeHolder: '' });
-	$('#bsbh').jqxDropDownList({ placeHolder: '' });
-    $('#username').jqxInput();
+	$('#qrlx').on('select', function (event)
+	{
+//		alert($('#NewProject_ProjectType').val())
+		if ($('#qrlx').val() == '购买标书')
+		{//
+			$('#bsbh').jqxDropDownList({ disabled:false });
+			$('#bsbh').jqxDropDownList({source :gbsbh});
+		}
+		else
+		{//
+			$('#bsbh').jqxDropDownList({ disabled:false });
+			$('#bsbh').jqxDropDownList({source : gprojectid, displayMember: "ProjectCode", valueMember: "Id"});
+		}
+	}                        
+	); 
+
+	$('#bsbh').jqxDropDownList({ placeHolder: '', filterPlaceHolder:'', searchMode: 'containsignorecase', filterable:true });
+    $('#bsbh').jqxDropDownList({ disabled:true });
+	$('#username').jqxInput();
 	$('#tr_rq').hide();
 	$('#tr_cwqrbz').hide();
 	$('#tr_username').hide();
@@ -392,7 +424,9 @@ function inityhlsqr() {
 		//需特殊处理
 		$('#wjm').jqxComboBox({ source: result['wjm'], searchMode: 'contains'});
 		$('#dwmc').jqxComboBox({ source: result['dwmc'] , searchMode: 'contains'});
-		$('#bsbh').jqxDropDownList({source : result['bsbh']});
+		gbsbh = result['bsbh']
+		gprojectid = result['projectid']
+		//$('#bsbh').jqxDropDownList({source : result['bsbh']});
 		$('#qrlx').jqxDropDownList({ placeHolder: "", source: result['qrlx'], displayMember: "PackageNumber", valueMember: "PackageNumber" });
 	}, 'json');
 	$("#Id").jqxValidator({scroll: false,

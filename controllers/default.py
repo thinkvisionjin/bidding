@@ -247,7 +247,15 @@ def select():
     return json.dumps(dic_rows,ensure_ascii=False)
 
 ###############业务处理页面################################
-
+def getnewprojectpz():
+    dictionaries = {}
+#    strSQL = u"select  Id,ProjectCode,ProjectName from [bidding].[dbo].[Project]"
+#    dictionaries["ProjectName"] = sqltojson(strSQL)
+    strSQL = u"select  Id,dwmc from [bidding].[dbo].[kh]"
+    dictionaries["Customer"] = sqltojson(strSQL)
+    strSQL = u"select  Id,khId,lxr,sj from [bidding].[dbo].[lxr]"
+    dictionaries["Contactor"] = sqltojson(strSQL)
+    return json.dumps(dictionaries,ensure_ascii=False)
 
 def getDictionaries():
     dictionaries = {}
@@ -265,15 +273,15 @@ def getDictionaries():
     dictionaries["ProjectSource"] = sqltojson(strSQL)
     strSQL = u"select  Id,Name from [bidding].[dbo].[FundingSource]"
     dictionaries["FundingSource"] = sqltojson(strSQL)
-    strSQL = u"select  Id,ManagementStyleId,ManagementStyleName from [bidding].[dbo].[ManagementStyle]"
-    dictionaries["ManagementStyle"] = sqltojson(strSQL)
+    strSQL = u"select  Id,ProjectPropertyId,ProjectPropertyName from [bidding].[dbo].[ProjectProperty]"
+    dictionaries["ProjectProperty"] = sqltojson(strSQL)
     strSQL = u"select  Id,Name from [bidding].[dbo].[ProjectStatus]"
     dictionaries["ProjectStatus"] = sqltojson(strSQL)
     strSQL = u"select  Id,chinesename as Name from [bidding].[dbo].[auth_user]"
     dictionaries["Employee"] = sqltojson(strSQL,'gbk')
     strSQL = u"select  TypeId,TypeName from [bidding].[dbo].[ProtocolCodeType]"
     dictionaries["ProtocolCodeType"] = sqltojson(strSQL)
-    strSQL = u"select Id,ProtocolNumber from [bidding].[dbo].[ProtocolCode]"
+    strSQL = u"select Id,ProtocolNumber from [bidding].[dbo].[ProtocolCode] order by CreationTime desc"
     dictionaries["ProtocolCode"] = sqltojson(strSQL)
     return json.dumps(dictionaries,ensure_ascii=False)
 
@@ -293,8 +301,8 @@ def getDictionariesArray():
     dictionaries["ProjectSource"] = sqltojson(strSQL)
     strSQL = u"select  Id,Name from [bidding].[dbo].[FundingSource]"
     dictionaries["FundingSource"] = sqltojson(strSQL)
-    strSQL = u"select  Id,ManagementStyleId,ManagementStyleName from [bidding].[dbo].[ManagementStyle]"
-    dictionaries["ManagementStyle"] = sqltojson(strSQL)
+    strSQL = u"select  Id,ProjectPropertyId,ProjectPropertyName from [bidding].[dbo].[ProjectProperty]"
+    dictionaries["ProjectProperty"] = sqltojson(strSQL)
     strSQL = u"select  Id,Name from [bidding].[dbo].[ProjectStatus]"
     dictionaries["ProjectStatus"] = sqltojson(strSQL)
     strSQL = u"select  Id,chinesename as Name from [bidding].[dbo].[auth_user]"
@@ -332,7 +340,7 @@ def xmgl():
     return dict(dictionaries=dictionaries);
 def xmgl_ss():
     searchkey = request.vars.searchkey
-    strSQL = u'''select  a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete],
+    strSQL = u'''select  a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ProjectPropertyId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete],
       count(b.Id) as PackageCount,
       count(b.Id) as DocumentBuyerCount,
       count(b.Id) as BidderCount,
@@ -340,7 +348,7 @@ def xmgl_ss():
       count(b.Id) as ReturnMarginCount,
       sum(isnull(b.EntrustMoney,0)) as EntrustMoney,
       sum(isnull(b.WinningMoney,0)) as WinningMoney 
-      from [dbo].[Project] a left join [dbo].[ProjectPackage] b on a.id= b.ProjectId ''' + searchkey.decode(u'utf-8') + u''' group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete]
+      from [dbo].[Project] a left join [dbo].[ProjectPackage] b on a.id= b.ProjectId ''' + searchkey.decode(u'utf-8') + u''' group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ProjectPropertyId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[IsDelete]
       order by a.[Id] desc ''' 
     print  strSQL
     protocols=sqltojson(strSQL)
@@ -374,6 +382,19 @@ def SelectPackagesByProjectId():
     strSQL = u"select * from [bidding].[dbo].[ProjectPackage] where  ProjectId = " +id;
     return sqltojson(strSQL)
 
+
+def SelectFirstPackagesByProjectId():
+    id = request.vars.id
+    strSQL = u"select top 1 * from [bidding].[dbo].[ProjectPackage] where  ProjectId = " + unicode(id) + u" order by CreationDate";
+    print strSQL
+    result = sqltoarray(strSQL)
+    strSQL = u"""SELECT  right('00'+cast(cast(max(right(packagenumber,2)) as int)+1 as nvarchar(2)),2) as code
+  FROM [BIDDING].[dbo].[ProjectPackage]
+  where ProjectId=""" + unicode(id)
+    r = sqltoarray(strSQL)
+    result[0]['PackageNumber'] = r[0]['code']
+    return json.dumps(result,ensure_ascii=False)
+
 def GenerateProtocolCode(protocal_type,id):
     protocol_code = "SPMCEC-"+time.strftime('%y')
     if protocal_type == u'0':
@@ -386,7 +407,43 @@ def GenerateProtocolCode(protocal_type,id):
         protocol_code += 'QT'
     return protocol_code+unicode(id).zfill(5);
 
-def GenerateProjectCode(project,id):
+def GenerateProjectCode(project, id):
+    nf = time.localtime().tm_year
+    nf = unicode(nf)[-2:]
+    bh = p_getebh(project['ProjectTypeId'])
+    ygbh = auth.user.code
+
+    ProjectCode = ''
+    if project['ProjectTypeId'] == '0':
+        #国内
+        if project["PurchaseStyleId"]==u"1":
+            cgfs=u"G"
+        if project["PurchaseStyleId"]==u"2":
+            cgfs=u"Y"
+        if project["PurchaseStyleId"]==u"3":
+            cgfs=u"X"
+        if project["PurchaseStyleId"]==u"4":
+            cgfs=u"J"
+        if project["PurchaseStyleId"]==u"5":
+            cgfs=u"J"
+        if project["PurchaseStyleId"]==u"6":
+            cgfs=u"D"
+        if project["PurchaseStyleId"]==u"7":
+            cgfs=u"Q"   
+        if project["PurchaseStyleId"]==u"8":
+            cgfs=u"L"                  
+        ProjectCode = 'PCMET-' + nf + unicode(project['ProjectPropertyId']) + ygbh +cgfs + bh
+    else:
+        #国际
+        ProjectCode = '0808-' + nf +unicode(project['FundingSourceId']) + unicode(project['ProjectPropertyId']) + \
+        u'GJF' + ygbh + bh
+    print "ProjectCode:" + ProjectCode
+    return ProjectCode
+
+
+
+
+def GenerateProjectCode1(project,id):
     ProjectCode = u"2016" 
     if project["ProjectTypeId"]==u"0":
         ProjectCode+="YB"
@@ -412,9 +469,9 @@ def GenerateProjectCode(project,id):
     if project["PurchaseStyleId"]==u"7":
         ProjectCode+=u"QT"
     ProjectCode+="-"
-    if project["ManagementStyleId"]==u"1":
+    if project["ProjectPropertyId"]==u"1":
         ProjectCode+=u"JDCP"
-    if project["ManagementStyleId"]==u"2":
+    if project["ProjectPropertyId"]==u"2":
         ProjectCode+=u"ZYTZ"
     ProjectCode+="-" 
     if project["ProjectSourceId"]==u"1":
@@ -446,7 +503,7 @@ def SelectProjectsSummary():
     if searchkey != None:
         tj += u" and "+ searchkey.decode(u'utf-8')
         
-    strSQL = u'''select  a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[ContactorNameId], a.[IsDelete],
+    strSQL = u'''select  a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,f.dwmc as [CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ProjectPropertyId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[ContactorNameId], a.[IsDelete],
       count(distinct b.Id) as PackageCount,
       count(distinct c.Id) as DocumentBuyerCount,
       count(distinct d.Id) as BidderCount,
@@ -458,10 +515,14 @@ def SelectProjectsSummary():
       left join [dbo].[ProjectPackage] b on a.id= b.ProjectId 
       left join [dbo].[GMBS] c on b.PackageNumber = c.bsbh
       left join [dbo].[tbbzj] d on d.projectid = a.Id
-      left join [dbo].[tbzj] e on e.projectid = d.projectid  ''' + tj + u''' group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,[CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ManagementStyleId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[ContactorNameId], a.[IsDelete] order by a.[Id] desc'''
+      left join [dbo].[tbzj] e on e.projectid = d.projectid  
+      left join [dbo].[kh] f on a.CustomerId = f.Id
+      ''' + tj + u''' group by a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,f.[dwmc]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ProjectPropertyId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[ContactorNameId], a.[IsDelete] order by a.[Id] desc'''
     
     print strSQL
     return  sqltojson(strSQL)
+
+
 
 @auth.requires_login()
 def gmbs():
@@ -506,8 +567,8 @@ def p_CreateNewProject(rowData, id):
                     dict_row[key] = unicode(row[key])
                 else:
                     dict_row[key] = row[key]
-    result= json.dumps(dict_row,ensure_ascii=False)
-    return result
+    
+    return dict_row
 
 def ReGetProjectCode():
     print u'ReGetPorjectCode'
@@ -517,11 +578,22 @@ def ReGetProjectCode():
         print rowData
         for key in rowData:
             rowData[key] = rowData[key].decode(u'utf-8')
+        username = auth.user.chinesename.decode('gbk')
+        khrow = {}
+        khrow[u'username'] = username
+        khrow[u'dwmc'] = rowData[u'CustomerId']
+        khrow[u'lxr'] = rowData[u'ContactorNameId']
+        khrow[u'sj'] = rowData.pop(u'ContactTelId')
+   
+        result = p_addkh(khrow)
+        rowData['CustomerId'] = result['khId']
+        rowData['ContactorNameId'] = result['lxrId']            
         db(db[u'Project']._id == id).update(**rowData)
         print id 
         result = p_CreateNewProject(rowData, id)
+        result['CustomerId'] = khrow[u'dwmc']
         db.commit()
-        return result
+        return json.dumps(result,ensure_ascii=False)
     except:
         db.rollback()
         return u'fail'
@@ -533,12 +605,24 @@ def CreateNewProject():
         print rowData
         for key in rowData:
             rowData[key] = rowData[key].decode(u'utf-8')
+        username = auth.user.chinesename.decode('gbk')
+        khrow = {}
+        khrow[u'username'] = username
+        khrow[u'dwmc'] = rowData[u'CustomerId']
+        khrow[u'lxr'] = rowData[u'ContactorNameId']
+        khrow[u'sj'] = rowData.pop(u'ContactTelId')
+   
+        result = p_addkh(khrow)
+        rowData['CustomerId'] = result['khId']
+        rowData['ContactorNameId'] = result['lxrId']
         id = db[u'Project'].insert(**rowData)
         print id 
         result = p_CreateNewProject(rowData, id)
+        result['CustomerId'] = khrow[u'dwmc']
         db.commit()
-        return result
-    except:
+        return json.dumps(result,ensure_ascii=False)
+    except Exception as e:
+        print e
         db.rollback()
         result = {}
         result['result'] = 'fail'
@@ -786,7 +870,7 @@ def p_getbsbh(projectid=None):
     if projectid != None:
         tj = u""" and b.ProjectId = """+unicode(projectid)
     sql = u"""select b.PackageNumber FROM [Project] a, ProjectPackage b   
-    where """+ tj_uid+u""" and a.Id=b.ProjectId and b.stateid=2 """+tj;
+    where """+ tj_uid+u""" and a.Id=b.ProjectId  """+tj;  #and b.stateid=2
     print sql
     return sqltoarraynodict(sql);
 
@@ -925,36 +1009,55 @@ def p_addkh(rowData):
     row = db(db[table_name].dwmc ==rowData[u'dwmc']).select().first()
     
     khrow = {}
-    khrow[u'username'] = rowData[u'username']
-    khrow[u'nsrsbh'] = rowData[u'nsrsbh']
-    khrow[u'dwmc'] = rowData[u'dwmc']
-    khrow[u'lxdz'] = rowData[u'lxdz']
-    khrow[u'khyh'] = rowData[u'khyh']
-    khrow[u'yhzh'] = rowData[u'yhzh']    
-    khrow[u'dzxx'] = rowData[u'dzxx']   
-    khrow[u'dh'] = rowData[u'dh']           
-    khrow[u'cz'] = rowData[u'cz']
+    if rowData.has_key('username'):
+        khrow[u'username'] = rowData[u'username']
+
+    if rowData.has_key('nsrsbh'):    
+        khrow[u'nsrsbh'] = rowData[u'nsrsbh']
+    if rowData.has_key('dwmc'):  
+        khrow[u'dwmc'] = rowData[u'dwmc']
+    if rowData.has_key('lxdz'): 
+        khrow[u'lxdz'] = rowData[u'lxdz']
+    if rowData.has_key('khyh'): 
+        khrow[u'khyh'] = rowData[u'khyh']
+    if rowData.has_key('yhzh'): 
+        khrow[u'yhzh'] = rowData[u'yhzh']
+    if rowData.has_key('dzxx'):     
+        khrow[u'dzxx'] = rowData[u'dzxx']
+    if rowData.has_key('dh'):    
+        khrow[u'dh'] = rowData[u'dh']
+    if rowData.has_key('cz'):            
+        khrow[u'cz'] = rowData[u'cz']
     if row==None:
         id = db[table_name].insert(**khrow)
     else:
         id = row[u'id']
         db((db[table_name]._id == id)).update(**khrow)
-        
+    result = {}
+    result['khId'] = id
     table_name = u'lxr'
     if rowData[u'lxr'] != '':
         row = db(db.lxr.lxr == rowData[u'lxr']).select().first()
         khrow = {}
-        khrow[u'lxr'] = rowData[u'lxr']
-        khrow[u'sj'] = rowData[u'sj']
-        khrow[u'dz'] = rowData[u'lxrdz']
-        khrow[u'dh'] = rowData[u'lxrdh']
-        khrow[u'username'] = rowData[u'username']
+        if rowData.has_key('lxr'): 
+            khrow[u'lxr'] = rowData[u'lxr']
+        if rowData.has_key('sj'): 
+            khrow[u'sj'] = rowData[u'sj']
+        if rowData.has_key('lxrdz'): 
+            khrow[u'dz'] = rowData[u'lxrdz']
+        if rowData.has_key('lxrdh'): 
+            khrow[u'dh'] = rowData[u'lxrdh']
+        if rowData.has_key('username'): 
+            khrow[u'username'] = rowData[u'username']
         khrow[u'khId'] = unicode(id)        
         if row==None:
-            insertrow(table_name, khrow)    
+            #insertrow(table_name, khrow)   
+            id = db[table_name].insert(**khrow) 
         else:
             id = row[u'id']
             db((db[table_name]._id == id)).update(**khrow)
+        result['lxrId'] = id
+    return result        
 
 def p_insertcwls(ywlx, id, sz, rowData):
     table_name = u'cwls'
@@ -1020,7 +1123,33 @@ def deleterow_gmbs():
         print e
         db.rollback()
         return u"fail"    
-    
+
+def qxfkqr_gmbs():
+    try:
+        id = request.vars.Id
+        table_name = u'gmbs'
+        rowData={}
+        rowData[u'fkbz'] = 0
+        rowData[u'fkrq'] = None     
+        db(db[table_name]._id == id).update(**rowData)
+        return u'success'
+    except Exception as e:
+        print e
+        return u'fail'        
+
+def fkqr_gmbs():
+    try:
+        id = request.vars.Id
+        table_name = u'gmbs'
+        rowData={}
+        rowData[u'fkbz'] = 1
+        rowData[u'fkrq'] = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))       
+        db(db[table_name]._id == id).update(**rowData)
+        return u'success'
+    except Exception as e:
+        print e
+        return u'fail'  
+
 def selectone_gmbs():
     try:
         table_name = u'gmbs'
@@ -1561,6 +1690,7 @@ def getContactsByProjectID():
     return sqltojson(sql)
 
 def getFinanceByProjectID():
+    print 'getFinanceByProjectID'
     uid = u''
     pid = request.vars.pid
     sql = u'select sz,ywlx,sum(je) as je from cwls where projectid = '+pid+u' group by sz,ywlx'
@@ -1586,7 +1716,9 @@ def getFinanceByProjectID():
             finance["sr_wtxy"] = unicode(row['je'])
         elif row['ywlx']  == u'中标服务费':
             finance["sr_zbfwf"] = unicode(row['je'])
+        print row['ywlx']
     res.append(finance)
+
     sql = u'select sum(ChargeRate) as je from ProjectPackage where projectid = '+pid
 #     sql = u'select sz,ywlx,sum(je) as je from cwls  group by sz,ywlx '
     res = sqltoarray(sql)   
@@ -1754,7 +1886,7 @@ def selectone_yhlswj():
 
 def fileUpload():
     try:
-        f= request.vars.fileToUpload
+        f = request.vars.fileToUpload
         table_name = u'yhlswj'
         username = auth.user.chinesename.decode('gbk')
         rowData = {}
@@ -1837,7 +1969,8 @@ def getyhlsqrpz():
         sql = u"""select distinct wjm from yhls""";   
         result[u'wjm'] = sqltoarraynodict(sql);          
         result[u'bsbh'] = p_getbsbh(request.vars.projectid);
-        result[u'qrlx'] = [u'购买标书', u'投标保证金']
+        result[u'projectid'] = p_getprojectcode(request.vars.projectid)
+        result[u'qrlx'] = [u'购买标书', u'投标保证金', u'中标服务费']
         return json.dumps(result)  
     except:
         return u"fail"    
@@ -1880,11 +2013,18 @@ def insertrow_yhlsqr():
             tbbzjrow = {}
             tbbzjrow[u'lyId'] = id
             tbbzjrow[u'dwmc'] = rowData[u'dwmc']
-            tbbzjrow[u'bsbh'] = rowData[u'bsbh']
+            tbbzjrow[u'projectid'] = rowData[u'bsbh']
             tbbzjrow[u'ly'] = u'交易流水确认'
             tbbzjrow[u'je'] = rowData[u'qrje']
             tbbzjrow[u'username'] = username
-            p_insertrow_tbbzj(tbbzjrow)             
+            p_insertrow_tbbzj(tbbzjrow)       
+        if rowData[u'qrlx'] == u'中标服务费':
+            zbfwf = {}
+            zbfwf[u'lyId'] = id
+            zbfwf[u'projectid'] = rowData[u'bsbh']
+            zbfwf[u'je'] = rowData[u'qrje']
+            zbfwf[u'username'] = username            
+            p_insertcwls(rowData[u'qrlx'], id, '支出', zbfwf)      
 #########################
 
         db.commit()
@@ -1999,7 +2139,7 @@ def updaterow_yhlsqr():
             tbbzjrow = {}
             tbbzjrow[u'lyId'] = id
             tbbzjrow[u'dwmc'] = rowData[u'dwmc']
-            tbbzjrow[u'bsbh'] = rowData[u'bsbh']
+            tbbzjrow[u'projectid'] = rowData[u'bsbh']
             tbbzjrow[u'ly'] = u'交易流水确认'
             tbbzjrow[u'je'] = rowData[u'qrje']
             tbbzjrow[u'username'] = username
@@ -2041,10 +2181,12 @@ def deleterow_yhlsqr():
 ######################
         if qrlx == u'购买标书':
             trow = db(db.gmbs.lyId == id).select().first()
-            p_deleterow_gmbs(trow[u'id'], gmbsrow)
+            p_deleterow_gmbs(trow[u'id'])
         if qrlx == u'投标保证金':
             trow = db(db.tbbzj.lyId == id).select().first()
-            p_deleterow_tbbzj(trow[u'id'], tbbzjrow)   
+            p_deleterow_tbbzj(trow[u'id'])   
+        if qrlx == u'中标服务费':
+            p_deletecwls(qrlx, id)               
 ######################        
         db.commit()
         return u"success";
@@ -2291,6 +2433,7 @@ def insertrow_xmzc():
         username = auth.user.chinesename.decode('gbk')
         rowData = request.post_vars
         rowData[u'username'] = username
+        rowData[u'lyId'] = -1
         print u"insertrow cwls"
         print rowData
         insertrow(table_name, rowData)
@@ -2327,7 +2470,7 @@ def getxmzcpz():
     result = {};
     result[u'projectid'] = p_getprojectcode(request.vars.projectid);
     result[u'sz'] = [u'收入', u'支出']
-    result[u'ywlx'] = [u'专家评审费', u'项目分成']
+    result[u'ywlx'] = [u'专家评审费', u'项目分成',u'其他']
     return json.dumps(result)   
 ############
 def pbcy():
@@ -2553,6 +2696,7 @@ def insertrow_auth_user():
         table_name = u'auth_user'
         row={}
         rowData = request.post_vars
+        row[u'code'] = rowData[u'code']
         row[u'username'] = rowData[u'username']
         row[u'chinesename'] = rowData[u'chinesename']
 
@@ -2587,6 +2731,7 @@ def updaterow_auth_user():
         id = request.vars.Id
         row={}
         rowData = request.post_vars
+        row[u'code'] = rowData[u'code']
         row[u'username'] = rowData[u'username']
         row[u'chinesename'] = rowData[u'chinesename']
         updaterow(table_name, id, row)
@@ -3078,7 +3223,7 @@ union
 select distinct dwmc from bidding.dbo.tbbzj where projectid = """+projectid+u"""
 union
 select distinct dwmc from bidding.dbo.tbzj where projectid = """+projectid+u""")a
-left join (select dwmc, sum(je) zje from gmbs where bsbh in (select PackageNumber from BIDDING.dbo.ProjectPackage where projectid = 1)
+left join (select dwmc, sum(je) zje from gmbs where bsbh in (select PackageNumber from BIDDING.dbo.ProjectPackage where projectid = """+projectid+u""")
 group by dwmc)b
 on a.dwmc =b.dwmc
 left join (select dwmc, sum(je) zje from bidding.dbo.tbbzj where projectid = """+projectid+u"""
@@ -3091,3 +3236,81 @@ on a.dwmc =d.dwmc
 """
     return sqltojson(sql)
 
+def p_generatebh():
+    table_name = u'pzbh'
+    nf = time.localtime().tm_year
+    row = db((db[table_name].lx == u'Project')&(db[table_name].nf==nf)).select().first()
+    print row
+    if row == None:
+        print '.....'
+        rowData={}
+        rowData[u'lx'] = u'Project'
+        rowData[u'nf'] = nf
+        rowData[u'bh'] = 1     
+        db[table_name].insert(**rowData)
+        bh = 1   
+    else:
+        print row
+        id = row[u'id']
+        rowData={}
+        rowData[u'lx'] = row[u'lx']
+        rowData[u'nf'] = row[u'nf']
+        rowData[u'bh'] = int(row[u'bh'])+1   
+        db(db[table_name]._id == id).update(**rowData)
+        bh = int(row[u'bh'])+1   
+    return 'success'
+
+def getprojectbh():
+    return p_generatebh()
+
+
+
+
+
+
+
+def CreateCustomer():
+    try:
+        username = auth.user.chinesename.decode('gbk')
+#         username = auth.user.username
+        rowData = request.post_vars
+        rowData[u'username'] = username
+        result = p_addkh(rowData)
+        db.commit()
+        return json.dumps(result)
+    except Exception as e:
+        print e
+        db.rollback()
+        return u"fail"
+
+
+def p_getebh(xmlx):
+    table_name = u'xmbh'
+    nf = time.localtime().tm_year
+    row = db((db[table_name].xmlx == xmlx)&(db[table_name].nf==nf)).select().first()
+    print row
+    result = ''
+    if row == None:
+        print '.....'
+        rowData={}
+        rowData[u'xmlx'] = xmlx
+        rowData[u'nf'] = nf
+        rowData[u'bh'] = 1     
+        db[table_name].insert(**rowData)
+        bh = 1   
+    else:
+        print row
+        id = row[u'id']
+        rowData={}
+        rowData[u'xmlx'] = row[u'xmlx']
+        rowData[u'nf'] = row[u'nf']
+        rowData[u'bh'] = int(row[u'bh'])+1   
+        db(db[table_name]._id == id).update(**rowData)
+        bh = int(row[u'bh'])+1
+    if xmlx == u'0':
+        return unicode(bh).zfill(4)
+    elif xmlx == u'1':
+        return unicode(bh).zfill(3)
+    else:
+        return 'success'   
+    
