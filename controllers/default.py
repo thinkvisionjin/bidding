@@ -12,6 +12,7 @@ from decimal import *
 from _sqlite3 import Row
 import time
 import xlrd
+import traceback 
 T.force('zh-cn')
 CONST_MANAGER=2;
 CONST_ADMIN = 1;
@@ -283,6 +284,7 @@ def getDictionaries():
     dictionaries["ProtocolCodeType"] = sqltojson(strSQL)
     strSQL = u"select Id,ProtocolNumber from [bidding].[dbo].[ProtocolCode] order by CreationTime desc"
     dictionaries["ProtocolCode"] = sqltojson(strSQL)
+    dictionaries["User"] = auth.user_id
     return json.dumps(dictionaries,ensure_ascii=False)
 
 
@@ -1870,11 +1872,12 @@ def deleterow_yhlswj():
         row = db(db[table_name]._id ==id).select().first()
         print row[u'wjm']
         
-        db((db.yhls.wjm == row[u'wjm'])&(db.yhls.wjmId==id)).delete()
+        db((db.yhls.wjm == row[u'wjm'].decode('utf-8'))&(db.yhls.wjmId==id)).delete()
         deleterow(table_name, id)
         db.commit()
         return u"success"
     except Exception as e:
+        traceback.print_exc()
         db.rollback()
         print e
         return u"fail"
@@ -1883,7 +1886,7 @@ def deleterow_yhlswj():
 def selectone_yhlswj():
     table_name = u'yhlswj'
     sql = u"""select * from """+table_name+u""" where Id="""+request.vars.Id;
-
+  
 def fileUpload():
     try:
         f = request.vars.fileToUpload
@@ -1892,31 +1895,31 @@ def fileUpload():
         rowData = {}
         rowData[u'username'] = username
         rowData[u'wjm'] = unicode(f.filename, u'utf-8')
-        print rowData
+
         id = db[table_name].insert(**rowData)    
         
         wb = xlrd.open_workbook(file_contents=f.value)
         sh = wb.sheet_by_index(0)
     
-        for i in range(1, sh.nrows):
+        for i in range(2, sh.nrows-1):
             row = sh.row_values(i)
-            print row
-            print type(xlrd.xldate.xldate_as_datetime(row[1], 1)) 
+            #print type(xlrd.xldate.xldate_as_datetime(row[1], 1)) 
             rowData={}
-            rowData[u'jysj'] = xlrd.xldate.xldate_as_datetime(row[1], 1)
-            rowData[u'je'] = row[2]
-            rowData[u'zy'] = row[3]
-            rowData[u'dfmc'] = row[4]
-            rowData[u'dfzh'] = row[5]
+            #rowData[u'jysj'] = xlrd.xldate.xldate_as_datetime(row[1], 1)
+            rowData[u'jysj'] = row[0]
+            rowData[u'zy'] = row[1]
+            rowData[u'je'] = float(row[6].replace(',',''))-float(row[5].replace(',',''))
+            rowData[u'dfmc'] = row[10]
+            rowData[u'dfzh'] = row[9]
             rowData[u'qrje'] = 0
             rowData[u'cwqrje'] = 0
-            rowData[u'wjm'] = unicode(f.filename)
+            rowData[u'wjm'] = f.filename
             rowData[u'wjmId'] = id
             insertrow(u'yhls', rowData)
-        print f.filename
         db.commit()
         return u"success"
     except Exception as e:
+        traceback.print_exc()
         print e
         db.rollback()
         return u"fail"
@@ -1952,7 +1955,14 @@ def select_yhls():
             wjm=u''
         else:
             wjm = unicode(request.vars.wjm, u'utf-8')
-        where += u"and wjm like '%"+wjm+u"%'"        
+        where += u"and wjm like '%"+wjm+u"%'"  
+
+        if request.vars.zy==None:
+            zy=u''
+        else:
+            zy = unicode(request.vars.zy, u'utf-8') 
+        where += u"and zy like '%"+zy+u"%'"             
+             
         order = u" order by jysj desc"
         sql = u"""select * from yhls """ + where+order;
         print sql   
@@ -3129,6 +3139,10 @@ def select_pzgl():
             sql = 'select [Id],[ProjectTypeId] as pzid  ,[ProjectTypeCode] as code ,[ProjectTypeName] as text from ProjectType'            
         if tablename == 'PurchaseStyle':
             sql = 'select [Id],[PurchaseStyleId] as pzid  ,[PurchaseStyleCode] as code ,[PurchaseStyleName] as text from PurchaseStyle'            
+        if tablename == 'ProjectSource':
+            sql = 'select [Id],[Id] as pzid,[Id] as code ,[Name] as text from ProjectSource'         
+        if tablename == 'hys':
+            sql = 'select [Id],[Id] as pzid,[Id] as code ,[hys] as text from hys'       
         if tablename == 'pzgdwj':
             sql = 'select [Id],pzid  ,\'\' as code , text from pzgdwj'            
         print sql
@@ -3154,10 +3168,15 @@ def convert_pzgldata(tablename, rowData):
     if tablename == 'PurchaseStyle':
         row['PurchaseStyleId'] = rowData['pzid']
         row['PurchaseStyleCode'] = rowData['code']
-        row['PurchaseStyleName'] = rowData['text']                
+        row['PurchaseStyleName'] = rowData['text']    
+    if tablename == 'ProjectSource':
+        row['Name'] = rowData['text']       
+    if tablename == 'hys':
+        row['hys'] = rowData['text']                               
     if tablename == 'pzgdwj':
         row['pzid'] = rowData['pzid']
         row['text'] = rowData['text']    
+
     return row
 
 def insertrow_pzgl():
@@ -3314,3 +3333,15 @@ def p_getebh(xmlx):
     else:
         return 'success'   
     
+
+def generatesql():
+    ts = ['[FundingSource]','[ManagementStyle]','[OperationType]','[ProjectSource]','[ProjectStatus]','[ProjectType]','[PurchaseStyle]','[pzgl]','[ProjectProperty]','[ProjectSource]', '[hys]']
+    result=''
+    for t in ts:
+        result += unicode('SET IDENTITY_INSERT '+t+' ON' + "<br/>")
+        sql = 'proc_insert '+t
+        r = sqltoarraynodict(sql)
+        result+="<br/>".join(r) + "<br/>"
+        result+=unicode('SET IDENTITY_INSERT '+t+' OFF' +'<br/>')
+    print result
+    return result

@@ -80,17 +80,18 @@ function deleteyhlswj(id)
 	{
 		return ;
 	}	
-    var selectedrowindex = $("#yhlswj-grid").jqxGrid('getselectedrowindex');
-    var rowscount = $("#yhlswj-grid").jqxGrid('getdatainformation').rowscount;
-    if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
-        var rowid = $("#yhlswj-grid").jqxGrid('getrowid', selectedrowindex);
-        $("#yhlswj-grid").jqxGrid('deleterow', rowid);
-    }
+
 
 	$.get('deleterow_yhlswj?Id='+id, function(result){
 		if (result=='success')
 		{
 			confirm('成功')
+			var selectedrowindex = $("#yhlswj-grid").jqxGrid('getselectedrowindex');
+			var rowscount = $("#yhlswj-grid").jqxGrid('getdatainformation').rowscount;
+			if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+				var rowid = $("#yhlswj-grid").jqxGrid('getrowid', selectedrowindex);
+				$("#yhlswj-grid").jqxGrid('deleterow', rowid);
+			}			
 		}
 		else
 		{

@@ -102,11 +102,11 @@ var g_selectedrowindex;
 
 
 function search() {
-	if ($("#dfmc").val() == '' && $("#dfzh").val() == '' &&$("#wjm").val()=='') {
+	if ($("#dfmc").val() == '' && $("#dfzh").val() == '' &&$("#wjm").val()=='' &&$("#zy").val()=='') {
 		url = "select_yhls";
 	}
 	else {
-		url = "select_yhls?dfmc=" + $("#dfmc").val() + "&dfzh=" + $("#dfzh").val() + "&wjm=" + $("#wjm").val()
+		url = "select_yhls?dfmc=" + $("#dfmc").val() + "&dfzh=" + $("#dfzh").val() + "&wjm=" + $("#wjm").val() + "&zy=" + $("#zy").val()
 	}
 
 	var source = {
@@ -379,7 +379,7 @@ function inityhlsqr() {
 		});
 
 	$("#yhls_popupWindow").jqxWindow({
-		width: 400, height: 350, resizable: false, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.4
+		width: 400, height: 240, resizable: false, isModal: true, autoOpen: false, cancelButton: $("#Cancel"), modalOpacity: 0.4
 	});
     $('#Id').jqxInput();
     $('#rq').jqxInput();
@@ -460,18 +460,18 @@ $(document).ready(function () {
 			columnsresize: true,
 			height: "50%",
 			width: "98%",
-			columns: [{ text: '序号', datafield: 'Id', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+			columns: [{ text: '序号', datafield: 'Id', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '交易时间', datafield: 'jysj', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '金额', datafield: 'je', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '摘要', datafield: 'zy', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '对方名称', datafield: 'dfmc', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '对方账号', datafield: 'dfzh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '确认金额', datafield: 'qrje', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '财务确认金额', datafield: 'cwqrje', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '金额', datafield: 'je', width: '8%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '摘要', datafield: 'zy', width: '29%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '对方名称', datafield: 'dfmc', width: '15%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '对方账号', datafield: 'dfzh', width: '15%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '确认金额', datafield: 'qrje', width: '8%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '财务确认金额', datafield: 'cwqrje', width: '8%', cellsalign: 'center', align: 'center', hidden: true },
 				{ text: '文件名', datafield: 'wjm', width: '10%', cellsalign: 'center', align: 'center', hidden: true },
 				{
 					text: '操作',
-					width: '200',
+					width: '50',
 					editable: false,
 					datafield: 'delete',
 					cellsrenderer: function (

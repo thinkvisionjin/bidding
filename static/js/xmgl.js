@@ -296,6 +296,7 @@ function InitProjectGrid(dict){
 
 					gdictcontactor = result.Contactor;
 					BindContactor("#NewProject_ContactName","#NewProject_ContactTel","#NewProject_Customer",result.Contactor)
+					$("#NewProject_Employee").val(gdict.User)
 					$("#popupWindow_NewProject").jqxWindow('show');
 				}, 'json');	
 
@@ -578,10 +579,72 @@ function InitNewProjectWindow(dict){
 		$("#popupWindow_NewCustomer").jqxWindow('show');
 	});*/
 
-	
+    $('#NewProject_Validator').jqxValidator({
+        rules: [
+ { input: '#NewProject_ProjectName', message: '项目名称不得为空!', action: 'keyup, blur', rule: function(input){
+       			var val = $("#NewProject_ProjectName").val();
+    			if(val==""){return false;}	return true;
+    		} },
+               { input: '#NewProject_Customer', message: '必须选择采购单位!', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_Customer").val();
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_ContactName', message: '必须选择采购单位联系人!', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_ContactName").val();
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_ContactTel', message: '必须选择采购单位联系人方式', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_ContactTel").val();
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_ProjectType', message: '必须选择项目类型!', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_ProjectType").val();
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_PurchaseStyle', message: '必须选择项目采购方式!', action: 'keyup, blur', rule: function(input){
+					if ($("#NewProject_ProjectType").val() == '0' )
+					{          			
+						var val = $("#NewProject_PurchaseStyle").val();
+						if(val==""){return false;}	return true;
+					}
+					return true;
+        		} },
+               { input: '#NewProject_ProjectProperty', message: '必须选择项目性质!', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_ProjectProperty").val();
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_ProjectSource', message: '必须选择项目来源', action: 'keyup, blur', rule:function(input){
+          			var val = $("#NewProject_ProjectSource").val();
+        			if(val==""){return false;}	return true;
+        		} },
+               { input: '#NewProject_FundingSource', message: '必须选择项目资金来源', action: 'keyup, blur', rule: function(input){
+          			
+					if ($("#NewProject_ProjectType").val() == '1' )
+					{
+						var val = $("#NewProject_FundingSource").val();
+						if(val==""){return false;}	return true;
+					}
+					return true;
+        		}},
+               { input: '#NewProject_Employee', message: '必须选择项目负责人', action: 'keyup, blur', rule: function(input){
+          			var val = $("#NewProject_Employee").val();
+        			if(val==""){return false;}	return true;
+        		} },
+            //    { input: '#NewProject_Assistant', message: '必须选择项目协助人', action: 'valuechanged, blur', rule: function(input){
+          	// 		var val = $("#NewProject_Assistant").val();
+        	// 		if(val==""){return false;}	return true;
+        	// 	} }
+//               { input: '#NewProject_ProtocolCode', message: '必须选择项目协助人!', action: 'valuechanged, blur', rule: function(input){
+//          			var val = $("#NewProject_ProtocolCode").val();
+//        			if(val==""){return false;}	return true;
+//        		} }
+               ]
+    });	
     $("#NewProject_Save").click(function () {
-    	
-    	if ($('#NewProject_Validator').jqxValidator('validate')==false){return;}
+    	if ($('#NewProject_Validator').jqxValidator('validate')==false){
+			
+			return;
+		}
     	
 		// 添加成功后弹出项目编号创建成功的界面，告知操作人员项目已添加了
 		var row = {  ProtocolCodeId:$("#NewProject_ProtocolCode").val()
@@ -623,68 +686,10 @@ function InitNewProjectWindow(dict){
 				$('#Loader_CreatingNewProject').jqxLoader('close');
 			},'json');
 		}
+		
 		$("#popupWindow_NewProject").jqxWindow('hide');
 	});
 
-    $('#NewProject_Validator').jqxValidator({
-        rules: [
-               { input: '#NewProject_ProjectName', message: '项目名称不得为空!', action: 'keyup, blur', rule: function(input){
-       			var val = $("#NewProject_ProjectName").val();
-    			if(val==""){return false;}	return true;
-    		} },
-               { input: '#NewProject_Customer', message: '必须选择采购单位!', action: 'keyup, blur', rule: function(input){
-          			var val = $("#NewProject_Customer").val();
-        			if(val==""){return false;}	return true;
-        		} },
-               { input: '#NewProject_ContactName', message: '必须选择采购单位联系人!', action: 'keyup, blur', rule: function(input){
-          			var val = $("#NewProject_ContactName").val();
-        			if(val==""){return false;}	return true;
-        		} },
-               { input: '#NewProject_ContactTel', message: '必须选择采购单位联系人方式', action: 'keyup, blur', rule: function(input){
-          			var val = $("#NewProject_ContactTel").val();
-        			if(val==""){return false;}	return true;
-        		} },
-               { input: '#NewProject_ProjectType', message: '必须选择项目类型!', action: 'keyup, blur', rule: function(input){
-          			var val = $("#NewProject_ProjectType").val();
-        			if(val==""){return false;}	return true;
-        		} },
-               { input: '#NewProject_PurchaseStyle', message: '必须选择项目采购方式!', action: 'keyup, blur', rule: function(input){
-					if ($("#NewProject_ProjectType").val() == '0' )
-					{          			
-						var val = $("#NewProject_PurchaseStyle").val();
-						if(val=="0"){return false;}	return true;
-					}
-        		} },
-               { input: '#NewProject_ProjectProperty', message: '必须选择项目性质!', action: 'keyup, blur', rule: function(input){
-          			var val = $("#NewProject_ProjectProperty").val();
-        			if(val==""){return false;}	return true;
-        		} },
-               { input: '#NewProject_ProjectSource', message: '必须选择项目来源', action: 'keyup, blur', rule:function(input){
-          			var val = $("#NewProject_ProjectSource").val();
-        			if(val==""){return false;}	return true;
-        		} },
-               { input: '#NewProject_FundingSource', message: '必须选择项目资金来源', action: 'keyup, blur', rule: function(input){
-          			
-					if ($("#NewProject_ProjectType").val() == '1' )
-					{
-						var val = $("#NewProject_FundingSource").val();
-						if(val==""){return false;}	return true;
-					}
-        		}},
-               { input: '#NewProject_Employee', message: '必须选择项目负责人', action: 'keyup, blur', rule: function(input){
-          			var val = $("#NewProject_Employee").val();
-        			if(val==""){return false;}	return true;
-        		} },
-               { input: '#NewProject_Assistant', message: '必须选择项目协助人', action: 'valuechanged, blur', rule: function(input){
-          			var val = $("#NewProject_Assistant").val();
-        			if(val==""){return false;}	return true;
-        		} },
-//               { input: '#NewProject_ProtocolCode', message: '必须选择项目协助人!', action: 'valuechanged, blur', rule: function(input){
-//          			var val = $("#NewProject_ProtocolCode").val();
-//        			if(val==""){return false;}	return true;
-//        		} }
-               ]
-    });
 }
 
 function AdvancedSearchContent(action,dict){
