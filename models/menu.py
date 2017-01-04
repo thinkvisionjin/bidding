@@ -5,7 +5,7 @@
 ## Customize your APP title, subtitle and menus here
 #########################################################################
 
-response.logo = A(B('上海浦成机电招标设备有限公司',SPAN(''),''),XML('&trade;&nbsp;'),
+response.logo = A(B('上海浦成机电设备招标有限公司',SPAN(''),''),XML('&trade;&nbsp;'),
                   _class="navbar-brand",_href="#",
                   _id="web2py-logo")
 response.title = request.application.replace('_',' ').title()

@@ -1,0 +1,167 @@
+<!DOCTYPE html >
+<head>
+<meta charset="utf-8">
+<title>招标项目管理</title>
+<!-- 加载基本的CSS
+<link href="/datalabs/static/css/vendor/bootstrap/css/bootstrap.min.css"	rel="stylesheet">
+<link href="/datalabs/static/css/vendor/flat-ui/flat-ui.css"	rel="stylesheet">-->
+<link rel="stylesheet" href="{{=URL('static','css/vendor/jqwidgets/styles/jqx.base.css')}}" type="text/css" />
+<link rel="stylesheet" href="{{=URL('static','css/vendor/jqwidgets/styles/jqx.bootstrap.css')}}" type="text/css" />
+<link rel="stylesheet" href="{{=URL('static','css/site.css')}}" type="text/css" />
+<script type="text/javascript" src="{{=URL('static','js/vendor/jquery/jquery-1.11.1.min.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/demos.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxcore.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxsplitter.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxbuttons.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxscrollbar.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxpanel.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxnavigationbar.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtabs.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxbuttons.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtree.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxwindow.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxexpander.js')}}"></script> 
+<script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxinput.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxpasswordinput.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxvalidator.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxtooltip.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','js/auth_userresetpasswordform.js')}}"></script>
+<script type="text/javascript" src="{{=URL('static','js/index.js')}}"></script>
+</head>
+<body style='overflow:hidden'>
+
+        <div id="mainSplitter">
+            <div class="splitter-panel">
+            	<div style='text-align:center'><font  size=2.5 color=#3333F5>欢迎<b>{{=chinesename}}</b>使用 <a href='/bidding/default/user/logout?_next=/bidding/default/index'><b>退出</b></a></font></div>
+                <div id='jqxNavigationBar'>
+					
+					<div>项目管理</div>
+					<div>
+						<div class="NavBtn">
+							<img class="NavBtnImg" src="../static/images/Main.png" onclick="addTabs('首页', 'hysgl.html')" alt="ImageButton">
+						</div>
+						<div class="NavBtnText">欢迎使用</div>			
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCProtocolCode.png" onclick="addTabs('协议编号', 'xybh.html')" alt="ImageButton">
+					</div> 
+					<div class="NavBtnText">协议编号</div>
+					<!--
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCProjectCode.png" onclick="addTabs('项目编号', 'ProjectCode.html')" alt="ImageButton">
+					</div>
+					<div class="NavBtnText">项目编号</div>
+					-->
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCProject.png" onclick="addTabs('项目管理', 'xmgl.html')" alt="ImageButton">
+					</div>
+					
+					<div class="NavBtnText">项目管理</div>																		
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCEmployee.png" onclick="addTabs('购买标书', 'gmbs.html')" alt="ImageButton">
+					</div>
+					<div class="NavBtnText">购买标书</div>							
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCWebFinance.png" onclick="addTabs('投标保证金', 'tbbzj.html')" alt="ImageButton">
+					</div>
+					<div class="NavBtnText">投标保证金</div>	
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCProjectStatus.png" onclick="addTabs('退保证金', 'tbzj.html')" alt="ImageButton">
+					</div>
+					<div class="NavBtnText">退保证金</div>	
+					
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCWebFinance.png" onclick="addTabs('财务流水', 'cwls.html')" alt="ImageButton">
+					</div>
+					<div class="NavBtnText">财务流水</div>	
+					
+					
+					</div>
+					
+					<div>银行流水</div>
+					<div>
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCSuggest.png" onclick="addTabs('银行流水文件', 'yhlswj')" alt="ImageButton">
+					</div>
+					<div class="NavBtnText">银行流水文件</div>
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCProjectStatus.png" onclick="addTabs('银行流水', 'yhls')" alt="ImageButton">
+					</div>
+					<div class="NavBtnText">银行流水</div>		
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCFinance.png" onclick="addTabs('银行流水', 'yhlsqr')" alt="ImageButton">
+					</div>
+					<div class="NavBtnText">财务确认流水</div>										
+					</div>
+
+					
+					<div>用户管理</div>
+					<div>
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCCustomer.png" onclick="addTabs('客户管理', 'kh')" alt="ImageButton">
+					</div>
+					<div class="NavBtnText">客户管理</div>		
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCProjectStatus.png" onclick="authuser_password_popupwindow(1);" alt="ImageButton">
+					</div>
+					<div class="NavBtnText">修改密码</div>	
+				
+					{{if auth.user_groups.has_key(3):}}																
+					<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCWebFinance.png" onclick="addTabs('员工管理', 'auth_user')" alt="ImageButton">
+					</div>
+					<div class="NavBtnText">员工管理</div>
+					{{pass}}
+
+					</div>
+					
+
+					<div>报表管理</div>
+					<div>
+						<div class="NavBtn">
+
+							<img class="NavBtnImg" src="../static/images/report1.png" onclick="addTabs('个人统计', 'grtjb.html')" alt="ImageButton">
+
+						</div>
+						<div class="NavBtnText">个人统计</div>
+						
+						<div class="NavBtn">
+
+						<img class="NavBtnImg" src="../static/images/report2.png" onclick="addTabs('在做项目统计', 'zzxmtjb.html')" alt="ImageButton">
+
+						</div>
+						<div class="NavBtnText">在做项目统计</div>
+
+						<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/PCWebProjectCode.png" onclick="addTabs('统计总表', 'tjzb.html')" alt="ImageButton">
+
+						</div>
+						<div class="NavBtnText">统计总表</div>						
+					</div>
+
+					{{if auth.user_groups.has_key(3):}}
+					<div>系统设置</div>
+					<div id='aa' width="100%">
+						<div class="NavBtn">
+						<img class="NavBtnImg" src="../static/images/shezhi.png" onclick="addTabs('字典配置', 'pzgl.html')" alt="ImageButton">
+						</div>
+						<div class="NavBtnText">字典配置</div>	  
+					</div>
+					{{pass}}
+				</div>	
+			</div>
+            <div class="splitter-panel">
+				<div id='jqxTabs' class = "right-tab">
+					<ul style="margin-left: 30px;" id="unorderedList">
+						<li hasclosebutton='false'>首页</li>
+					</ul>
+
+					<div id="kmye-jqxgrid">					<iframe id="首页" style="border:none;padding:0;margin:0;" frameborder=no border=0 height="99%" width="100%"src="hysgl"></iframe>      </div>
+
+				</div>				
+				
+			</div>
+        </div>
+
+
+</body>
+</html>
