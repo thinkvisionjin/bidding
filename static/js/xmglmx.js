@@ -28,10 +28,10 @@ function InitEditProjectPage(dict, project) {
 	$("#EditProject_ProjectName").width(200)
 	$("#EditProject_ProjectName").height(25)
 	$("#EditProject_ProjectName").val(project.ProjectName)
-	$("#EditProject_ProjectName").jqxInput({ disabled: true });
+	$("#EditProject_ProjectName").jqxInput({ disabled: false });
 	//采购单位
     BindCustomer("#EditProject_Customer", dict.Customer, project)
-    $("#EditProject_Customer").jqxComboBox({ disabled: true });
+    $("#EditProject_Customer").jqxComboBox({ disabled: false });
 	//项目类型
 	BindProjectType("#EditProject_ProjectType", dict.ProjectType, project);
 	//采购类型
@@ -52,10 +52,10 @@ function InitEditProjectPage(dict, project) {
 
 	$("#EditProject_ProjectType").jqxDropDownList({ disabled: true });
 	$("#EditProject_PurchaseStyle").jqxDropDownList({ disabled: true });
-	$("#EditProject_ProjectSource").jqxDropDownList({ disabled: true });
+	$("#EditProject_ProjectSource").jqxDropDownList({ disabled: false });
 	$("#EditProject_FundingSource").jqxDropDownList({ disabled: true });
 	$("#EditProject_Employee").jqxDropDownList({ disabled: true });
-	$("#EditProject_Assistant").jqxDropDownList({ disabled: true });	
+	$("#EditProject_Assistant").jqxDropDownList({ disabled: false });	
 	$("#EditProject_Save").jqxButton({ template: 'success' });
 	if (gViewFlag == 1) {
 		$("#EditProject_Save").hide()
@@ -1226,7 +1226,8 @@ function InitEditPackageWindow(dict, projectpackage) {
 		}
 		$("#EntrustMoney_Manage").jqxNumberInput('val', projectpackage.EntrustMoney);
 		$("#WinningMoney_Manage").jqxNumberInput('val', projectpackage.WinningMoney);
-		$("#WinningCompany_Manage").jqxInput('val', projectpackage.WinningCompany);
+		//$("#WinningCompany_Manage").jqxInput('val', projectpackage.WinningCompany);
+		$('#WinningCompany_Manage').val(projectpackage.WinningCompany);
 		$("#ChargeRate_Manage").jqxNumberInput('val', projectpackage.ChargeRate);
 		BindPackageStatus("#StateIdPackage_Manage", dict.ProjectStatus, projectpackage)
 	}
@@ -1249,7 +1250,9 @@ function InitEditPackageWindow(dict, projectpackage) {
 		$("#MakeOutDate_Manage").jqxDateTimeInput('val', '')
 		$("#EntrustMoney_Manage").jqxNumberInput({ width: '200px', height: '25px', inputMode: 'simple' });
 		$("#WinningMoney_Manage").jqxNumberInput({ width: '200px', height: '25px', inputMode: 'simple' });
-		$("#WinningCompany_Manage").jqxInput({ width: '200px', height: "25px" });
+		//$("#WinningCompany_Manage").jqxInput({ width: '200px', height: "25px" });
+		//$("#WinningCompany_Manage").jqxComboBox({ width: '200px', height: "25px" });
+		$('#WinningCompany_Manage').jqxComboBox({ width: '200px', height: "25px", placeHolder: "", source: dict.dwmc, searchMode: 'contains', autoComplete: true});
 		$("#ChargeRate_Manage").jqxNumberInput({ width: '200px', height: '25px', inputMode: 'simple' });
 		/*$('#NotePackage_Manage').jqxEditor({height: "200px", width: '492px'});*/
 		BindPackageStatus("#StateIdPackage_Manage", dict.ProjectStatus);

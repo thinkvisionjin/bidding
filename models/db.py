@@ -10,7 +10,7 @@ from gluon.tools import *
 
 # reload(sys)
 # sys.setdefaultencoding('utf-8')
-str_db = u'mssql4://sa:1@localhost/BIDDING'
+str_db = u'mssql4://sa:sohunj123@localhost/BIDDING'
 #03.连接需要用utf8字符集，这样返回的中文结果可直接解码
 
 db = DAL(str_db,migrate_enabled=False)
@@ -59,7 +59,7 @@ db.define_table('grtjb', Field('xm'),Field('gngk'),Field('gnyq'),Field('dylycg')
 db.define_table('yhlswj', Field('rq'),Field('wjm'),Field('username'))
 db.define_table('yhls', Field('jysj'),Field('je'),Field('zy'),Field('dfmc'),Field('dfzh'),Field('qrje'),Field('cwqrje'),Field('wjmId'), Field('wjm'))
 db.define_table('yhlsqr', Field('dwmc'),Field('bsbh'),Field('qrlx'),Field('rq'),Field('qrje'),Field('yhlsId'),Field('cwqrbz'),Field('username'))
-db.define_table('lxr', Field('khId'),Field('lxr'),Field('sj'),Field('dz'),Field('dh'),Field('rq'),Field('username'))
+db.define_table('lxr', Field('khId'),Field('lxr'),Field('sj'),Field('dz'),Field('dh'),Field('rq'),Field('username'),Field('cz'), Field('yx'))
 db.define_table('cwls', Field('projectid'),Field('sz'),Field('je'),Field('zy'),Field('ywlx'),Field('lyId'),Field('username'),Field('rq'))
 db.define_table('pbcy', Field('bsbh'),Field('zjxx'),Field('zfy'),Field('username'),Field('rq'))
 db.define_table('zj', Field('xm'),Field('gzdw'),Field('username'),Field('rq'))
@@ -71,3 +71,4 @@ db.define_table('gdwj', Field('username'),Field('rq'),Field('type'),Field('wj'),
 db.define_table('pzgdwj', Field('pzid'), Field('text'), Field('parentid'))
 db.define_table('pzbh', Field('lx'), Field('nf'), Field('bh'))
 db.define_table('xmbh', Field('nf'), Field('xmlx'), Field('bh'))
+db.define_table('xybh', Field('nf'), Field('xylx'), Field('bh'))

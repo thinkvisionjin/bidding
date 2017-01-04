@@ -15,8 +15,15 @@ import xlrd
 import traceback 
 T.force('zh-cn')
 CONST_MANAGER=2;
-CONST_ADMIN = 1;
+CONST_ADMIN = 3;
 auth.settings.actions_disabled=['register','request_reset_password']
+
+
+
+@auth.requires_login()
+def guanli():
+    return dict(chinesename=auth.user.chinesename.decode('gbk'))
+    
 @auth.requires_login()
 def index():
     """
@@ -264,6 +271,8 @@ def getDictionaries():
     dictionaries["ProjectName"] = sqltojson(strSQL)
     strSQL = u"select  Id,dwmc from [bidding].[dbo].[kh]"
     dictionaries["Customer"] = sqltojson(strSQL)
+    strSQL = u"""select dwmc from kh""";   
+    dictionaries[u'dwmc'] = sqltoarraynodict(strSQL);    
     strSQL = u"select  Id,khId,lxr,sj from [bidding].[dbo].[lxr]"
     dictionaries["Contactor"] = sqltojson(strSQL)
     strSQL = u"select  Id,ProjectTypeId,ProjectTypeName from [bidding].[dbo].[ProjectType]"
@@ -280,7 +289,7 @@ def getDictionaries():
     dictionaries["ProjectStatus"] = sqltojson(strSQL)
     strSQL = u"select  Id,chinesename as Name from [bidding].[dbo].[auth_user]"
     dictionaries["Employee"] = sqltojson(strSQL,'gbk')
-    strSQL = u"select  TypeId,TypeName from [bidding].[dbo].[ProtocolCodeType]"
+    strSQL = u"select  TypeId,TypeName from [bidding].[dbo].[ProtocolCodeType] order by TypeId"
     dictionaries["ProtocolCodeType"] = sqltojson(strSQL)
     strSQL = u"select Id,ProtocolNumber from [bidding].[dbo].[ProtocolCode] order by CreationTime desc"
     dictionaries["ProtocolCode"] = sqltojson(strSQL)
@@ -309,7 +318,7 @@ def getDictionariesArray():
     dictionaries["ProjectStatus"] = sqltojson(strSQL)
     strSQL = u"select  Id,chinesename as Name from [bidding].[dbo].[auth_user]"
     dictionaries["Employee"] = sqltojson(strSQL,'gbk')
-    strSQL = u"select  TypeId,TypeName from [bidding].[dbo].[ProtocolCodeType]"
+    strSQL = u"select  TypeId,TypeName from [bidding].[dbo].[ProtocolCodeType] order by TypeId"
     dictionaries["ProtocolCodeType"] = sqltojson(strSQL)
     strSQL = u"select Id,ProtocolNumber from [bidding].[dbo].[ProtocolCode]"
     dictionaries["ProtocolCode"] = sqltojson(strSQL)
@@ -397,17 +406,39 @@ def SelectFirstPackagesByProjectId():
     result[0]['PackageNumber'] = r[0]['code']
     return json.dumps(result,ensure_ascii=False)
 
+def p_getexybh(xylx):
+    table_name = u'xybh'
+    nf = time.localtime().tm_year
+    row = db((db[table_name].xylx == xylx)&(db[table_name].nf==nf)).select().first()
+    print row
+    result = ''
+    if row == None:
+        print '...??..'
+        rowData={}
+        rowData[u'xylx'] = xylx
+        rowData[u'nf'] = nf
+        rowData[u'bh'] = 1     
+        db[table_name].insert(**rowData)
+        bh = 1   
+    else:
+        print row
+        id = row[u'id']
+        rowData={}
+        rowData[u'xylx'] = row[u'xylx']
+        rowData[u'nf'] = row[u'nf']
+        rowData[u'bh'] = int(row[u'bh'])+1   
+        db(db[table_name]._id == id).update(**rowData)
+        bh = int(row[u'bh'])+1
+    print '===>', bh
+    return unicode(bh).zfill(5)
+
+
 def GenerateProtocolCode(protocal_type,id):
+    print '...', protocal_type
     protocol_code = "SPMCEC-"+time.strftime('%y')
-    if protocal_type == u'0':
-        protocol_code += 'ZC'
-    if protocal_type == u'1':
-        protocol_code += 'SM'
-    if protocal_type == u'2':
-        protocol_code += 'ND'
-    if protocal_type == u'3':
-        protocol_code += 'QT'
-    return protocol_code+unicode(id).zfill(5);
+    row = db(db[u'ProtocolCodeType'].TypeId == protocal_type).select().first()       
+    protocol_code += row['TypeCode']
+    return protocol_code+p_getexybh(protocal_type);
 
 def GenerateProjectCode(project, id):
     nf = time.localtime().tm_year
@@ -418,22 +449,9 @@ def GenerateProjectCode(project, id):
     ProjectCode = ''
     if project['ProjectTypeId'] == '0':
         #国内
-        if project["PurchaseStyleId"]==u"1":
-            cgfs=u"G"
-        if project["PurchaseStyleId"]==u"2":
-            cgfs=u"Y"
-        if project["PurchaseStyleId"]==u"3":
-            cgfs=u"X"
-        if project["PurchaseStyleId"]==u"4":
-            cgfs=u"J"
-        if project["PurchaseStyleId"]==u"5":
-            cgfs=u"J"
-        if project["PurchaseStyleId"]==u"6":
-            cgfs=u"D"
-        if project["PurchaseStyleId"]==u"7":
-            cgfs=u"Q"   
-        if project["PurchaseStyleId"]==u"8":
-            cgfs=u"L"                  
+      
+        row = db(db[u'PurchaseStyle'].PurchaseStyleId == project["PurchaseStyleId"]).select().first()       
+        cgfs = row['PurchaseStyleCode']
         ProjectCode = 'PCMET-' + nf + unicode(project['ProjectPropertyId']) + ygbh +cgfs + bh
     else:
         #国际
@@ -494,16 +512,19 @@ def GenerateProjectCode1(project,id):
 def SelectProjectsSummary():
     uid = auth.user_id
     searchkey = request.vars.searchkey
+    print uid, auth.user_groups
     tj=u''
     if auth.user_groups.has_key(CONST_MANAGER) or auth.user_groups.has_key(CONST_ADMIN):
         tj = u'where 1=1 '
     else:
         #显示所有项目
-        tj = u'where 1=1 '
-        #tj = u'where a.EmployeeId = ' + unicode(uid) + u' or Assistant = ' + unicode(uid)
+        # tj = u'where 1=1 '
+        tj = u'where a.EmployeeId = ' + unicode(uid) + u' or Assistant = ' + unicode(uid)
         
     if searchkey != None:
         tj += u" and "+ searchkey.decode(u'utf-8')
+    else:
+        tj = u'where a.EmployeeId = ' + unicode(uid) + u' or Assistant = ' + unicode(uid)
         
     strSQL = u'''select  a.[Id]      ,[ProtocolCodeId]      ,[ProjectCode]      ,[ProjectName]      ,f.dwmc as [CustomerId]      ,[EmployeeId]      ,[Assistant]      ,[ProjectSourceId]      ,[FundingSourceId]      ,[ProjectTypeId]      ,[ProjectPropertyId]      ,[PurchaseStyleId]      ,[ProjectStatusId]      ,a.[CreationDate]      ,a.[ContactorNameId], a.[IsDelete],
       count(distinct b.Id) as PackageCount,
@@ -2174,7 +2195,7 @@ def deleterow_yhlsqr():
         table_name = u'yhlsqr'
         id = request.vars.Id
         row = db(db[table_name]._id ==id).select().first()
-        qrlx = row[u'qrlx']
+        qrlx = row[u'qrlx'].decode('utf-8')
         qrje = row[u'qrje']
         table_name = u'yhls'
         yhlsId = row[u'yhlsId']
@@ -2188,6 +2209,7 @@ def deleterow_yhlsqr():
         print id
         table_name = u'yhlsqr'
         deleterow(table_name, id)
+        print "==>", qrlx, id
 ######################
         if qrlx == u'购买标书':
             trow = db(db.gmbs.lyId == id).select().first()
@@ -2879,7 +2901,7 @@ def updaterow_hysgl():
         if rows[0][u'c'] == 0:
             updaterow(table_name, id, rowData)
         else:
-            return u"fail:time conflict"
+            return u"申请失败：时间冲突"
         return u"success";
     except:
         return u"fail";
@@ -2906,7 +2928,7 @@ def insertrow_hysgl():
             insertrow(table_name, rowData)
             return u"success";
         else:
-            return u"fail:time conflict"
+            return u"申请失败：时间冲突"
     except:
         return u"fail";
 
@@ -3142,7 +3164,9 @@ def select_pzgl():
         if tablename == 'ProjectSource':
             sql = 'select [Id],[Id] as pzid,[Id] as code ,[Name] as text from ProjectSource'         
         if tablename == 'hys':
-            sql = 'select [Id],[Id] as pzid,[Id] as code ,[hys] as text from hys'       
+            sql = 'select [Id],[Id] as pzid,[Id] as code ,[hys] as text from hys'    
+        if tablename == 'ProjectProperty':
+            sql = 'select [Id],[ProjectPropertyId] as pzid,[ProjectPropertyCode] as code,[ProjectPropertyName] as text FROM [BIDDING].[dbo].[ProjectProperty]'                   
         if tablename == 'pzgdwj':
             sql = 'select [Id],pzid  ,\'\' as code , text from pzgdwj'            
         print sql
@@ -3172,7 +3196,11 @@ def convert_pzgldata(tablename, rowData):
     if tablename == 'ProjectSource':
         row['Name'] = rowData['text']       
     if tablename == 'hys':
-        row['hys'] = rowData['text']                               
+        row['hys'] = rowData['text']   
+    if tablename == 'ProjectProperty':
+        row['ProjectPropertyId'] = rowData['pzid']
+        row['ProjectPropertyCode'] = rowData['code']
+        row['ProjectPropertyName'] = rowData['text']                                        
     if tablename == 'pzgdwj':
         row['pzid'] = rowData['pzid']
         row['text'] = rowData['text']    
@@ -3220,8 +3248,8 @@ def deleterow_pzgl():
 
 
 def zbfwf_print():
-    sql = u"""select PackageNumber as pn, b.dwmc, a.SigningDate as rq,  b.nsrsbh, b.lxdz, b.dh, a.WinningMoney as je, b.khyh, b.yhzh   from ProjectPackage a, kh b
-where a.WinningCompany=b.dwmc and a.PackageNumber='"""+request.vars.PackageNumber+u"'";
+    sql = u"""select PackageNumber as pn, b.dwmc, a.SigningDate as rq,  b.nsrsbh, b.lxdz, b.dh, a.WinningMoney as je, b.khyh, b.yhzh   from ProjectPackage a left join kh b
+on a.WinningCompany=b.dwmc where a.PackageNumber='"""+request.vars.PackageNumber+u"'";
     print sql
     rows = rawsqltojson(sql);   
     
@@ -3335,7 +3363,7 @@ def p_getebh(xmlx):
     
 
 def generatesql():
-    ts = ['[FundingSource]','[ManagementStyle]','[OperationType]','[ProjectSource]','[ProjectStatus]','[ProjectType]','[PurchaseStyle]','[pzgl]','[ProjectProperty]','[ProjectSource]', '[hys]']
+    ts = ['[pzgdwj]', '[ProtocolCodeType]', '[FundingSource]','[ManagementStyle]','[OperationType]','[ProjectSource]','[ProjectStatus]','[ProjectType]','[PurchaseStyle]','[pzgl]','[ProjectProperty]','[ProjectSource]', '[hys]']
     result=''
     for t in ts:
         result += unicode('SET IDENTITY_INSERT '+t+' ON' + "<br/>")

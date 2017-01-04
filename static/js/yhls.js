@@ -139,7 +139,7 @@ function addselectfieldwindows() {
 		{ label: '对方名称', value: 'dfmc', checked: true }, ,
 		{ label: '对方账号', value: 'dfzh', checked: true }, ,
 		{ label: '确认金额', value: 'qrje', checked: true }, ,
-		{ label: '财务确认金额', value: 'cwqrje', checked: true }, ,
+		//{ label: '财务确认金额', value: 'cwqrje', checked: true }, ,
 		{ label: '文件名', value: 'wjm', checked: false },];
 	$('#zdlistbox').jqxListBox({ source: listSource, width: '100%', height: '100%', checkboxes: true });
     $("#zdlistbox").on('checkChange', function (event) {
@@ -341,7 +341,7 @@ function inityhlsqr() {
 				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '确认金额', datafield: 'qrje', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '银行流水序号', datafield: 'yhlsId', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '财务确认标志', datafield: 'cwqrbz', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '财务确认标志', datafield: 'cwqrbz', width: '5%', cellsalign: 'center', align: 'center', hidden: true },
 				{ text: '操作人', datafield: 'username', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{
 					text: '操作',
@@ -517,6 +517,7 @@ $(document).ready(function () {
 	$('#wjm').jqxComboBox({ placeHolder: "", autoComplete:true, searchMode: 'contains'});
 	$('#dfmc').jqxInput();
 	$('#dfzh').jqxInput();
+	$('#zy').jqxInput();
 	addselectfieldwindows();
 	inityhlsqr();
 	$("#yhls-grid").on('rowselect', function (event) {

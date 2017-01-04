@@ -13,6 +13,8 @@ function l_searchlxr(id){
 			{ name: 'dz', type: 'string' },
 			{ name: 'dh', type: 'string' },			
 			{ name: 'rq', type: 'date' },
+			{ name: 'cz', type: 'string' },			
+			{ name: 'yx', type: 'string' },			
 			{ name: 'username', type: 'string' }],
 		id: 'Id',
 		url: url
@@ -180,7 +182,9 @@ function initlxr() {
 				{ text: '联系人', datafield: 'lxr', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '手机', datafield: 'sj', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '地址', datafield: 'dz', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '电话', datafield: 'dh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },				
+				{ text: '电话', datafield: 'dh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },		
+				{ text: '传真', datafield: 'cz', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '邮箱', datafield: 'yx', width: '10%', cellsalign: 'center', align: 'center', hidden: false },							
 				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '操作人', datafield: 'username', width: '10%', cellsalign: 'center', align: 'center', hidden: true },
 				{

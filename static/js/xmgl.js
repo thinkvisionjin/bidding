@@ -337,19 +337,27 @@ function InitProjectGrid(dict){
 					var rowid = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
 				}				
 				row = $('#jqxgrid').jqxGrid('getrowdata', selectedrowindex)
-				$("#NewProject_ProtocolCode").val(row['ProtocolCodeId'])
-				$("#NewProject_ProjectName").val(row['ProjectName'])
-				$("#NewProject_Customer").val(row['CustomerId'])
-				$("#NewProject_Employee").val(row['EmployeeId'])
-				$("#NewProject_Assistant").val(row['Assistant'])
-				$("#NewProject_ProjectSource").val(row['ProjectSourceId'])
-				$("#NewProject_FundingSource").val(row['FundingSourceId'])
-				$("#NewProject_ProjectType").val(row['ProjectTypeId'])
-				$("#NewProject_ProjectProperty").val(row['ProjectPropertyId'])
-				$("#NewProject_PurchaseStyle").val(row['PurchaseStyleId'])
-				$("#NewProject_ContactName").val(row['ContactorNameId'])
 
-				$("#popupWindow_NewProject").jqxWindow('show');
+				if ((dict.User == row['EmployeeId']) || (dict.User == row['Assistant']))
+				{
+					$("#NewProject_ProtocolCode").val(row['ProtocolCodeId'])
+					$("#NewProject_ProjectName").val(row['ProjectName'])
+					$("#NewProject_Customer").val(row['CustomerId'])
+					$("#NewProject_Employee").val(row['EmployeeId'])
+					$("#NewProject_Assistant").val(row['Assistant'])
+					$("#NewProject_ProjectSource").val(row['ProjectSourceId'])
+					$("#NewProject_FundingSource").val(row['FundingSourceId'])
+					$("#NewProject_ProjectType").val(row['ProjectTypeId'])
+					$("#NewProject_ProjectProperty").val(row['ProjectPropertyId'])
+					$("#NewProject_PurchaseStyle").val(row['PurchaseStyleId'])
+					$("#NewProject_ContactName").val(row['ContactorNameId'])
+
+					$("#popupWindow_NewProject").jqxWindow('show');
+				}
+				else
+				{
+					alert('你不是项目管理人员，不能重新获取该项目编号！')
+				}
             	//$("#jqxgrid").jqxGrid('exportdata', 'xls', 'jqxGrid'); 
             });
             // delete selected row.
@@ -357,7 +365,17 @@ function InitProjectGrid(dict){
                 var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
                 var rowscount = $("#jqxgrid").jqxGrid('getdatainformation').rowscount;
                 var id = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
-                $("#jqxgrid").jqxGrid('deleterow', id);
+
+				row = $('#jqxgrid').jqxGrid('getrowdata', selectedrowindex)
+				if ((dict.User == row['EmployeeId']) || (dict.User == row['Assistant']))
+				{					
+                	$("#jqxgrid").jqxGrid('deleterow', id);
+				}
+				else
+				{
+					alert('你不是项目管理人员，不能删除该项目！')
+				}
+			
             });
         },
     });

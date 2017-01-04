@@ -212,23 +212,23 @@ $('#tr_kh_username').hide();
 		rules: [
 		{ input: "#kh_nsrsbh", message: "不可为空!", action: 'keyup, blur', rule: 'required' },
 		{ input: "#kh_dwmc", message: "不可为空!", action: 'keyup, blur', rule: 'required' },
-		{ input: "#kh_khyh", message: "不可为空!", action: 'keyup, blur', rule: 'required' },
-		{ input: "#kh_yhzh", message: "不可为空!", action: 'keyup, blur', rule: 'required' },
+		//{ input: "#kh_khyh", message: "不可为空!", action: 'keyup, blur', rule: 'required' },
+		//{ input: "#kh_yhzh", message: "不可为空!", action: 'keyup, blur', rule: 'required' },
 		{ input: "#kh_yhzh", message: "不是有效的银行账号!", action: 'keyup, blur', rule: function(input){
 			var val = $("#kh_yhzh").val();
-			if(val==""){return false;}
+			if(val==""){return true;}
 			var reg = /[+|-|0-9]{2,30}$/;
 			if (reg.test(val)) {return true;}else{return false;}
 		} },	
 		{ input: "#kh_cz", message: "不是有效的传真号码!", action: 'keyup, blur', rule: function(input){
 			var val = $("#kh_cz").val();
-			if(val==""){return false;}
+			if(val==""){return true;}
 			var reg = /[+|-|0-9]{2,30}$/;
 			if (reg.test(val)) {return true;}else{return false;}
 		} },
 		{ input: "#kh_dh", message: "不是有效的电话号码!", action: 'keyup, blur', rule: function(input){
 			var val = $("#kh_dh").val();
-			if(val==""){return false;}
+			if(val==""){return true;}
 			var reg = /[+|-|0-9]{2,30}$/;
 			if (reg.test(val)) {return true;}else{return false;}
 		} },		
