@@ -22,7 +22,7 @@ function getkh(dwmc)
 		
 	}, 'json');	
 }
-function cwls_configpage(projectid)
+function cwls_configpage(projectid, cb)
 {
 	if (projectid == undefined)
 	{
@@ -39,6 +39,7 @@ function cwls_configpage(projectid)
 $('#cwls_sz').jqxDropDownList({ placeHolder: "", source: result['sz']});
 $('#cwls_projectid').jqxDropDownList('selectIndex', 0);
 $('#cwls_ywlx').jqxDropDownList({ placeHolder: "", source: result['ywlx']});
+cb();
     }, 'json');	
     $("#cwls_dwmc input").blur(function(){getkh($("#cwls_dwmc").val())});  
 }
@@ -220,22 +221,24 @@ function cwls_popupwindow(flag_state, id, callback, projectid)
 	gkhcallback = callback;
 	$('#cwls_Id').val(id);
 	$('#cwls_projectid').val(projectid);
-	cwls_configpage(projectid);
-	if (state == 'add')
-	{
-		cwls_title.innerHTML='新增';
-		cwls_setupadd();
-	}
-	if (state == 'modify')
-	{
-		cwls_title.innerHTML='修改';
-		cwls_setupmodify();
-	}
-	if (state == 'detail')
+	cwls_configpage(projectid, function(){
+		if (state == 'add')
 		{
-			
-			cwls_title.innerHTML='详情';
-			cwls_setupdetail();
+			cwls_title.innerHTML='新增';
+			cwls_setupadd();
 		}
-	$('#cwls_popupWindow').jqxWindow('open');
+		if (state == 'modify')
+		{
+			cwls_title.innerHTML='修改';
+			cwls_setupmodify();
+		}
+		if (state == 'detail')
+			{
+				
+				cwls_title.innerHTML='详情';
+				cwls_setupdetail();
+			}
+		$('#cwls_popupWindow').jqxWindow('open');
+	});
+
 }

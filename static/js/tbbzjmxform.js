@@ -1,4 +1,5 @@
 
+var w_flag;
 function gettbbzjkh(dwmc)
 {
 	if (dwmc == olddwmc)
@@ -22,7 +23,7 @@ function gettbbzjkh(dwmc)
 		
 	}, 'json');	
 }
-function tbbzj_configpage(projectid)
+function tbbzj_configpage(projectid, cb)
 {
 	if (projectid == undefined)
 	{
@@ -39,6 +40,7 @@ function tbbzj_configpage(projectid)
 $('#tbbzj_projectid').jqxDropDownList({ placeHolder: "", source: result['projectid'], displayMember:'ProjectCode', valueMember:'Id'});
 $('#tbbzj_projectid').jqxDropDownList('selectIndex', 0);
 $('#tbbzj_bzjlx').jqxDropDownList({ placeHolder: "", source: result['bzjlx']});
+		cb();
     }, 'json');	
     $("#tbbzj_dwmc input").blur(function(){gettbbzjkh($("#tbbzj_dwmc").val())});  
 }
@@ -168,7 +170,7 @@ function tbbzj_init () {
 <tr id='tr_tbbzj_dwmc'><td class='tbinputtitle'>单位名称:</td><td><div class='tbinput' type='text' id='tbbzj_dwmc'/></td></tr>\
 <tr id='tr_tbbzj_projectid'><td class='tbinputtitle'>项目编号:</td><td><div class='tbinput' type='text' id='tbbzj_projectid'/></td></tr>\
 <tr id='tr_tbbzj_bzjlx'><td class='tbinputtitle'>保证金类型:</td><td><div class='tbinput' type='text' id='tbbzj_bzjlx'/></td></tr>\
-<tr id='tr_tbbzj_je'><td class='tbinputtitle'>金额:</td><td><input class='tbinput' type='text' id='tbbzj_je'/></td></tr>\
+<tr id='tr_tbbzj_je'><td class='tbinputtitle'>金额(元):</td><td><input class='tbinput' type='text' id='tbbzj_je'/></td></tr>\
 <tr id='tr_tbbzj_rq'><td class='tbinputtitle'>日期:</td><td><input class='tbinput' type='text' id='tbbzj_rq'/></td></tr>\
 <tr id='tr_tbbzj_username'><td class='tbinputtitle'>操作人:</td><td><input class='tbinput' type='text' id='tbbzj_username'/></td></tr>\
 <tr id='tr_tbbzj_ly'><td class='tbinputtitle'>来源:</td><td><input class='tbinput' type='text' id='tbbzj_ly'/></td></tr>\
@@ -233,9 +235,10 @@ function tbbzj_popupwindow(flag_state, id, callback, projectid)
 	$('#tbbzj_popupWindow').jqxWindow({ position: { x: x, y: y }});	
 	state = flag_state;
 	gkhcallback = callback;
-	tbbzj_configpage(projectid);
+
+	tbbzj_configpage(projectid,function(){
 	$('#tbbzj_Id').val(id);
-	
+
 	if (state == 'add')
 	{
 		tbbzj_title.innerHTML='新增';
@@ -256,4 +259,7 @@ function tbbzj_popupwindow(flag_state, id, callback, projectid)
 			$('#tbbzj_popupWindow').jqxWindow({ height:380});
 		}
 	$('#tbbzj_popupWindow').jqxWindow('open');
+
+	})
+
 }

@@ -97,7 +97,7 @@
 	src="{{=URL('static','js/xmzcmxform.js')}}"></script>	
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/globalization/globalize.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/globalization/globalize.culture.zh-CN.js')}}"></script>
-	
+	<script type="text/javascript" src="{{=URL('static','js/biddingbase.js')}}"></script>
 
 
 <style type="text/css">
@@ -208,12 +208,13 @@
 						<div id="Note_ADD" /></td>
 				</tr>
 				-->
-				<tr>
+				<tr style ="display: none">
 					<td align="center" style="padding-top: 10px;">
 					<td align="center" style="padding-top: 10px;">
 					<td align="center" style="padding-top: 10px;">
 					<td align="center" style="padding-top: 10px;"><input
-						style="margin-right: 5px;" type="button" id="EditProject_Save"
+						style="margin-right: 5px;" type="button" id="EditProject_Modify"
+						value="修改" /> <input type="button" id="EditProject_Save"
 						value="保存" /> <input type="button" id="EditProject_Cancel"
 						value="取消" /> <input type="button" id="EditProject_Return"
 						value="返回" /></td>
@@ -308,7 +309,7 @@
 					<td align="left"><input id="PackageName_ADD" /></td>
 
 					<td align="left">
-						<p>委托金额</p>
+						<p>委托金额(万元)</p>
 					</td>
 					<td align="left"><input id="EntrustMoney_ADD" /></td>
 				</tr>
@@ -408,7 +409,7 @@
 			</tr>
 			<tr>
 							<td align="left">
-								<p>委托金额</p>
+								<p>委托金额(万元)</p>
 							</td>
 							<td align="left"><input id="EntrustMoney_Manage" /></td>
 
@@ -442,10 +443,12 @@
 						</tr>
 					<tr><td colspan=4><hr/></td></tr>
 					<tr id = 'tr_WinningCompany' style="display: none"><td align="left"><p>中标单位</p></td><td align="left"><div id="WinningCompany_Manage"/></td>
-					<td align="left"><p>中标金额</p></td><td align="left"><input id="WinningMoney_Manage"/></td></tr>
+					<td align="left"><p>中标本币金额(万元)</p></td><td align="left"><input id="WinningMoney_Manage"/></td></tr>
+					<tr id = 'tr_WinningDollar' style="display: none"><td align="left"></td><td></td>
+					<td align="left"><p>中标外币金额(万元)</p></td><td align="left"><input id="WinningDollar_Manage"/></td></tr>					
 					<tr id = 'tr_SigningDate'  style="display: none"><td align="left"><p>签约时间</p></td><td align="left"><input id="SigningDate_Manage"/></td>
 					<td align="left"><p>开票时间</p></td><td align="left"><input id="MakeOutDate_Manage"/></td></tr>
-					<tr id = 'tr_ChargeRate' style="display: none"><td align="left"><p>服务费</p></td><td align="left"><input id="ChargeRate_Manage"/></td></tr>
+					<tr id = 'tr_ChargeRate' style="display: none"><td align="left"><p>服务费(元)</p></td><td align="left"><input id="ChargeRate_Manage"/></td></tr>
 					<tr>
 						<td align="left">
 							<p>备注</p>

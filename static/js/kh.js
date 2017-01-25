@@ -1,4 +1,5 @@
 function searchlxr() {
+	//l_selectedindex =  $('#kh-grid').jqxGrid('getselectedcells')[0].rowindex;
 	l_selectedindex = $('#kh-grid').jqxGrid('getselectedrowindex');
 	data = $('#kh-grid').jqxGrid('getrowdata', l_selectedindex);
 	l_searchlxr(data['Id']);
@@ -35,7 +36,8 @@ function deletelxr(id) {
 	{
 		return ;
 	}	
-    var selectedrowindex = $("#lxr-grid").jqxGrid('getselectedrowindex');
+    //var selectedrowindex = $('#lxr-grid').jqxGrid('getselectedcells')[0].rowindex;
+	var selectedrowindex = $('#lxr-grid').jqxGrid('getselectedrowindex');
     var rowscount = $("#lxr-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
         var rowid = $("#lxr-grid").jqxGrid('getrowid', selectedrowindex);
@@ -125,7 +127,8 @@ function deletekh(id) {
 	{
 		return ;
 	}	
-    var selectedrowindex = $("#kh-grid").jqxGrid('getselectedrowindex');
+    //var selectedrowindex =  $('#kh-grid').jqxGrid('getselectedcells')[0].rowindex
+	var selectedrowindex = $('#kh-grid').jqxGrid('getselectedrowindex');
     var rowscount = $("#kh-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
         var rowid = $("#kh-grid").jqxGrid('getrowid', selectedrowindex);
@@ -164,6 +167,7 @@ function configpopupwindow() {
 
 function addlxr()
 {
+		//l_selectedindex = $('#kh-grid').jqxGrid('getselectedcells')[0].rowindex//
 		l_selectedindex = $('#kh-grid').jqxGrid('getselectedrowindex');
 		data = $('#kh-grid').jqxGrid('getrowdata', l_selectedindex);
 		lxr_popupwindow('add', '', searchlxr, data['Id']);
@@ -178,6 +182,7 @@ function initlxr() {
 			columnsresize: true,
 			height: "40%",
 			width: "98%",
+			enablebrowserselection: true,
 			columns: [{ text: '序号', datafield: 'Id', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '联系人', datafield: 'lxr', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '手机', datafield: 'sj', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
@@ -241,6 +246,7 @@ $(document).ready(function () {
 			columnsresize: true,
 			height: "45%",
 			width: "98%",
+			enablebrowserselection: true,
 			columns: [{ text: '序号', datafield: 'Id', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '纳税人识别号', datafield: 'nsrsbh', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '单位名称', datafield: 'dwmc', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
@@ -309,14 +315,14 @@ $(document).ready(function () {
 	addselectfieldwindows();
 	initlxr();
 	configpopupwindow();
-	$("#kh-grid").on('rowselect', function (event) {
+	$("#kh-grid").on('rowclick', function (event) {
 		var args = event.args;
 		// row's bound index.
 		var rowBoundIndex = args.rowindex;
 		if (rowBoundIndex == -1) {
 							    	return;
 		}
-		var rowData = args.row;
+		var rowData = $('#kh-grid').jqxGrid('getrowdata', rowBoundIndex);//args.row;
 		l_searchlxr(rowData['Id']);
 
 

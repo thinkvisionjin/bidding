@@ -20,8 +20,10 @@ function gettbzjkh(dwmc)
 		
 	}, 'json');	
 }
-function tbzj_configpage1(projectid)
+function tbzj_configpage1(projectid, cb)
 {
+	$('#tbzj_dwmc').jqxComboBox({disabled:false});
+	$('#tbzj_projectid').jqxDropDownList({disabled:false});	
 	if (projectid == undefined)
 	{
 		url = 'gettbzjpz';
@@ -38,6 +40,7 @@ function tbzj_configpage1(projectid)
 		$('#tbzj_projectid').jqxDropDownList({ placeHolder: "", source: result['projectid'], displayMember:'ProjectCode', valueMember:'Id'});
 		$('#tbzj_projectid').jqxDropDownList('selectIndex', 0);
 		$('#tbzj_fkfs').jqxDropDownList({ placeHolder: "", source: result['fkfs']});
+		cb();
     }, 'json');	
     $("#tbzj_dwmc input").blur(function(){gettbzjkh($("#tbzj_dwmc").val())});  
 }
@@ -227,7 +230,7 @@ function tbzj_init () {
 <tr id='tr_tbzj_khyh'><td class='tbinputtitle'>开户银行:</td><td><input class='tbinput' type='text' id='tbzj_khyh'/></td></tr>\
 <tr id='tr_tbzj_yhzh'><td class='tbinputtitle'>银行账号:</td><td><input class='tbinput' type='text' id='tbzj_yhzh'/></td></tr>\
 <tr id='tr_tbzj_fkfs'><td class='tbinputtitle'>付款方式:</td><td><div class='tbinput' type='text' id='tbzj_fkfs'/></td></tr>\
-<tr id='tr_tbzj_je'><td class='tbinputtitle'>金额:</td><td><input class='tbinput' type='text' id='tbzj_je'/></td></tr>\
+<tr id='tr_tbzj_je'><td class='tbinputtitle'>金额(元):</td><td><input class='tbinput' type='text' id='tbzj_je'/></td></tr>\
 <tr id='tr_tbzj_rq'><td class='tbinputtitle'>日期:</td><td><input class='tbinput' type='text' id='tbzj_rq'/></td></tr>\
 <tr id='tr_tbzj_username'><td class='tbinputtitle'>操作人:</td><td><input class='tbinput' type='text' id='tbzj_username'/></td></tr>\
 <tr id='tr_tbzj_ly'><td class='tbinputtitle'>来源:</td><td><input class='tbinput' type='text' id='tbzj_ly'/></td></tr>\
@@ -344,27 +347,29 @@ function tbzj_popupwindow1(flag_state, id, callback, projectid)
 	$('#tbzj_popupWindow').jqxWindow({ position: { x: x, y: y }});	
 	state = flag_state;
 	gkhcallback = callback;
-	tbzj_configpage1(projectid);
-	$('#tbzj_Id').val(id);
-	
-	if (state == 'add')
-	{
-		tbzj_title.innerHTML='新增';
-		tbzj_setupadd();
-		$('#tbzj_popupWindow').jqxWindow({ height:300});
-	}
-	if (state == 'modify')
-	{
-		tbzj_title.innerHTML='修改';
-		tbzj_setupmodify();
-		$('#tbzj_popupWindow').jqxWindow({ height:430});
-	}
-	if (state == 'detail')
+	tbzj_configpage1(projectid, function(){
+		$('#tbzj_Id').val(id);
+		
+		if (state == 'add')
 		{
-			
-			tbzj_title.innerHTML='详情';
-			tbzj_setupdetail();
+			tbzj_title.innerHTML='新增';
+			tbzj_setupadd();
+			$('#tbzj_popupWindow').jqxWindow({ height:300});
+		}
+		if (state == 'modify')
+		{
+			tbzj_title.innerHTML='修改';
+			tbzj_setupmodify();
 			$('#tbzj_popupWindow').jqxWindow({ height:430});
 		}
-	$('#tbzj_popupWindow').jqxWindow('open');
+		if (state == 'detail')
+			{
+				
+				tbzj_title.innerHTML='详情';
+				tbzj_setupdetail();
+				$('#tbzj_popupWindow').jqxWindow({ height:430});
+			}
+		$('#tbzj_popupWindow').jqxWindow('open');
+	});
+
 }

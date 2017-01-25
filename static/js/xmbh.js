@@ -10,15 +10,7 @@ $(document).ready(function () {
                 url: data_url,
                 datatype: "json",
                 datafields:datafields_content,
-                updaterow: function (rowid, rowdata, commit) {
-                    // synchronize with the server - send update command
-                    // call commit with parameter true if the synchronization with the server is successful 
-                    // and with parameter false if the synchronization failed.
-                $.post("/bidding/default/update?table=ProjectCode",rowdata,function(result){
-                		 alert("操作成功！");
-                	 });
-                    commit(true);
-                },
+
                 deleterow: function (rowid, commit) {
                     // synchronize with the server - send delete command
                     // call commit with parameter true if the synchronization with the server is successful 

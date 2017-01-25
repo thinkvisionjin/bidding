@@ -121,6 +121,7 @@ $(document).ready(function() {
 										columnsresize: true,
 										height : "90%",
 										width : "98%",
+										enablebrowserselection: true,
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '项目编号', datafield: 'projectid', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '收支', datafield: 'sz', width: '10%',cellsalign: 'center', align: 'center',hidden:false },

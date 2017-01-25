@@ -16,7 +16,7 @@ function search()
 {name : 'dwmc',type : 'string'	},
 {name : 'projectid',type : 'string'	},
 {name : 'bzjlx',type : 'string'	},
-{name : 'je',type : 'string'	},
+{name : 'je',type : 'float'	},
 {name : 'rq',type : 'date'	},
 {name : 'username',type : 'string'	},
 {name : 'ly',type : 'string'	}],
@@ -37,7 +37,7 @@ function addselectfieldwindows()
 { label: '单位名称', value: 'dwmc', checked: true },,
 { label: '项目编号', value: 'projectid', checked: true },,
 { label: '保证金类型', value: 'bzjlx', checked: true },,
-{ label: '金额', value: 'je', checked: true },,
+{ label: '金额(元)', value: 'je', checked: true },,
 { label: '日期', value: 'rq', checked: true },,
 { label: '操作人', value: 'username', checked: false },,
 { label: '来源', value: 'ly', checked: false },];
@@ -67,7 +67,8 @@ function deletetbbzj(id)
 	{
 		return ;
 	}	
-    var selectedrowindex = $("#tbbzj-grid").jqxGrid('getselectedrowindex');
+    //var selectedrowindex = $('#tbbzj-grid').jqxGrid('getselectedcells')[0].rowindex;//
+	var selectedrowindex = $("#tbbzj-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#tbbzj-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
         var rowid = $("#tbbzj-grid").jqxGrid('getrowid', selectedrowindex);
@@ -118,11 +119,12 @@ $(document).ready(function() {
 										columnsresize: true,
 										height : "90%",
 										width : "98%",
+										enablebrowserselection: true,
 										columns : [{ text: '序号', datafield: 'Id', width: '5%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '项目编号', datafield: 'projectid', width: '15%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '保证金类型', datafield: 'bzjlx', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '金额', datafield: 'je', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '金额(元)', datafield: 'je', width: '10%',cellsalign: 'center', align: 'center',cellsformat: 'f2',hidden:false },
 { text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '操作人', datafield: 'username', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '来源', datafield: 'ly', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
@@ -176,6 +178,7 @@ $(document).ready(function() {
 										}
 
 									});
+								
 					//$("#tbbzj-grid").('hidecolumn', 'id');
 					search();
 					/*$("#tbbzjexport").click(function() {

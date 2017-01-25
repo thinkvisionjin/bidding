@@ -36,6 +36,7 @@
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/globalization/globalize.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/jqxvalidator.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/vendor/jqwidgets/globalization/globalize.culture.zh-CN.js')}}"></script>    
+    <script type="text/javascript" src="{{=URL('static','js/biddingbase.js')}}"></script>
     <script type="text/javascript" src="{{=URL('static','js/hysgl.js')}}"></script>
 	<script type="text/javascript" src="{{=URL('static','js/hysglmxform.js')}}"></script>
 
@@ -57,11 +58,16 @@
     	<div>
     		<table align="center" >
 				<tr >
-					<td class='tbinputtitle'>申请人:</td><td><input class='tbinput' type='text' id='username'/></td>
+					<td class='tbinputtitle'>主题:</td><td><input class='tbinput' type='text' id='username'/></td>
 <td class='tbinputtitle'>会议室:</td><td><div class='tbinput' type='text' id='hys'/></td>
 <td>
 					<input id="search" style="float:right" type="button" value="查询" />
+
 				</td>
+<td>
+
+                    <input id="search_all" style="float:right" type="button" value="查询所有" />
+				</td>                
 				</tr>
     		</table>
     	</div>

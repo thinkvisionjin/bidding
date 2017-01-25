@@ -27,7 +27,7 @@ function search()
 {name : 'dzxx',type : 'string'	},
 {name : 'cz',type : 'string'	},
 {name : 'bsbh',type : 'string'	},
-{name : 'je',type : 'string'	},
+{name : 'je',type : 'float'	},
 {name : 'rq',type : 'date'	},
 {name : 'username',type : 'string'	},
 {name : 'ly',type : 'string'	}],
@@ -59,7 +59,7 @@ function addselectfieldwindows()
 { label: '电子信箱', value: 'dzxx', checked: false },,
 { label: '传真', value: 'cz', checked: false },,
 { label: '标书编号', value: 'bsbh', checked: true },,
-{ label: '金额', value: 'je', checked: true },,
+{ label: '金额(元)', value: 'je', checked: true },,
 { label: '日期', value: 'rq', checked: true },,
 { label: '操作人', value: 'username', checked: false },,
 { label: '来源', value: 'ly', checked: false },];
@@ -90,10 +90,10 @@ function deletegmbs(id)
 		return ;
 	}	
 
-    var selectedrowindex = $("#gmbs-grid").jqxGrid('getselectedrowindex');
+    var selectedrowindex = $("#gmbs-grid").jqxGrid('getselectedrowindex');//$('#gmbs-grid').jqxGrid('getselectedcells')[0].rowindex//
     var rowscount = $("#gmbs-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
-        var rowid = $("#gmbs-grid").jqxGrid('getrowid', selectedrowindex);
+        rowid = $("#gmbs-grid").jqxGrid('getrowid', selectedrowindex);
     }
 
 	$.get('deleterow_gmbs?Id='+id, function(result){
@@ -141,6 +141,7 @@ $(document).ready(function() {
 										columnsresize: true,
 										height : "90%",
 										width : "98%",
+										enablebrowserselection: true,
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '购标书单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '纳税人识别号', datafield: 'nsrsbh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
@@ -156,7 +157,7 @@ $(document).ready(function() {
 { text: '电子信箱', datafield: 'dzxx', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '传真', datafield: 'cz', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '标书编号', datafield: 'bsbh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '金额', datafield: 'je', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '金额(元)', datafield: 'je', width: '10%',cellsalign: 'center', align: 'center',cellsformat: 'f2',hidden:false },
 { text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '操作人', datafield: 'username', width: '10%',cellsalign: 'center', align: 'center',hidden:true },
 { text: '来源', datafield: 'ly', width: '10%',cellsalign: 'center', align: 'center',hidden:true },

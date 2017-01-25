@@ -25,17 +25,6 @@ function initProtocolCodeGrid(dict) {
 		url: data_url,
 		datatype: "json",
 		datafields: datafields_content,
-		updaterow: function (rowid, rowdata, commit) {
-			// synchronize with the server - send update command
-			// call commit with parameter true if the synchronization with the
-			// server is successful
-			// and with parameter false if the synchronization failed.
-			$.post("/bidding/default/update?table=ProtocolCode", rowdata,
-				function (result) {
-					alert("操作成功！");
-				});
-			commit(true);
-		},
 		deleterow: function (rowid, commit) {
 			// synchronize with the server - send delete command
 			// call commit with parameter true if the synchronization with the
@@ -44,7 +33,13 @@ function initProtocolCodeGrid(dict) {
 			var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', rowid);
 			$.post("/bidding/default/delete?table=ProtocolCode", dataRecord,
 				function (result) {
-					alert("操作成功！");
+					if (result=='success')
+					{
+						alert("操作成功！");
+					}
+					else{
+						alert(result)
+					}
 				});
 			commit(true);
 		},
@@ -71,7 +66,7 @@ function initProtocolCodeGrid(dict) {
 			"text": "\u534f\u8bae\u7f16\u53f7"
 		}, {
 			"datafield": "TypeId",
-			"text": "\u7c7b\u578b\u7f16\u53f7",
+			"text": "类型",
 			cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
 				var label = "";
 				var pt = JSON.parse(dict.ProtocolCodeType)
@@ -84,7 +79,7 @@ function initProtocolCodeGrid(dict) {
 			}
 		}, {
 			"datafield": "EmployeeId",
-			"text": "\u5458\u5de5\u7f16\u53f7",
+			"text": "员工",
 			cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		   var label="";
                         		   var pt = JSON.parse(dict.Employee)
@@ -102,11 +97,12 @@ function initProtocolCodeGrid(dict) {
 	$("#jqxgrid").jqxGrid(
 		{
 			width: '99%',
-			height: "90%",
+			height: "97%",
 			columnsresize: true,
 			source: dataAdapter,
+			enablebrowserselection: true,
 			//pageable: true,
-			autoheight: true,
+			//autoheight: true,
 			columns: columns_content,
 			showtoolbar: true,
 				        rendertoolbar: function (toolbar) {
@@ -199,7 +195,15 @@ function initProtocolCodeGrid(dict) {
 			var row = { TypeId: $("#ProtocalTypeId_ADD").val() }
 			var datarow = row;
 			$.post("/bidding/default/CreateNewProtocol", datarow, function (result) {
-				$("#jqxgrid").jqxGrid('addrow', null, result, 'first');
+				if (result=='fail')
+				{
+					alert(result)
+				}
+				else{
+					$("#jqxgrid").jqxGrid('addrow', null, result, 'first');
+					alert('领取成功')
+				}
+				
 			}, 'json');
 			$("#popupWindow_ADD").jqxWindow('hide');
 		}

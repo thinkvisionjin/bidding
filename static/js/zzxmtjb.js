@@ -14,6 +14,8 @@ function search()
 {name : 'xjcg',type : 'string'	},
 {name : 'jzxcs',type : 'string'	},
 {name : 'qt',type : 'string'	},
+{name : 'jklz',type : 'string'	},
+{name : 'zx',type : 'string'	},
 {name : 'gjzb',type : 'string'	},
 {name : 'zj',type : 'string'	}],
 		id : 'Id',
@@ -76,6 +78,8 @@ function search()
                                       {dataField : 'xjcg',displayText : '询价采购'	},
                                       {dataField : 'jzxcs',displayText : '竞争性磋商'	},
                                       {dataField : 'qt',displayText : '其他'	},
+                                      {dataField : 'jklz',displayText : '进口论证'	},
+                                      {dataField : 'zx',displayText : '咨询'	},									  
                                       {dataField : 'gjzb',displayText : '国际招标'	}                                     
                                   ]
                           }
@@ -102,6 +106,7 @@ $(document).ready(function() {
 										columnsresize: true,
 										height : "300",
 										width : "98%",
+										enablebrowserselection: true,
 										columns : [{ text: '姓名', pinned: true, datafield: 'xm', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '国内公开', datafield: 'gngk', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '国内邀请', datafield: 'gnyq', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
@@ -110,6 +115,8 @@ $(document).ready(function() {
 { text: '询价采购', datafield: 'xjcg', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '竞争性磋商', datafield: 'jzxcs', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '其他', datafield: 'qt', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '进口论证', datafield: 'jklz', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '咨询', datafield: 'zx', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '国际招标', datafield: 'gjzb', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '总计', datafield: 'zj', width: '10%',cellsalign: 'center', align: 'center',hidden:false } ],
 										showtoolbar : true,

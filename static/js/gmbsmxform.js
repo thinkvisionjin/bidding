@@ -35,7 +35,7 @@ function getgmbskh(dwmc)
 	olddwmc = dwmc;
 }
 
-function gmbs_configpage(projectid)
+function gmbs_configpage(projectid, cb)
 {
 	if (projectid == undefined)
 	{
@@ -51,6 +51,7 @@ function gmbs_configpage(projectid)
 		$('#gmbs_dwmc').jqxComboBox({ placeHolder: '', source: result['dwmc'], searchMode: 'contains', autoComplete:true});
 		$('#gmbs_bsbh').jqxDropDownList({ placeHolder: '', source: result['bsbh']});
 		$('#gmbs_bsbh').jqxDropDownList('selectIndex', 0);
+		cb();
 
 	}, 'json');	
 	$('#gmbs_dwmc input').blur(function(){getgmbskh($('#gmbs_dwmc').val())});  
@@ -243,7 +244,7 @@ function gmbs_init () {
 <tr id='tr_gmbs_dzxx'><td class='tbinputtitle'>电子信箱:</td><td><input class='tbinput' type='text' id='gmbs_dzxx'/></td></tr>\
 <tr id='tr_gmbs_cz'><td class='tbinputtitle'>传真:</td><td><input class='tbinput' type='text' id='gmbs_cz'/></td></tr>\
 <tr id='tr_gmbs_bsbh'><td class='tbinputtitle'>标书编号:</td><td><div class='tbinput' type='text' id='gmbs_bsbh'/></td></tr>\
-<tr id='tr_gmbs_je'><td class='tbinputtitle'>金额:</td><td><input class='tbinput' type='text' id='gmbs_je'/></td></tr>\
+<tr id='tr_gmbs_je'><td class='tbinputtitle'>金额(元):</td><td><input class='tbinput' type='text' id='gmbs_je'/></td></tr>\
 <tr id='tr_gmbs_rq'><td class='tbinputtitle'>日期:</td><td><input class='tbinput' type='text' id='gmbs_rq'/></td></tr>\
 <tr id='tr_gmbs_username'><td class='tbinputtitle'>操作人:</td><td><input class='tbinput' type='text' id='gmbs_username'/></td></tr>\
 <tr id='tr_gmbs_ly'><td class='tbinputtitle'>来源:</td><td><input class='tbinput' type='text' id='gmbs_ly'/></td></tr>\
@@ -402,29 +403,31 @@ function gmbs_popupwindow1(flag_state, id, search, projectid, bsbh)
 	x = (document.body.scrollWidth -600)/2
 	$('#gmbs_popupWindow').jqxWindow({ position: { x: x, y: y }});
 	state = flag_state;
-	gmbs_configpage(projectid);
-	$('#gmbs_Id').val(id);
-	ggmbscallback = search;
-	if (state == 'add')
-	{
-		$('#gmbs_popupWindow').jqxWindow({ height:580});
-		gmbs_title.innerHTML='新增';
-		gmbs_setupadd();
-	}
-	if (state == 'modify')
-	{
-		$('#gmbs_popupWindow').jqxWindow({ height:800});
-		gmbs_title.innerHTML='修改';
-		gmbs_setupmodify();
-	}
-	if (state == 'detail')
-	{
-		$('#gmbs_popupWindow').jqxWindow({ height:800});
+	gmbs_configpage(projectid, function(){
+		$('#gmbs_Id').val(id);
+		ggmbscallback = search;
+		if (state == 'add')
+		{
+			$('#gmbs_popupWindow').jqxWindow({ height:580});
+			gmbs_title.innerHTML='新增';
+			gmbs_setupadd();
+		}
+		if (state == 'modify')
+		{
+			$('#gmbs_popupWindow').jqxWindow({ height:800});
+			gmbs_title.innerHTML='修改';
+			gmbs_setupmodify();
+		}
+		if (state == 'detail')
+		{
+			$('#gmbs_popupWindow').jqxWindow({ height:800});
 
-		gmbs_title.innerHTML='详情';
-		gmbs_setupdetail();
-	}
-//	$('#gmbs_bsbh').val(bsbh);	
+			gmbs_title.innerHTML='详情';
+			gmbs_setupdetail();
+		}
+	//	$('#gmbs_bsbh').val(bsbh);	
 
-	$('#gmbs_popupWindow').jqxWindow('open');
+		$('#gmbs_popupWindow').jqxWindow('open');
+	});
+
 }

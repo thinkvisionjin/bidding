@@ -91,7 +91,11 @@ var source =
         // and with parameter false if the synchronization failed.
     	var dataRecord = $("#jqxgrid").jqxGrid('getrowdata', rowid);
     	$.post("/bidding/default/delete?table=Project",dataRecord,function(result){
-   		 alert("操作成功！");
+			if (result=='success')
+			{
+				alert("操作成功！");
+			}
+   		 
    	 });
         commit(true);
     },
@@ -257,6 +261,8 @@ function InitProjectGrid(dict){
         height: '90%',
         source: dataAdapter,
         columnsresize: true,
+		enablebrowserselection: true,
+		//selectionmode: 'multiplecellsadvanced',
         //pageable: true,
         rowdetails: true,
         rowsheight: 35,
@@ -270,7 +276,7 @@ function InitProjectGrid(dict){
             var container = $("<div style='margin-left: auto; margin-right: auto; '></div>");
             var container = $("<div style='margin: 5px;'></div>");
             var addNewButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>新增</span></div>");
-            var refreshButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>刷新</span></div>");
+            var refreshButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>修改</span></div>");
             var deleteButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>删除</span></div>");
             var printButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>打印</span></div>");
             var exportButton = $("<div style='float: left; margin-left: 5px;'><span style='margin-left: 4px; position: relative; top: 0px;'>重新获取项目编码</span></div>");
@@ -292,6 +298,11 @@ function InitProjectGrid(dict){
 				greGetCodeFlag = 0;
 				$.get('getnewprojectpz', function(result){
 					//需特殊处理
+					NewProject_Validator.innerHTML = '新建项目档案'
+					$("#NewProject_FundingSource").jqxDropDownList({ disabled: false }); 
+					$("#NewProject_PurchaseStyle").jqxDropDownList({ disabled: false }); 
+					$("#NewProject_ProjectProperty").jqxDropDownList({ disabled: false }); 
+					$("#NewProject_ProjectType").jqxDropDownList({ disabled: false }); 					
 					BindCustomer("#NewProject_Customer",result.Customer)
 
 					gdictcontactor = result.Contactor;
@@ -303,7 +314,46 @@ function InitProjectGrid(dict){
             	
             });
             refreshButton.click(function (event) {
-                $("#jqxgrid").jqxGrid({ source:dataAdapter });
+                //$("#jqxgrid").jqxGrid({ source:dataAdapter });
+				greGetCodeFlag = 2;
+				var selectedrowindex = getselectindex('#jqxgrid');//$('#jqxgrid').jqxGrid('getselectedcell').rowindex//$("#jqxgrid").jqxGrid('getselectedrowindex');
+				if (selectedrowindex == -1)
+				{
+					alert('请选择项目')
+					return;
+				}
+				var rowscount = $("#jqxgrid").jqxGrid('getdatainformation').rowscount;
+				if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+					var rowid = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
+				}				
+				row = $('#jqxgrid').jqxGrid('getrowdata', selectedrowindex)
+
+				if ((dict.User == row['EmployeeId']) || (dict.User == row['Assistant']))
+				{
+					NewProject_Validator.innerHTML = '修改项目信息'
+					$("#NewProject_ProtocolCode").val(row['ProtocolCodeId'])
+					$("#NewProject_ProjectName").val(row['ProjectName'])
+					$("#NewProject_Customer").val(row['CustomerId'])
+					$("#NewProject_Employee").val(row['EmployeeId'])
+					$("#NewProject_Assistant").val(row['Assistant'])
+					$("#NewProject_ProjectSource").val(row['ProjectSourceId'])
+					$("#NewProject_FundingSource").val(row['FundingSourceId'])
+					$("#NewProject_ProjectType").val(row['ProjectTypeId'])
+					$("#NewProject_ProjectProperty").val(row['ProjectPropertyId'])
+					$("#NewProject_PurchaseStyle").val(row['PurchaseStyleId'])
+					$("#NewProject_ContactName").val(row['ContactorNameId'])
+
+					$("#NewProject_FundingSource").jqxDropDownList({ disabled: true }); 
+					$("#NewProject_PurchaseStyle").jqxDropDownList({ disabled: true }); 
+					$("#NewProject_ProjectProperty").jqxDropDownList({ disabled: true }); 
+					$("#NewProject_ProjectType").jqxDropDownList({ disabled: true }); 
+
+					$("#popupWindow_NewProject").jqxWindow('show');
+				}
+				else
+				{
+					alert('你不是项目管理人员，不能修改该项目！')
+				}				
             });
             columnSettingButton.click(function (event) {
             	$("#popupWindow").jqxWindow('open');
@@ -326,7 +376,7 @@ function InitProjectGrid(dict){
             });
             exportButton.click(function (event) {
 				greGetCodeFlag = 1;
-				var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
+				var selectedrowindex = getselectindex("#jqxgrid");
 				if (selectedrowindex == -1)
 				{
 					alert('请选择项目')
@@ -340,6 +390,7 @@ function InitProjectGrid(dict){
 
 				if ((dict.User == row['EmployeeId']) || (dict.User == row['Assistant']))
 				{
+					NewProject_Validator.innerHTML = '重新获取项目编码'
 					$("#NewProject_ProtocolCode").val(row['ProtocolCodeId'])
 					$("#NewProject_ProjectName").val(row['ProjectName'])
 					$("#NewProject_Customer").val(row['CustomerId'])
@@ -351,7 +402,10 @@ function InitProjectGrid(dict){
 					$("#NewProject_ProjectProperty").val(row['ProjectPropertyId'])
 					$("#NewProject_PurchaseStyle").val(row['PurchaseStyleId'])
 					$("#NewProject_ContactName").val(row['ContactorNameId'])
-
+					$("#NewProject_FundingSource").jqxDropDownList({ disabled: false }); 
+					$("#NewProject_PurchaseStyle").jqxDropDownList({ disabled: false }); 
+					$("#NewProject_ProjectProperty").jqxDropDownList({ disabled: false }); 
+					$("#NewProject_ProjectType").jqxDropDownList({ disabled: false }); 
 					$("#popupWindow_NewProject").jqxWindow('show');
 				}
 				else
@@ -362,7 +416,13 @@ function InitProjectGrid(dict){
             });
             // delete selected row.
             deleteButton.click(function (event) {
-                var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
+				var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
+				if (selectedrowindex == -1) {
+					return;
+				}				
+				if (confirm('是否删除') == false) {
+					return;
+				}					
                 var rowscount = $("#jqxgrid").jqxGrid('getdatainformation').rowscount;
                 var id = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
 
@@ -567,13 +627,19 @@ function InitNewProjectWindow(dict){
 			$("#NewProject_PurchaseStyle").jqxDropDownList({ disabled: false }); 
 			$("#NewProject_ProjectProperty").jqxDropDownList({ disabled: false }); 
 			$("#NewProject_ProjectProperty").jqxDropDownList('enableAt', 4 ); 
+			$("#NewProject_PurchaseStyle").jqxDropDownList('disableItem', 999 ); 
+			$("#NewProject_PurchaseStyle").val( 1 );  
 		}
 		else
 		{//国际项目
 			$("#NewProject_FundingSource").jqxDropDownList({ disabled: false }); 
+			$('#NewProject_PurchaseStyle').jqxDropDownList('selectIndex',-1);
 			$("#NewProject_PurchaseStyle").jqxDropDownList({ disabled: true }); 
 			$("#NewProject_ProjectProperty").jqxDropDownList({ disabled: false }); 
-			$("#NewProject_ProjectProperty").jqxDropDownList('disableAt', 4 ); 
+			$("#NewProject_ProjectProperty").jqxDropDownList('disableAt', 4 );
+			$("#NewProject_PurchaseStyle").jqxDropDownList('enableItem', 999 ); 
+			$("#NewProject_PurchaseStyle").val( 999 );  
+			
 		}
 	}                        
 	);   
@@ -591,6 +657,7 @@ function InitNewProjectWindow(dict){
     	$("#popupWindow_NewProject").jqxWindow('hide');
     });
     $("#NewProject_Save").jqxButton({ theme: theme, template:"success"  });
+	$("#NewProject_Cancel").jqxButton({ theme: theme, template:"warning"  });	
 /*	$("#NewCustomer_Create").jqxButton({ theme: theme, template:"primary"  });
 	$("#NewProject_Cancel").jqxButton({ theme: theme, template:"warning"  });
 	$("#NewCustomer_Create").click(function () {
@@ -686,7 +753,7 @@ function InitNewProjectWindow(dict){
 				$('#Loader_CreatingNewProject').jqxLoader('close');
 			},'json');
 		}
-		else
+		else if(greGetCodeFlag == 1)
 		{
 			var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
 			var rowid = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
@@ -698,6 +765,26 @@ function InitNewProjectWindow(dict){
 					$('#Loader_CreatingNewProject').jqxLoader('close');
 					return
 				}
+				alert('操作成功')
+				var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
+				var rowid = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
+				$("#jqxgrid").jqxGrid('updaterow', rowid, result);
+				$('#Loader_CreatingNewProject').jqxLoader('close');
+			},'json');
+		}
+		else
+		{
+			var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
+			var rowid = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
+			row = $('#jqxgrid').jqxGrid('getrowdata', selectedrowindex)
+			$.post("/bidding/default/UpdateProject?id="+row['Id'],datarow,function(result){
+				if (result['result'] == 'fail')
+				{
+					alert('操作不成功')
+					$('#Loader_CreatingNewProject').jqxLoader('close');
+					return
+				}
+				alert('操作成功')
 				var selectedrowindex = $("#jqxgrid").jqxGrid('getselectedrowindex');
 				var rowid = $("#jqxgrid").jqxGrid('getrowid', selectedrowindex);
 				$("#jqxgrid").jqxGrid('updaterow', rowid, result);

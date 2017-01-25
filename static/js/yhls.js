@@ -163,13 +163,15 @@ function deleteyhlsqr(id) {
 	{
 		return ;
 	}	
-    var selectedrowindex = $("#yhlsqr-grid").jqxGrid('getselectedrowindex');
+    //var selectedrowindex = $('#yhlsqr-grid').jqxGrid('getselectedcells')[0].rowindex;//
+	var selectedrowindex = $("#yhlsqr-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#yhlsqr-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
         rowid = $("#yhlsqr-grid").jqxGrid('getrowid', selectedrowindex);
 		row = $("#yhlsqr-grid").jqxGrid('getrowdata', selectedrowindex);
 		qrje = row['qrje'];
     }
+	//var selectedrowindex = $('#yhls-grid').jqxGrid('getselectedcells')[0].rowindex;//
 	var selectedrowindex = $("#yhls-grid").jqxGrid('getselectedrowindex');
 	g_row = $("#yhls-grid").jqxGrid('getrowdata', selectedrowindex);	
 	$.get('deleterow_yhlsqr?Id=' + id, function (result) {
@@ -198,7 +200,8 @@ function deleteyhls(id) {
 	{
 		return ;
 	}	
-    var selectedrowindex = $("#yhls-grid").jqxGrid('getselectedrowindex');
+    //var selectedrowindex = $('#yhls-grid').jqxGrid('getselectedcells')[0].rowindex;//
+	var selectedrowindex = $("#yhls-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#yhls-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
         var rowid = $("#yhls-grid").jqxGrid('getrowid', selectedrowindex);
@@ -257,7 +260,8 @@ function save(state) {
 
 	
 	
-    var selectedrowindex = $("#yhls-grid").jqxGrid('getselectedrowindex');
+    //var selectedrowindex = $('#yhls-grid').jqxGrid('getselectedcells')[0].rowindex;//
+	var selectedrowindex = $("#yhls-grid").jqxGrid('getselectedrowindex');
     g_selectedrowindex = selectedrowindex;
     var rowscount = $("#yhls-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
@@ -324,9 +328,10 @@ function inityhlsqr() {
 			columnsresize: true,
 			height: "35%",
 			width: "98%",
+			enablebrowserselection: true,
 			columns: [{ text: '序号', datafield: 'Id', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '单位名称', datafield: 'dwmc', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '标书编号/项目编号', datafield: 'bsbh', width: '10%', cellsalign: 'center', align: 'center', hidden: false ,
+				{ text: '标书编号/项目编号', datafield: 'bsbh', width: '10%', cellsalign: 'center', align: 'center', hidden: false/* ,
 			                        	   cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
                         		   var label=value;
 
@@ -336,7 +341,7 @@ function inityhlsqr() {
                           			  }
                           		  }
                      		   		  return '<div class="jqx-grid-cell-middle-align" style="margin-top: 10px;">'+ label+' </div>'
-                               }},
+                               }*/},
 				{ text: '确认类型', datafield: 'qrlx', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '确认金额', datafield: 'qrje', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
@@ -458,8 +463,10 @@ $(document).ready(function () {
 		{
 			enabletooltips: true,
 			columnsresize: true,
+			sortable: true,
 			height: "50%",
 			width: "98%",
+			enablebrowserselection: true,
 			columns: [{ text: '序号', datafield: 'Id', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '交易时间', datafield: 'jysj', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '金额', datafield: 'je', width: '8%', cellsalign: 'center', align: 'center', hidden: false },
@@ -498,6 +505,13 @@ $(document).ready(function () {
 			}
 
 		});
+	var localizationobj = {};
+
+	localizationobj.sortascendingstring = "升序";
+	localizationobj.sortdescendingstring = "降序";
+	localizationobj.sortremovestring = "移除排序";
+
+	$("#yhls-grid").jqxGrid('localizestrings', localizationobj);
 	//$("#yhls-grid").('hidecolumn', 'id');
 	search();
 	$("#yhlsadd").click(function () {
@@ -520,14 +534,15 @@ $(document).ready(function () {
 	$('#zy').jqxInput();
 	addselectfieldwindows();
 	inityhlsqr();
-	$("#yhls-grid").on('rowselect', function (event) {
+	$("#yhls-grid").on('rowclick', function (event) {
 		var args = event.args;
 		// row's bound index.
 		var rowBoundIndex = args.rowindex;
 		if (rowBoundIndex == -1) {
 							    	return;
 		}
-		var rowData = args.row;
+		//var rowData = args.row;
+		var rowData = $('#yhls-grid').jqxGrid('getrowdata', rowBoundIndex);//args.row;
 		searchqryhls(rowData['Id']);
 
 

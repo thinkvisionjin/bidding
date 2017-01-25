@@ -3,11 +3,11 @@ function search(flag)
 {
 	if ($("#username").val()=='' && $("#hys").val()=='')
 	{
-		url = "select_hysgl?flag=1";
+		url = "select_hysgl?flag="+flag;
 	}
 	else
 	{
-		url = "select_hysgl?flag=1&username="+$("#username").val()+"&hys="+$("#hys").val()
+		url = "select_hysgl?flag="+flag+"&zt="+$("#username").val()+"&hys="+$("#hys").val()
 	}
 
 	var source = {					
@@ -155,7 +155,6 @@ function init_treegrid()
                 //source: dataAdapter,
                 columnsResize: true,
 
-
                 	
 
                 columns: [
@@ -191,6 +190,7 @@ $(document).ready(function() {
         	{
         		enabletooltips: true,
         		columnsresize: true,
+				enablebrowserselection: true,
         		height : "75%",
         		width : "98%",
         		columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
@@ -254,7 +254,12 @@ $(document).ready(function() {
 					$("#search").click(function() {
 						search(1);
 					});					
-
+					$("#search_all").jqxButton({
+						template : 'success'
+					});	
+					$("#search_all").click(function() {
+						search(3);
+					});	
 					$('#username').jqxInput();
 					$('#hys').jqxDropDownList({ placeHolder: ''});
 					addselectfieldwindows();

@@ -65,7 +65,8 @@ function deleteauth_user(id)
 	{
 		return ;
 	}	
-    var selectedrowindex = $("#auth_user-grid").jqxGrid('getselectedrowindex');
+    //var selectedrowindex = $('#auth_user-grid').jqxGrid('getselectedcells')[0].rowindex;//
+	var selectedrowindex = $("#auth_user-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#auth_user-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
         var rowid = $("#auth_user-grid").jqxGrid('getrowid', selectedrowindex);
@@ -113,6 +114,7 @@ $(document).ready(function() {
 										columnsresize: true,
 										height : "80%",
 										width : "98%",
+										enablebrowserselection: true,
 										columns : [{ text: '序号', datafield: 'id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '用户名', datafield: 'username', width: '15%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '用户编号', datafield: 'code', width: '15%',cellsalign: 'center', align: 'center',hidden:false },

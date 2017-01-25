@@ -878,3 +878,19 @@ function BindContactor(documentObjectName, documentObjectTel,documentObjectCusto
 }
 
 
+// function getselectindex(documentObjectName){
+// 	return $(documentObjectName).jqxGrid('getselectedcell')==null?-1:$('#jqxgrid').jqxGrid('getselectedcell').rowindex
+// }
+
+function getselectindex(documentObjectName){
+	// var cells = $(documentObjectName).jqxGrid('getselectedcells')
+	// if (cells.length != 1)
+	// {
+	// 	return -1
+	// }
+	// else
+	// {
+	// 	return cells[0].rowindex
+	// }
+	return $(documentObjectName).jqxGrid('getselectedrowindex');
+}

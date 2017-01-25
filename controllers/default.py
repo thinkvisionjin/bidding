@@ -42,10 +42,10 @@ def Num2MoneyFormat( change_number ):
     change_number 支持 float, int, long, string
     """
     format_word = ["分", "角", "元",
-               "拾","百","千","万",
-               "拾","百","千","亿",
-               "拾","百","千","万",
-               "拾","百","千","兆"]
+               "拾","佰","仟","万",
+               "拾","佰","仟","亿",
+               "拾","佰","仟","万",
+               "拾","佰","仟","兆"]
 
     format_num = ["零","壹","贰","叁","肆","伍","陆","柒","捌","玖"]
     if type( change_number ) == unicode:
@@ -176,14 +176,16 @@ def insert():
 
 
 def delete():
-    table_name = request.vars.table
-    print 'delete data from:'  +table_name +'**************'
-    id = request.post_vars['Id']
-    strSQL = u"delete  from [bidding].[dbo].[" + table_name + u"] where  id = " +id;
-    print strSQL
-    db.executesql(strSQL)
-    return dict(table=table_name)
-
+    try:
+        table_name = request.vars.table
+        print 'delete data from:'  +table_name +'**************'
+        id = request.post_vars['Id']
+        strSQL = u"delete  from [bidding].[dbo].[" + table_name + u"] where  id = " +id;
+        print strSQL
+        db.executesql(strSQL)
+        return u'success'
+    except:
+        return u'fail'
 def update():
     try:
         table_name = request.vars.table
@@ -226,6 +228,31 @@ def update():
         result={}
         result['result'] = u'fail'
         return json.dumps(result)
+
+
+def updaterow_project():
+    try:
+        print u'updaterow_gmbs'
+        
+        id = request.vars.Id
+        rowData = request.post_vars
+
+        table_name = u'Project'
+
+        updaterow(table_name, id, rowData)
+
+
+
+        
+
+        row = sqltoarray(u'select * from Project where Id = '+unicode(request.vars.Id))
+        db.commit()
+        return json.dumps(row,ensure_ascii=False)
+    except Exception as e:
+        print e
+        db.rollback()
+        return u"fail" 
+
 
 @auth.requires_login()
 def select():
@@ -377,8 +404,8 @@ def xmglmx():
         viewflag = 0
     else:
         sql = u'select * from Project where Id = '+id
-        res = sqltoarray(sql)        
-        if res[0]['EmployeeId'] == auth.user.id or res[0]['Assistant'] == auth.user.id:
+        res = sqltoarray(sql)      
+        if int(u'0'+res[0]['EmployeeId']) == auth.user.id or int(u'0'+res[0]['Assistant']) == auth.user.id:
             viewflag = 0    
     return dict(project=project,dictionaries=dictionaries, viewflag=viewflag)
 
@@ -399,11 +426,14 @@ def SelectFirstPackagesByProjectId():
     strSQL = u"select top 1 * from [bidding].[dbo].[ProjectPackage] where  ProjectId = " + unicode(id) + u" order by CreationDate";
     print strSQL
     result = sqltoarray(strSQL)
-    strSQL = u"""SELECT  right('00'+cast(cast(max(right(packagenumber,2)) as int)+1 as nvarchar(2)),2) as code
-  FROM [BIDDING].[dbo].[ProjectPackage]
-  where ProjectId=""" + unicode(id)
-    r = sqltoarray(strSQL)
-    result[0]['PackageNumber'] = r[0]['code']
+    try:
+        strSQL = u"""SELECT  right('00'+cast(cast(max(right(packagenumber,2)) as int)+1 as nvarchar(2)),2) as code
+    FROM [BIDDING].[dbo].[ProjectPackage]
+    where ProjectId=""" + unicode(id)
+        r = sqltoarray(strSQL)
+        result[0]['PackageNumber'] = r[0]['code']
+    except:
+         result[0]['PackageNumber'] = ''
     return json.dumps(result,ensure_ascii=False)
 
 def p_getexybh(xylx):
@@ -621,6 +651,36 @@ def ReGetProjectCode():
         db.rollback()
         return u'fail'
 
+def UpdateProject():
+    print u'UpdateProject'
+    try:
+        id = request.vars.id
+        rowData = request.post_vars
+        print rowData
+        for key in rowData:
+            rowData[key] = rowData[key].decode(u'utf-8')
+        username = auth.user.chinesename.decode('gbk')
+        khrow = {}
+        khrow[u'username'] = username
+        khrow[u'dwmc'] = rowData[u'CustomerId']
+        khrow[u'lxr'] = rowData[u'ContactorNameId']
+        khrow[u'sj'] = rowData.pop(u'ContactTelId')
+   
+        result = p_addkh(khrow)
+        rowData['CustomerId'] = result['khId']
+        rowData['ContactorNameId'] = result['lxrId']            
+        db(db[u'Project']._id == id).update(**rowData)
+        print id 
+        sql = u'select * from Project where Id = '+unicode(id)
+        t = sqltoarray(sql)
+        result = t[0]
+        result['CustomerId'] = khrow[u'dwmc']
+        db.commit()
+        return json.dumps(result,ensure_ascii=False)
+    except:
+        db.rollback()
+        return u'fail'
+
 def CreateNewProject():
     print u'CreateNewProject'
     try:
@@ -683,35 +743,38 @@ def CreateNewPackage(rowData):
     return result
 
 def CreateNewProtocol():
-    print 'CreateNewProtocal'
-    rowData = request.post_vars
-    print rowData
-    for key in rowData:
-        rowData[key] = rowData[key].decode('utf-8')
-    id = db['ProtocolCode'].insert(**rowData)
-    print id 
-    db.commit()
-    updateProtocolStr = u"update [bidding].[dbo].[ProtocolCode]  set ProtocolNumber = '"+GenerateProtocolCode(rowData['TypeId'],id)+u"' where id ="+unicode(id)
-    print updateProtocolStr
-    db.executesql(updateProtocolStr)
-    db.commit()
-    row = db(db['ProtocolCode']._id ==id).select().first()
-    print row
-    dict_row = {}
-    for key in row.keys():
-        if (key!= u'update_record' and key!= u'delete_record'):
-                if key==u'id':
-                    dict_row[u'Id']  = row[key]
-                elif isinstance(row[key], bool):
-                    dict_row[key] = row[key]
-                elif isinstance(row[key], str):
-                    dict_row[key] = row[key].decode('utf-8')
-                elif isinstance(row[key], datetime):
-                    dict_row[key] = unicode(row[key])
-                else:
-                    dict_row[key] = row[key]
-    result= json.dumps(dict_row,ensure_ascii=False)
-    return result
+    try:
+        print 'CreateNewProtocal'
+        rowData = request.post_vars
+        print rowData
+        for key in rowData:
+            rowData[key] = rowData[key].decode('utf-8')
+        id = db['ProtocolCode'].insert(**rowData)
+        print id 
+        db.commit()
+        updateProtocolStr = u"update [bidding].[dbo].[ProtocolCode]  set ProtocolNumber = '"+GenerateProtocolCode(rowData['TypeId'],id)+u"' where id ="+unicode(id)
+        print updateProtocolStr
+        db.executesql(updateProtocolStr)
+        db.commit()
+        row = db(db['ProtocolCode']._id ==id).select().first()
+        print row
+        dict_row = {}
+        for key in row.keys():
+            if (key!= u'update_record' and key!= u'delete_record'):
+                    if key==u'id':
+                        dict_row[u'Id']  = row[key]
+                    elif isinstance(row[key], bool):
+                        dict_row[key] = row[key]
+                    elif isinstance(row[key], str):
+                        dict_row[key] = row[key].decode('utf-8')
+                    elif isinstance(row[key], datetime):
+                        dict_row[key] = unicode(row[key])
+                    else:
+                        dict_row[key] = row[key]
+        result= json.dumps(dict_row,ensure_ascii=False)
+        return result
+    except:
+        return u'fail'
 
 def getyhls():
     print "getyhls"
@@ -1768,13 +1831,15 @@ def select_grtjb():
   竞争性磋商 as jzxcs,
   单一来源采购 as dylycg, 
   其他 as qt,
+  进口论证 as jklz,
+  咨询 as zx,
   国际招标 as gjzb,
-国内公开招标+国内邀请招标+询价采购+竞争性谈判+竞争性磋商+单一来源采购+其他+国际招标 as zj
-    from (select c.id, c.chinesename, b.PurchaseStyleName, a.projectname  from project a, PurchaseStyle b, auth_user c 
-   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) and a.EmployeeId=c.id 
-   and [CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""') a 
-   pivot (count(projectname) for  PurchaseStyleName
-    in (国内公开招标,国内邀请招标,询价采购,竞争性谈判,竞争性磋商,单一来源采购,其他,国际招标))t""" ;
+国内公开招标+国内邀请招标+询价采购+竞争性谈判+竞争性磋商+单一来源采购+其他+进口论证+咨询+国际招标 as zj
+    from (select c.id, c.chinesename, b.PurchaseStyleName, d.packagenumber  from project a, ProjectPackage d, PurchaseStyle b, auth_user c 
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) and a.EmployeeId=c.id and a.Id = d.ProjectId
+   and d.[CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""') a 
+   pivot (count(packagenumber) for  PurchaseStyleName
+    in (国内公开招标,国内邀请招标,询价采购,竞争性谈判,竞争性磋商,单一来源采购,其他,进口论证,咨询, 国际招标))t""" ;
         print sql   
         return sqltojson(sql, 'gbk');
     except Exception as e:
@@ -1788,29 +1853,29 @@ def select_grtjbfb():
         jsrq = request.vars.jsrq     
         id = unicode(request.vars.id, u'utf-8')
         
-        sql = u"""select b.PurchaseStyleName　as xmlx, count(case EmployeeId　when """+id+u""" then EmployeeId end) as fz, 
+        sql = u"""select b.PurchaseStyleName as xmlx, count(case EmployeeId when """+id+u""" then EmployeeId end) as fz, 
 case when (select count(*) as c from project a, PurchaseStyle b
    where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
    and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
    and a.EmployeeId ="""+id+u""")=0 then '0' else
-rtrim(convert(decimal(18,2),count(case EmployeeId　when """+id+u""" then EmployeeId end)*100.00/(select count(*) as c from project a, PurchaseStyle b
+rtrim(convert(decimal(18,2),count(case EmployeeId when """+id+u""" then EmployeeId end)*100.00/(select count(*) as c from project a,  ProjectPackage c, PurchaseStyle b
    where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
-   and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
-   and a.EmployeeId ="""+id+u"""))) end +'%'  as fzbfb, 
+   and c.[CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
+   and a.EmployeeId ="""+id+u""" and a.Id = c.ProjectId))) end +'%'  as fzbfb, 
 count(case assistant when """+id+u""" then assistant end) as xz,
 case when (select count(*) as c from project a, PurchaseStyle b
    where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
    and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
    and a.assistant ="""+id+u""")=0 then '0' else
-rtrim(convert(decimal(18,2),count(case assistant　when """+id+u""" then assistant end)*100.00/(select count(*) as c from project a, PurchaseStyle b
-   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
-   and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
+rtrim(convert(decimal(18,2),count(case assistant when """+id+u""" then assistant end)*100.00/(select count(*) as c from project a,  ProjectPackage c, PurchaseStyle b
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) and a.Id = c.ProjectId
+   and c.[CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
    and a.assistant ="""+id+u"""))) end+'%' as xzbfb,
    0 as dj,
    0 as zj
-  from project a, PurchaseStyle b
-   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) 
-   and [CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
+  from project a,ProjectPackage c, PurchaseStyle b
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId])  AND a.Id = c.ProjectId
+   and c.[CreationDate]  between '"""+ksrq+u"' and '"+jsrq+u"""'
    and (a.EmployeeId ="""+id+u"""
    or a.assistant ="""+id+u""")
    group by b.PurchaseStyleName""" ;
@@ -1833,13 +1898,15 @@ def select_zzxmtjb():
   竞争性磋商 as jzxcs,
   单一来源采购 as dylycg, 
   其他 as qt,
+  进口论证 as jklz,
+  咨询 as zx,  
   国际招标 as gjzb,
-国内公开招标+国内邀请招标+询价采购+竞争性谈判+竞争性磋商+单一来源采购+其他+国际招标 as zj
-    from (select c.chinesename, b.PurchaseStyleName, a.projectname  from project a, PurchaseStyle b, auth_user c 
-   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) and a.EmployeeId=c.id 
-   and a.[ProjectStatusId]<>3 ) a 
-   pivot (count(projectname) for  PurchaseStyleName
-    in (国内公开招标,国内邀请招标,询价采购,竞争性谈判,竞争性磋商,单一来源采购,其他,国际招标))t""" ;
+国内公开招标+国内邀请招标+询价采购+竞争性谈判+竞争性磋商+单一来源采购+其他+进口论证+咨询+国际招标 as zj
+    from (select c.chinesename, b.PurchaseStyleName, d.packagenumber  from project a, ProjectPackage d, PurchaseStyle b, auth_user c 
+   where a.PurchaseStyleId=convert(int, b.[PurchaseStyleId]) and a.EmployeeId=c.id  and a.Id = d.ProjectId
+   and d.[stateid] not in (7,8) ) a 
+   pivot (count(packagenumber) for  PurchaseStyleName
+    in (国内公开招标,国内邀请招标,询价采购,竞争性谈判,竞争性磋商,单一来源采购,其他,进口论证,咨询,国际招标))t""" ;
         print sql    
         return sqltojson(sql, 'gbk');   
     except:
@@ -2257,7 +2324,16 @@ def select_yhlsqr():
             wjm = unicode(request.vars.wjm, u'utf-8')
             where += u"and yhlsId in (select Id from yhls where wjm='"+wjm+u"')"        
         order = u" order by rq desc"
-        sql = u"""select * from yhlsqr """ + where+order;
+        sql = u"""select a.Id,
+        a.dwmc,
+        a.qrlx,
+        a.rq,
+        a.qrje,
+        a.yhlsId,
+        a.cwqrbz,
+        a.username,
+        case when b.id is null then bsbh else b.projectcode end bsbh from yhlsqr a 
+        left join project b on a.bsbh=convert(NVARCHAR(50), b.id)""" + where+order;
         print sql   
         return sqltojson(sql);
     except:
@@ -2843,10 +2919,16 @@ def select_hysgl():
     try:
         
         if request.vars.flag == u'1':
-            where = u"where 1=1 "
+            where = u"where 1=1 and jssj>getdate() "
             username = auth.user.chinesename.decode('gbk')
             where += u"and username='"+username+u"'"
  
+            if request.vars.zt==None:
+                zt=u''
+            else:
+                zt = unicode(request.vars.zt, u'utf-8')
+            where += u"and hyzt like '%"+zt+u"%'"
+            print "--->", zt, where
             if request.vars.hys==None:
                 hys=u''
             else:
@@ -2854,6 +2936,24 @@ def select_hysgl():
             where += u"and hys like '%"+hys+u"%'"
             order = u" order by rq desc"
             sql = u"""select * from hysgl """ + where+order;
+        elif request.vars.flag == u'3':
+            where = u"where 1=1 "
+            username = auth.user.chinesename.decode('gbk')
+            where += u"and username='"+username+u"'"
+ 
+            if request.vars.zt==None:
+                zt=u''
+            else:
+                zt = unicode(request.vars.zt, u'utf-8')
+            where += u"and hyzt like '%"+zt+u"%'"
+            print "--->", zt, where
+            if request.vars.hys==None:
+                hys=u''
+            else:
+                hys = unicode(request.vars.hys, u'utf-8')
+            where += u"and hys like '%"+hys+u"%'"
+            order = u" order by rq desc"
+            sql = u"""select * from hysgl """ + where+order;            
         else:
             if request.vars.hysrq != None:
                 hysrq = unicode(request.vars.hysrq, u'utf-8')
@@ -2893,7 +2993,7 @@ def updaterow_hysgl():
         newjssj = rowData[u'jssj']
         hys = unicode(rowData[u'hys'], 'utf-8')
         sql = u"""select count(*) c from hysgl 
-        where hys='"""+hys+u"""' and Id<>"""+id+u"""(('"""+newkssj+u"""'>=kssj and '"""+newkssj+u"""'<jssj) 
+        where hys='"""+hys+u"""' and Id<>"""+id+u""" and (('"""+newkssj+u"""'>=kssj and '"""+newkssj+u"""'<jssj) 
         or ('"""+newjssj+u"""'<=jssj and '"""+newjssj+u"""'>kssj) 
         or ('"""+newkssj+u"""'<=kssj and '"""+newjssj+u"""'>=jssj))"""
         print sql 
@@ -2963,23 +3063,37 @@ def select_tjzb():
         ksrq = request.vars.ksrq
         jsrq = request.vars.jsrq
         result = {};
-        sql2 = u""" select PurchaseStyleName as cgfs,
-  非政府采购国内一般项目 as gnzb,
-  国际项目 as gjzb,
-  政府采购 as zfcg,
-  国内涉密 as sm,
-非政府采购国内一般项目+国际项目+政府采购+国内涉密 as zj　from 
- ( select c.PurchaseStyleName,  b.ProjectTypeName, a.ProjectName from project a, projecttype b, PurchaseStyle c 
-  where a.projecttypeid=convert(int, b.projecttypeid) and a.PurchaseStyleId=convert(int, c.[PurchaseStyleId])
-  and [CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""') a 
-  pivot (count(projectname) for  ProjectTypeName
-    in (非政府采购国内一般项目,国际项目,政府采购,国内涉密))t""" ;
+        sql2 = u"""select PurchaseStyleName as cgfs,
+  机电 as jd,
+  [政府采购项目(线下)] as zf,
+  国债技改项目 as gj,
+  [同属政府采购、国债技改项目] as ts,
+  涉密 AS sm,
+  [政府采购项目(二期)] as zfe,
+机电+[政府采购项目(线下)]+国债技改项目+[同属政府采购、国债技改项目]+涉密+[政府采购项目(二期)] as zj from
+ ( select c.PurchaseStyleName,  b.ProjectPropertyName, d.packagenumber from project a, projectpackage d,ProjectProperty b, PurchaseStyle c
+  where a.projectpropertyid=convert(int, b.projectpropertyid) and a.PurchaseStyleId=convert(int, c.[PurchaseStyleId]) and a.id=d.projectid
+  and d.[CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""') a
+  pivot (count(packagenumber) for  ProjectPropertyName
+    in (机电,[政府采购项目(线下)],国债技改项目,[同属政府采购、国债技改项目],涉密,[政府采购项目(二期)]))t
+        """
+#         sql2 = u""" select PurchaseStyleName as cgfs,
+#   非政府采购国内一般项目 as gnzb,
+#   国际项目 as gjzb,
+#   政府采购 as zfcg,
+#   国内涉密 as sm,
+# 非政府采购国内一般项目+国际项目+政府采购+国内涉密 as zj from 
+#  ( select c.PurchaseStyleName,  b.ProjectTypeName, d.packagenumber from project a, projectpackage d,projecttype b, PurchaseStyle c 
+#   where a.projecttypeid=convert(int, b.projecttypeid) and a.PurchaseStyleId=convert(int, c.[PurchaseStyleId]) and a.id=d.projectid
+#   and d.[CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""') a 
+#   pivot (count(packagenumber) for  ProjectTypeName
+#     in (非政府采购国内一般项目,国际项目,政府采购,国内涉密))t""" ;
         print sql2;
         sql3=u"""SELECT b.name as xmly, count(*) as xmsl, 0 as dwfc, 0 as yfc, 0 as sy 
-  FROM project a,[ProjectSource] b where a.ProjectSourceId=b.id
-  and [CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""'
+  FROM project a,projectpackage d, [ProjectSource] b where a.ProjectSourceId=b.id and a.id=d.projectid
+  and d.[CreationDate] between '"""+ksrq+u"' and '"+jsrq+u"""'
   group by b.name""";
-
+        print sql3
         sql1 = u"""select PurchaseStyleName as cgfs,
 购买标书 as bssr,
 专家评审费 as xmcb, 
@@ -3016,7 +3130,7 @@ def gdwj():
         sql = u'select * from Project where Id = '+request.vars.projectid
         print sql 
         res = sqltoarray(sql)        
-        if res[0]['EmployeeId'] == auth.user.id or res[0]['Assistant'] == auth.user.id:
+        if int(u'0'+res[0]['EmployeeId']) == auth.user.id or int(u'0'+res[0]['Assistant']) == auth.user.id:
             row['viewflag'] = 0
     row['projectid'] = request.vars.projectid
     row['projectname'] = request.vars.projectname

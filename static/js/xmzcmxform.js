@@ -22,7 +22,7 @@ function getkh(dwmc)
 		
 	}, 'json');	
 }
-function xmzc_configpage(projectid)
+function xmzc_configpage(projectid, cb)
 {
 	if (projectid == undefined)
 	{
@@ -39,6 +39,7 @@ function xmzc_configpage(projectid)
 $('#xmzc_sz').jqxDropDownList({ placeHolder: "", source: result['sz']});
 $('#xmzc_projectid').jqxDropDownList('selectIndex', 0);
 $('#xmzc_ywlx').jqxDropDownList({ placeHolder: "", source: result['ywlx']});
+cb();
     }, 'json');	
     $("#xmzc_dwmc input").blur(function(){getkh($("#xmzc_dwmc").val())});  
 }
@@ -166,7 +167,7 @@ function xmzc_init () {
 <tr id='tr_xmzc_projectid'><td class='tbinputtitle'>项目编号:</td><td><div class='tbinput' type='text' id='xmzc_projectid'/></td></tr>\
 <tr id='tr_xmzc_sz'><td class='tbinputtitle'>收支:</td><td><div class='tbinput' type='text' id='xmzc_sz'/></td></tr>\
 <tr id='tr_xmzc_zy'><td class='tbinputtitle'>摘要:</td><td><input class='tbinput' type='text' id='xmzc_zy'/></td></tr>\
-<tr id='tr_xmzc_je'><td class='tbinputtitle'>金额:</td><td><input class='tbinput' type='text' id='xmzc_je'/></td></tr>\
+<tr id='tr_xmzc_je'><td class='tbinputtitle'>金额(元):</td><td><input class='tbinput' type='text' id='xmzc_je'/></td></tr>\
 <tr id='tr_xmzc_ywlx'><td class='tbinputtitle'>业务类型:</td><td><div class='tbinput' type='text' id='xmzc_ywlx'/></td></tr>\
 <tr id='tr_xmzc_lyId'><td class='tbinputtitle'>来源序号:</td><td><input class='tbinput' type='text' id='xmzc_lyId'/></td></tr>\
 <tr id='tr_xmzc_username'><td class='tbinputtitle'>操作人:</td><td><input class='tbinput' type='text' id='xmzc_username'/></td></tr>\
@@ -235,22 +236,24 @@ function xmzc_popupwindow(flag_state, id, callback, projectid)
 	gkhcallback = callback;
 	$('#xmzc_Id').val(id);
 	$('#xmzc_projectid').val(projectid);
-	xmzc_configpage(projectid);
-	if (state == 'add')
-	{
-		xmzc_title.innerHTML='新增';
-		xmzc_setupadd();
-	}
-	if (state == 'modify')
-	{
-		xmzc_title.innerHTML='修改';
-		xmzc_setupmodify();
-	}
-	if (state == 'detail')
+	xmzc_configpage(projectid, function(){
+		if (state == 'add')
 		{
-			
-			xmzc_title.innerHTML='详情';
-			xmzc_setupdetail();
+			xmzc_title.innerHTML='新增';
+			xmzc_setupadd();
 		}
-	$('#xmzc_popupWindow').jqxWindow('open');
+		if (state == 'modify')
+		{
+			xmzc_title.innerHTML='修改';
+			xmzc_setupmodify();
+		}
+		if (state == 'detail')
+			{
+				
+				xmzc_title.innerHTML='详情';
+				xmzc_setupdetail();
+			}
+		$('#xmzc_popupWindow').jqxWindow('open');
+	});
+
 }

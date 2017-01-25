@@ -86,6 +86,7 @@ function deleteyhlswj(id)
 		if (result=='success')
 		{
 			confirm('成功')
+			//var selectedrowindex = $('#yhlswj-grid').jqxGrid('getselectedcells')[0].rowindex;//
 			var selectedrowindex = $("#yhlswj-grid").jqxGrid('getselectedrowindex');
 			var rowscount = $("#yhlswj-grid").jqxGrid('getdatainformation').rowscount;
 			if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
@@ -126,6 +127,7 @@ $(document).ready(function() {
 										columnsresize: true,
 										height : "85%",
 										width : "98%",
+										enablebrowserselection: true,
 										columns : [{ text: '序号', datafield: 'Id', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '文件名', datafield: 'wjm', width: '10%',cellsalign: 'center', align: 'center',hidden:false },

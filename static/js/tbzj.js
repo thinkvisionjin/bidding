@@ -21,7 +21,7 @@ function search()
 {name : 'khyh',type : 'string'	},
 {name : 'yhzh',type : 'string'	},
 {name : 'fkfs',type : 'string'	},
-{name : 'je',type : 'string'	}],
+{name : 'je',type : 'float'	}],
 		id : 'Id',
 		url : url
 	};
@@ -44,7 +44,7 @@ function addselectfieldwindows()
 { label: '开户银行', value: 'khyh', checked: true },,
 { label: '银行账号', value: 'yhzh', checked: true },,
 { label: '付款方式', value: 'fkfs', checked: true },,
-{ label: '金额', value: 'je', checked: true },];
+{ label: '金额(元)', value: 'je', checked: true },];
 	$('#tbzj_zdlistbox').jqxListBox({ source: listSource, width:'100%', height:'100%', checkboxes: true });
     $("#tbzj_zdlistbox").on('checkChange', function (event) {
         $("#tbzj-grid").jqxGrid('beginupdate');
@@ -71,7 +71,8 @@ function deletetbzj(id)
 	{
 		return ;
 	}	
-    var selectedrowindex = $("#tbzj-grid").jqxGrid('getselectedrowindex');
+    //var selectedrowindex = $('#tbzj-grid').jqxGrid('getselectedcells')[0].rowindex;//
+	var selectedrowindex = $("#tbzj-grid").jqxGrid('getselectedrowindex');
     var rowscount = $("#tbzj-grid").jqxGrid('getdatainformation').rowscount;
     if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
         var rowid = $("#tbzj-grid").jqxGrid('getrowid', selectedrowindex);
@@ -124,6 +125,7 @@ $(document).ready(function() {
 										columnsresize: true,
 										height : "85%",
 										width : "98%",
+										enablebrowserselection: true,
 										columns : [{ text: '序号', datafield: 'Id', width: '5%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '单位名称', datafield: 'dwmc', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '日期', datafield: 'rq', cellsformat:'yyyy-MM-dd HH:mm:ss', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
@@ -133,7 +135,7 @@ $(document).ready(function() {
 { text: '开户银行', datafield: 'khyh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '银行账号', datafield: 'yhzh', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
 { text: '付款方式', datafield: 'fkfs', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
-{ text: '金额', datafield: 'je', width: '10%',cellsalign: 'center', align: 'center',hidden:false },
+{ text: '金额(元)', datafield: 'je', width: '10%',cellsalign: 'center', cellsformat: 'f2', align: 'center',hidden:false },
 												{
 													text : '操作',
 													width: '200',
