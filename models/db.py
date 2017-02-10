@@ -36,7 +36,7 @@ db.define_table('OperationType',Field('OperationTypeCode'),Field('OperationTypeI
 db.define_table('ProjectProperty',Field('ProjectPropertyCode'),Field('ProjectPropertyId'),Field('ProjectPropertyName'))
 db.define_table('Project',Field('Assistant'),Field('ContactorNameId'),Field('CustomerId'),Field('CreationDate',type='datetime',default=request.now),Field('EmployeeId',default=auth.user_id),Field('IsDelete'),Field('ManagementStyleId'),Field('PurchaseStyleId'),Field('Note'),Field('ProjectCode'),Field('ProjectName'),Field('ProjectSourceId'),Field('ProjectTypeId'),Field('ProtocolCodeId'),Field('FundingSourceId'),Field('ProjectStatusId'), Field('ProjectPropertyId'))
 db.define_table('ProjectCode',Field('CreationTime'),Field('EmployeeId'),Field('IsDelete'),Field('Option1'),Field('Option2'),Field('Option3'),Field('ProjectNumber'),Field('ProjectTypeId'),Field('ProtocolId'))
-db.define_table('ProjectPackage',Field('ChargeRate'),Field('OpenDate'),Field('ReviewDate'),Field('PublicDate'),Field('CreationDate',type='datetime',default=request.now),Field('EntrustMoney'),Field('IsDelete'),Field('MakeOutDate'),Field('Note'),Field('PackageName'),Field('PackageNumber'),Field('ProjectId'),Field('SigningDate'),Field('StateId'),Field('WinningCompany'),Field('WinningMoney'), Field('SecondPublicDate'), Field('comment'), Field('WinningDollar'))
+db.define_table('ProjectPackage',Field('NoticeDate'),Field('ChargeRate'),Field('OpenDate'),Field('ReviewDate'),Field('PublicDate'),Field('CreationDate',type='datetime',default=request.now),Field('EntrustMoney'),Field('IsDelete'),Field('MakeOutDate'),Field('Note'),Field('PackageName'),Field('PackageNumber'),Field('ProjectId'),Field('SigningDate'),Field('StateId'),Field('WinningCompany'),Field('WinningMoney'), Field('SecondPublicDate'), Field('comment'), Field('WinningDollar'))
 db.define_table('ProjectSource',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('ProjectStatus',Field('CreationTime'),Field('IsDelete'),Field('Name'))
 db.define_table('ProjectType',Field('ProjectTypeCode'),Field('ProjectTypeID'),Field('ProjectTypeName'))
@@ -52,7 +52,7 @@ db.define_table('TypeOfTask',Field('CreationDate'),Field('IsDelete'),Field('Name
 db.define_table('gmbs', Field('dwmc'),Field('nsrsbh'),Field('lxdz'),Field('dh'),Field('khyh'),Field('yhzh'),Field('zzsdwmc'),Field('lxr'),Field('sj'),Field('lxrdh'),Field('lxrdz'),Field('dzxx'),Field('cz'),Field('bsbh'),Field('je'),Field('rq'),Field('username'),Field('ly'), Field('lyId'), Field('fkbz'), Field('fkrq'))
 db.define_table('kh', Field('nsrsbh'),Field('dwmc'),Field('rq'),Field('khyh'),Field('yhzh'),Field('lxdz'),Field('dzxx'),Field('cz'),Field('dh'), Field('username'))
 db.define_table('tbbzj', Field('dwmc'),Field('projectid'),Field('bzjlx'),Field('je'),Field('rq'),Field('username'),Field('ly'),Field('lyId'))
-db.define_table('tbzj', Field('dwmc'),Field('rq'),Field('projectid'),Field('username'),Field('ly'),Field('khyh'),Field('yhzh'),Field('fkfs'),Field('je'))
+db.define_table('tbzj', Field('tbzjrq'), Field('dwmc'),Field('rq'),Field('projectid'),Field('username'),Field('ly'),Field('khyh'),Field('yhzh'),Field('fkfs'),Field('je'))
 db.define_table('zb', Field('bsbh'),Field('zbdw1'),Field('zbdw2'),Field('zbdw3'),Field('username'),Field('rq'))#########################################################################
 db.define_table('grtjb', Field('xm'),Field('gngk'),Field('gnyq'),Field('dylycg'),Field('jzxtp'),Field('xjcg'),Field('jzxcs'),Field('qt'),Field('gjzb'),Field('zj'))
 

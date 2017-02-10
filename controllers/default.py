@@ -423,17 +423,22 @@ def SelectPackagesByProjectId():
 
 def SelectFirstPackagesByProjectId():
     id = request.vars.id
-    strSQL = u"select top 1 * from [bidding].[dbo].[ProjectPackage] where  ProjectId = " + unicode(id) + u" order by CreationDate";
+    packageid = request.vars.packageid
+    if packageid==u'-1':
+        strSQL = u"select top 1 * from [bidding].[dbo].[ProjectPackage] where  ProjectId = " + unicode(id) + u" order by CreationDate";
+    else:
+        strSQL = u"select top 1 * from [bidding].[dbo].[ProjectPackage] where  Id = " + unicode(packageid) + u" order by CreationDate";
     print strSQL
     result = sqltoarray(strSQL)
     try:
         strSQL = u"""SELECT  right('00'+cast(cast(max(right(packagenumber,2)) as int)+1 as nvarchar(2)),2) as code
     FROM [BIDDING].[dbo].[ProjectPackage]
     where ProjectId=""" + unicode(id)
+        print strSQL
         r = sqltoarray(strSQL)
         result[0]['PackageNumber'] = r[0]['code']
     except:
-         result[0]['PackageNumber'] = ''
+        result[0]['PackageNumber'] = ''
     return json.dumps(result,ensure_ascii=False)
 
 def p_getexybh(xylx):
@@ -1556,7 +1561,7 @@ def select_tbzj():
         where += u"and b.ProjectCode like '%"+projectid+u"%' "
         
         order = u" order by rq desc"
-        sql = u"""select a.Id, a.dwmc, a.khyh, a.yhzh, a.rq, a.username, a.fkfs, a.je, b.ProjectCode as projectid from tbzj a, Project b """ + where+order;
+        sql = u"""select a.Id, a.tbzjrq, a.dwmc, a.khyh, a.yhzh, a.rq, a.username, a.fkfs, a.je, b.ProjectCode as projectid from tbzj a, Project b """ + where+order;
         print sql   
         return sqltojson(sql);
     except:
@@ -1576,7 +1581,7 @@ def select_tbzjbyProjectId():
         where += u"and a.projectid ="+projectid
         
         order = u" order by rq desc"
-        sql = u"""select a.Id, a.dwmc, a.khyh, a.yhzh, a.rq, a.username, a.fkfs, a.je, b.ProjectCode as projectid from tbzj a, Project b """ + where+order;
+        sql = u"""select a.Id, a.dwmc,a.tbzjrq, a.khyh, a.yhzh, a.rq, a.username, a.fkfs, a.je, b.ProjectCode as projectid from tbzj a, Project b """ + where+order;
         print sql   
         return sqltojson(sql);
     except:
@@ -3362,7 +3367,7 @@ def deleterow_pzgl():
 
 
 def zbfwf_print():
-    sql = u"""select PackageNumber as pn, b.dwmc, a.SigningDate as rq,  b.nsrsbh, b.lxdz, b.dh, a.WinningMoney as je, b.khyh, b.yhzh   from ProjectPackage a left join kh b
+    sql = u"""select PackageNumber as pn, b.dwmc, a.NoticeDate as rq,  b.nsrsbh, b.lxdz, b.dh, a.ChargeRate as je, b.khyh, b.yhzh   from ProjectPackage a left join kh b
 on a.WinningCompany=b.dwmc where a.PackageNumber='"""+request.vars.PackageNumber+u"'";
     print sql
     rows = rawsqltojson(sql);   

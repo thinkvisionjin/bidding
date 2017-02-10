@@ -177,6 +177,7 @@ function InitProjectPackageGrid(dict, project) {
 				{ "name": "ReviewDate", "type": "datetime" },
 				{ "name": "SigningDate", "type": "datetime" },
 				{ "name": "MakeOutDate", "type": "datetime" },
+				{ "name": "NoticeDate", "type": "datetime" },
 				{ "name": "EntrustMoney", "type": "float" },
 				{ "name": "WinningMoney", "type": "float" },
 				{ "name": "WinningDollar", "type": "float" },
@@ -394,7 +395,16 @@ function InitProjectPackageGrid(dict, project) {
 				return '<div class="jqx-grid-cell-middle-align" style="margin: 5px;" >' + label + ' </div>'
 			}
 		},
-
+		{
+			"datafield": "NoticeDate", "text": "中标通知时间", cellsalign: 'center', align: 'center', columntype: 'datetimeinput', cellsformat: 'yyyy-MM-dd', width: '6%',
+			cellsrenderer: function (index, datafield, value, defaultvalue, column, rowdata) {
+				var label = value;
+				if (label == "1900-01-01 00:00:00" || label == "None") {
+					label = ""
+				}
+				return '<div class="jqx-grid-cell-middle-align" style="margin: 5px;" >' + label + ' </div>'
+			}
+		},
 		{ "datafield": "WinningMoney", "text": "中标本币金额(万元)", cellsalign: 'center', cellsformat:'f2',align: 'center', width: '10%' },
 		{ "datafield": "WinningDollar", "text": "中标外币金额(万元)", cellsalign: 'center', cellsformat:'f2',align: 'center', width: '10%' },
 		{ "datafield": "WinningCompany", "text": "中标单位", cellsalign: 'center', align: 'center', width: '10%' },
@@ -460,7 +470,18 @@ function InitProjectPackageGrid(dict, project) {
 				newWindow.print();
 			});
 			addNewButton.click(function (event) {
-				$.get('SelectFirstPackagesByProjectId?id=' + project.Id, function (result) {
+				var selectedrowindex = getselectindex("#EditProject_PackageTable");
+				if (selectedrowindex == -1) {
+					packageid=-1;
+					url = 'SelectFirstPackagesByProjectId?packageid=-1&id=' + project.Id
+				}
+				else
+				{
+					var projectpackage = $("#EditProject_PackageTable").jqxGrid('getrowdata', selectedrowindex);
+					packageid=projectpackage.Id;
+					url = 'SelectFirstPackagesByProjectId?id='+project.Id+'&packageid=' + packageid
+				}	
+				$.get(url, function (result) {
 
 					y = document.body.scrollTop;
 					x = (document.body.scrollWidth -600)/2
@@ -1179,6 +1200,7 @@ function InitNewPackageWindow(dict, project) {
 				, ReviewDate: $("#ReviewDate_ADD").val()
 				, SigningDate: ''
 				, MakeOutDate: ''
+				, NoticeDate: ''
 				, WinningMoney: 0
 				, WinningDollar: 0
 				, WinningCompany: ''
@@ -1323,6 +1345,10 @@ function InitEditPackageWindow(dict, projectpackage) {
 		if (projectpackage.MakeOutDate == "None" || projectpackage.MakeOutDate == "1900-01-01 00:00:00") {
 			$("#MakeOutDate_Manage").jqxDateTimeInput('val', "")
 		}
+		$("#NoticeDate_Manage").jqxDateTimeInput('val', projectpackage.NoticeDate);
+		if (projectpackage.NoticeDate == "None" || projectpackage.NoticeDate == "1900-01-01 00:00:00") {
+			$("#NoticeDate_Manage").jqxDateTimeInput('val', "")
+		}		
 		$("#EntrustMoney_Manage").jqxNumberInput('val', projectpackage.EntrustMoney);
 		$("#WinningMoney_Manage").jqxNumberInput('val', projectpackage.WinningMoney);
 		$("#WinningDollar_Manage").jqxNumberInput('val', projectpackage.WinningDollar);
@@ -1348,6 +1374,8 @@ function InitEditPackageWindow(dict, projectpackage) {
 		$("#SigningDate_Manage").jqxDateTimeInput('val', '')
 		$("#MakeOutDate_Manage").jqxDateTimeInput({ culture: 'zh-CN', formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px', allowNullDate: true });
 		$("#MakeOutDate_Manage").jqxDateTimeInput('val', '')
+		$("#NoticeDate_Manage").jqxDateTimeInput({ culture: 'zh-CN', formatString: "yyyy-MM-dd HH:mm:ss", showTimeButton: true, width: '200px', height: '25px', allowNullDate: true });
+		$("#NoticeDate_Manage").jqxDateTimeInput('val', '')		
 		$("#EntrustMoney_Manage").jqxNumberInput({ width: '200px', height: '25px', inputMode: 'simple' });
 		$("#WinningMoney_Manage").jqxNumberInput({ width: '200px', height: '25px', inputMode: 'simple' });
 		$("#WinningDollar_Manage").jqxNumberInput({ width: '200px', height: '25px', inputMode: 'simple' });
@@ -1381,6 +1409,7 @@ function InitEditPackageWindow(dict, projectpackage) {
 				, WinningDollar: $("#WinningDollar_Manage").val()
 				, SigningDate: $("#SigningDate_Manage").val()
 				, MakeOutDate: $("#MakeOutDate_Manage").val()
+				, NoticeDate: $("#NoticeDate_Manage").val()
 				, ChargeRate: $("#ChargeRate_Manage").val()
 				, SecondPublicDate: $("#SecondPublicDate_Manage").val()
 				, comment: $("#comment_Manage").val()
@@ -2154,6 +2183,7 @@ function InittbzjGrid(dict, project) {
 			datafields:
 			[{ name: 'Id', type: 'string' },
 				{ name: 'dwmc', type: 'string' },
+				{ name: 'tbzjrq', type: 'date' },
 				{ name: 'rq', type: 'date' },
 				{ name: 'projectid', type: 'string' },
 				{ name: 'username', type: 'string' },
@@ -2307,8 +2337,9 @@ function InittbzjGrid(dict, project) {
 			columns: [
 				{ text: '序号', datafield: 'Id', width: '5%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '单位名称', datafield: 'dwmc', width: '20%', cellsalign: 'center', align: 'center', hidden: false },
-				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
+//				{ text: '日期', datafield: 'rq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: true },
 				{ text: '项目编号', datafield: 'projectid', width: '15%', cellsalign: 'center', align: 'center', hidden: false },
+				{ text: '退保证金时间', datafield: 'tbzjrq', cellsformat: 'yyyy-MM-dd HH:mm:ss', width: '10%', cellsalign: 'center', align: 'center', hidden: false },
 				{ text: '操作人', datafield: 'username', width: '10%', cellsalign: 'center', align: 'center', hidden: true },
 				{ text: '来源', datafield: 'ly', width: '10%', cellsalign: 'center', align: 'center', hidden: true },
 				{ text: '开户银行', datafield: 'khyh', width: '15%', cellsalign: 'center', align: 'center', hidden: false },
