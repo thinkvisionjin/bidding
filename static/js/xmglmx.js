@@ -8,6 +8,25 @@ var gProjectViewdataAdapter;
 var gdocumentdataAdapter
 var gViewFlag = 1;
 
+function UpdateProjectStatus()
+{
+    var rows = $('#EditProject_PackageTable').jqxGrid('getrows');
+    var result = "";
+	var min = 100;
+    for(var i = 0; i < rows.length; i++)
+    {
+        var row = rows[i];
+		if (row.StateId<min)
+		{
+			min = row.StateId
+		}
+    }
+	 autosetStatusBar(min);
+	var items = $('#EditProject_ProjectStatus').jqxDropDownList('getItems');
+	var item = $('#EditProject_ProjectStatus').jqxDropDownList('getItemByValue', min);
+	$('#EditProject_ProjectStatus').jqxDropDownList('selectItem', item);	 
+}
+
 function InitEditProjectPage(dict, project) {
 	$("#jqxProjectBasicExpander").jqxExpander({ width: '99%', toggleMode: 'dblclick' });
 	$("#jqxProjectPackagesExpander").jqxExpander({ width: '99%', toggleMode: 'dblclick' });
@@ -193,7 +212,6 @@ function InitProjectPackageGrid(dict, project) {
 				// synchronize with the server - send update command
 				// call commit with parameter true if the synchronization with the server is successful 
 				// and with parameter false if the synchronization failed.
-
 				commit(true);
 			},
 			deleterow: function (rowid, commit) {
@@ -203,6 +221,7 @@ function InitProjectPackageGrid(dict, project) {
 				var dataRecord = $("#EditProject_PackageTable").jqxGrid('getrowdata', rowid);
 				$.post("/bidding/default/delete?table=ProjectPackage", dataRecord, function (result) {
 					alert("操作成功！");
+					UpdateProjectStatus();
 				});
 				commit(true);
 			},
@@ -217,6 +236,7 @@ function InitProjectPackageGrid(dict, project) {
 		};
 	var projectPackageurldataAdapter = new $.jqx.dataAdapter(source, {
 		loadComplete: function () {
+			UpdateProjectStatus();
 			// data is loaded.
 		}
 	});
@@ -317,7 +337,7 @@ function InitProjectPackageGrid(dict, project) {
 					color = 'color: #FF00FF;'
 				}
 				else if (value == 7) {
-					color = 'color: #FFFFFF;'
+					color = 'color: #000000;'
 				}
 				else if (value == 8) {
 					color = 'color: #008000;'
@@ -600,6 +620,7 @@ function InitProjectPackageGrid(dict, project) {
 		},
 		columns: projectPackage_columns_content
 	});
+	
 	//$('#EditProject_PackageTable').jqxGrid('autoresizecolumns');
 	$('#EditProject_PackageTable').on('rowclick', function (event) {
 		var args = event.args;
@@ -1213,6 +1234,7 @@ function InitNewPackageWindow(dict, project) {
 		$.post("/bidding/default/insert?table=ProjectPackage", row, function (result) {
 			$("#EditProject_PackageTable").jqxGrid('addrow', null, result, "first");
 			$("#popupWindow_PackageADD").jqxWindow('hide');
+			UpdateProjectStatus();
 		}, 'json');
 	});
 }

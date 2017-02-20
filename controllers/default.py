@@ -220,6 +220,12 @@ def update():
                 else:
                     dict_row[key] = unicode(row[key])
         dic_rows.append(dict_row)
+
+        print dict_row['ProjectId']
+        if table_name==u'ProjectPackage':
+            sql = u'update project set projectstatusid=(select min(stateid) from projectpackage where  project.id=projectpackage.projectid) where id='+dict_row['ProjectId']
+            print sql
+            db.executesql(sql)
         db.commit()
         return json.dumps(dic_rows,ensure_ascii=False)
     except Exception as e:
@@ -373,6 +379,8 @@ def xybh_ss():
 
 def xmbh():
     return dict();
+
+@auth.requires_login()
 def xmgl():
     dictionaries = getDictionaries()
     return dict(dictionaries=dictionaries);
@@ -392,7 +400,7 @@ def xmgl_ss():
     protocols=sqltojson(strSQL)
     return protocols
 
-
+@auth.requires_login()
 def xmglmx():
     id = request.vars.id
     strSQL = u"select top 1 *  from [bidding].[dbo].[Project] where  Id = " +id;
@@ -628,6 +636,7 @@ def p_CreateNewProject(rowData, id):
     
     return dict_row
 
+@auth.requires_login()
 def ReGetProjectCode():
     print u'ReGetPorjectCode'
     try:
@@ -686,6 +695,7 @@ def UpdateProject():
         db.rollback()
         return u'fail'
 
+@auth.requires_login()
 def CreateNewProject():
     print u'CreateNewProject'
     try:
